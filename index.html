@@ -1,0 +1,53 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Playback "Demo" - text one word at a time</title>
+</head>
+<body>
+
+	Just in the console at the moment.
+
+
+	<script src="node_modules/@knod/hyphenaxe/lib/hyphenaxe.js"></script>
+	<script src="node_modules/@knod/prose-stepper/dist/prose-stepper.js"></script>
+	<script src="node_modules/@knod/string-time/dist/string-time.js"></script>
+	<script src="dist/playback.js"></script>
+	<script src="node_modules/wolfy87-eventemitter/EventEmitter.js"></script>
+
+	<script>
+
+		var state = {};
+
+		state.emitter = new EventEmitter();  // Now has events
+		state.stepper = { maxNumCharacters: 20 };
+		state.delayer = { slowStartDelay: 0 };
+		state.playback = {};
+		state.playback.transform = function ( frag ) {
+			var changed = frag.replace(/[\n\r]+/g, '$@skip@$');
+			return changed;
+		}
+
+		var parsedText = [ 
+			[ 'Victorious,', 'you','brave', 'flag.' ],
+			[ 'Delirious,', 'I', 'come', 'back.' ],
+			[ '\n' ],
+			[ 'Why,', 'oh', 'wattlebird?' ]
+		];
+
+		var playback = Playback( state );
+
+		playback.process( parsedText );
+
+		state.emitter.on('newWordFragment', function (playback, frag) {
+			console.log( '~', frag );
+		})
+
+		playback.start();
+
+	</script>
+	
+</body>
+</html>
