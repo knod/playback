@@ -25,7 +25,7 @@
 		state.stepper = { maxNumCharacters: 20 };
 		state.delayer = { slowStartDelay: 0 };
 		state.playback = {};
-		state.playback.transform = function ( frag ) {
+		state.playback.transformFragment = function ( frag ) {
 			var changed = frag.replace(/[\n\r]+/g, '$@skip@$');
 			return changed;
 		}

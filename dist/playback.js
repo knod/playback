@@ -52,11 +52,15 @@
 			plab._stepper = RealStepperConstr( state.stepper );
 			plab._delayer = RealDelayerConstr( state.delayer );
 
-			plab.done 		 = false;
+			plab.done 		  = false;
 
-			plab._timeoutID  = null;
-			plab._isPlaying  = false;
-			plab._wasPlaying = false;
+			plab._timeoutID   = null;
+			plab._isPlaying   = false;
+			plab._wasPlaying  = false;
+
+			// // For rewinding, ffding, resuming
+			// plab._direction  	= 'forward';
+			// plab._prevDirection = 'backward';
 
 			// Moving around
 			plab._jumping 	 	= false;
@@ -70,6 +74,9 @@
 			plab._stepper.process( sentenceArray );
 			return plab;
 		};
+
+
+		// plab.setState = function ( newState ) { stepper.setState( newState.stepper ) };
 
 
 
@@ -103,7 +110,7 @@
 
 			if ( eventName ) plab.trigger( eventName + 'Begin', [plab] );
 
-			plab._pause(null, null, null);
+			plab._pause(null);
 
 			plab.done = false;
 			// Just put the index at the right place
@@ -150,7 +157,6 @@
 			return plab;
 		};  // End plab._play()
 
-
 		plab.play = function () {
 			if ( plab.done ) { plab.restart(); }  // Comes back here after restarted
 			else { plab._play( 'play' ); }
@@ -177,7 +183,6 @@
 			return plab;
 		};  // End plab._pause()
 
-
 		// Names for "pause":
 		plab.pause = function () {
 			plab._pause( 'pause' );
@@ -193,9 +198,109 @@
 		};
 
 
+
 		plab.togglePlayPause = function () {
 			if (plab._isPlaying) { plab.pause(); }
 			else { plab.play(); }
+			return plab;
+		};
+
+
+
+		// ========== FF and REWIND (arrow keys and other) ========== \\
+
+		plab._oneJumpNoDelay = function ( changes ) {
+			plab._wasPlaying = plab._isPlaying;
+			plab._pause( null );
+
+			plab._skipWhitespace = true;
+			plab.once( changes );
+			plab._skipWhitespace = false;
+
+			if ( plab._wasPlaying ) { plab._play( null ); }
+			return plab;
+		};  // End plab._oneJumpNoDelay()
+
+		plab.jumpWords = function ( numToJump ) {
+			numToJump = numToJump || 1;
+			plab._oneJumpNoDelay( [0, numToJump, 0] );
+			return plab;
+		};
+		plab.jumpSentences = function ( numToJump ) {
+			numToJump = numToJump || 1;
+			plab._oneJumpNoDelay( [numToJump, 0, 0] );
+			return plab;
+		};
+
+		// plab.nextWord = function () {
+		// 	plab._oneJumpNoDelay( [0, 1, 0] );
+		// 	return plab;
+		// };
+		// plab.nextSentence = function() {
+		// 	plab._oneJumpNoDelay( [1, 0, 0] );
+		// 	return plab;
+		// };
+
+		// plab.prevWord = function () {
+		// 	plab._oneJumpNoDelay( [0, -1, 0] );
+		// 	return plab;
+		// };
+		// plab.prevSentence = function() {
+		// 	plab._oneJumpNoDelay( [-1, 0, 0] );
+		// 	return plab;
+		// };
+
+
+		// var oldFastTime;
+		// var notStartedYet = true;
+		// plab.rewind = function ( increaseSpeedFunc ) {
+		// 	// affect number of words jumped, or affect amount of delay
+
+		// 	if (notStartedYet) {
+				
+		// 	}
+
+		// 	plab.trigger( 'rewindLoopBegin', [plab] );
+
+		// 	plab._pause( null );
+
+		// 	if () {
+		// 		increaseSpeedFunc = increaseSpeedFunc || defaultSpeedFunc;
+		// 		var num = increaseSpeedFunc( plab._incrementors[1] );
+		// 		plab.jumpWords( num )
+		// 		setTimeout( plab.rewind( increaseSpeedFunc ), 200 );
+		// 	}
+
+		// 	plab.trigger( 'rewindLoopFinish', [plab] );
+
+		// 	return plab;
+		// };  // end Plab.rewind()
+		// plab.fastForward = function ( increaseSpeedFunc ) {};  // end plab.fastForward()
+
+
+
+		// =================== SCRUBBER BAR (probably) =================== \\
+
+		plab.jumpTo = function ( jumpToObj ) {
+		// Argument to pass in? 'previous sentence'? 'next sentence'?
+		// 'section of document'? An index number?
+		// ??: How to give useful feedback from this?
+			if ( !plab._jumping ) {
+				plab._wasPlaying = plab._isPlaying;
+				plab._pause( null );
+				plab._jumping = true;
+			}
+
+			var oldIndex = plab.getIndex(),
+				newIndex = jumpToObj.index;
+			plab.once( [0, newIndex - oldIndex, 0] );
+
+			return plab;
+		};  // End plab.jumpTo()
+
+		plab.disengageJumpTo = function () {
+			if ( plab._wasPlaying ) { plab._play( null ); }
+			plab._jumping = false;
 			return plab;
 		};
 
@@ -211,66 +316,6 @@
 
 			return plab;
 		};  // End plab.once()
-
-
-
-		// ========== FF and REWIND (arrow keys and other) ========== \\
-
-		plab._oneStepUntimed = function ( changes ) {
-			plab._wasPlaying = plab._isPlaying;
-			plab._pause( null, null, null );
-
-			plab._skipWhitespace = true;
-			plab.once( changes );
-			plab._skipWhitespace = false;
-
-			if ( plab._wasPlaying ) { plab._play( null, null, null ); }
-			return plab;
-		};  // End plab._oneStepUntimed()
-
-		plab.nextWord = function () {
-			plab._oneStepUntimed( [0, 1, 0] );
-			return plab;
-		};
-		plab.nextSentence = function() {
-			plab._oneStepUntimed( [1, 0, 0] );
-			return plab;
-		};
-
-		plab.prevWord = function () {
-			plab._oneStepUntimed( [0, -1, 0] );
-			return plab;
-		};
-		plab.prevSentence = function() {
-			plab._oneStepUntimed( [-1, 0, 0] );
-			return plab;
-		};
-
-
-		// =================== SCRUBBER BAR (probably) =================== \\
-
-		plab.jumpTo = function ( jumpToObj ) {
-		// Argument to pass in? 'previous sentence'? 'next sentence'?
-		// 'section of document'? An index number?
-		// ??: How to give useful feedback from this?
-			if ( !plab._jumping ) {
-				plab._wasPlaying = plab._isPlaying;
-				plab._pause( null, null, null );
-				plab._jumping = true;
-			}
-
-			var oldIndex = plab.getIndex(),
-				newIndex = jumpToObj.index;
-			plab.once( [0, newIndex - oldIndex, 0] );
-
-			return plab;
-		};  // End plab.jumpTo()
-
-		plab.disengageJumpTo = function () {
-			if ( plab._wasPlaying ) { plab._play( null, null, null ); }
-			plab._jumping = false;
-			return plab;
-		};
 
 
 
@@ -355,8 +400,6 @@
         plab._loop = function( incrementors, noDelay ) {
         // https://jsfiddle.net/d1mgadeo/2/
 
-        	// TODO: Do whitespace/other substitutions in here somewhere
-
 			plab.trigger( 'loopBegin', [plab] );
     	    
 			// If, for example, calling the loop from the loop, just keep
@@ -366,7 +409,7 @@
 			var frag 	 = plab._stepper.getFragment( incrementors ),
 				// "$@skip@$" will be skipped. Can use transform for that and
 				// other stuff (like paragraph or space symbols)
-				frag 	 = state.playback.transform( frag );
+				frag 	 = state.playback.transformFragment( frag );
 
 			// Skip 1 word in the right direction if needed
 			var skipVector = plab._skipDirection( incrementors, frag );  // [int, int, int] of -1, 0, or 1
