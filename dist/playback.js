@@ -140,11 +140,11 @@
 		// means the "play" image won't fire off on restarts, even though
 		// it feels like it should always fire on play.
 		plab._play = function ( eventName ) {
-		/* ( Str, Str ) -> PlaybackManager
+		/* ( Str ) -> PlaybackManager
 		* 
 		* For all 'play'-like activities
 		*/
-			// "play" will always be forward. "rewind" can be play, but with "prev".
+			// "play" will always be forward
 			plab._incrementors = [0, 0, 1];
 
 			if ( eventName ) plab.trigger( eventName + 'Begin', [plab] );
@@ -167,7 +167,7 @@
 
 
 		plab._pause = function ( eventName ) {
-		/* ( Str, Str, Func ) -> PlaybackManager
+		/* ( Str ) -> PlaybackManager
 		* 
 		* For all 'pause'-like activities
 		*/ 
@@ -257,7 +257,7 @@
 		// 	// affect number of words jumped, or affect amount of delay
 
 		// 	if (notStartedYet) {
-				
+
 		// 	}
 
 		// 	plab.trigger( 'rewindLoopBegin', [plab] );
@@ -327,14 +327,14 @@
             return typeof num === 'number' ? num ? num < 0 ? -1 : 1 : num === num ? num : NaN : NaN;
         }
 
-        plab._sendProgress = function () {
+        plab._emitProgress = function () {
         /* () -> Playback
         * 
         * Just trigger the progress event with the right progress
         */
 	        plab.trigger( 'progress', [plab, plab.getProgress()] );
 	        return plab;
-        };  // End plab._sendProgress()
+        };  // End plab._emitProgress()
 
         plab._finishIfDone = function () {
         /* () -> Bool
@@ -397,8 +397,35 @@
         };  // End plab._skipDirection()
 
 
-        plab._loop = function( incrementors, noDelay ) {
-        // https://jsfiddle.net/d1mgadeo/2/
+        plab._loop = function( incrementors, numRepeats, delayFunc ) 
+        /* ( [ [ int, int, int ], int, func ] )
+        * 
+        * `incrementors`: three deltas for the stepper, telling which position to
+        * change and how much (or uses `._incrementors`). In a multi-loop call,
+        * this only applies to the first time through. After that `._incrementors`
+        * is used.
+        * 
+        * ??: How to make this more flexible? Add callback for when numRepeats is done?
+        * 
+        * `numRepeats`: I'm not yet sure why this would be more than 0 or infinite,
+        * but why not leave room for the future? How many times to repeat the loop.
+        *`null` or undefined means "until done". This persists through the loops.
+        * 
+        * `delayFunc`: An alternative function that returns the amount of delay
+        * given to a word. Currently given the Playback intance and the fragment.
+        * This persists through the loops.
+        * 
+        * All three arguments are optional
+        * 
+        * Uses the `stepper` to get a new fragment based on `incrementors`, then
+        * sends out an event with the fragment. Calls itself `numRepeats` number
+        * of times (till done if `undefined` or `null`), pausing between each
+        * fragment for an amount of time returned by `delayFunc` or its default
+        * delay calculations
+        * 
+        * ??: Should -1 mean "until done"? Then the argument isn't optional, though.
+        */
+        // https://jsfiddle.net/d1mgadeo/2/ (my version)
 
 			plab.trigger( 'loopBegin', [plab] );
     	    
@@ -406,10 +433,11 @@
 			// going in the same global direction. Allows for stuff like
 			// `._play()` to show current word, then keep going
 			incrementors = incrementors || plab._incrementors;  // ??: Too indirect?
-			var frag 	 = plab._stepper.getFragment( incrementors ),
-				// "$@skip@$" will be skipped. Can use transform for that and
-				// other stuff (like paragraph or space symbols)
-				frag 	 = state.playback.transformFragment( frag );
+			// Maybe do this with ._play() and events...? Is that possible? Can a timeout be watched?
+
+			var frag = plab._stepper.getFragment( incrementors ),
+				// "$@skip@$" will be returned to skip the fragment
+				frag = state.playback.transformFragment( frag );
 
 			// Skip 1 word in the right direction if needed
 			var skipVector = plab._skipDirection( incrementors, frag );  // [int, int, int] of -1, 0, or 1
@@ -417,24 +445,42 @@
     	    if ( skipVector !== null ) {
 
 				plab.trigger( 'loopSkip', [plab, frag] );
-    	    	plab._loop( skipVector, noDelay );
+    	    	plab._loop( skipVector, numRepeats, delayFunc );
     	    
     	    } else {
 
-				if ( !noDelay ) {
-					// How long this word will remain on the screen before changing
-					var delay = plab._delayer.calcDelay( frag );  // TODO: for fastforward, modify speed
-					plab._timeoutID = setTimeout( plab._loop, delay );
+    	    	// How long this word will remain on the screen before changing
+    	    	var delay;
+
+				if ( !delayFunc ) {
+					delay = plab._delayer.calcDelay( frag );
+				} else {
+					delay = delayFunc( plab, frag );
+				}
+
+				// Don't loop again if 0 repeats desired
+				if ( numRepeats !== 0 ) {
+
+					if ( numRepeats !== null && numRepeats !== undefined ) {
+						// Should get an error if of the wrong type
+						numRepeats -= 1;  // Count down the number of loops left
+					}
+
+					plab._timeoutID = setTimeout( function () {
+						plab._loop( null, numRepeats, delayFunc );
+					}, delay );
+
 				}
 
 				// Send fragment after setTimeout so that you can easily
-				// pause on "newWordFragment". Feels weird, though.
+				// pause on "newWordFragment" - pause kills the current
+				// `._timeoutID`. Feels weird, though.
 				plab.trigger( 'newWordFragment', [plab, frag] );
 				plab.trigger( 'loopFinish', [plab] );
 
     	    }  // end if skip fragment or not skip fragment
 
-			plab._sendProgress();
+			plab._emitProgress();
 			plab._finishIfDone();
 
 			return plab;  // Return timeout id instead?
