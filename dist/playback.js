@@ -146,11 +146,13 @@
 		*/
 			// "play" will always be forward
 			plab._incrementors = [0, 0, 1];
+			notStartedAccYet = true;  // Temp
 
 			if ( eventName ) plab.trigger( eventName + 'Begin', [plab] );
 			if ( !plab._isPlaying ) {
 				plab._isPlaying = true;
-				plab._loop( [0, 0, 0], false );  // Show the current word first, then it will move on
+				plab._loop( [0, 0, 0], null, null );  // Show the current word first, then it will move on
+				// plab._loop( [0, 0, 0], null, function () { return 1; } );  // Show the current word first, then it will move on
 			}
 			if ( eventName ) plab.trigger( eventName + 'Finish', [plab] );
 
@@ -207,7 +209,7 @@
 
 
 
-		// ========== FF and REWIND (arrow keys and other) ========== \\
+		// ========== NAVIGATE (arrow keys and other) ========== \\
 
 		plab._oneJumpNoDelay = function ( changes ) {
 			plab._wasPlaying = plab._isPlaying;
@@ -232,50 +234,89 @@
 			return plab;
 		};
 
-		// plab.nextWord = function () {
-		// 	plab._oneJumpNoDelay( [0, 1, 0] );
-		// 	return plab;
-		// };
-		// plab.nextSentence = function() {
-		// 	plab._oneJumpNoDelay( [1, 0, 0] );
-		// 	return plab;
-		// };
-
-		// plab.prevWord = function () {
-		// 	plab._oneJumpNoDelay( [0, -1, 0] );
-		// 	return plab;
-		// };
-		// plab.prevSentence = function() {
-		// 	plab._oneJumpNoDelay( [-1, 0, 0] );
-		// 	return plab;
-		// };
+		plab.nextWord = function () { return plab.jumpWords( 1 ); };
+		plab.nextSentence = function() { return plab.jumpSentences( 1 ); };
+		plab.prevWord = function () { return plab.jumpWords( -1 ); };
+		plab.prevSentence = function() { return plab.jumpSentences( -1 ); };
 
 
-		// var oldFastTime;
-		// var notStartedYet = true;
-		// plab.rewind = function ( increaseSpeedFunc ) {
-		// 	// affect number of words jumped, or affect amount of delay
 
-		// 	if (notStartedYet) {
+		// ========== FF and REWIND (arrow keys and other) ========== \\
 
-		// 	}
+		var oldAccTime, notStartedAccYet = true, defaultDelay = 300;
+		plab.accelerate = function ( frag ) {
+		// Less delay as time goes on
 
-		// 	plab.trigger( 'rewindLoopBegin', [plab] );
+			// When first run
+			if ( notStartedAccYet ) {
+				oldAccTime 		 = Date.now();
+				notStartedAccYet = false;
+			}
 
-		// 	plab._pause( null );
+			var elapsed = Date.now() - oldAccTime,
+				elapsedIterations = elapsed/defaultDelay;
+			elapsedIterations = Math.max( 1, elapsed );
+			elapsedIterations = Math.max( 60, elapsed );
 
-		// 	if () {
-		// 		increaseSpeedFunc = increaseSpeedFunc || defaultSpeedFunc;
-		// 		var num = increaseSpeedFunc( plab._incrementors[1] );
-		// 		plab.jumpWords( num )
-		// 		setTimeout( plab.rewind( increaseSpeedFunc ), 200 );
-		// 	}
+			// (1/x) + 200
 
-		// 	plab.trigger( 'rewindLoopFinish', [plab] );
+			// var delay = defaultDelay - elapsed;
+			// console.log(delay, elapsed, elapsed/20, (elapsed - elapsed/20))
+			// (15 - 0)/(300 - 10) = 0.3
+			// iteration 1: 0, iteration last: 15
+			// delay start 1: 100, delay end: 10
+			var delay = defaultDelay + (elapsedIterations * -0.15);
+			console.log(delay)
+			delay = Math.max( 5, delay )
 
-		// 	return plab;
-		// };  // end Plab.rewind()
-		// plab.fastForward = function ( increaseSpeedFunc ) {};  // end plab.fastForward()
+
+			return delay;
+		};
+
+		plab.startRewind = function ( accelerateFunc ) {
+		// TODO: What happens when rewind and then `.jumpWord()` in the middle?
+
+			// affect number of words jumped, or affect amount of delay
+
+			plab.trigger( 'startRewindBegin', [plab] );
+
+			plab._wasPlaying = plab._isPlaying;
+			plab._pause( null );
+			plab._incrementors = [0, -1, 0];
+			plab._direction = 'back';
+
+			var accelerateFunc = accelerateFunc || plab.accelerate;
+
+			plab._loop( null, null, accelerateFunc );  // Show the current word first, then it will move on
+
+			plab.trigger( 'startRewindFinish', [plab] );
+
+			return plab;
+		};  // end plab.startRewind()
+
+		plab.stopRewind = function () {
+
+			plab.trigger( 'stopRewindBegin', [plab] );
+
+			notStartedAccYet = true;
+
+			plab._pause( null );
+
+			if ( plab._wasPlaying ) { plab._play(); }
+
+			plab.trigger( 'stopRewindFinish', [plab] );
+
+			return plab;
+		};
+
+		state.emitter.on( 'done', function () {
+			if ( plab._direction === 'back' ) {
+				plab.stopRewind();
+			}
+		})
+
+
+		plab.fastForward = function ( increaseSpeedFunc ) {};  // end plab.fastForward()
 
 
 
@@ -311,7 +352,7 @@
 		plab.once = function ( incrementors ) {
 
 			plab.trigger( 'onceBegin', [plab] );
-			plab._loop( incrementors, true);
+			plab._loop( incrementors, 0, function () { return 0; });
 			plab.trigger( 'onceFinish', [plab] );
 
 			return plab;
@@ -343,8 +384,15 @@
 		* prepare for a possible restart. Otherwise save not
 		* done.
         */
+        	var isDone = false;
         	// Stop if we've reached the end
-        	if ( plab.getProgress() === 1 ) {
+        	if ( plab._direction !== 'back' && plab.getProgress() === 1 ) {
+        		isDone = true;
+        	} else if ( plab._direction === 'back' && plab.getIndex() === 0 ) {
+        		isDone = true;
+	        }
+
+        	if ( isDone ) {
         		plab.done = true;
         		plab.trigger( 'done', [plab] );
         		plab.stop();
@@ -397,43 +445,25 @@
         };  // End plab._skipDirection()
 
 
-        plab._loop = function( incrementors, numRepeats, delayFunc ) 
-        /* ( [ [ int, int, int ], int, func ] )
-        * 
-        * `incrementors`: three deltas for the stepper, telling which position to
-        * change and how much (or uses `._incrementors`). In a multi-loop call,
-        * this only applies to the first time through. After that `._incrementors`
-        * is used.
-        * 
-        * ??: How to make this more flexible? Add callback for when numRepeats is done?
-        * 
-        * `numRepeats`: I'm not yet sure why this would be more than 0 or infinite,
-        * but why not leave room for the future? How many times to repeat the loop.
-        *`null` or undefined means "until done". This persists through the loops.
-        * 
-        * `delayFunc`: An alternative function that returns the amount of delay
-        * given to a word. Currently given the Playback intance and the fragment.
-        * This persists through the loops.
-        * 
-        * All three arguments are optional
-        * 
-        * Uses the `stepper` to get a new fragment based on `incrementors`, then
-        * sends out an event with the fragment. Calls itself `numRepeats` number
-        * of times (till done if `undefined` or `null`), pausing between each
-        * fragment for an amount of time returned by `delayFunc` or its default
-        * delay calculations
-        * 
-        * ??: Should -1 mean "until done"? Then the argument isn't optional, though.
-        */
-        // https://jsfiddle.net/d1mgadeo/2/ (my version)
-
+        plab._loop = function( incrementors, numRepeats, delayFunc ) {
+		/* ( [ [int, int, int], int, func ] )
+		* 
+		* `incrementors` will only be used for the first loop. loop calls itself
+		* with `null` as the first argument. Used with `._play()` and `skipVector`.
+		* `numRepeats`: `null` or `undefined` means "until done".
+		* `delayFunc`: Arguments give are the new fragment and the Playback instance.
+		* 
+		* All three arguments are optional
+		* 
+		* Uses the `stepper` to get a new fragment based on `incrementors`, then
+		* sends out an event with the fragment. Calls itself `numRepeats` number
+		* of times, pausing between each fragment for an amount of time returned
+		* by `delayFunc` or its default delay calculations
+		*/
 			plab.trigger( 'loopBegin', [plab] );
     	    
-			// If, for example, calling the loop from the loop, just keep
-			// going in the same global direction. Allows for stuff like
-			// `._play()` to show current word, then keep going
-			incrementors = incrementors || plab._incrementors;  // ??: Too indirect?
-			// Maybe do this with ._play() and events...? Is that possible? Can a timeout be watched?
+			// Allows for stuff like `._play()` to show current word, then keep going
+			incrementors = incrementors || plab._incrementors;
 
 			var frag = plab._stepper.getFragment( incrementors ),
 				// "$@skip@$" will be returned to skip the fragment
@@ -445,24 +475,21 @@
     	    if ( skipVector !== null ) {
 
 				plab.trigger( 'loopSkip', [plab, frag] );
-    	    	plab._loop( skipVector, numRepeats, delayFunc );
+    	    	plab._loop( skipVector, numRepeats, delayFunc );  // Don't decrease repeats
     	    
     	    } else {
 
-    	    	// How long this word will remain on the screen before changing
-    	    	var delay;
+    	    	// How long this word fragment will remain on the screen before changing
+    	    	var delayFunc = delayFunc || plab._delayer.calcDelay,
+    	    		delay 	  = delayFunc( frag );
+    	    	// TODO: change string-time library - parameters for `.calcDelay()`
 
-				if ( !delayFunc ) {
-					delay = plab._delayer.calcDelay( frag );
-				} else {
-					delay = delayFunc( plab, frag );
-				}
+    	    	// ??: Could do `if ( delay !== 0 )`, but does that conflate?
 
 				// Don't loop again if 0 repeats desired
 				if ( numRepeats !== 0 ) {
 
 					if ( numRepeats !== null && numRepeats !== undefined ) {
-						// Should get an error if of the wrong type
 						numRepeats -= 1;  // Count down the number of loops left
 					}
 
