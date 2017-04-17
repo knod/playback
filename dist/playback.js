@@ -10,6 +10,7 @@
 * 
 * TODO;
 * - Speed up with long duration of ff or rewind
+* - `.rewind()` base speed as state property
 * 
 * DEVELOPMENT NOTES/GUIDES:
 * - Where possible, return Playback so functions can be chained
@@ -140,17 +141,23 @@
 		// means the "play" image won't fire off on restarts, even though
 		// it feels like it should always fire on play.
 		plab._play = function ( eventName ) {
-		/* ( Str, Str ) -> PlaybackManager
+		/* ( Str ) -> PlaybackManager
 		* 
 		* For all 'play'-like activities
 		*/
-			// "play" will always be forward. "rewind" can be play, but with "prev".
+			// "play" will always be forward
+			// ??: Here so can be changed ever event?
 			plab._incrementors = [0, 0, 1];
+			// notStartedAccYet = true;  // Temp
 
 			if ( eventName ) plab.trigger( eventName + 'Begin', [plab] );
+			
+			plab._direction = 'forward';
+
 			if ( !plab._isPlaying ) {
 				plab._isPlaying = true;
-				plab._loop( [0, 0, 0], false );  // Show the current word first, then it will move on
+				// plab._loop( [0, 0, 0], null, null );  // Show the current word first, then it will move on
+				plab._loop( [0, 0, 0], null, function () { return 1; } );  // Show the current word first, then it will move on
 			}
 			if ( eventName ) plab.trigger( eventName + 'Finish', [plab] );
 
@@ -167,7 +174,7 @@
 
 
 		plab._pause = function ( eventName ) {
-		/* ( Str, Str, Func ) -> PlaybackManager
+		/* ( Str ) -> PlaybackManager
 		* 
 		* For all 'pause'-like activities
 		*/ 
@@ -197,8 +204,6 @@
 			return plab;
 		};
 
-
-
 		plab.togglePlayPause = function () {
 			if (plab._isPlaying) { plab.pause(); }
 			else { plab.play(); }
@@ -207,7 +212,30 @@
 
 
 
-		// ========== FF and REWIND (arrow keys and other) ========== \\
+		// ========== RESUME ========== \\
+
+		plab._resumeIfWasPlaying = function () {
+		/* () -> Bool
+		* 
+		* Returns true if resumed playing, false if stopped
+		* completely
+		*/
+			plab.trigger( 'resumeBegin', [plab] );
+
+			// notStartedAccYet = true;  // Not accelerating currently
+
+			plab._pause( null );
+
+			if ( plab._wasPlaying ) { plab._play(); }  // this is the key difference from _pause()
+
+			plab.trigger( 'resumeFinish', [plab] );
+
+			return plab._wasPlaying;
+		};  // End plab._resumeIfWasPlaying()
+
+
+
+		// ========== NAVIGATE (arrow keys and other) ========== \\
 
 		plab._oneJumpNoDelay = function ( changes ) {
 			plab._wasPlaying = plab._isPlaying;
@@ -217,65 +245,33 @@
 			plab.once( changes );
 			plab._skipWhitespace = false;
 
-			if ( plab._wasPlaying ) { plab._play( null ); }
+			plab._resumeIfWasPlaying();
 			return plab;
 		};  // End plab._oneJumpNoDelay()
 
 		plab.jumpWords = function ( numToJump ) {
 			numToJump = numToJump || 1;
+			
+			if ( numToJump < 0 ) { plab._direction = 'back'; }
+			else { plab._direction = 'forward'; }
+
 			plab._oneJumpNoDelay( [0, numToJump, 0] );
 			return plab;
 		};
 		plab.jumpSentences = function ( numToJump ) {
 			numToJump = numToJump || 1;
+			
+			if ( numToJump < 0 ) { plab._direction = 'back'; }
+			else { plab._direction = 'forward'; }
+
 			plab._oneJumpNoDelay( [numToJump, 0, 0] );
 			return plab;
 		};
 
-		// plab.nextWord = function () {
-		// 	plab._oneJumpNoDelay( [0, 1, 0] );
-		// 	return plab;
-		// };
-		// plab.nextSentence = function() {
-		// 	plab._oneJumpNoDelay( [1, 0, 0] );
-		// 	return plab;
-		// };
-
-		// plab.prevWord = function () {
-		// 	plab._oneJumpNoDelay( [0, -1, 0] );
-		// 	return plab;
-		// };
-		// plab.prevSentence = function() {
-		// 	plab._oneJumpNoDelay( [-1, 0, 0] );
-		// 	return plab;
-		// };
-
-
-		// var oldFastTime;
-		// var notStartedYet = true;
-		// plab.rewind = function ( increaseSpeedFunc ) {
-		// 	// affect number of words jumped, or affect amount of delay
-
-		// 	if (notStartedYet) {
-				
-		// 	}
-
-		// 	plab.trigger( 'rewindLoopBegin', [plab] );
-
-		// 	plab._pause( null );
-
-		// 	if () {
-		// 		increaseSpeedFunc = increaseSpeedFunc || defaultSpeedFunc;
-		// 		var num = increaseSpeedFunc( plab._incrementors[1] );
-		// 		plab.jumpWords( num )
-		// 		setTimeout( plab.rewind( increaseSpeedFunc ), 200 );
-		// 	}
-
-		// 	plab.trigger( 'rewindLoopFinish', [plab] );
-
-		// 	return plab;
-		// };  // end Plab.rewind()
-		// plab.fastForward = function ( increaseSpeedFunc ) {};  // end plab.fastForward()
+		plab.nextWord = function () { return plab.jumpWords( 1 ); };
+		plab.nextSentence = function() { return plab.jumpSentences( 1 ); };
+		plab.prevWord = function () { return plab.jumpWords( -1 ); };
+		plab.prevSentence = function() { return plab.jumpSentences( -1 ); };
 
 
 
@@ -306,16 +302,149 @@
 
 
 
+		// ========== FF and REWIND (arrow keys and other) ========== \\
+
+		// var oldAccTime, notStartedAccYet = true, defaultDelay = 300;
+		plab.accelerate = function ( frag ) {
+
+		// // Less delay as time goes on
+		// 	// When first run
+		// 	if ( notStartedAccYet ) {
+		// 		oldAccTime 		 = Date.now();
+		// 		notStartedAccYet = false;
+		// 	}
+
+		// 	var elapsed = Date.now() - oldAccTime,
+		// 		elapsedIterations = elapsed/defaultDelay;
+		// 	elapsedIterations = Math.max( 1, elapsed );
+		// 	elapsedIterations = Math.max( 60, elapsed );
+
+		// 	// (1/x) + 200
+
+		// 	// var delay = defaultDelay - elapsed;
+		// 	// console.log(delay, elapsed, elapsed/20, (elapsed - elapsed/20))
+		// 	// xxx(15 - 0)/(60 - 10) = 0.3
+		// 	// iteration 1: 0, iteration last: 15
+		// 	// delay start 1: 60, delay end: 10
+
+		// 	// TODO: Actually check if state delay is 0 or above
+		// 	var baseDelay;
+		// 	if ( state._baseAccelerationDelay >= 0 ) {
+		// 		baseDelay = state._baseAccelerationDelay;
+		// 	} else {
+		// 		baseDelay = defaultDelay;
+		// 	}
+
+		// 	var delay = baseDelay + (elapsedIterations * -0.15);
+		// 	delay = Math.max( 5, delay )
+
+		// 	// return delay;
+
+			return 20;
+		};
+
+		plab.rewind = function ( accelerateFunc ) {
+		/* ( [ func ] ) -> Playback
+		* 
+		* Goes backward, acceleration controled by `accelerateFunc()` or
+		* `state` or internal equivalent. (`accelerateFunc()` takes precedent,
+		* with next fallback being `state.playback.accelerate()`, then internal
+		* `.accelerate()`)
+		* Default currently just a steady speed.
+		* 
+		* TODO: What happens when rewind and then `.jumpWord()` in the middle?
+		*/
+			plab.trigger( 'rewindBegin', [plab] );
+
+			plab._wasPlaying = plab._isPlaying;
+			plab._pause( null );
+
+			plab._incrementors = [0, -1, 0];
+			plab._direction = 'back';
+
+			var accelerateFunc = accelerateFunc || state.playback.accelerate || plab.accelerate;
+
+			plab._loop( null, null, accelerateFunc );  // Show the current word first, then it will move on
+
+			plab.trigger( 'rewindFinish', [plab] );
+
+			return plab;
+		};  // end plab.rewind()
+
+
+		plab.fastForward = function ( accelerateFunc ) {
+		/* ( [ func ] ) -> Playback
+		* 
+		* Goes forward, acceleration controled by `accelerateFunc()` or
+		* `state` or internal equivalent. (`accelerateFunc()` takes precedent,
+		* with next fallback being `state.playback.accelerate()`, then internal
+		* `.accelerate()`)
+		* 
+		* Default currently just a steady speed.
+		*/
+			plab.trigger( 'fastForwardBegin', [plab] );
+
+			plab._wasPlaying = plab._isPlaying;
+			plab._pause( null );
+
+			plab._incrementors = [0, 1, 0];
+			plab._direction = 'forward';
+
+			var accelerateFunc = accelerateFunc || state.playback.accelerate || plab.accelerate;
+
+			plab._loop( null, null, accelerateFunc );  // Show the current word first, then it will move on
+
+			plab.trigger( 'fastForwardFinish', [plab] );
+
+			return plab;
+		};  // end plab.fastForward()
+
+
+
 		// ========== ONCE ========== \\
 
 		plab.once = function ( incrementors ) {
 
 			plab.trigger( 'onceBegin', [plab] );
-			plab._loop( incrementors, true);
+			plab._loop( incrementors, 0, function () { return 0; });
 			plab.trigger( 'onceFinish', [plab] );
 
 			return plab;
 		};  // End plab.once()
+
+
+
+		// =================== DONE =================== \\
+
+		plab._finishIfDone = function () {
+        /* () -> Bool
+		* 
+		* If done, trigger 'done' event, stop the loop, and
+		* prepare for a possible restart. Otherwise save not
+		* done.
+        */
+        	var isDone;
+
+        	// Stop if we've reached the end
+        	if ( plab._direction !== 'back' && plab.getProgress() === 1 ) {
+        		isDone = true;
+        	} else if ( plab._direction === 'back' && plab.getIndex() === 0 ) {
+        		// Check if resumed playing. If not resumed, done.
+        		isDone = !plab._resumeIfWasPlaying();  
+	    	}
+
+	        if ( isDone ) {
+				plab.done = true;
+				plab.stop();
+				plab.trigger( 'done', [plab] );
+	        } else {
+	        	plab.done = false;
+	        }
+
+        	return plab.done;
+		};  // End plab._finishIfDone()
+
+		// state.emitter.on( 'done', function () { plab._finish(); });
 
 
 
@@ -327,33 +456,14 @@
             return typeof num === 'number' ? num ? num < 0 ? -1 : 1 : num === num ? num : NaN : NaN;
         }
 
-        plab._sendProgress = function () {
+        plab._emitProgress = function () {
         /* () -> Playback
         * 
         * Just trigger the progress event with the right progress
         */
 	        plab.trigger( 'progress', [plab, plab.getProgress()] );
 	        return plab;
-        };  // End plab._sendProgress()
-
-        plab._finishIfDone = function () {
-        /* () -> Bool
-		* 
-		* If done, trigger 'done' event, stop the loop, and
-		* prepare for a possible restart. Otherwise save not
-		* done.
-        */
-        	// Stop if we've reached the end
-        	if ( plab.getProgress() === 1 ) {
-        		plab.done = true;
-        		plab.trigger( 'done', [plab] );
-        		plab.stop();
-        	} else {
-        		plab.done = false;
-        	}
-
-        	return plab.done;
-        };  // End plab._finishIfDone()
+        };  // End plab._emitProgress()
 
         plab._skipDirection = function ( incrementors, frag ) {
         /* ( [ int, int, int ], str ) -> [ int, int, int ] of 0, 1, or -1
@@ -397,19 +507,32 @@
         };  // End plab._skipDirection()
 
 
-        plab._loop = function( incrementors, noDelay ) {
-        // https://jsfiddle.net/d1mgadeo/2/
-
+        plab._loop = function( incrementors, numRepeats, delayFunc ) {
+		/* ( [ [int, int, int], int, func ] )
+		* 
+		* `incrementors` will only be used for the first loop. loop calls itself
+		* with `null` as the first argument. Used with `._play()` and `skipVector`.
+		* `numRepeats`: `null` or `undefined` means "until done".
+		* `delayFunc`: Arguments give are the new fragment and the Playback instance.
+		* 
+		* All three arguments are optional
+		* 
+		* Uses the `stepper` to get a new fragment based on `incrementors`, then
+		* sends out an event with the fragment. Calls itself `numRepeats` number
+		* of times, pausing between each fragment for an amount of time returned
+		* by `delayFunc` or its default delay calculations
+		*/
 			plab.trigger( 'loopBegin', [plab] );
+
+			var done = plab._finishIfDone();
+			if ( done ) { return plab; }
     	    
-			// If, for example, calling the loop from the loop, just keep
-			// going in the same global direction. Allows for stuff like
-			// `._play()` to show current word, then keep going
-			incrementors = incrementors || plab._incrementors;  // ??: Too indirect?
-			var frag 	 = plab._stepper.getFragment( incrementors ),
-				// "$@skip@$" will be skipped. Can use transform for that and
-				// other stuff (like paragraph or space symbols)
-				frag 	 = state.playback.transformFragment( frag );
+			// Allows for stuff like `._play()` to show current word, then keep going
+			incrementors = incrementors || plab._incrementors;
+
+			var frag = plab._stepper.getFragment( incrementors ),
+				// "$@skip@$" will be returned to skip the fragment
+				frag = state.playback.transformFragment( frag );
 
 			// Skip 1 word in the right direction if needed
 			var skipVector = plab._skipDirection( incrementors, frag );  // [int, int, int] of -1, 0, or 1
@@ -417,25 +540,43 @@
     	    if ( skipVector !== null ) {
 
 				plab.trigger( 'loopSkip', [plab, frag] );
-    	    	plab._loop( skipVector, noDelay );
+    	    	plab._loop( skipVector, numRepeats, delayFunc );  // Don't decrease repeats
     	    
     	    } else {
 
-				if ( !noDelay ) {
-					// How long this word will remain on the screen before changing
-					var delay = plab._delayer.calcDelay( frag );  // TODO: for fastforward, modify speed
-					plab._timeoutID = setTimeout( plab._loop, delay );
+    	    	// How long this word fragment will remain on the screen before changing
+    	    	var delayFunc = delayFunc || plab._delayer.calcDelay,
+    	    		delay 	  = delayFunc( frag );
+    	    	// TODO: change string-time library - parameters for `.calcDelay()`
+    	    	// so that can pass in `frag` and `plab`
+
+    	    	// ??: Could do `if ( delay !== 0 )`, but does that conflate?
+
+				// Don't loop again if 0 repeats desired
+				if ( numRepeats !== 0 ) {
+
+					if ( numRepeats !== null && numRepeats !== undefined ) {
+						numRepeats -= 1;  // Count down the number of loops left
+					}
+
+					plab._timeoutID = setTimeout( function () {
+						plab._loop( null, numRepeats, delayFunc );
+					}, delay );
+
 				}
 
 				// Send fragment after setTimeout so that you can easily
-				// pause on "newWordFragment". Feels weird, though.
+				// pause on "newWordFragment" - pause kills the current
+				// `._timeoutID`. Feels weird, though.
 				plab.trigger( 'newWordFragment', [plab, frag] );
 				plab.trigger( 'loopFinish', [plab] );
 
     	    }  // end if skip fragment or not skip fragment
 
-			plab._sendProgress();
-			plab._finishIfDone();
+			plab._emitProgress();
+
+			// Need one at the end too?
+			// plab._finishIfDone();
 
 			return plab;  // Return timeout id instead?
         };  // End plab._loop()
