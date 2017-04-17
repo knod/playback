@@ -406,7 +406,7 @@
 		plab.once = function ( incrementors ) {
 
 			plab.trigger( 'onceBegin', [plab] );
-			plab._loop( incrementors, 0, function () { return 0; });
+			plab._loop( incrementors, function () { return 0; }, function () { return 0; });
 			plab.trigger( 'onceFinish', [plab] );
 
 			return plab;
@@ -507,18 +507,18 @@
         };  // End plab._skipDirection()
 
 
-        plab._loop = function( incrementors, numRepeats, delayFunc ) {
+        plab._loop = function( incrementors, calcRepeats, delayFunc ) {
 		/* ( [ [int, int, int], int, func ] )
 		* 
 		* `incrementors` will only be used for the first loop. loop calls itself
 		* with `null` as the first argument. Used with `._play()` and `skipVector`.
-		* `numRepeats`: `null` or `undefined` means "until done".
+		* `calcRepeats`: `null` or `undefined` means "until done".
 		* `delayFunc`: Arguments give are the new fragment and the Playback instance.
 		* 
 		* All three arguments are optional
 		* 
 		* Uses the `stepper` to get a new fragment based on `incrementors`, then
-		* sends out an event with the fragment. Calls itself `numRepeats` number
+		* sends out an event with the fragment. Calls itself `calcRepeats` number
 		* of times, pausing between each fragment for an amount of time returned
 		* by `delayFunc` or its default delay calculations
 		*/
@@ -540,27 +540,30 @@
     	    if ( skipVector !== null ) {
 
 				plab.trigger( 'loopSkip', [plab, frag] );
-    	    	plab._loop( skipVector, numRepeats, delayFunc );  // Don't decrease repeats
+    	    	plab._loop( skipVector, calcRepeats, delayFunc );  // Don't decrease repeats
     	    
     	    } else {
 
     	    	// How long this word fragment will remain on the screen before changing
-    	    	var delayFunc = delayFunc || plab._delayer.calcDelay,
+    	    	// TODO: Include provision for `state.playback.calcDelay()`?
+    	    	var delayFunc = delayFunc || state.playback.calcDelay || plab._delayer.calcDelay,
     	    		delay 	  = delayFunc( frag );
     	    	// TODO: change string-time library - parameters for `.calcDelay()`
     	    	// so that can pass in `frag` and `plab`
 
     	    	// ??: Could do `if ( delay !== 0 )`, but does that conflate?
 
-				// Don't loop again if 0 repeats desired
-				if ( numRepeats !== 0 ) {
 
-					if ( numRepeats !== null && numRepeats !== undefined ) {
-						numRepeats -= 1;  // Count down the number of loops left
-					}
+    	    	calcRepeats = calcRepeats || state.playback.calcRepeats || function () { return 1; };
+				// Don't loop again if 0 repeats desired
+				if ( calcRepeats && calcRepeats( plab ) !== 0 ) {
+
+					// if ( calcRepeats !== null && calcRepeats !== undefined ) {
+					// 	calcRepeats -= 1;  // Count down the number of loops left
+					// }
 
 					plab._timeoutID = setTimeout( function () {
-						plab._loop( null, numRepeats, delayFunc );
+						plab._loop( null, calcRepeats, delayFunc );
 					}, delay );
 
 				}
