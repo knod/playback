@@ -59,9 +59,8 @@
 			plab._isPlaying   = false;
 			plab._wasPlaying  = false;
 
-			// // For rewinding, ffding, resuming
-			// plab._direction  	= 'forward';
-			// plab._prevDirection = 'backward';
+			// For rewinding, ffding, playing
+			plab._direction  	= 'forward';
 
 			// Moving around
 			plab._jumping 	 	= false;
@@ -111,7 +110,7 @@
 
 			if ( eventName ) plab.trigger( eventName + 'Begin', [plab] );
 
-			plab._pause(null);
+			plab._pause( null );
 
 			plab.done = false;
 			// Just put the index at the right place
@@ -154,17 +153,22 @@
 			
 			plab._direction = 'forward';
 
-			if ( !plab._isPlaying ) {
+			if ( !plab._isPlaying ) {  // ??: could possibly just pause first instead
 				plab._isPlaying = true;
+				// Get current word first time, then get following fragments forever after
 				// plab._loop( [0, 0, 0], null, null );  // Show the current word first, then it will move on
 				plab._loop( [0, 0, 0], null, function () { return 1; } );  // Show the current word first, then it will move on
 			}
+
 			if ( eventName ) plab.trigger( eventName + 'Finish', [plab] );
 
 			return plab;
 		};  // End plab._play()
 
-		plab.play = function () {
+var debug;  // DEBUGGING
+		plab.play = function ( d ) {
+			debug = d;  // DEBUGGING
+			if (debug) { console.log('playing. done?:', plab.done)}
 			if ( plab.done ) { plab.restart(); }  // Comes back here after restarted
 			else { plab._play( 'play' ); }
 			return plab;
@@ -277,10 +281,10 @@
 
 		// =================== SCRUBBER BAR (probably) =================== \\
 
-		plab.jumpTo = function ( jumpToObj ) {
-		// Argument to pass in? 'previous sentence'? 'next sentence'?
-		// 'section of document'? An index number?
-		// ??: How to give useful feedback from this?
+		plab.jumpTo = function ( indx ) {
+		/* ( int ) -> Playback
+		* 
+		*/
 			if ( !plab._jumping ) {
 				plab._wasPlaying = plab._isPlaying;
 				plab._pause( null );
@@ -288,13 +292,13 @@
 			}
 
 			var oldIndex = plab.getIndex(),
-				newIndex = jumpToObj.index;
+				newIndex = indx;
 			plab.once( [0, newIndex - oldIndex, 0] );
 
 			return plab;
 		};  // End plab.jumpTo()
 
-		plab.disengageJumpTo = function () {
+		plab._disengageJumpTo = function () {
 			if ( plab._wasPlaying ) { plab._play( null ); }
 			plab._jumping = false;
 			return plab;
@@ -319,11 +323,9 @@
 		// 	elapsedIterations = Math.max( 1, elapsed );
 		// 	elapsedIterations = Math.max( 60, elapsed );
 
-		// 	// (1/x) + 200
-
 		// 	// var delay = defaultDelay - elapsed;
 		// 	// console.log(delay, elapsed, elapsed/20, (elapsed - elapsed/20))
-		// 	// xxx(15 - 0)/(60 - 10) = 0.3
+		// 	// xxx(15 - 0)/(10 - 60) = -0.3 (slope)
 		// 	// iteration 1: 0, iteration last: 15
 		// 	// delay start 1: 60, delay end: 10
 
@@ -406,7 +408,12 @@
 		plab.once = function ( incrementors ) {
 
 			plab.trigger( 'onceBegin', [plab] );
-			plab._loop( incrementors, function () { return 0; }, function () { return 0; });
+			var shouldRepeat = function () { return false; },
+				calcDelay 	 = function () { return 0; };
+			plab._loop( incrementors, shouldRepeat, calcDelay);
+
+			plab._disengageJumpTo();  // Just in case
+
 			plab.trigger( 'onceFinish', [plab] );
 
 			return plab;
@@ -507,25 +514,26 @@
         };  // End plab._skipDirection()
 
 
-        plab._loop = function( incrementors, calcRepeats, delayFunc ) {
+        plab._loop = function( incrementors, getShouldRepeat, delayFunc ) {
 		/* ( [ [int, int, int], int, func ] )
 		* 
 		* `incrementors` will only be used for the first loop. loop calls itself
 		* with `null` as the first argument. Used with `._play()` and `skipVector`.
-		* `calcRepeats`: `null` or `undefined` means "until done".
+		* `getShouldRepeat`: `null` or `undefined` means "until done".
 		* `delayFunc`: Arguments give are the new fragment and the Playback instance.
 		* 
 		* All three arguments are optional
 		* 
 		* Uses the `stepper` to get a new fragment based on `incrementors`, then
-		* sends out an event with the fragment. Calls itself `calcRepeats` number
+		* sends out an event with the fragment. Calls itself `getShouldRepeat` number
 		* of times, pausing between each fragment for an amount of time returned
 		* by `delayFunc` or its default delay calculations
 		*/
 			plab.trigger( 'loopBegin', [plab] );
 
-			var done = plab._finishIfDone();
-			if ( done ) { return plab; }
+			// var done = plab._finishIfDone();
+			// // if (debug) { console.log('done') }  // DEBUGGING
+			// if ( done ) { return plab; }
     	    
 			// Allows for stuff like `._play()` to show current word, then keep going
 			incrementors = incrementors || plab._incrementors;
@@ -540,7 +548,7 @@
     	    if ( skipVector !== null ) {
 
 				plab.trigger( 'loopSkip', [plab, frag] );
-    	    	plab._loop( skipVector, calcRepeats, delayFunc );  // Don't decrease repeats
+    	    	plab._loop( skipVector, getShouldRepeat, delayFunc );  // Don't decrease repeats
     	    
     	    } else {
 
@@ -549,21 +557,21 @@
     	    	var delayFunc = delayFunc || state.playback.calcDelay || plab._delayer.calcDelay,
     	    		delay 	  = delayFunc( frag );
     	    	// TODO: change string-time library - parameters for `.calcDelay()`
-    	    	// so that can pass in `frag` and `plab`
+    	    	// so that can pass in `frag` and `plab`, or `plab` and `frag`
 
     	    	// ??: Could do `if ( delay !== 0 )`, but does that conflate?
 
 
-    	    	calcRepeats = calcRepeats || state.playback.calcRepeats || function () { return 1; };
+    	    	getShouldRepeat = getShouldRepeat || state.playback.getShouldRepeat || function () { return true; };
 				// Don't loop again if 0 repeats desired
-				if ( calcRepeats && calcRepeats( plab ) !== 0 ) {
+				if ( getShouldRepeat && getShouldRepeat( plab, frag ) ) {
 
-					// if ( calcRepeats !== null && calcRepeats !== undefined ) {
-					// 	calcRepeats -= 1;  // Count down the number of loops left
+					// if ( getShouldRepeat !== null && getShouldRepeat !== undefined ) {
+					// 	getShouldRepeat -= 1;  // Count down the number of loops left
 					// }
 
 					plab._timeoutID = setTimeout( function () {
-						plab._loop( null, calcRepeats, delayFunc );
+						plab._loop( null, getShouldRepeat, delayFunc );
 					}, delay );
 
 				}
@@ -579,7 +587,7 @@
 			plab._emitProgress();
 
 			// Need one at the end too?
-			// plab._finishIfDone();
+			plab._finishIfDone();
 
 			return plab;  // Return timeout id instead?
         };  // End plab._loop()
