@@ -1,5 +1,7 @@
 
 xit("`.rewind()` at start, middle, end, then other stuff is called, then rewind is called again")
+xit("rewind triggers 'done' when it gets to the beginning")
+xit("rewind when already rewinding")
 
 describe("When Playback is", function() {
 // Includes `.play()`, `.start()`, `.restart()`, `.pause()`, `.stop()`, `.close()`
