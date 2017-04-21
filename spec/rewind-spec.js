@@ -1,8 +1,8 @@
 
 xit("`.rewind()` at start, middle, end, then other stuff is called, then rewind is called again")
-xit("rewind when already rewinding")
 
-describe("When Playback is", function() {
+// Slowing us down!
+xdescribe("When Playback is", function() {
 
 	var Playback = require( '../dist/Playback.js' );
 	var EventEmitter = require( '../node_modules/wolfy87-eventemitter/EventEmitter.js' );
@@ -43,6 +43,31 @@ describe("When Playback is", function() {
 	describe("created with valid values", function() {
 
 		describe("and `.rewind()` is called", function () {
+
+			describe("at the very start", function () {
+
+				var all, rewinding;
+				beforeEach(function ( done ) {
+
+					all = [];
+					rewinding = false;
+
+					state.emitter.on('newWordFragment', function (playback, frag) {
+						all.push( frag );
+					})
+
+					plab.rewind();
+
+					setTimeout(done, 500);
+
+				}, 1000);
+
+				it("it should just send the first word.", function () {
+					var result = [ 'Victorious,' ];
+					expect( all ).toEqual( result );
+				});
+
+			});
 
 			describe("at the start having just", function() {
 

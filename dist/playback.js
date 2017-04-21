@@ -59,8 +59,6 @@
 			// ?? `.userPressedPlay` + `.userPlay`? and `.userPause`?
 			plab._persistentAction 	= null;  // either 'play' or 'pause'
 			plab._currentAction 	= null;
-
-			// For rewinding, ffwding, playing
 			plab._direction 		= 'forward';
 			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
 

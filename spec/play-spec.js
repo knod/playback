@@ -4,15 +4,11 @@ xit("stopped at the start and end - and in the middle is ___ed")
 xit("jump, at 'startOnce', jump again, see what happens, esp if was playing before")
 
 /* Functions to test
+TODO:
 .process
 .getProgress
 .getLength
 .getIndex
-.restart
-.play
-.pause
-.stop
-.close
 .togglePlayPause
 .jumpWords
 .jumpSentences
@@ -21,8 +17,14 @@ xit("jump, at 'startOnce', jump again, see what happens, esp if was playing befo
 .prevWord
 .prevSentence
 .jumpTo
-.rewind
 .fastForward
+combos
+
+Partly done:
+.restart
+.play
+.pause, .stop, .close
+.rewind
 */
 
 /* Events to test

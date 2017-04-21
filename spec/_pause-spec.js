@@ -1,164 +1,284 @@
 
-describe("When Playback is", function() {
+var runPauseTests = function ( type ) {
 
-	var Playback = require( '../dist/Playback.js' );
-	var EventEmitter = require( '../node_modules/wolfy87-eventemitter/EventEmitter.js' );
+	describe("When Playback is", function() {
 
-	var plab, state, parsedText, forward;
+		// !!! WARNING: using `.restart()` instead of `.play()` because
+		// of conflicts with beforeEach() calls
 
+		var Playback = require( '../dist/Playback.js' );
+		var EventEmitter = require( '../node_modules/wolfy87-eventemitter/EventEmitter.js' );
 
-	beforeEach(function () {
-
-		state = {};
-
-		state.emitter = new EventEmitter();  // Now has events
-		state.stepper = { maxNumCharacters: 20 };
-		state.delayer = { slowStartDelay: 0, _baseDelay: 1 };  // Speed it up a bit for testing
-		state.playback = {};
-		// state.playback.transformFragment = function ( frag ) {
-		// 	var changed = frag.replace(/[\n\r]+/g, '$@skip@$');
-		// 	return changed;
-		// }
-		state.playback.transformFragment = function ( frag ) {
-			return frag;
-		}
-
-		parsedText = [
-			[ 'Victorious,', 'you','brave', 'flag.' ],
-			[ 'Delirious,', 'I', 'come', 'back.' ],
-			[ '\n' ],
-			[ 'Why,', 'oh', 'wattlebird?' ]
-		];
-
-		forward = parsedText[0].concat(parsedText[1].concat(parsedText[2]).concat(parsedText[3]));
-
-		plab = Playback( state );
-		plab.process( parsedText );
-	});
+		var plab, state, parsedText, forward;
 
 
-	describe("created with valid values", function() {
+		beforeEach(function () {
 
-		describe("and it's `.pause()`d in the middle", function () {
+			state = {};
 
-			var all, instance1, instance2;
-			beforeEach(function ( done ) {
+			state.emitter = new EventEmitter();  // Now has events
+			state.stepper = { maxNumCharacters: 20 };
+			state.delayer = { slowStartDelay: 0, _baseDelay: 1 };  // Speed it up a bit for testing
+			state.playback = {};
+			// state.playback.transformFragment = function ( frag ) {
+			// 	var changed = frag.replace(/[\n\r]+/g, '$@skip@$');
+			// 	return changed;
+			// }
+			state.playback.transformFragment = function ( frag ) {
+				return frag;
+			}
 
-				all = [];
+			parsedText = [
+				[ 'Victorious,', 'you','brave', 'flag.' ],
+				[ 'Delirious,', 'I', 'come', 'back.' ],
+				[ '\n' ],
+				[ 'Why,', 'oh', 'wattlebird?' ]
+			];
 
-				state.emitter.on('pauseBegin', function (playback) { instance1  = playback; });
-				state.emitter.on('pauseFinish', function (playback) { instance2  = playback; });
+			forward = parsedText[0].concat(parsedText[1].concat(parsedText[2]).concat(parsedText[3]));
 
-				state.emitter.on('newWordFragment', function (playback, frag) {
-					all.push( frag );
-					if ( frag === 'Delirious,' ) { plab.pause(); }
-				});
-
-				state.emitter.on( 'pauseFinish', function (playback) {
-					// Give time for other weird things to happen
-					setTimeout(function () { done() }, 100);
-				});
-
-				plab.play();
-
-			}, 200);
-
-
-			it("should send the 'pauseBegin' event with the Playback instance as an argument.", function() {
-				expect( instance1 ).toBe( plab );
-			});
-
-			it("should send the 'pauseFinish' event with the Playback instance as an argument.", function() {
-				expect( instance2 ).toBe( plab );
-			});
-
-			it("should only have sent some of the words.", function () {
-				var result = [ 'Victorious,', 'you','brave', 'flag.', 'Delirious,' ];
-				expect( all ).toEqual( result );
-			});
-
-		});  // End `.pause()`
-
-		describe("and it's `.stop()`d in the middle", function () {
-
-			var all, instance1, instance2;
-			beforeEach(function ( done ) {
-
-				all = [];
-
-				state.emitter.on('stopBegin', function (playback) { instance1  = playback; });
-				state.emitter.on('stopFinish', function (playback) { instance2  = playback; });
-
-				state.emitter.on('newWordFragment', function (playback, frag) {
-					all.push( frag );
-					if ( frag === 'Delirious,' ) { plab.stop(); }
-				});
-
-				state.emitter.on( 'stopFinish', function (playback) {
-					// Give time for other weird things to happen
-					setTimeout(function () { done() }, 100);
-				});
-
-				plab.play();
-
-			}, 200);
+			plab = Playback( state );
+			plab.process( parsedText );
+		});
 
 
-			it("should send the 'stopBegin' event with the Playback instance as an argument.", function() {
-				expect( instance1 ).toBe( plab );
-			});
+		describe("created with valid values", function() {
 
-			it("should send the 'stopFinish' event with the Playback instance as an argument.", function() {
-				expect( instance2 ).toBe( plab );
-			});
+			describe("and it's `." + type + "()`d", function () {
+				
+				describe("at the start", function () {
 
-			it("should only have sent some of the words.", function () {
-				var result = [ 'Victorious,', 'you','brave', 'flag.', 'Delirious,' ];
-				expect( all ).toEqual( result );
-			});
+					var all, instance1, instance2;
+					beforeEach(function ( done ) {
 
-		});  // End `.stop()`
+						all = [];
 
-		describe("and it's `.close()`d in the middle", function () {
+						state.emitter.on( type + 'Begin', function ( plbk ) { instance1 = plbk; });
+						state.emitter.on( type + 'Finish', function ( plbk ) { instance2 = plbk; });
 
-			var all, instance1, instance2;
-			beforeEach(function ( done ) {
+						state.emitter.on( type + 'Finish', function ( plbk ) {
+							// Give time for other weird things to happen
+							setTimeout(function () { done() }, 100);
+						});
 
-				all = [];
+						plab[ type ]();
 
-				state.emitter.on('closeBegin', function (playback) { instance1  = playback; });
-				state.emitter.on('closeFinish', function (playback) { instance2  = playback; });
-
-				state.emitter.on('newWordFragment', function (playback, frag) {
-					all.push( frag );
-					if ( frag === 'Delirious,' ) { plab.close(); }
-				});
-
-				state.emitter.on( 'closeFinish', function (playback) {
-					// Give time for other weird things to happen
-					setTimeout(function () { done() }, 100);
-				});
-
-				plab.play();
-
-			}, 200);
+					}, 150);
 
 
-			it("should send the 'closeBegin' event with the Playback instance as an argument.", function() {
-				expect( instance1 ).toBe( plab );
-			});
+					it("should send the " + type + "'Begin' event with the Playback instance as an argument.", function() {
+						expect( instance1 ).toBe( plab );
+					});
 
-			it("should send the 'closeFinish' event with the Playback instance as an argument.", function() {
-				expect( instance2 ).toBe( plab );
-			});
+					it("should send the " + type + "'Finish' event with the Playback instance as an argument.", function() {
+						expect( instance2 ).toBe( plab );
+					});
 
-			it("should only have sent some of the words.", function () {
-				var result = [ 'Victorious,', 'you','brave', 'flag.', 'Delirious,' ];
-				expect( all ).toEqual( result );
-			});
+					it("should have sent 0 words.", function () {
+						var result = [];
+						expect( all ).toEqual( result );
+					});
 
-		});  // End `.close()`
+					describe("repeatedly", function () {
 
-	});  // End "expected types"
+						var all, instance1, instance2;
+						beforeEach(function ( done ) {
 
-});  // End Playback
+							all = [];
+
+							state.emitter.on( type + 'Begin', function ( plbk ) { instance1 = plbk; });
+							state.emitter.on( type + 'Finish', function ( plbk ) { instance2 = plbk; });
+
+							state.emitter.on( type + 'Finish', function ( plbk ) {
+								// Give time for other weird things to happen
+								setTimeout(function () { done() }, 100);
+							});
+
+							plab[ type ]();
+							plab[ type ]();
+
+						}, 150);
+
+
+						it("should have sent 0 words.", function () {
+							var result = [];
+							expect( all ).toEqual( result );
+						});
+
+					});  // end repeatedly
+
+				});  // end at the start
+				
+				describe("in the middle", function () {
+
+					describe("while already playing", function () {
+
+						var all, instance1, instance2;
+						beforeEach(function ( done ) {
+
+							all = [];
+
+							state.emitter.on( type + 'Begin', function ( plbk ) { instance1 = plbk; });
+							state.emitter.on( type + 'Finish', function ( plbk ) { instance2 = plbk; });
+
+							state.emitter.on('newWordFragment', function ( plbk, frag ) {
+								all.push( frag );
+								if ( frag === 'Delirious,' ) { plab[ type ](); }
+							});
+
+							state.emitter.on( type + 'Finish', function ( plbk ) {
+								// Give time for other weird things to happen
+								setTimeout(function () { done() }, 100);
+							});
+
+							plab.restart();
+
+						}, 150);
+
+
+						it("should send the " + type + "'Begin' event with the Playback instance as an argument.", function() {
+							expect( instance1 ).toBe( plab );
+						});
+
+						it("should send the " + type + "'Finish' event with the Playback instance as an argument.", function() {
+							expect( instance2 ).toBe( plab );
+						});
+
+						it("should only have sent some of the words.", function () {
+							var result = [ 'Victorious,', 'you','brave', 'flag.', 'Delirious,' ];
+							expect( all ).toEqual( result );
+						});
+
+						describe("repeatedly", function () {
+
+							var all, instance1, instance2;
+							beforeEach(function ( done ) {
+
+								all = [];
+
+								state.emitter.on( type + 'Begin', function ( plbk ) { instance1 = plbk; });
+								state.emitter.on( type + 'Finish', function ( plbk ) { instance2 = plbk; });
+
+								state.emitter.on('newWordFragment', function ( plbk, frag ) {
+									all.push( frag );
+									if ( frag === 'Delirious,' ) {
+										plab[ type ]();
+										plab[ type ]();
+									}
+								});
+
+								state.emitter.on( type + 'Finish', function ( plbk ) {
+									// Give time for other weird things to happen
+									setTimeout(function () { done() }, 100);
+								});
+
+								plab.restart();
+
+							}, 150);
+
+
+							it("should only have sent some of the words.", function () {
+								var result = [ 'Victorious,', 'you','brave', 'flag.', 'Delirious,' ];
+								expect( all ).toEqual( result );
+							});
+
+						});  // end repeatedly
+
+					});  // end while already playing
+
+				});  // end in the middle
+
+				describe("at the end", function () {
+
+					describe("while already playing", function () {
+
+						var all, instance1, instance2;
+						beforeEach(function ( done ) {
+
+							all = [];
+
+							state.emitter.on( type + 'Begin', function ( plbk ) { instance1 = plbk; });
+							state.emitter.on( type + 'Finish', function ( plbk ) { instance2 = plbk; });
+
+							state.emitter.on( type + 'Finish', function ( plbk ) {
+								// Give time for other weird things to happen
+								setTimeout(function () { done() }, 100);
+							});
+
+							state.emitter.on('newWordFragment', function ( plbk, frag) {
+								all.push( frag );
+							});
+
+							state.emitter.on( 'done', function () {
+								plab[ type ]();
+							});
+
+							plab.restart();
+
+						}, 150);
+
+
+						it("should send the " + type + "'Begin' event with the Playback instance as an argument.", function() {
+							expect( instance1 ).toBe( plab );
+						});
+
+						it("should send the " + type + "'Finish' event with the Playback instance as an argument.", function() {
+							expect( instance2 ).toBe( plab );
+						});
+
+						it("should just send all the words.", function () {
+							var result = forward;
+							expect( all ).toEqual( result );
+						});
+
+						describe("repeatedly", function () {
+
+							var all, instance1, instance2;
+							beforeEach(function ( done ) {
+
+								all = [];
+
+								state.emitter.on( type + 'Begin', function ( plbk ) { instance1 = plbk; });
+								state.emitter.on( type + 'Finish', function ( plbk ) { instance2 = plbk; });
+
+								state.emitter.on( type + 'Finish', function ( plbk ) {
+									// Give time for other weird things to happen
+									setTimeout(function () { done() }, 100);
+								});
+
+								state.emitter.on('newWordFragment', function ( plbk, frag) {
+									all.push( frag );
+								});
+
+								state.emitter.on( 'done', function () {
+									plab[ type ]();
+									plab[ type ]();
+								});
+
+								plab.restart();
+
+							}, 150);
+
+
+							it("should just send all the words.", function () {
+								var result = forward;
+								expect( all ).toEqual( result );
+							});
+
+						});  // end repeatedly
+
+					});  // end while already playing
+
+				});  // end at the end
+
+			});  // End `.type()`
+
+		});  // End "expected types"
+
+	});  // End Playback
+
+};  // End runPauseTests()
+
+runPauseTests('pause');
+runPauseTests('stop');
+runPauseTests('close');
