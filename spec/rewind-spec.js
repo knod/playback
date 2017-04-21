@@ -1,5 +1,7 @@
 
 xit("`.rewind()` at start, middle, end, then other stuff is called, then rewind is called again")
+xit("rewind triggers 'done' when it gets to the beginning")
+xit("rewind when already rewinding")
 
 describe("When Playback is", function() {
 // Includes `.play()`, `.start()`, `.restart()`, `.pause()`, `.stop()`, `.close()`
@@ -44,9 +46,9 @@ describe("When Playback is", function() {
 
 		describe("and `.rewind()` is called", function () {
 
-			describe("at the start while", function() {
+			describe("at the start having just", function() {
 
-				describe("`.play()`ing", function() {
+				describe("`.play()`ed", function() {
 
 					var all = [];
 					var rewinding = false;
@@ -56,20 +58,21 @@ describe("When Playback is", function() {
 							all.push( frag );
 						})
 
+						plab.play();
 						plab.rewind();
 
 						setTimeout(done, 500);
 
 					}, 2000);
 
-					it("should send nothing back, then send words, moving forwards, till the end.", function() {
-						var result = []
+					it("should send the first word three times (play, rewind, play again), then send words, moving forwards, till the end.", function() {
+						var result = ['Victorious,', 'Victorious,'].concat( forward );
 						expect( all ).toEqual( result );
 					});
 
 				});  // End while playing
 				
-				xdescribe("paused", function() {
+				xdescribe("paused/stopped", function() {
 
 				});  // End while paused
 
