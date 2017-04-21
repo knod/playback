@@ -53,8 +53,8 @@
 			plab._stepper = RealStepperConstr( state.stepper );
 			plab._delayer = RealDelayerConstr( state.delayer );
 
-			plab.done = false;
-			plab._timeoutID  		= null;
+			plab.done 		= false;
+			plab._timeoutID = null;
 
 			// ?? `.userPressedPlay` + `.userPlay`? and `.userPause`?
 			plab._persistentAction 	= null;  // either 'play' or 'pause'
