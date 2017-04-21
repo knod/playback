@@ -53,18 +53,16 @@
 			plab._stepper = RealStepperConstr( state.stepper );
 			plab._delayer = RealDelayerConstr( state.delayer );
 
-			plab.done 		  = false;
+			plab.done = false;
+			plab._timeoutID  		= null;
 
-			plab._timeoutID   = null;
-			plab._isPlaying   = false;
-			plab._wasPlaying  = false;
+			// ?? `.userPressedPlay` + `.userPlay`? and `.userPause`?
+			plab._persistentAction 	= null;  // either 'play' or 'pause'
+			plab._currentAction 	= null;
 
-			// For rewinding, ffding, playing
-			plab._direction  	= 'forward';
-
-			// Moving around
-			plab._jumping 	 	= false;
-			plab._incrementors 	= [0, 0, 1];  // This is a regular 1 step forward move
+			// For rewinding, ffwding, playing
+			plab._direction 		= 'forward';
+			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
 
 			return plab;
 		};  // End plab._init()
@@ -124,11 +122,13 @@
 		
 		// // Bring back if it becomes useful again
 		// plab.start = function () {
+		// 	plab._persistentAction = 'play';
 		// 	plab._restart( 'start' );
 		// 	return plab;
 		// };  // End plab.start()
 
 		plab.restart = function () {
+			plab._persistentAction = 'play';
 			plab._restart( 'restart' );
 			return plab;
 		};
@@ -154,8 +154,8 @@
 			
 			plab._direction = 'forward';
 
-			if ( !plab._isPlaying ) {  // ??: could possibly just pause first instead
-				plab._isPlaying = true;
+			if ( plab._currentAction !== 'play' ) {  // ??: could possibly just pause first instead
+				plab._currentAction = 'play';
 				// Get current word first time, then get following fragments forever after
 				// plab._loop( [0, 0, 0], null, null );  // Show the current word first, then it will move on
 				plab._loop( [0, 0, 0], null, function () { return 1; } );  // Show the current word first, then it will move on
@@ -170,10 +170,14 @@ var debug;  // DEBUGGING
 		plab.play = function ( d ) {
 			debug = d;  // DEBUGGING
 			// if (debug) { console.log('playing. done?:', plab.done)}
+			plab._persistentAction = 'play';
 			if ( plab.done ) { plab.restart(); }  // Comes back here after restarted
 			else { plab._play( 'play' ); }
 			return plab;
 		};  // End plab.play()
+
+		// ??: Include `.open()` as a proxy for `.play()`?
+		// ??: Also `.start()`?
 
 
 
@@ -186,7 +190,7 @@ var debug;  // DEBUGGING
 			if ( eventName ) plab._trigger( eventName + 'Begin', [plab] );
 
 			clearTimeout( plab._timeoutID );  // Needed? Maybe more immediate.
-			plab._isPlaying = false;
+			plab._currentAction = 'pause';
 			// Start slow when next go through loop (restore countdown)
 			plab._delayer.resetSlowStart();
 
@@ -197,20 +201,24 @@ var debug;  // DEBUGGING
 
 		// Names for "pause":
 		plab.pause = function () {
+			plab._persistentAction = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
 			plab._pause( 'pause' );
 			return plab;
 		};
-		plab.stop = function () {
+		plab.stop = function () {  // ??: plab._persistentAction = 'pause';
+			plab._persistentAction = 'pause';
 			plab._pause( 'stop' );
 			return plab;
 		};
-		plab.close = function () {
+		plab.close = function () {  // ??: plab._persistentAction = 'pause';
+			plab._persistentAction = 'pause';
 			plab._pause( 'close' );
 			return plab;
 		};
 
+
 		plab.togglePlayPause = function () {
-			if (plab._isPlaying) { plab.pause(); }
+			if (plab._currentAction === 'play' ) { plab.pause(); }
 			else { plab.play(); }
 			return plab;
 		};
@@ -231,11 +239,12 @@ var debug;  // DEBUGGING
 
 			plab._pause( null );
 
-			if ( plab._wasPlaying ) { plab._play(); }  // this is the key difference from _pause()
+			var wasPlaying = plab._persistentAction === 'play';
+			if ( wasPlaying ) { plab._play(); }  // this is the key difference from _pause()
 
 			plab._trigger( 'resumeFinish', [plab] );
 
-			return plab._wasPlaying;
+			return wasPlaying;
 		};  // End plab._resumeIfWasPlaying()
 
 
@@ -246,11 +255,21 @@ var debug;  // DEBUGGING
 
 			plab._trigger( 'onceBegin', [plab] );
 
+			// if ( plab._currentAction !== 'jump' ) {
+				plab._pause( null );
+				plab._currentAction = 'jump';
+			// }
+
+			// ??: Have `.jumpTo` logic in here instead?
+
 			var shouldRepeat = function () { return false; },
 				calcDelay 	 = function () { return 0; };
 			plab._loop( incrementors, shouldRepeat, calcDelay);
 
 			plab._trigger( 'onceFinish', [plab] );
+
+			// ??: After event sent or before?
+			plab._resumeIfWasPlaying();
 
 			return plab;
 		};  // End plab.once()
@@ -259,31 +278,13 @@ var debug;  // DEBUGGING
 
 		// ========== NAVIGATE (arrow keys and other) ========== \\
 
-		plab._oneJumpNoDelay = function ( changes ) {
-
-			// If `._jumping`, `._isPlaying` will be false, but it might have
-			// been true before, so it would be a false negative
-			// if ( !plab._jumping ) {
-				plab._wasPlaying = plab._isPlaying;
-				plab._pause( null );
-				plab._jumping = true;
-			// }
-
-			plab.once( changes );
-
-			plab._jumping = false;
-			plab._resumeIfWasPlaying();
-
-			return plab;
-		};  // End plab._oneJumpNoDelay()
-
 		plab.jumpWords = function ( numToJump ) {
 			numToJump = numToJump || 1;
 			
 			if ( numToJump < 0 ) { plab._direction = 'back'; }
 			else { plab._direction = 'forward'; }
 
-			plab._oneJumpNoDelay( [0, numToJump, 0] );
+			plab.once( [0, numToJump, 0] );
 			return plab;
 		};
 		plab.jumpSentences = function ( numToJump ) {
@@ -292,7 +293,7 @@ var debug;  // DEBUGGING
 			if ( numToJump < 0 ) { plab._direction = 'back'; }
 			else { plab._direction = 'forward'; }
 
-			plab._oneJumpNoDelay( [numToJump, 0, 0] );
+			plab.once( [numToJump, 0, 0] );
 			return plab;
 		};
 
@@ -303,25 +304,23 @@ var debug;  // DEBUGGING
 
 
 
-		// =================== SCRUBBER BAR (probably) =================== \\
+		// =================== SCRUBBER BAR (probably, and maybe scrolling) =================== \\
 
 		plab.jumpTo = function ( indx ) {
 		/* ( int ) -> Playback
 		* 
 		*/
-			// If `._jumping`, `._isPlaying` will be false, but it might have
-			// been true before, so it would be a false negative
-			if ( !plab._jumping ) {
-				plab._wasPlaying = plab._isPlaying;
-				// Have to pause first so index doesn't change
-				plab._pause( null );
-				plab._jumping = true;
-			}
+			// if ( plab._currentAction !== 'jump' ) {
+			// 	// Have to pause first so index doesn't change
+			// 	plab._currentAction = 'jump';
+			// 	plab._pause( null );
+			// }
 
-			var oldIndex = plab.getIndex(),
-				newIndex = indx;
+			// var oldIndex = plab.getIndex(),
+			// 	newIndex = indx;
 
-			plab._oneJumpNoDelay( [0, newIndex - oldIndex, 0] );
+			// plab.once( [0, newIndex - oldIndex, 0] );
+			plab.once( indx );
 
 			return plab;
 		};  // End plab.jumpTo()
@@ -367,58 +366,66 @@ var debug;  // DEBUGGING
 			return 20;
 		};
 
-		plab.rewind = function ( accelerateFunc ) {
+		plab.rewind = function ( accelerateOverride ) {
 		/* ( [ func ] ) -> Playback
 		* 
-		* Goes backward, acceleration controled by `accelerateFunc()` or
-		* `state` or internal equivalent. (`accelerateFunc()` takes precedent,
+		* Goes backward, acceleration controled by `accelerateOverride()` or
+		* `state` or internal equivalent. (`accelerateOverride()` takes precedent,
 		* with next fallback being `state.playback.accelerate()`, then internal
 		* `.accelerate()`)
 		* Default currently just a steady speed.
 		* 
 		* TODO: What happens when rewind and then `.jumpWord()` in the middle?
 		*/
-			plab._trigger( 'rewindBegin', [plab] );
+			if ( plab._currentAction !== 'rewind' ) {
 
-			plab._wasPlaying = plab._isPlaying;
-			plab._pause( null );
+				plab._trigger( 'rewindBegin', [plab] );
 
-			plab._incrementors = [0, -1, 0];
-			plab._direction = 'back';
+				plab._pause( null );
 
-			var accelerateFunc = accelerateFunc || state.playback.accelerate || plab._accelerate;
+				plab._incrementors = [0, -1, 0];
+				plab._direction = 'back';
+				plab._currentAction = 'rewind';
 
-			plab._loop( null, null, accelerateFunc );  // Show the current word first, then it will move on
+				var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
 
-			plab._trigger( 'rewindFinish', [plab] );
+				plab._loop( null, null, accelerate );  // Show the current word first, then it will move on
+
+				plab._trigger( 'rewindFinish', [plab] );
+
+			}
 
 			return plab;
 		};  // end plab.rewind()
 
 
-		plab.fastForward = function ( accelerateFunc ) {
+		plab.fastForward = function ( accelerateOverride ) {
 		/* ( [ func ] ) -> Playback
 		* 
-		* Goes forward, acceleration controled by `accelerateFunc()` or
-		* `state` or internal equivalent. (`accelerateFunc()` takes precedent,
+		* Goes forward, acceleration controled by `accelerateOverride()` or
+		* `state` or internal equivalent. (`accelerateOverride()` takes precedent,
 		* with next fallback being `state.playback.accelerate()`, then internal
 		* `.accelerate()`)
 		* 
 		* Default currently just a steady speed.
 		*/
-			plab._trigger( 'fastForwardBegin', [plab] );
+			if ( plab._currentAction !== 'fastForward' ) {
 
-			plab._wasPlaying = plab._isPlaying;
-			plab._pause( null );
+				plab._trigger( 'fastForwardBegin', [plab] );
 
-			plab._incrementors = [0, 1, 0];
-			plab._direction = 'forward';
+				plab._pause( null );
 
-			var accelerateFunc = accelerateFunc || state.playback.accelerate || plab._accelerate;
+				plab._incrementors = [0, 1, 0];
+				plab._direction = 'forward';
+				plab._currentAction = 'fastForward';
 
-			plab._loop( null, null, accelerateFunc );  // Show the current word first, then it will move on
+				var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
 
-			plab._trigger( 'fastForwardFinish', [plab] );
+				plab._loop( null, null, accelerate );  // Show the current word first, then it will move on
+
+				plab._trigger( 'fastForwardFinish', [plab] );
+
+			}
 
 			return plab;
 		};  // end plab.fastForward()
@@ -444,7 +451,7 @@ var debug;  // DEBUGGING
         		isDone = !plab._resumeIfWasPlaying();  
 	    	}
 
-	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'?
+	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'? 'doneBegin', 'doneFinish'?
 	        if ( isDone ) {
 				plab.done = true;
 				plab.stop();
@@ -470,7 +477,7 @@ var debug;  // DEBUGGING
         plab._emitProgress = function () {
         /* () -> Playback
         * 
-        * Just trigger the progress event with the right progress
+        * Just trigger the progress event with the right progress fraction
         */
 	        plab._trigger( 'progress', [plab, plab.getProgress()] );
 	        return plab;
@@ -492,6 +499,7 @@ var debug;  // DEBUGGING
 			// var noWhitespace = chars.replace( plab._whitespaceRegex, '' );
 
 			// Skip our special symbols ( "$@skip@$" )
+			// TODO: ??: use state property with a fallback?
 			if ( frag === '$@skip@$' ) {
 
 				vector = [0, 0, 0];  // Need to be able to manipulate an array
@@ -523,22 +531,18 @@ var debug;  // DEBUGGING
 		* 
 		* `incrementors` will only be used for the first loop. loop calls itself
 		* with `null` as the first argument. Used with `._play()` and `skipVector`.
-		* `checkRepeatOverride`: `null` or `undefined` means "until done".
-		* `calcDelayOverride`: Arguments give are the new fragment and the Playback instance.
+		* `checkRepeatOverride`: `null` or `undefined` means "until done". Given fragment and instance.
+		* `calcDelayOverride`: Argument given is the new fragment. Future maybe Playback instance.
 		* 
 		* All three arguments are optional
 		* 
 		* Uses the `stepper` to get a new fragment based on `incrementors`, then
-		* sends out an event with the fragment. Calls itself `checkRepeatOverride` number
-		* of times, pausing between each fragment for an amount of time returned
-		* by `calcDelayOverride` or its default delay calculations
+		* sends out an event with the fragment. Calls itself until `checkRepeat`
+		* returns false, pausing between each fragment for an amount of time returned
+		* by `calcDelayOverride`, `state.clacDelay()`, or its own default.
 		*/
 			plab._trigger( 'loopBegin', [plab] );
 
-			// var done = plab._finishIfDone();
-			// // if (debug) { console.log('done') }  // DEBUGGING
-			// if ( done ) { return plab; }
-    	    
 			// Allows for stuff like `._play()` to show current word, then keep going
 			incrementors = incrementors || plab._incrementors;
 
@@ -553,12 +557,12 @@ var debug;  // DEBUGGING
 
     	    	// TODO: ??: Also add 'loopSkipFinish'? (with 'loopSkipBegin')
 				plab._trigger( 'loopSkip', [plab, frag] );
-    	    	plab._loop( skipVector, checkRepeatOverride, calcDelay );  // Don't decrease repeats
+    	    	plab._loop( skipVector, checkRepeatOverride, calcDelayOverride );  // Don't decrease repeats
     	    
     	    } else {
 
     	    	// How long this word fragment will remain on the screen before changing
-    	    	var calcDelay = calcDelay || state.playback.calcDelay || plab._delayer.calcDelay,
+    	    	var calcDelay = calcDelayOverride || state.playback.calcDelay || plab._delayer.calcDelay,
     	    		delay 	  = calcDelay( frag );
     	    	// TODO: change string-time library - parameters for `.calcDelay()`
     	    	// so that can pass in `frag` and `plab`, or `plab` and `frag`
