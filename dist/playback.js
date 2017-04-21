@@ -251,7 +251,7 @@ var debug;  // DEBUGGING
 
 		plab.once = function ( incrementors ) {
 
-			plab._trigger( 'onceBegin', [plab] );
+			plab._trigger( 'onceBegin', [plab] );  // ??: 'jumpBegin'?
 
 			// if ( plab._currentAction !== 'jump' ) {
 				plab._pause( null );
@@ -264,7 +264,7 @@ var debug;  // DEBUGGING
 				calcDelay 	 = function () { return 0; };
 			plab._loop( incrementors, shouldRepeat, calcDelay);
 
-			plab._trigger( 'onceFinish', [plab] );
+			plab._trigger( 'onceFinish', [plab] );  // ??: 'jumpFinish'?
 
 			// ??: After event sent or before?
 			plab._resumeIfWasPlaying();
