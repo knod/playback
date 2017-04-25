@@ -11,6 +11,7 @@
 * TODO;
 * - Speed up with long duration of ff or rewind
 * - `.rewind()` base speed as state property
+* - ??: Should `.restart()` trigger 'playBegin' and 'playFinish'
 * 
 * DEVELOPMENT NOTES/GUIDES:
 * - Where possible, return Playback so functions can be chained
@@ -56,9 +57,8 @@
 			plab.done 		= false;
 			plab._timeoutID = null;
 
-			// ?? `.userPressedPlay` + `.userPlay`? and `.userPause`?
-			plab._persistentAction 	= null;  // either 'play' or 'pause'
-			plab._currentAction 	= null;
+			plab._persistentAction 	= 'pause';  // either 'play' or 'pause'
+			plab._currentAction 	= 'pause';
 			plab._direction 		= 'forward';
 			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
 
@@ -102,18 +102,45 @@
 
 		// ============== FLOW CONTROL ============== \\
 
-		plab._restart = function ( eventName ) {
-
-			if ( eventName ) plab._trigger( eventName + 'Begin', [plab] );
-
+		plab._reset = function () {
+		/* () -> Playback
+		* 
+		* Returns to initial values
+		*/
 			plab._pause( null );
 
-			plab.done = false;
+			plab.done 		= false;
+			plab._timeoutID = null;
+
+			plab._persistentAction 	= 'pause';  // either 'play' or 'pause'
+			plab._currentAction 	= 'pause';
+			plab._direction 		= 'forward';
+			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
+
 			// Just put the index at the right place
 			plab._stepper.restart();
-			plab.play();  // Also sends "play" events
 
-			if ( eventName ) plab._trigger( eventName + 'Finish', [plab] );
+			return plab;
+		};  // End plab._reset()
+
+		plab.reset = function () {
+		/* () -> Playback
+		* 
+		* Returns to initial values, sends first fragment
+		*/
+			plab._trigger( 'resetBegin', [plab] );
+			plab._reset();
+			plab.once( 0 );  // Send first fragment
+			plab._trigger( 'resetFinish', [plab] );
+			return plab;
+		};
+
+		plab._restart = function ( eventName ) {
+
+			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
+			plab._reset();
+			plab._play();  // Also sends "play" events
+			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
 
 			return plab;
 		};  // End plab._restart()
@@ -132,7 +159,7 @@
 		};
 
 
-
+var count = 1;
 		// ??: 'playing' event should go off every time, but if we're
 		// restarting without pausing first (pausing would trigger visual
 		// feedback about pausing), then should the event not happen? That
@@ -143,32 +170,35 @@
 		* 
 		* For all 'play'-like activities
 		*/
+			if ( debug ) { console.log('count:', count, eventName); }  // DEBUGGING
+			count++;  // DEBUGGING
 			// "play" will always be forward
-			// ??: Here so can be changed ever event?
+			// ??: Here so can be changed no matter the event?
 			plab._incrementors = [0, 0, 1];
 			// notStartedAccYet = true;  // Temp
 
-			if ( eventName ) plab._trigger( eventName + 'Begin', [plab] );
+			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
 			
 			plab._direction = 'forward';
 
 			if ( plab._currentAction !== 'play' ) {  // ??: could possibly just pause first instead
 				plab._currentAction = 'play';
 				// Get current word first time, then get following fragments forever after
-				// plab._loop( [0, 0, 0], null, null );  // Show the current word first, then it will move on
-				plab._loop( [0, 0, 0], null, function () { return 1; } );  // Show the current word first, then it will move on
+				plab._loop( [0, 0, 0], null, null );  // Show the current word first, then it will move on
+				// plab._loop( [0, 0, 0], null, function () { return 1; } );  // Show the current word first, then it will move on
 			}
 
-			if ( eventName ) plab._trigger( eventName + 'Finish', [plab] );
+			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
 
 			return plab;
 		};  // End plab._play()
 
 var debug;  // DEBUGGING
-		plab.play = function ( d ) {
+		plab.play = function ( frag, d ) {
 			debug = d;  // DEBUGGING
-			// if (debug) { console.log('playing. done?:', plab.done)}
+			if (debug) { console.log('playing. done?:', plab.done)}
 			plab._persistentAction = 'play';
+			// if ( debug ) { console.log( 'done?', plab.done ); }  // DEBUGGING
 			if ( plab.done ) { plab.restart(); }  // Comes back here after restarted
 			else { plab._play( 'play' ); }
 			return plab;
@@ -185,14 +215,14 @@ var debug;  // DEBUGGING
 		* 
 		* For all 'pause'-like activities
 		*/ 
-			if ( eventName ) plab._trigger( eventName + 'Begin', [plab] );
+			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
 
 			clearTimeout( plab._timeoutID );  // Needed? Maybe more immediate.
 			plab._currentAction = 'pause';
 			// Start slow when next go through loop (restore countdown)
 			plab._delayer.resetSlowStart();
 
-			if ( eventName ) plab._trigger( eventName + 'Finish', [plab] );
+			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
 
 			return plab;
 		};  // End plab._pause()
@@ -216,7 +246,8 @@ var debug;  // DEBUGGING
 
 
 		plab.togglePlayPause = function () {
-			if (plab._currentAction === 'play' ) { plab.pause(); }
+			// Use `._persistentAction` instead?
+			if ( plab._currentAction !== 'pause' ) { plab.pause(); }
 			else { plab.play(); }
 			return plab;
 		};
@@ -225,7 +256,7 @@ var debug;  // DEBUGGING
 
 		// ========== RESUME ========== \\
 
-		plab._resumeIfWasPlaying = function () {
+		plab.resume = function () {
 		/* () -> Bool
 		* 
 		* Returns true if resumed playing, false if stopped
@@ -243,7 +274,7 @@ var debug;  // DEBUGGING
 			plab._trigger( 'resumeFinish', [plab] );
 
 			return wasPlaying;
-		};  // End plab._resumeIfWasPlaying()
+		};  // End plab.resume()
 
 
 
@@ -262,12 +293,12 @@ var debug;  // DEBUGGING
 
 			var shouldRepeat = function () { return false; },
 				calcDelay 	 = function () { return 0; };
-			plab._loop( incrementors, shouldRepeat, calcDelay);
+			plab._loop( incrementors, shouldRepeat, calcDelay );
 
 			plab._trigger( 'onceFinish', [plab] );  // ??: 'jumpFinish'?
 
 			// ??: After event sent or before?
-			plab._resumeIfWasPlaying();
+			plab.resume();
 
 			return plab;
 		};  // End plab.once()
@@ -277,7 +308,7 @@ var debug;  // DEBUGGING
 		// ========== NAVIGATE (arrow keys and other) ========== \\
 
 		plab.jumpWords = function ( numToJump ) {
-			numToJump = numToJump || 1;
+			// TODO: Should probably give beginning of current word on 0
 			
 			if ( numToJump < 0 ) { plab._direction = 'back'; }
 			else { plab._direction = 'forward'; }
@@ -286,7 +317,7 @@ var debug;  // DEBUGGING
 			return plab;
 		};
 		plab.jumpSentences = function ( numToJump ) {
-			numToJump = numToJump || 1;
+			// TODO: Should probably give beginning of current sentence on 0
 			
 			if ( numToJump < 0 ) { plab._direction = 'back'; }
 			else { plab._direction = 'forward'; }
@@ -439,14 +470,15 @@ var debug;  // DEBUGGING
 		* prepare for a possible restart. Otherwise save not
 		* done.
         */
-        	var isDone;
+        	var isDone = false;
 
         	// Stop if we've reached the end
         	if ( plab._direction !== 'back' && plab.getProgress() === 1 ) {
         		isDone = true;
         	} else if ( plab._direction === 'back' && plab.getIndex() === 0 ) {
         		// Check if resumed playing. If not resumed, done.
-        		isDone = !plab._resumeIfWasPlaying();  
+        		plab.resume();  
+        		if ( plab._persistentAction !== 'play' ) { isDone = true; }
 	    	}
 
 	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'? 'doneBegin', 'doneFinish'?
@@ -540,9 +572,16 @@ var debug;  // DEBUGGING
 		* by `calcDelayOverride`, `state.clacDelay()`, or its own default.
 		*/
 			plab._trigger( 'loopBegin', [plab] );
+			if ( debug ) { console.log('loop begins', incrementors) }
 
 			// Allows for stuff like `._play()` to show current word, then keep going
-			incrementors = incrementors || plab._incrementors;
+			// If incrementors is an index number
+			if ( typeof incrementors === 'number' && incrementors >= 0 ) {
+				// Do nothing, `incrementors` is good as it is
+				// This allows `incrementors` to be 0
+			} else {
+				incrementors = incrementors || plab._incrementors;
+			}
 
 			var frag = plab._stepper.getFragment( incrementors ),
 				// "$@skip@$" will be returned to skip the fragment

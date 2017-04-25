@@ -2,7 +2,7 @@
 xit("`.rewind()` at start, middle, end, then other stuff is called, then rewind is called again")
 
 // Slowing us down!
-xdescribe("When Playback is", function() {
+describe("When Playback is", function() {
 
 	var Playback = require( '../dist/Playback.js' );
 	var EventEmitter = require( '../node_modules/wolfy87-eventemitter/EventEmitter.js' );

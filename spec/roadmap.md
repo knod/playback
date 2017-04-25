@@ -1,13 +1,25 @@
 # Specs
 
 
+## Other Questions
+- Do I need to wait a bit after finishing each test to make sure that nothing unexpected happens after?
+
+
+## Fragments
+- Multi-fragment word at start
+- Single fragment word at start
+- Multi-fragment word at end
+- Single fragment word at end
+
+
 ## Single function calls
 - At start
   - .process
 
 - At runtime
-  - [partly done] .restart
   - [partly done] .play
+  - .reset
+  - [partly done] .restart
   - [partly done] .pause, .stop, .close (proxies/variants for each other)
   - [partly done] .rewind
   - .fastForward
@@ -26,20 +38,21 @@
 
 ## Events
 
-- 'restartBegin', 'restartFinish'
 - 'playBegin', 'playFinish'
+- 'resetBegin', 'resetFinish'
+- 'restartBegin', 'restartFinish'
 - 'pauseBegin', 'pauseFinish'
 - 'stopBegin', 'stopFinish'
 - 'closeBegin', 'closeFinish'
-- 'resumeBegin', 'resumeFinish'
 - 'onceBegin', 'onceFinish'
+- 'resumeBegin', 'resumeFinish'
 - 'rewindBegin', 'rewindFinish'
 - 'fastForwardBegin', 'fastForwardFinish'
 - 'loopBegin', 'loopFinish'
 - 'newWordFragment'
-- 'done'
-- 'progress'
 - 'loopSkip'
+- 'progress'
+- 'done'
 
 
 ## State Properties
@@ -58,10 +71,11 @@
   - state.playback.checkRepeat()
 
 
-## Functions once (at very start, no events)
+## Single Functions (at very start, no events)
 
-- .restart
 - .play
+- .reset
+- .restart
 - .pause, .stop, .close (proxies/variants for each other)
 - .rewind
 - .fastForward
@@ -78,7 +92,16 @@
 - .getIndex
 
 
-## Function self-combos (at different events)
+## Function Self-Combos (at different events)
+_??: At beginning, middle, and end? At sentence and word boundries?_
+
+- .play(), .play() again at 'playBegin'
+- .play(), .play() again at 'playFinish'
+- .play(), .play() again at 'loopBegin'
+- .play(), .play() again at 'loopFinish'
+- .play(), .play() again at 'loopSkip'
+- .play(), .play() again at 'newWordFragment'
+- .play(), .play() again at 'done'
 
 - .restart(), .restart() again at 'restartBegin'
 - .restart(), .restart() again at 'restartFinish'
@@ -89,14 +112,6 @@
 - .restart(), .restart() again at 'loopSkip'
 - .restart(), .restart() again at 'newWordFragment'
 - .restart(), .restart() again at 'done'
-
-- .play(), .play() again at 'playBegin'
-- .play(), .play() again at 'playFinish'
-- .play(), .play() again at 'loopBegin'
-- .play(), .play() again at 'loopFinish'
-- .play(), .play() again at 'loopSkip'
-- .play(), .play() again at 'newWordFragment'
-- .play(), .play() again at 'done'
 
 - .rewind(), .rewind() again at 'rewindBegin'
 - .rewind(), .rewind() again at 'rewindFinish'
@@ -181,7 +196,7 @@
 - .jumpTo(), .jumpTo() again at 'done'
 
 
-## Function combos (at different events)
+## Simple Function Combos (at different events)
 _(`.pause()` counts for `.stop()` and `.close()` too. Should `.rewind()` stand for `.ffwd()` too?)_
 
 - .play(), .pause() at 'playBegin'
@@ -213,3 +228,71 @@ _(`.pause()` counts for `.stop()` and `.close()` too. Should `.rewind()` stand f
 - .play(), .rewind() at 'newWordFragment', .rewind() again immediately
 
 
+
+
+
+## Diagram of transition to internal/temporary states to resumed state
+
+play > play					>> "play"			>> "play"
+play > restart				>> "play"			>> "play"
+play > pause/stop/close		>> "pause"			>> "pause"
+play > rewind				>> "rewind"			>> "play"
+play > fastForward			>> "fastForward"	>> "play"
+play > togglePlayPause?		>> "play"/"pause"	>> "same"
+play > jumpWords			>> "jump"			>> "play"
+play > jumpSentences		>> "jump"			>> "play"
+play > nextWord				>> "jump"			>> "play"
+play > nextSentence			>> "jump"			>> "play"
+play > prevWord				>> "jump"			>> "play"
+play > prevSentence			>> "jump"			>> "play"
+play > jumpTo				>> "jump"			>> "play"
+
+restart > play				>> "play"			>> "play"
+restart > restart			>> "play"			>> "play"
+restart > pause/stop/close	>> "pause"			>> "pause"
+restart > rewind			>> "rewind"			>> "play"
+restart > fastForward		>> "fastForward"	>> "play"
+restart > togglePlayPause?	>> "play"/"pause"	>> "same"
+restart > jumpWords			>> "jump"			>> "play"
+restart > jumpSentences		>> "jump"			>> "play"
+restart > nextWord			>> "jump"			>> "play"
+restart > nextSentence		>> "jump"			>> "play"
+restart > prevWord			>> "jump"			>> "play"
+restart > prevSentence		>> "jump"			>> "play"
+restart > jumpTo			>> "jump"			>> "play"
+
+pause > play				>> "play"			>> "play"
+pause > restart				>> "play"			>> "play"
+pause > pause/stop/close	>> "pause"			>> "pause"
+pause > rewind				>> "rewind"			>> "pause"
+pause > fastForward			>> "fastForward"	>> "pause"
+pause > togglePlayPause?	>> "play"/"pause"	>> "same"
+pause > jumpWords			>> "jump"			>> "pause"
+pause > jumpSentences		>> "jump"			>> "pause"
+pause > nextWord			>> "jump"			>> "pause"
+pause > nextSentence		>> "jump"			>> "pause"
+pause > prevWord			>> "jump"			>> "pause"
+pause > prevSentence		>> "jump"			>> "pause"
+pause > jumpTo				>> "jump"			>> "pause"
+
+rewind/others > play				>> "play"			>> "play"
+rewind/others > restart				>> "play"			>> "play"
+rewind/others > pause/stop/close	>> "pause"			>> "pause"
+rewind/others > rewind				>> "rewind"			>> "prev"/"pause"
+rewind/others > fastForward			>> "fastForward"	>> "prev"/"pause"
+rewind/others > togglePlayPause?	>> "play"/"pause"	>> "same"
+rewind/others > jumpWords			>> "jump"			>> "prev"/"pause"
+rewind/others > jumpSentences		>> "jump"			>> "prev"/"pause"
+rewind/others > nextWord			>> "jump"			>> "prev"/"pause"
+rewind/others > nextSentence		>> "jump"			>> "prev"/"pause"
+rewind/others > prevWord			>> "jump"			>> "prev"/"pause"
+rewind/others > prevSentence		>> "jump"			>> "prev"/"pause"
+rewind/others > jumpTo				>> "jump"			>> "prev"/"pause"
+
+
+togglePlayPause is separate?
+??: play > togglePlayPause > togglePlayPause
+
+## TODO
+.reset
+.resume
