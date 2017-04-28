@@ -75,7 +75,7 @@ defaultAsserts.not = function( plbk, result, testText ) {
 		// Nothing is expected, it's failing for good reasons
 	} else {
 		expect( result.args ).toEqual( [] );
-		expect( result.frags ).toEqual( [] );
+		expect( result.arg2s ).toEqual( [] );
 	}
 };
 
@@ -181,7 +181,7 @@ var getAssertProgLast = function ( plyb ) {
 
 var callAll = function ( bigs, opWith, eventAssertions, whenToCollect, waitTime, reset, testText ) {
 	for ( var evi = 0; evi < eventAssertions.length; evi++ ) {
-		runSimple ( bigs, opWith, eventAssertions, whenToCollect, waitTime, reset, testText );
+		runSimple ( bigs, opWith, eventAssertions[ evi ], whenToCollect, waitTime, reset, testText );
 	}
 };
 
@@ -766,7 +766,9 @@ jasmine.testJumpWords11 = function ( bigs, assertsOverride, reset, testText ) {
 		{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 		{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
 		{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-		{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+
+		{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
+
 		{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 		{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
@@ -778,7 +780,7 @@ jasmine.testJumpWords11 = function ( bigs, assertsOverride, reset, testText ) {
 		{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
 
 		{ event: 'loopSkip', assertion: asserts.not },
-		{ event: 'done', assertion: asserts.not },
+		{ event: 'done', assertion: asserts.triggered },
 		{ event: 'progress', assertion: asserts.progress }
 	];
 
@@ -809,7 +811,9 @@ jasmine.testJumpWords100 = function ( bigs, assertsOverride, reset, testText ) {
 		{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 		{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
 		{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-		{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+
+		{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
+
 		{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 		{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
@@ -821,7 +825,7 @@ jasmine.testJumpWords100 = function ( bigs, assertsOverride, reset, testText ) {
 		{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
 
 		{ event: 'loopSkip', assertion: asserts.not },
-		{ event: 'done', assertion: asserts.not },
+		{ event: 'done', assertion: asserts.triggered },
 		{ event: 'progress', assertion: asserts.progress }
 	];
 
@@ -852,7 +856,9 @@ jasmine.testJumpSentencesNegative1 = function ( bigs, assertsOverride, reset, te
 		{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 		{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
 		{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-		{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+
+		{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
+
 		{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 		{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
@@ -864,7 +870,7 @@ jasmine.testJumpSentencesNegative1 = function ( bigs, assertsOverride, reset, te
 		{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
 
 		{ event: 'loopSkip', assertion: asserts.not },
-		{ event: 'done', assertion: asserts.not },
+		{ event: 'done', assertion: asserts.triggered },
 		{ event: 'progress', assertion: asserts.progress }
 	];
 
@@ -1029,7 +1035,9 @@ jasmine.testJumpSentences100 = function ( bigs, assertsOverride, reset, testText
 		{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 		{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
 		{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-		{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+
+		{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
+
 		{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 		{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
@@ -1041,7 +1049,7 @@ jasmine.testJumpSentences100 = function ( bigs, assertsOverride, reset, testText
 		{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
 
 		{ event: 'loopSkip', assertion: asserts.not },
-		{ event: 'done', assertion: asserts.not },
+		{ event: 'done', assertion: asserts.triggered },
 		{ event: 'progress', assertion: asserts.progress }
 	];
 
@@ -1091,41 +1099,6 @@ jasmine.testNextWord = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-
-	runSimple( bigs, opWith, 'newWordFragment', getAlwaysTrue, shortTime, asserts.frags, reset, testText );
-
-	runSimple( bigs, opWith, 'playBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'playFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'resetBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'resetFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'restartBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'restartFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'pauseBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'pauseFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'stopBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'stopFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-
-	runSimple( bigs, opWith, 'closeBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'closeFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-
-	runSimple( bigs, opWith, 'onceBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'onceFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'resumeBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'resumeFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-
-	runSimple( bigs, opWith, 'rewindBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'rewindFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'fastForwardBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'fastForwardFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-
-	runSimple( bigs, opWith, 'loopBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'loopFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-
-	runSimple( bigs, opWith, 'loopSkip', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'done', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-
-	runSimple( bigs, opWith, 'progress', getAlwaysTrue, shortTime, asserts.progress, reset, testText );
-
 };  // End jasmine.testNextWord()
 
 
@@ -1145,40 +1118,30 @@ jasmine.testNextSentence = function ( bigs, assertsOverride, reset, testText ) {
 
 	asserts = assertsOverride || defaultAsserts;
 
+	var eventAssertions = [
+		{ event: 'newWordFragment', assertion: asserts.frags },
 
-	runSimple( bigs, opWith, 'newWordFragment', getAlwaysTrue, shortTime, asserts.frags, reset, testText );
+		{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+		{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+		{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+		{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
+		{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+		{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
-	runSimple( bigs, opWith, 'playBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'playFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'resetBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'resetFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'restartBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'restartFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'pauseBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'pauseFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'stopBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'stopFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
+		{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+		{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
-	runSimple( bigs, opWith, 'closeBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'closeFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
+		{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+		{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
-	runSimple( bigs, opWith, 'onceBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'onceFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'resumeBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'resumeFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
+		{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
 
-	runSimple( bigs, opWith, 'rewindBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'rewindFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'fastForwardBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'fastForwardFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
+		{ event: 'loopSkip', assertion: asserts.not },
+		{ event: 'done', assertion: asserts.not },
+		{ event: 'progress', assertion: asserts.progress }
+	];
 
-	runSimple( bigs, opWith, 'loopBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'loopFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-
-	runSimple( bigs, opWith, 'loopSkip', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'done', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-
-	runSimple( bigs, opWith, 'progress', getAlwaysTrue, shortTime, asserts.progress, reset, testText );
+	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
 };  // End jasmine.testNextSentence()
 
@@ -1199,42 +1162,32 @@ jasmine.testPrevWord = function ( bigs, assertsOverride, reset, testText ) {
 
 	asserts = assertsOverride || defaultAsserts;
 
+	var eventAssertions = [
+		{ event: 'newWordFragment', assertion: asserts.frags },
 
-	runSimple( bigs, opWith, 'newWordFragment', getAlwaysTrue, shortTime, asserts.frags, reset, testText );
+		{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+		{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+		{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+		{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
 
-	runSimple( bigs, opWith, 'playBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'playFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'resetBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'resetFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'restartBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'restartFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'pauseBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'pauseFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
+		{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
 
-	runSimple( bigs, opWith, 'stopBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'stopFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
+		{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
-	runSimple( bigs, opWith, 'closeBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'closeFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
+		{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+		{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
-	runSimple( bigs, opWith, 'onceBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'onceFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'resumeBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'resumeFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
+		{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+		{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
-	runSimple( bigs, opWith, 'rewindBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'rewindFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'fastForwardBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'fastForwardFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
+		{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
 
-	runSimple( bigs, opWith, 'loopBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'loopFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
+		{ event: 'loopSkip', assertion: asserts.not },
+		{ event: 'done', assertion: asserts.triggered },
+		{ event: 'progress', assertion: asserts.progress }
+	];
 
-	runSimple( bigs, opWith, 'loopSkip', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-
-	runSimple( bigs, opWith, 'done', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-
-	runSimple( bigs, opWith, 'progress', getAlwaysTrue, shortTime, asserts.progress, reset, testText );
+	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
 };  // End jasmine.testPrevWord()
 
@@ -1255,42 +1208,32 @@ jasmine.testPrevSentence = function ( bigs, assertsOverride, reset, testText ) {
 
 	asserts = assertsOverride || defaultAsserts;
 
+	var eventAssertions = [
+		{ event: 'newWordFragment', assertion: asserts.frags },
 
-	runSimple( bigs, opWith, 'newWordFragment', getAlwaysTrue, shortTime, asserts.frags, reset, testText );
+		{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+		{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+		{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+		{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
 
-	runSimple( bigs, opWith, 'playBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'playFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'resetBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'resetFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'restartBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'restartFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'pauseBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'pauseFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
+		{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
 
-	runSimple( bigs, opWith, 'stopBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'stopFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
+		{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
-	runSimple( bigs, opWith, 'closeBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'closeFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
+		{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+		{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
-	runSimple( bigs, opWith, 'onceBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'onceFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'resumeBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'resumeFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
+		{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+		{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
-	runSimple( bigs, opWith, 'rewindBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'rewindFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'fastForwardBegin', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-	runSimple( bigs, opWith, 'fastForwardFinish', getAlwaysTrue, shortTime, asserts.not, reset, testText );
+		{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
 
-	runSimple( bigs, opWith, 'loopBegin', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-	runSimple( bigs, opWith, 'loopFinish', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
+		{ event: 'loopSkip', assertion: asserts.not },
+		{ event: 'done', assertion: asserts.triggered },
+		{ event: 'progress', assertion: asserts.progress }
+	];
 
-	runSimple( bigs, opWith, 'loopSkip', getAlwaysTrue, shortTime, asserts.not, reset, testText );
-
-	runSimple( bigs, opWith, 'done', getAlwaysTrue, shortTime, asserts.triggered, reset, testText );
-
-	runSimple( bigs, opWith, 'progress', getAlwaysTrue, shortTime, asserts.progress, reset, testText );
+	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
 };  // End jasmine.testPrevSentence()
 
@@ -1453,7 +1396,9 @@ jasmine.testJumpTo11 = function ( bigs, assertsOverride, reset, testText ) {
 		{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 		{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
 		{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-		{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+
+		{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
+
 		{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 		{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
@@ -1465,7 +1410,7 @@ jasmine.testJumpTo11 = function ( bigs, assertsOverride, reset, testText ) {
 		{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
 
 		{ event: 'loopSkip', assertion: asserts.not },
-		{ event: 'done', assertion: asserts.not },
+		{ event: 'done', assertion: asserts.triggered },
 		{ event: 'progress', assertion: asserts.progress }
 	];
 
@@ -1497,7 +1442,9 @@ jasmine.testJumpTo100 = function ( bigs, assertsOverride, reset, testText ) {
 		{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 		{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
 		{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-		{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+
+		{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
+
 		{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 		{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
@@ -1509,7 +1456,7 @@ jasmine.testJumpTo100 = function ( bigs, assertsOverride, reset, testText ) {
 		{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
 
 		{ event: 'loopSkip', assertion: asserts.not },
-		{ event: 'done', assertion: asserts.not },
+		{ event: 'done', assertion: asserts.triggered },
 		{ event: 'progress', assertion: asserts.progress }
 	];
 

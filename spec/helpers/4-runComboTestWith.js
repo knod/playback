@@ -7,7 +7,8 @@ jasmine.runComboTestWith = function ( bigs, opsWith, events, checks, msTillAsser
 * 	{op2: func, collect: func},
 * 	int,
 * 	func,
-* 	bool
+* 	bool,
+* 	str
 *  )
 */
 	var plbk 	= bigs.playback,
@@ -25,13 +26,11 @@ jasmine.runComboTestWith = function ( bigs, opsWith, events, checks, msTillAsser
 		collectCheck = checks.collect;
 
 	var thisText = ", for a test-test, `." + op1 + "()` with " + arg1 + " then, on '" + event1 + "', calls " + op2 + "()` with " + arg2 + " and listens for '" + event2 + "'";
-	// describe( "`." + op1 + "()` with " + arg1 + " then, on '" + event1 + "', calls `." + op2 + "()` with " + arg2 + " and listens for '" + event2 + "'", function () {
 	describe( thisText, function () {
 
 		testText = testText + ' ' + thisText;
-		// console.log(testText);
 
-		var frags, args, result;
+		var arg2s, args, result;
 		msTillAssert = msTillAssert || 0;
 
 		var currentEvent = event1;
@@ -49,45 +48,45 @@ jasmine.runComboTestWith = function ( bigs, opsWith, events, checks, msTillAsser
 
 				// Stop listening for this event
 				state.emitter.off( currentEvent, run1 );
-				// // Start of the second listener and then the second function
+				// Start of the second listener and then the second function
 				currentEvent = event2;
 				state.emitter.on( currentEvent, run2 );
-				// plbk[ op2 ]( arg2 );
-				jasmine[ op2 ]( { playback: plbk, state: state }, null, false, testText )
+				plbk[ op2 ]( arg2 );
 			}
 
 		};
 
-		// var run2 = function ( one, two, three, four ) {
+		var run2 = function ( one, two, three, four ) {
 
-		// 	// console.log( '====== outside 2:', two, three, four )
+			// console.log( '====== outside 2:', two, three, four )
 
-		// 	// var canCollect = collectCheck( plbk, result, currentEvent );
+			var canCollect = collectCheck( plbk, result, currentEvent );
 
-		// 	// if ( canCollect ) {
-		// 	// 	// I happen to know this will be the fragment some of the time
-		// 	// 	// and, most of the time it'll be the argument I'm interested in.
-		// 	// 	frags.push( arg2 );
-		// 	// 	args.push( [ one, two, three, four ] );
+			if ( canCollect ) {
+				// I happen to know this will be the fragment some of the time
+				// and, most of the time it'll be the argument I'm interested in.
+				arg2s.push( arg2 );
+				args.push( [ one, two, three, four ] );
 
-		// 		// console.log( '====== inside 2:', two, three, four )
-		// 	// }
+				// console.log( '====== inside 2:', two, three, four )
+			}
 
-		// };
+		};
 
 
-		// beforeEach(function ( done ) {
-			frags = [], args = [], result = { frags: frags, args: args };
+		beforeEach(function ( done ) {
+			arg2s = [], args = [], result = { arg2s: arg2s, args: args };
 
 			plbk.reset();
+			currentEvent = event1;
 
 			state.emitter.on( event1, run1 );
 
 			plbk[ op1 ]( arg1 );
 
-			// setTimeout( done, (msTillAssert - (msTillAssert/4)) )
+			setTimeout( done, (msTillAssert - (msTillAssert/4)) )
 
-		// }, msTillAssert );
+		}, msTillAssert );
 
 
 		// // This is here just to trigger the "before thing"

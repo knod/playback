@@ -57,10 +57,12 @@ jasmine.runSimpleTestWith = function ( bigs, opWith, evntAssertion, mayCollectCh
 		var lastText = "it should return..."
 
 		it( lastText, function () {
-			testText = testText + ' ' + lastText;
 
 			state.emitter.off( evnt, whenRun );
+			testText = testText + ' ' + lastText;
+
 			if ( assert ) { assert( plbk, result, testText ) }
+
 		});
 
 	});  // End describe

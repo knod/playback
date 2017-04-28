@@ -348,6 +348,9 @@ var debug;  // DEBUGGING
 			// var oldIndex = plab.getIndex(),
 			// 	newIndex = indx;
 
+			if ( indx >= 0 ) { plab._direction = 'forward' }
+			else { plab._direction = 'back' }
+
 			// plab.once( [0, newIndex - oldIndex, 0] );
 			plab.once( indx );
 

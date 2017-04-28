@@ -57,29 +57,29 @@ describe( testText, function() {
 	// jas.testPause( bigObjects, null, true, testText );
 	// jas.testStop( bigObjects, null, true, testText );
 	// jas.testClose( bigObjects, null, true, testText );
-	jas.testTogglePlayPause( bigObjects, null, true, testText );
-	jas.testRewind( bigObjects, null, true, testText );
-	jas.testFastForward( bigObjects, null, true, testText );
-	jas.testJumpWordsNegative1( bigObjects, null, true, testText );
-	jas.testJumpWords0( bigObjects, null, true, testText );
-	jas.testJumpWords3( bigObjects, null, true, testText );
-	jas.testJumpWords4( bigObjects, null, true, testText );
-	jas.testJumpWords11( bigObjects, null, true, testText );
-	jas.testJumpWords100( bigObjects, null, true, testText );
-	jas.testJumpSentencesNegative1( bigObjects, null, true, testText );
-	jas.testJumpSentences0( bigObjects, null, true, testText );
-	jas.testJumpSentences1( bigObjects, null, true, testText );
-	jas.testJumpSentences3( bigObjects, null, true, testText );
-	jas.testJumpSentences100( bigObjects, null, true, testText );
+	// jas.testTogglePlayPause( bigObjects, null, true, testText );
+	// jas.testRewind( bigObjects, null, true, testText );
+	// jas.testFastForward( bigObjects, null, true, testText );
+	// jas.testJumpWordsNegative1( bigObjects, null, true, testText );
+	// jas.testJumpWords0( bigObjects, null, true, testText );
+	// jas.testJumpWords3( bigObjects, null, true, testText );
+	// jas.testJumpWords4( bigObjects, null, true, testText );
+	// jas.testJumpWords11( bigObjects, null, true, testText );
+	// jas.testJumpWords100( bigObjects, null, true, testText );
+	// jas.testJumpSentencesNegative1( bigObjects, null, true, testText );
+	// jas.testJumpSentences0( bigObjects, null, true, testText );
+	// jas.testJumpSentences1( bigObjects, null, true, testText );
+	// jas.testJumpSentences3( bigObjects, null, true, testText );
+	// jas.testJumpSentences100( bigObjects, null, true, testText );
 	// jas.testNextWord( bigObjects, null, true, testText );
 	// jas.testNextSentence( bigObjects, null, true, testText );
 	// jas.testPrevWord( bigObjects, null, true, testText );
 	// jas.testPrevSentence( bigObjects, null, true, testText );
-	jas.testJumpToNegative1( bigObjects, null, true, testText );
-	jas.testJumpTo0( bigObjects, null, true, testText );
-	jas.testJumpTo6( bigObjects, null, true, testText );
-	jas.testJumpTo11( bigObjects, null, true, testText );
-	jas.testJumpTo100( bigObjects, null, true, testText );
+	// jas.testJumpToNegative1( bigObjects, null, true, testText );
+	// jas.testJumpTo0( bigObjects, null, true, testText );
+	// jas.testJumpTo6( bigObjects, null, true, testText );
+	// jas.testJumpTo11( bigObjects, null, true, testText );
+	// jas.testJumpTo100( bigObjects, null, true, testText );
 
 	// xit("why isn't jumping causing an infinite loop in 'onceBegin'?")
 

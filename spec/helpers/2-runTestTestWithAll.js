@@ -53,7 +53,7 @@ jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msT
 				// currentEvent = event2;
 				// state.emitter.on( currentEvent, run2 );
 				// plbk[ op2 ]( arg2 );
-				jasmine[ op2 ]( { playback: plbk, state: state }, null, false, testText )
+				jasmine[ op2 ]( { playback: plbk, state: state }, null, false, testText );
 			}
 
 		};
