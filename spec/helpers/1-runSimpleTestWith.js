@@ -86,7 +86,7 @@
 
 
 
-jasmine.runSimpleTestWith = function ( bigs, opWith, evnt, mayCollectCheck, msTillAssert, assert, debug ) {
+jasmine.runSimpleTestWith = function ( bigs, opWith, evnt, mayCollectCheck, msTillAssert, assert, reset, testText ) {
 /* ( {playback, state}, {op, arg}, str, func, int, func, bool )
 * 
 */
@@ -97,19 +97,26 @@ jasmine.runSimpleTestWith = function ( bigs, opWith, evnt, mayCollectCheck, msTi
 	var op 	= opWith.op,
 		arg = opWith.arg;
 
+	var thisText = "`." + op + "()` with " + arg + " and we collect data on '" + evnt + "'"
 
-	describe( "`." + op + "()` with " + arg + " and we collect data on '" + evnt + "'", function () {
+	describe( thisText, function () {
+
+		testText = testText + ' ' + thisText;
 
 		var frags, args, result;
 		msTillAssert = msTillAssert || 0;
 
-		var whenRun = function ( arg1, arg2, arg3, arg4 ) {
+//		console.log(plbk.getIndex())
+		
+		var whenRun = function ( one, two, three, four ) {
 
+//			if ( evnt === 'newWordFragment' ) { console.log(two, plbk.getIndex(), three); }
+		
 			if ( mayCollectCheck && mayCollectCheck( plbk, result, evnt ) ) {
 				// I happen to know this will be the fragment some of the time
 				// and, most of the time it'll be the argument I'm interested in.
-				frags.push( arg2 );
-				args.push( [ arg1, arg2, arg3, arg4 ] );
+				frags.push( two );
+				args.push( [ one, two, three, four ] );
 			}
 
 		};
@@ -118,22 +125,28 @@ jasmine.runSimpleTestWith = function ( bigs, opWith, evnt, mayCollectCheck, msTi
 		beforeEach(function ( done ) {
 			frags = [], args = [], result = { frags: frags, args: args };
 
-			plbk.reset();
+			// !!! WARNING !!!
+			if ( reset ) { plbk.reset(); }  // This is what's causing combo tests to pass when they shouldn't!
+			// !!! WARNING !!!
 
 			state.emitter.on( evnt, whenRun );
 
-			plbk[ op ]( arg, debug );
+			plbk[ op ]( arg );
 
 			setTimeout( done, (msTillAssert - (msTillAssert/4)) )
 
 		}, msTillAssert );
 
 
-		it("it should return...", function () {
+		var lastText = "it should return..."
+
+		it( lastText, function () {
+			testText = testText + ' ' + lastText;
+
 			state.emitter.off( evnt, whenRun );
-			if ( assert ) { assert( plbk, result ) }
+			if ( assert ) { assert( plbk, result, testText ) }
 		});
 
 	});  // End describe
 
-};
+};  // End jasmine.runSimpleTestWith()

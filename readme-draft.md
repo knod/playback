@@ -1,4 +1,4 @@
-summary
+
 # Broader Project
 
 The final project is similar to this: http://the-digital-reader.com/wp-content/uploads/2015/09/word-runner-gif.gif

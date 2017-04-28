@@ -615,10 +615,14 @@ var debug;  // DEBUGGING
 
 				}
 
-				// Send fragment after setTimeout so that you can easily
-				// pause on "newWordFragment" - pause kills the current
-				// `._timeoutID`. Feels weird, though.
-				plab._trigger( 'newWordFragment', [plab, frag] );
+				// // Send fragment after setTimeout so that you can easily
+				// // pause on "newWordFragment" - pause kills the current
+				// // `._timeoutID`. Feels weird, though.
+				// plab._trigger( 'newWordFragment', [plab, frag] );
+
+				plab._trigger( 'newWordFragment', [plab, frag, incrementors] );
+
+
 				plab._trigger( 'loopFinish', [plab] );
 
     	    }  // end if skip fragment or not skip fragment
