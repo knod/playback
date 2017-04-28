@@ -1,5 +1,5 @@
 
-jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msTillAssert, assert, reset, testText ) {
+jasmine.runComboTestWith = function ( bigs, opsWith, events, checks, msTillAssert, assert, reset, testText ) {
 /* (
 * 	{playback: {}, state: {}},
 * 	{op1: str, arg1: any, op2: str, arg2: any},
@@ -24,7 +24,7 @@ jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msT
 	var op2Check 	 = checks.op2,
 		collectCheck = checks.collect;
 
-	var thisText = ", for a test-test, `." + op1 + "()` with " + arg1 + " then, on '" + event1 + "', calls";
+	var thisText = ", for a test-test, `." + op1 + "()` with " + arg1 + " then, on '" + event1 + "', calls " + op2 + "()` with " + arg2 + " and listens for '" + event2 + "'";
 	// describe( "`." + op1 + "()` with " + arg1 + " then, on '" + event1 + "', calls `." + op2 + "()` with " + arg2 + " and listens for '" + event2 + "'", function () {
 	describe( thisText, function () {
 
@@ -50,8 +50,8 @@ jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msT
 				// Stop listening for this event
 				state.emitter.off( currentEvent, run1 );
 				// // Start of the second listener and then the second function
-				// currentEvent = event2;
-				// state.emitter.on( currentEvent, run2 );
+				currentEvent = event2;
+				state.emitter.on( currentEvent, run2 );
 				// plbk[ op2 ]( arg2 );
 				jasmine[ op2 ]( { playback: plbk, state: state }, null, false, testText )
 			}
@@ -97,5 +97,5 @@ jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msT
 		// });
 
 	});  // End describe
+};  // End jasmine.runComboTestWith()
 
-};  // End jasmine.detectUnusualResultsWith()

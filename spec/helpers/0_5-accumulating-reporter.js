@@ -4,7 +4,7 @@
 * worth it. There may be other ways to deal with this.
 *
 * Previously:
-* Accumulates testTestFailures and tests them agains expected testTestFailures
+* Accumulates testTestFailures and tests them against expected failures
 * 
 * Since I have so many possible combinations to test for, I can't
 * write all those tests - writing the correct output for each single
