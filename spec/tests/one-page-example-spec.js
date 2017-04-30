@@ -1,11 +1,13 @@
 
-// --- in the first script ---
-var run_it_ = function ( expected1, count ) {
+// --- 1st script ---
+var run_it_ = function ( val, count ) {
 
 	it("tests against the expected value.", function () {
-		
-		console.log( 'it:', count, this.test1, expected1, (this.test1 == expected1) );
-		expect( this.test1 ).toEqual( expected1 );
+
+		// // Won't work
+		// expect( this.test1 ).toEqual( val );
+		expect( val ).toEqual( vals[ count ] );
+
 
 	});
 
@@ -13,44 +15,29 @@ var run_it_ = function ( expected1, count ) {
 
 
 
-// --- in the second script ---
-var count = 1  // Just to maybe help us see what's going on
-var one = function ( val ) {
+// --- 2nd script ---
+var vals = [ 'yaaas', 'noooo' ];
+var count = 0;
 
-	beforeEach(function () {
-		this.test1 = val
-		console.log( 'beforeEach in other function:', count, val, this.test1 );
-		count++
-	});
-
-	// afterEach(function () {
-	// 	this.test = null;
-	// });
-
-	run_it_( val, count );
-};
-
-
-
-// --- in the third script ---
+// Can't be in a function or jasmine won't see it
 describe("One test", function () {
 
-	var vals = [ 'yaaas', 'noooo' ]
+	// Can't use beforeEach to assign values since it can only be used once
+	// Can only be used to reset values in state I guess?
+	// In the thing below, the count goes all the way up before
+	// the `beforeEach` would be called.
+	// I dunno. If you can get the thing below to work, then it might work
 
+	// beforeEach(function () {
+	// 	this.test1 = vals[ count ];
+	// 	console.log( 'beforeEach in other function:', count, vals[ count ], this.test1 );
+	// 	// count++
+	// });
+	
 	for ( let vali = 0; vali < vals.length; vali++ ) {
-		one( vals[ vali ] );
+
+		run_it_( vals[ vali ], count );
+		count++;
 	}
-
-	// Results:
-	// beforeEach: 1 yaaas yaaas
-	// beforeEach: 2 noooo noooo
-	// it: 1 noooo yaaas false
-	// (then a "failure")
-	// beforeEach: 3 yaaas yaaas
-	// beforeEach: 4 noooo noooo
-	// it: 1 noooo noooo true
-	// (then a success)
-
-	// Why is the `beforeEach` being called 4 times?
 
 });
