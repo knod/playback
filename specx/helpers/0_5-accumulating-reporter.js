@@ -26,6 +26,8 @@
 * These looped tests are run from 'find-unusual-tests-spec.js'
 */
 
+var utils = require('./0_115-utils.js');
+
 var unexpectedFailures = [];
 
 var testTestFailures = [];
@@ -89,7 +91,12 @@ var myReporter = {
 
 					// If the failure isn't an expected failure
 					if ( jasmine.playbackExpectedFailures.indexOf( result.fullName ) === -1 ) {
-						unexpectedFailures.push( result.fullName );
+
+						// TODO: Add test for if it's on the list already
+						var simple = utils.simplifyTestName( result.fullName );
+						if ( unexpectedFailures.indexOf( simple ) === -1 ) {
+							unexpectedFailures.push( simple );
+						}
 
 					// This cannot work! Jasmine has already recorded the testTestFailures
 					// by this time! May need to handle this a different way.
@@ -122,7 +129,7 @@ var myReporter = {
 				console.log( '\x1B[32mTest-testing testTestFailures are as they should be!\x1B[0m')
 			} else {
 				// console.log( '\x1B[31mTest-testing testTestFailures are failing in the wrong ways!\x1B[0m Actual testTestFailures:' )
-				console.log( '\x1B[31mTest-testing testTestFailures are failing in the wrong ways!\x1B[0m Unexpected testTestFailures:' )
+				console.log( '\x1B[31mTest-testing testTestFailures are failing in the wrong ways!\x1B[0m Unexpected testTestFailures (' + unexpectedFailures.length + '):' )
 				// console.log( testTestFailures.slice(0) )
 				console.log( unexpectedFailures );
 			}

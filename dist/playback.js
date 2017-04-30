@@ -12,6 +12,7 @@
 * - Speed up with long duration of ff or rewind
 * - `.rewind()` base speed as state property
 * - ??: Should `.restart()` trigger 'playBegin' and 'playFinish'
+* - Send event name with event
 * 
 * DEVELOPMENT NOTES/GUIDES:
 * - Where possible, return Playback so functions can be chained
@@ -129,9 +130,11 @@
 		* Returns to initial values, sends first fragment
 		*/
 			plab._trigger( 'resetBegin', [plab] );
+			// console.log( 'reset begins' );
 			plab._reset();
 			plab.once( 0 );  // Send first fragment
 			plab._trigger( 'resetFinish', [plab] );
+			// console.log( 'reset finished' );
 			return plab;
 		};
 
@@ -159,7 +162,7 @@
 		};
 
 
-var count = 1;
+		var count = 1;
 		// ??: 'playing' event should go off every time, but if we're
 		// restarting without pausing first (pausing would trigger visual
 		// feedback about pausing), then should the event not happen? That
@@ -170,22 +173,24 @@ var count = 1;
 		* 
 		* For all 'play'-like activities
 		*/
-			if ( debug ) { console.log('count:', count, eventName); }  // DEBUGGING
+			if ( debug ) {
+				console.log('count:', count, eventName);
+			}  // DEBUGGING
 			count++;  // DEBUGGING
+
 			// "play" will always be forward
 			// ??: Here so can be changed no matter the event?
 			plab._incrementors = [0, 0, 1];
-			// notStartedAccYet = true;  // Temp
 
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
-			
+			// console.log( 'began playing eventName:', eventName );  // DEBUGGING
+
 			plab._direction = 'forward';
 
 			if ( plab._currentAction !== 'play' ) {  // ??: could possibly just pause first instead
 				plab._currentAction = 'play';
 				// Get current word first time, then get following fragments forever after
 				plab._loop( [0, 0, 0], null, null );  // Show the current word first, then it will move on
-				// plab._loop( [0, 0, 0], null, function () { return 1; } );  // Show the current word first, then it will move on
 			}
 
 			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
@@ -193,12 +198,17 @@ var count = 1;
 			return plab;
 		};  // End plab._play()
 
-var debug;  // DEBUGGING
+
+		var debug;  // DEBUGGING
 		plab.play = function ( frag, d ) {
+			
 			debug = d;  // DEBUGGING
-			if (debug) { console.log('playing. done?:', plab.done)}
+			if ( debug ) {
+				console.log( 'playing. done?:', plab.done );
+			}  // DEBUGGING
+
 			plab._persistentAction = 'play';
-			// if ( debug ) { console.log( 'done?', plab.done ); }  // DEBUGGING
+
 			if ( plab.done ) { plab.restart(); }  // Comes back here after restarted
 			else { plab._play( 'play' ); }
 			return plab;
