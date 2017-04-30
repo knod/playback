@@ -1,4 +1,6 @@
 
+'use strict';
+
 // ------------ setup ------------
 
 // Will be calling:
@@ -19,9 +21,10 @@ var	parsedText = [
 var	forward = parsedText[0].concat(parsedText[1]).concat(parsedText[2]).concat(parsedText[3]);
 
 
-
-var opWith;
-var getAlwaysTrue = function () { return true; };  // TODO: Not needed anymore?
+var getAlwaysTrue = function ( playback, result, evnt ) {
+	// console.log( evnt, result.arg2s )
+	return true;
+};  // TODO: Not needed anymore?
 
 
 // ------------ expected failures ------------
@@ -53,14 +56,15 @@ var supressExpectedFailures = false;  // So we can turn this on and off easily
 var simplify = require('../helpers/0_115-utils.js').simplifyTestName;
 var checkExpectedToFail = function ( testText ) {
 
-	this.shouldFail = false;
+	var shouldFail = false;
 	if ( supressExpectedFailures ) {
 
-		this.simplified = simplify( testText );
-		this.shouldFail = jasmine.playbackExpectedFailures.indexOf( this.simplified ) !== -1
+		var simplified 	= simplify( testText );
+		shouldFail 		= jasmine.playbackExpectedFailures.indexOf( simplified ) !== -1;
 
 	}
-	return this.shouldFail;
+
+	return shouldFail;
 };  // End checkExpectedToFail()
 
 
@@ -75,24 +79,28 @@ var defaultAsserts = {
 
 defaultAsserts.not = function( plbk, result, testText ) {
 
-	this.shouldFail = checkExpectedToFail( testText );
-	if ( this.shouldFail ) {
+	var shouldFail = checkExpectedToFail( testText );
+	if ( shouldFail ) {
 		// Nothing is expected, it's failing for good reasons
 	} else {
 		expect( result.args ).toEqual( [] );
 		expect( result.arg2s ).toEqual( [] );
 	}
+
+	shouldFail = null;  // ??: Needed?
 };
 
 defaultAsserts.triggered = function( plbk, result, testText ) {
 
-	this.shouldFail = checkExpectedToFail( testText );
-	if ( this.shouldFail ) {
+	var shouldFail = checkExpectedToFail( testText );
+	if ( shouldFail ) {
 		// Nothing is expected, it's failing for good reasons
 	} else {
 		// No frags if not 'newWordFragment'
 		expect( result.args[0][0] ).toBe( plbk );
 	}
+
+	shouldFail = null;  // ??: Needed?
 };
 
 
@@ -110,8 +118,8 @@ var makeProgressAsserter = function ( plyb, numFrags, vals ) {
 */
 	return function assertProgress ( plbk, result, testText ) {
 
-		this.shouldFail = checkExpectedToFail( testText );
-		if ( supressExpectedFailures && this.shouldFail ) {
+		var shouldFail = checkExpectedToFail( testText );
+		if ( supressExpectedFailures && shouldFail ) {
 			// Nothing is expected, it's failing for good reasons
 		} else {
 			expect( result.args[0][0] ).toBe( plyb );
@@ -124,6 +132,8 @@ var makeProgressAsserter = function ( plyb, numFrags, vals ) {
 			if ( vals[3] ) { expect( result.arg2s[8] ).toEqual( vals[3] ); }
 			if ( vals[4] ) { expect( result.arg2s[11] ).toEqual( vals[4] ); }
 		}
+
+		shouldFail = null;  // ??: Needed?
 	};
 };
 
@@ -139,13 +149,17 @@ var makeFragAsserter = function ( plyb, frags ) {
 */
 	return function assertFrags( plbk, result, testText ) {
 
-		this.shouldFail = checkExpectedToFail( testText );
-		if ( supressExpectedFailures && this.shouldFail ) {
+		// console.log( result.arg2s );
+
+		var shouldFail = checkExpectedToFail( testText );
+		if ( supressExpectedFailures && shouldFail ) {
 			// Nothing is expected, it's failing for good reasons
 		} else {
 			expect( result.args[0][0] ).toBe( plyb );
 			expect( result.arg2s ).toEqual( frags );
 		}
+
+		shouldFail = null;  // ??: Needed?
 	};
 };
 
@@ -187,13 +201,18 @@ var getAssertProgLast = function ( plyb ) {
 var callAll = function ( bigs, opWith, eventAssertions, whenToCollect, waitTime, reset, testText ) {
 	bigs.state.emitter.removeAllListeners();
 	for ( let evi = 0; evi < eventAssertions.length; evi++ ) {
+		// console.log( eventAssertions[ evi ] === null );
 		runSimple( bigs, opWith, eventAssertions[ evi ], whenToCollect, waitTime, reset, testText );
 	}
 };
 
 
+var eventAssertions;  // ??: Needed?
+var opWith;  // ??: Needed?
+
 
 // =========== SINGLES ===========
+// Don't make any vars in here?
 
 // ----------- play() -----------
 jasmine.testPlay = function ( bigs, assertsOverride, reset, testText ) {
@@ -209,7 +228,7 @@ jasmine.testPlay = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.triggered }, 	{ event: 'playFinish', assertion: this.asserts.triggered },
@@ -235,11 +254,9 @@ jasmine.testPlay = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, longTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testPlay()
 
@@ -259,7 +276,7 @@ jasmine.testRestart = function ( bigs, assertsOverride, reset, testText ) {
 	this.asserts = assertsOverride || defaultAsserts;
 
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -286,11 +303,9 @@ jasmine.testRestart = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, longTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testRestart()
 
@@ -310,7 +325,7 @@ jasmine.testReset = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -337,11 +352,9 @@ jasmine.testReset = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testReset()
 
@@ -357,7 +370,7 @@ jasmine.testPause = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.not },
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
 		{ event: 'resetBegin', assertion: this.asserts.not }, 		{ event: 'resetFinish', assertion: this.asserts.not },
@@ -379,11 +392,9 @@ jasmine.testPause = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testPause()
 
@@ -401,7 +412,7 @@ jasmine.testStop = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.not },
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
 		{ event: 'resetBegin', assertion: this.asserts.not }, 		{ event: 'resetFinish', assertion: this.asserts.not },
@@ -423,11 +434,9 @@ jasmine.testStop = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testStop()
 
@@ -445,7 +454,7 @@ jasmine.testClose = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.not },
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
 		{ event: 'resetBegin', assertion: this.asserts.not }, 		{ event: 'resetFinish', assertion: this.asserts.not },
@@ -467,11 +476,9 @@ jasmine.testClose = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testClose()
 
@@ -491,7 +498,7 @@ jasmine.testTogglePlayPause = function ( bigs, assertsOverride, reset, testText 
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.triggered }, 	{ event: 'playFinish', assertion: this.asserts.triggered },
@@ -517,11 +524,9 @@ jasmine.testTogglePlayPause = function ( bigs, assertsOverride, reset, testText 
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, longTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testTogglePlayPause()
 
@@ -541,7 +546,7 @@ jasmine.testRewind = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -568,11 +573,9 @@ jasmine.testRewind = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testRewind()
 
@@ -593,7 +596,7 @@ jasmine.testFastForward = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 			 { event: 'playFinish', assertion: this.asserts.not },
@@ -618,11 +621,9 @@ jasmine.testFastForward = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, longTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testFastForward()
 
@@ -642,7 +643,7 @@ jasmine.testJumpWordsNegative1 = function ( bigs, assertsOverride, reset, testTe
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -669,11 +670,9 @@ jasmine.testJumpWordsNegative1 = function ( bigs, assertsOverride, reset, testTe
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpWordsNegative1()
 
@@ -694,7 +693,7 @@ jasmine.testJumpWords0 = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -719,11 +718,9 @@ jasmine.testJumpWords0 = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpWords0()
 
@@ -744,7 +741,7 @@ jasmine.testJumpWords3 = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -769,11 +766,9 @@ jasmine.testJumpWords3 = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpWords3()
 
@@ -793,7 +788,7 @@ jasmine.testJumpWords4 = function ( bigs, assertsOverride, reset, testText ) {  
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -818,11 +813,9 @@ jasmine.testJumpWords4 = function ( bigs, assertsOverride, reset, testText ) {  
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpWords4()
 
@@ -843,7 +836,7 @@ jasmine.testJumpWords11 = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -870,11 +863,9 @@ jasmine.testJumpWords11 = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpWords11()
 
@@ -894,7 +885,7 @@ jasmine.testJumpWords100 = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -921,11 +912,9 @@ jasmine.testJumpWords100 = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpWords100()
 
@@ -945,7 +934,7 @@ jasmine.testJumpSentencesNegative1 = function ( bigs, assertsOverride, reset, te
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -972,11 +961,9 @@ jasmine.testJumpSentencesNegative1 = function ( bigs, assertsOverride, reset, te
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpSentencesNegative1()
 
@@ -998,7 +985,7 @@ jasmine.testJumpSentences0 = function ( bigs, assertsOverride, reset, testText )
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1023,11 +1010,9 @@ jasmine.testJumpSentences0 = function ( bigs, assertsOverride, reset, testText )
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpSentences0()
 
@@ -1048,7 +1033,7 @@ jasmine.testJumpSentences1 = function ( bigs, assertsOverride, reset, testText )
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1073,11 +1058,9 @@ jasmine.testJumpSentences1 = function ( bigs, assertsOverride, reset, testText )
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpSentences1()
 
@@ -1098,7 +1081,7 @@ jasmine.testJumpSentences3 = function ( bigs, assertsOverride, reset, testText )
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1123,11 +1106,9 @@ jasmine.testJumpSentences3 = function ( bigs, assertsOverride, reset, testText )
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpSentences3()
 
@@ -1148,7 +1129,7 @@ jasmine.testJumpSentences100 = function ( bigs, assertsOverride, reset, testText
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1175,11 +1156,9 @@ jasmine.testJumpSentences100 = function ( bigs, assertsOverride, reset, testText
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpSentences100()
 
@@ -1200,7 +1179,7 @@ jasmine.testNextWord = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1225,11 +1204,9 @@ jasmine.testNextWord = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testNextWord()
 
@@ -1250,7 +1227,7 @@ jasmine.testNextSentence = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1275,11 +1252,9 @@ jasmine.testNextSentence = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testNextSentence()
 
@@ -1300,7 +1275,7 @@ jasmine.testPrevWord = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1327,11 +1302,9 @@ jasmine.testPrevWord = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testPrevWord()
 
@@ -1352,7 +1325,7 @@ jasmine.testPrevSentence = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1379,11 +1352,9 @@ jasmine.testPrevSentence = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testPrevSentence()
 
@@ -1407,7 +1378,7 @@ jasmine.testJumpToNegative1 = function ( bigs, assertsOverride, reset, testText 
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1432,11 +1403,9 @@ jasmine.testJumpToNegative1 = function ( bigs, assertsOverride, reset, testText 
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpToNegative1()
 
@@ -1457,7 +1426,7 @@ jasmine.testJumpTo0 = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1482,11 +1451,9 @@ jasmine.testJumpTo0 = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpTo0()
 
@@ -1507,7 +1474,7 @@ jasmine.testJumpTo6 = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1532,11 +1499,9 @@ jasmine.testJumpTo6 = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpTo6()
 
@@ -1557,7 +1522,7 @@ jasmine.testJumpTo11 = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1584,11 +1549,9 @@ jasmine.testJumpTo11 = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpTo11()
 
@@ -1609,7 +1572,7 @@ jasmine.testJumpTo100 = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.asserts = assertsOverride || defaultAsserts;
 
-	var eventAssertions = [
+	eventAssertions = [
 		{ event: 'newWordFragment', assertion: this.asserts.frags },
 
 		{ event: 'playBegin', assertion: this.asserts.not }, 		{ event: 'playFinish', assertion: this.asserts.not },
@@ -1636,10 +1599,8 @@ jasmine.testJumpTo100 = function ( bigs, assertsOverride, reset, testText ) {
 
 	callAll( bigs, opWith, eventAssertions, getAlwaysTrue, shortTime, reset, testText );
 
-	// Not sure about this...
-	afterEach(function () {
-		opWith = null;
-		eventAssertions = null;
-	});
+	// ??: Needed to prevent memory leak?
+	opWith = null;
+	eventAssertions = null;
 
 };  // End jasmine.testJumpTo100()

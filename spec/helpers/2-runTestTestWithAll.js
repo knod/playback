@@ -16,67 +16,73 @@ jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msT
 * 		never gets triggered? Why is the assert being triggered?
 */
 
-	// describe( "`." + op1 + "()` with " + arg1 + " then, on '" + event1 + "', calls `." + op2 + "()` with " + arg2 + " and listens for '" + event2 + "'", function () {
+	// describe( "`." + op1 + "()` with " + arg1 + " then, on '" + events.one + "', calls `." + op2 + "()` with " + arg2 + " and listens for '" + events.two + "'", function () {
 	describe( ", for a test-test, `." + opsWith.op1 + "()` with " + opsWith.arg1 + " then, on '" + events.one + "', calls", function () {
 
 
-		beforeEach(function () {
+		// beforeEach(function () {
 
-			console.log(plbk._currentAction)
 
-			var plbk 	= bigs.playback,
-				state 	= bigs.state;
+			// var plbk = bigs.playback,
+			// 	state 	= bigs.state;
 
-			var op1  = opsWith.op1,
-				arg1 = opsWith.arg1,
-				op2  = opsWith.op2,
-				arg2 = opsWith.arg2;
+			console.log(bigs.playback._currentAction)
 
-			var event1 = events.one,
-				event2 = events.two;
+			// var op1  = opsWith.op1,
+			// 	arg1 = opsWith.arg1,
+			// 	op2  = opsWith.op2,
+			// 	arg2 = opsWith.arg2;  // not needed
 
-			var op2Check 	 = checks.op2,
-				collectCheck = checks.collect;
+			// var event1 = events.one,
+			// 	event2 = events.two;  // not needed
 
-			testText = testText + ", for a test-test, `." + op1 + "()` with " + arg1 + " then, on '" + event1 + "', calls";
+			// var op2Check 	 = checks.op2,
+			// 	collectCheck = checks.collect;  // not needed
+
+			testText = testText + ", for a test-test, `." + opsWith.op1 + "()` with " + opsWith.arg1 + " then, on '" + events.one + "', calls";
 			// console.log(testText);
 
-			var frags, args, result;
-			msTillAssert = msTillAssert || 0;
+			// var frags, args, result;  // not needed
+			// msTillAssert = msTillAssert || 0;  // not needed
 
 			// Called after the first operation using the first event
-			var run1 = function ( one, two, three, four ) {
-
+			var handler = function ( one, two, three, four ) {
+				if ( events.one === 'newWordFragment' ) { console.log( '1:', one.getIndex() ); }
 				// console.log( '====== outside 1:', two, three, four )
-				// if ( event1 === 'resetBegin' ) { console.log( "what?" ) }  // never fires on 'play'
-				var canOp2 = op2Check( plbk, result, event1 );
+				// if ( events.one === 'resetBegin' ) { console.log( "what?" ) }  // never fires on 'play'
+				var canOp2 = checks.op1( bigs.playback, null, events.one );  // !!! No `result` here
 
 				if ( canOp2 ) {
 
 					// console.log( '====== inside 1:', two, three, four )
 
 					// Stop listening for this event
-					state.emitter.off( event1, run1 );
+					// bigs.state.emitter.off( events.one, handler );
+					bigs.state.emitter.removeAllListeners();  // Just to be sure
+
 					// // Start of the second listener and then the second function
-					// currentEvent = event2;
-					// state.emitter.on( currentEvent, run2 );
-					// plbk[ op2 ]( arg2 );
-					jasmine[ op2 ]( { playback: plbk, state: state }, null, false, testText, { event: event1, func: run1 } );
+					// currentEvent = events.two;
+					// bigs.state.emitter.on( currentEvent, handler2 );
+					// bigs.playback[ opsWith.op2 ]( opsWith.arg2 );
+					
+
+					// Need: ( bigs, assertsOverride, reset, testText )
+					jasmine[ opsWith.op2 ]( bigs, null, reset, testText );
 				}
 
 			};
 
 
-			// var run2 = function ( one, two, three, four ) {
+			// var handler2 = function ( one, two, three, four ) {
 
 			// 	// console.log( '====== outside 2:', two, three, four )
 
-			// 	// var canCollect = collectCheck( plbk, result, currentEvent );
+			// 	// var canCollect = checks.collect( bigs.playback, result, currentEvent );
 
 			// 	// if ( canCollect ) {
 			// 	// 	// I happen to know this will be the fragment some of the time
 			// 	// 	// and, most of the time it'll be the argument I'm interested in.
-			// 	// 	frags.push( arg2 );
+			// 	// 	frags.push( opsWith.arg2 );
 			// 	// 	args.push( [ one, two, three, four ] );
 
 			// 		// console.log( '====== inside 2:', two, three, four )
@@ -86,15 +92,15 @@ jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msT
 
 
 			// beforeEach(function ( done ) {
-				frags = [], args = [], result = { frags: frags, args: args };
-				this.result = result;
+				// frags = [], args = [], result = { frags: frags, args: args };
+				// this.result = result;
 
-				plbk.reset();
+				// bigs.playback.reset();
 
-				state.emitter.removeAllListeners();
-				state.emitter.on( event1, run1 );
+				// bigs.state.emitter.removeAllListeners();
+				bigs.state.emitter.on( events.one, handler );
 
-				plbk[ op1 ]( arg1 );
+				bigs.playback[ opsWith.op1 ]( opsWith.arg1 );
 
 				// setTimeout( done, (msTillAssert - (msTillAssert/4)) )
 
@@ -104,17 +110,12 @@ jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msT
 
 			// // This is here just to trigger the "before thing"
 			// it("it should...", function () {
-			// 	state.emitter.off( currentEvent, run2 );
-			// 	if ( assert ) { assert( plbk, result, currentEvent ) }
+			// 	bigs.state.emitter.off( currentEvent, handler2 );
+			// 	if ( assert ) { assert( bigs.playback, result, currentEvent ) }
 			// });
-		});
+		// });  // end beforeEach()
 
-		it("getting stuff to run", function () {
-			console.log('anything')
-			expect(5).toEqual(3);
-		});
-
-	});  // End describe
+	});  // end describe
 
 };  // End jasmine.detectUnusualResultsWith()
 
@@ -128,19 +129,19 @@ jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msT
 // state.playback.transformFragment = function ( frag ) { 	return frag; }
 // state.playback.accelerate = function ( frag ) { 	return 1; };
 
-// var run2 = function ( one, two, three, four ) {
+// var handler2 = function ( one, two, three, four ) {
 // 	console.log( '~~~~2:', 'playing a second time' );
 // 	state.emitter.removeAllListeners();
 // }
 
-// var run1 = function ( one, two, three, four ) {
+// var handler = function ( one, two, three, four ) {
 // 	console.log( '~~~~1:', one._currentAction );
 // 	state.emitter.removeAllListeners();
-// 	state.emitter.on( 'playBegin', run2 );
+// 	state.emitter.on( 'playBegin', handler2 );
 // 	one.play( 'y', true );
 // }
 
 // state.emitter.removeAllListeners();
 // plab.reset()
-// state.emitter.on( 'playBegin', run1 );
+// state.emitter.on( 'playBegin', handler );
 // plab.play( 'x', true )
