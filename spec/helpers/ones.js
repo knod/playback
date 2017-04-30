@@ -4,7 +4,7 @@ jasmine.one = function ( val ) {
 
 	beforeEach(function () {
 		this.test1 = val
-		console.log( 'beforeEach:', count, val, this.test1 );
+		console.log( 'beforeEach in other function:', count, val, this.test1 );
 		count++
 		// jasmine.runOne( val, count );
 	});
