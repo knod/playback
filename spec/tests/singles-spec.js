@@ -1,4 +1,20 @@
 
+var two = function ( val ) {
+
+	beforeEach(function () {
+		this.test1 = val
+		console.log( 'beforeEach in other function:', count, val, this.test1 );
+		count++
+		// jasmine.runOne( val, count );
+	});
+
+	// afterEach(function () {
+	// 	this.test = null;
+	// });
+
+	jasmine.runOne( val, count );
+};
+
 var count = 1
 
 describe("One test", function () {
@@ -23,19 +39,36 @@ describe("One test", function () {
 
 
 
-	jasmine.one( 'yaaas' );
-	jasmine.one( 'noooo' );
+	// jasmine.one( 'yaaas' );
+	// jasmine.one( 'noooo' );
 
-	// Results:
-	// beforeEach: 1 yaaas yaaas
-	// beforeEach: 2 noooo noooo
-	// it: 1 noooo yaaas false
-	// (then a "failure")
-	// beforeEach: 3 yaaas yaaas
-	// beforeEach: 4 noooo noooo
-	// it: 1 noooo noooo true
-	// (then a success)
-	
-	// Why is the `beforeEach` being called 4 times?
+	// // Results:
+	// // beforeEach: 1 yaaas yaaas
+	// // beforeEach: 2 noooo noooo
+	// // it: 1 noooo yaaas false
+	// // (then a "failure")
+	// // beforeEach: 3 yaaas yaaas
+	// // beforeEach: 4 noooo noooo
+	// // it: 1 noooo noooo true
+	// // (then a success)
+
+	// // Why is the `beforeEach` being called 4 times?
+
+
+
+	// two( 'yaaas' );
+	// two( 'noooo' );
+
+	// // Results:
+	// // beforeEach: 1 yaaas yaaas
+	// // beforeEach: 2 noooo noooo
+	// // it: 1 noooo yaaas false
+	// // (then a "failure")
+	// // beforeEach: 3 yaaas yaaas
+	// // beforeEach: 4 noooo noooo
+	// // it: 1 noooo noooo true
+	// // (then a success)
+
+	// // Why is the `beforeEach` being called 4 times?
 
 });
