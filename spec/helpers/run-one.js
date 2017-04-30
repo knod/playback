@@ -8,16 +8,4 @@ jasmine.runOne = function ( expected1, count ) {
 
 	});
 
-	// Results:
-	// beforeEach: 1 yaaas yaaas
-	// beforeEach: 2 noooo noooo
-	// it: 1 noooo yaaas false
-	// (then a "failure")
-	// beforeEach: 3 yaaas yaaas
-	// beforeEach: 4 noooo noooo
-	// it: 1 noooo noooo true
-	// (then a success)
-
-	// Why is the `beforeEach` being called 4 times?
-
 };

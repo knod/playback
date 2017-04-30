@@ -35,5 +35,7 @@ describe("One test", function () {
 	// beforeEach: 4 noooo noooo
 	// it: 1 noooo noooo true
 	// (then a success)
+	
+	// Why is the `beforeEach` being called 4 times?
 
 });
