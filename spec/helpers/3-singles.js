@@ -8,8 +8,10 @@
 /* ( {playback, state}, {op, arg}, {event, assertion}, func, int, func, bool, str ) */
 var runSimple = jasmine.runSimpleTestWith;
 
-var shortTime = 30,
-	longTime  = 60;
+// var shortTime = 30,
+// 	longTime  = 60;
+var shortTime = 80,
+	longTime  = 80;
 
 var	parsedText = [
 		[ 'Victorious,', 'you','brave', 'flag.' ],
@@ -77,7 +79,7 @@ var defaultAsserts = {
 	progress: null
 }
 
-defaultAsserts.not = function( plbk, result, testText ) {
+defaultAsserts.not = function ( plbk, result, testText, evnt ) {
 
 	var shouldFail = checkExpectedToFail( testText );
 	if ( shouldFail ) {
@@ -90,14 +92,19 @@ defaultAsserts.not = function( plbk, result, testText ) {
 	shouldFail = null;  // ??: Needed?
 };
 
-defaultAsserts.triggered = function( plbk, result, testText ) {
+defaultAsserts.triggered = function ( plbk, result, testText, evnt ) {
 
 	var shouldFail = checkExpectedToFail( testText );
 	if ( shouldFail ) {
 		// Nothing is expected, it's failing for good reasons
 	} else {
 		// No frags if not 'newWordFragment'
-		expect( result.args[0][0] ).toBe( plbk );
+		expect( result.args[0] ).not.toEqual( undefined );
+		if ( !result.args[0] ) {
+			fail( '`result.args[0]` was falsy in `triggered` assertion:', result.args[0] )
+		} else {
+			expect( result.args[0][0] ).toBe( plbk );
+		}
 	}
 
 	shouldFail = null;  // ??: Needed?
@@ -116,21 +123,30 @@ var makeProgressAsserter = function ( plyb, numFrags, vals ) {
 * which asserts that the correct progress was made at
 * the 0, 2, 5, 8, and 11th triggereing of the 'progress' event.
 */
-	return function assertProgress ( plbk, result, testText ) {
+	return function assertProgress ( plbk, result, testText, evnt ) {
 
 		var shouldFail = checkExpectedToFail( testText );
 		if ( supressExpectedFailures && shouldFail ) {
 			// Nothing is expected, it's failing for good reasons
 		} else {
-			expect( result.args[0][0] ).toBe( plyb );
 
-			expect( result.args.length ).toEqual( numFrags );
+			expect( result.args[0] ).not.toEqual( undefined );
 
-			if ( vals[0] ) { expect( result.arg2s[0] ).toEqual( vals[0] ); }
-			if ( vals[1] ) { expect( result.arg2s[2] ).toEqual( vals[1] ); }
-			if ( vals[2] ) { expect( result.arg2s[5] ).toEqual( vals[2] ); }
-			if ( vals[3] ) { expect( result.arg2s[8] ).toEqual( vals[3] ); }
-			if ( vals[4] ) { expect( result.arg2s[11] ).toEqual( vals[4] ); }
+			if ( !result.args[0] ) {
+				fail( '`result.args[0]` was falsy in `progress` assertion:', result.args[0] )
+			} else {
+
+				expect( result.args[0][0] ).toBe( plyb );
+
+				expect( result.args.length ).toEqual( numFrags );
+
+				if ( vals[0] ) { expect( result.arg2s[0] ).toEqual( vals[0] ); }
+				if ( vals[1] ) { expect( result.arg2s[2] ).toEqual( vals[1] ); }
+				if ( vals[2] ) { expect( result.arg2s[5] ).toEqual( vals[2] ); }
+				if ( vals[3] ) { expect( result.arg2s[8] ).toEqual( vals[3] ); }
+				if ( vals[4] ) { expect( result.arg2s[11] ).toEqual( vals[4] ); }
+			}
+
 		}
 
 		shouldFail = null;  // ??: Needed?
@@ -147,7 +163,7 @@ var makeFragAsserter = function ( plyb, frags ) {
 * which asserts that the given fragments are the ones that
 * were collected.
 */
-	return function assertFrags( plbk, result, testText ) {
+	return function assertFrags( plbk, result, testText, evnt ) {
 
 		// console.log( result.arg2s );
 
@@ -155,8 +171,13 @@ var makeFragAsserter = function ( plyb, frags ) {
 		if ( supressExpectedFailures && shouldFail ) {
 			// Nothing is expected, it's failing for good reasons
 		} else {
-			expect( result.args[0][0] ).toBe( plyb );
-			expect( result.arg2s ).toEqual( frags );
+			expect( result.args[0] ).not.toEqual( undefined );
+			if ( !result.args[0] ) {
+				fail( '`result.args[0]` was falsy in `frags` assertion:', result.args[0] )
+			} else {
+				expect( result.args[0][0] ).toBe( plyb );
+				expect( result.arg2s ).toEqual( frags );
+			}
 		}
 
 		shouldFail = null;  // ??: Needed?

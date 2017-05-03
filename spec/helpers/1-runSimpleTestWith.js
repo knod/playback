@@ -2,13 +2,13 @@
 'use strict';
 
 // ---- Before all so it won't accumulate in `describe` ---- \\
+var result, whenRun;
+var evnt;
+
 var thisText;
 var lastText = "it should return...";
 
 var count = 1;
-var result, whenRun;
-
-var prevThis, currentThis;
 
 // ---- inner `describe` ---- \\
 jasmine.runSimpleTestWith = function ( bigs, opWith, eventAssertion, mayCollectCheck, msTillAssert, reset, testText ) {
@@ -17,28 +17,29 @@ jasmine.runSimpleTestWith = function ( bigs, opWith, eventAssertion, mayCollectC
 */
 	thisText = "`." + opWith.op + "()` with " + opWith.arg + " and we collect data on '" + eventAssertion.event + "'";
 
-	describe( thisText, function () {
+	// describe( thisText, function () {
 
 		testText 	 = testText + ' ' + thisText;
 		msTillAssert = msTillAssert || 0;
 
+		evnt = eventAssertion.event;
 
-		it( lastText, function inIt( done ) {
+
+		// it( lastText, function inIt( done ) {
 
 			// if ( eventAssertion !== null ) { console.log( 'event in "it()":', count, eventAssertion.event ); }
 			// else { console.log( 'event in "it()":', count, null ); }
 
 			bigs.state.emitter.removeAllListeners();
 
-
-
 			result = { arg2s: [], args: [] };
-			console.log( 'first:', count, result.arg2s );
 			count++;
 
 			whenRun = function ( one, two, three, four ) {
 
-				// if ( eventAssertion !== null ) { console.log( eventAssertion.event ) }
+				// console.log( '2:', opWith.op );
+				if ( evnt ) { console.log( '2:', one.getIndex(), evnt, two ) }
+				// console.log( '2:' )
 				// console.trace( count, 'event === null', eventAssertion === null );
 				count++;
 				// if ( eventAssertion.event === 'newWordFragment' ) { console.log( '2:', one.getIndex() ); }
@@ -66,14 +67,7 @@ jasmine.runSimpleTestWith = function ( bigs, opWith, eventAssertion, mayCollectC
 				testText = testText + ' ' + lastText;
 				// console.log( 'count:', count, '; result:', result)
 
-				// console.log( 'second:', count, result.arg2s );
-				// Not async
-				// try {
-					if ( eventAssertion.assertion ) { eventAssertion.assertion( bigs.playback, result, testText ) }
-				// } catch ( err ) {
-				// 	done( err );
-				// 	return;
-				// }
+					if ( eventAssertion.assertion ) { eventAssertion.assertion( bigs.playback, result, testText, eventAssertion.event ) }
 
 				// Can't do any of these. It's not matter of time because the same
 				// exact pattern happens no matter the amount of time I delay. Is it
@@ -81,13 +75,14 @@ jasmine.runSimpleTestWith = function ( bigs, opWith, eventAssertion, mayCollectC
 
 				// !!! This inidicates a serious problem somewhere, but I don't know how to find it
 
-				// // ??: Needed?
-				// thisText = null;
-				// lastText = "it should return...";
+				// ??: Needed?
+				thisText = null;
+				lastText = "it should return...";
 
-				// // ??: Needed?
-				// result 	= null;
-				// whenRun = null;
+				// ??: Needed?
+				result 	= null;
+				whenRun = null;
+				evnt 	= null;
 
 				// ??: Needed?
 				bigs 			= null;
@@ -102,8 +97,8 @@ jasmine.runSimpleTestWith = function ( bigs, opWith, eventAssertion, mayCollectC
 
 			}, msTillAssert - (msTillAssert/4) )
 
-		}, msTillAssert );
+		// }, msTillAssert );
 
-	});  // End describe
+	// });  // End describe
 
 };  // End jasmine.runSimpleTestWith()

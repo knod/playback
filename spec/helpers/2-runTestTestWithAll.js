@@ -1,4 +1,12 @@
 
+var handler, thisText;
+var result, whenRun;
+var evnt1, evnt2;
+
+var lastText = "it should return...";
+
+var count = 1;
+
 jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msTillAssert, assert, reset, testText ) {
 /* (
 * 	{playback: {}, state: {}},
@@ -15,105 +23,129 @@ jasmine.detectUnusualResultsWith = function ( bigs, opsWith, events, checks, msT
 * - ??: How to test if first test is never triggered? Doesn't that mean the assert
 * 		never gets triggered? Why is the assert being triggered?
 */
+	thisText = ", for a test-test, `." + opsWith.op1 + "()` with " + opsWith.arg1 + " then, on '" + events.one + "', calls";
 
 	// describe( "`." + op1 + "()` with " + arg1 + " then, on '" + events.one + "', calls `." + op2 + "()` with " + arg2 + " and listens for '" + events.two + "'", function () {
-	describe( ", for a test-test, `." + opsWith.op1 + "()` with " + opsWith.arg1 + " then, on '" + events.one + "', calls", function () {
+	describe( thisText, function () {
+
+		testText 	 = testText + ' ' + thisText;
+		msTillAssert = msTillAssert || 0;
+
+		evnt1 = events.one;
+
+		// console.log(testText);
+
+		// Called after the first operation using the first event
+		handler = function ( one, two, three, four ) {
+
+			if ( events.one === 'newWordFragment' ) { console.log( '1:', count, one.getIndex(), two, opsWith.op1, events.one ); }
+			count++;
+
+			var canOp2 = checks.op1( bigs.playback, null, events.one );  // !!! No `result` here
+
+			if ( canOp2 ) {
+
+				// console.log( '====== inside 1:', two, three, four )
+
+				// Stop listening for this event
+				// bigs.state.emitter.off( events.one, handler );
+				bigs.state.emitter.removeAllListeners();  // Just to be sure
+				console.log('calling 2')
+				// Need: ( bigs, assertsOverride, reset, testText )
+				jasmine[ opsWith.op2 ]( bigs, null, reset, testText );
+			}
+
+		};
 
 
-		// beforeEach(function () {
+		// move everything into here
 
 
-			// var plbk = bigs.playback,
-			// 	state 	= bigs.state;
+		bigs.state.emitter.on( events.one, handler );
 
-			console.log(bigs.playback._currentAction)
+		bigs.playback[ opsWith.op1 ]( opsWith.arg1 );
 
-			// var op1  = opsWith.op1,
-			// 	arg1 = opsWith.arg1,
-			// 	op2  = opsWith.op2,
-			// 	arg2 = opsWith.arg2;  // not needed
 
-			// var event1 = events.one,
-			// 	event2 = events.two;  // not needed
 
-			// var op2Check 	 = checks.op2,
-			// 	collectCheck = checks.collect;  // not needed
 
-			testText = testText + ", for a test-test, `." + opsWith.op1 + "()` with " + opsWith.arg1 + " then, on '" + events.one + "', calls";
-			// console.log(testText);
 
-			// var frags, args, result;  // not needed
-			// msTillAssert = msTillAssert || 0;  // not needed
+		it( lastText, function inIt( done ) {
 
-			// Called after the first operation using the first event
-			var handler = function ( one, two, three, four ) {
-				if ( events.one === 'newWordFragment' ) { console.log( '1:', one.getIndex() ); }
-				// console.log( '====== outside 1:', two, three, four )
-				// if ( events.one === 'resetBegin' ) { console.log( "what?" ) }  // never fires on 'play'
-				var canOp2 = checks.op1( bigs.playback, null, events.one );  // !!! No `result` here
+			// if ( eventAssertion !== null ) { console.log( 'event in "it()":', count, eventAssertion.event ); }
+			// else { console.log( 'event in "it()":', count, null ); }
 
-				if ( canOp2 ) {
+			bigs.state.emitter.removeAllListeners();
 
-					// console.log( '====== inside 1:', two, three, four )
+			result = { arg2s: [], args: [] };
+			count++;
 
-					// Stop listening for this event
-					// bigs.state.emitter.off( events.one, handler );
-					bigs.state.emitter.removeAllListeners();  // Just to be sure
+			whenRun = function ( one, two, three, four ) {
 
-					// // Start of the second listener and then the second function
-					// currentEvent = events.two;
-					// bigs.state.emitter.on( currentEvent, handler2 );
-					// bigs.playback[ opsWith.op2 ]( opsWith.arg2 );
-					
-
-					// Need: ( bigs, assertsOverride, reset, testText )
-					jasmine[ opsWith.op2 ]( bigs, null, reset, testText );
+				console.log( '2:', opWith.op );
+				if ( evnt1 ) { console.log( '2:', one.getIndex(), two ) }
+				// console.log( '2:' )
+				// console.trace( count, 'event === null', eventAssertion === null );
+				count++;
+				// if ( eventAssertion.event === 'newWordFragment' ) { console.log( '2:', one.getIndex() ); }
+				if ( mayCollectCheck && mayCollectCheck( bigs.playback, result, eventAssertion.event ) ) {
+					// I happen to know this will be the fragment some of the time
+					// and, most of the time it'll be the argument I'm interested in.
+					result.arg2s.push( two );
+					result.args.push( [ one, two, three, four ] );
 				}
 
 			};
 
+			// playback reset and events removed in `beforeEach()` in originating script
+			// Can't include `beforeEach()` in loop
 
-			// var handler2 = function ( one, two, three, four ) {
+			if ( reset ) { bigs.playback._reset(); }  // ??: Needed?
+			// console.log( eventAssertion );
+			bigs.state.emitter.on( eventAssertion.event, whenRun );
 
-			// 	// console.log( '====== outside 2:', two, three, four )
+			bigs.playback[ opWith.op ]( opWith.arg );
 
-			// 	// var canCollect = checks.collect( bigs.playback, result, currentEvent );
+			setTimeout( function () {
 
-			// 	// if ( canCollect ) {
-			// 	// 	// I happen to know this will be the fragment some of the time
-			// 	// 	// and, most of the time it'll be the argument I'm interested in.
-			// 	// 	frags.push( opsWith.arg2 );
-			// 	// 	args.push( [ one, two, three, four ] );
+				// bigs.state.emitter.off( eventAssertion.event, whenRun );
+				testText = testText + ' ' + lastText;
+				// console.log( 'count:', count, '; result:', result)
 
-			// 		// console.log( '====== inside 2:', two, three, four )
-			// 	// }
+					if ( eventAssertion.assertion ) { eventAssertion.assertion( bigs.playback, result, testText, eventAssertion.event ) }
 
-			// };
+				// Can't do any of these. It's not matter of time because the same
+				// exact pattern happens no matter the amount of time I delay. Is it
+				// a matter of execustion order.
+
+				// !!! This inidicates a serious problem somewhere, but I don't know how to find it
+
+				// ??: Needed?
+				thisText = null;
+				lastText = "it should return...";
+
+				// ??: Needed?
+				result 	= null;
+				handler = null;
+				whenRun = null;
+				evnt1 	= null;
+				evnt2 	= null;
+
+				// ??: Needed?
+				bigs 			= null;
+				opWith 			= null;
+				eventAssertion 	= null;
+				mayCollectCheck 	= null;
+				msTillAssert 	= null;
+				reset 			= null;
+				testText 		= null;
+
+				done();
+
+			}, msTillAssert - (msTillAssert/4) )
+
+		}, msTillAssert );
 
 
-			// beforeEach(function ( done ) {
-				// frags = [], args = [], result = { frags: frags, args: args };
-				// this.result = result;
-
-				// bigs.playback.reset();
-
-				// bigs.state.emitter.removeAllListeners();
-				bigs.state.emitter.on( events.one, handler );
-
-				bigs.playback[ opsWith.op1 ]( opsWith.arg1 );
-
-				// setTimeout( done, (msTillAssert - (msTillAssert/4)) )
-
-			// }, msTillAssert );
-
-
-
-			// // This is here just to trigger the "before thing"
-			// it("it should...", function () {
-			// 	bigs.state.emitter.off( currentEvent, handler2 );
-			// 	if ( assert ) { assert( bigs.playback, result, currentEvent ) }
-			// });
-		// });  // end beforeEach()
 
 	});  // end describe
 

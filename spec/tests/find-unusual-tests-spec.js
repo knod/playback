@@ -3,13 +3,17 @@
 
 // ---- Before all so it won't accumulate in `describe` --- \\
 
-var testing = true;  // Quick toggle
+var testing = false;  // Quick toggle
 
 var Playback 	 = require( '../../dist/Playback.js' );
 var EventEmitter = require( '../../node_modules/wolfy87-eventemitter/EventEmitter.js' );
 
-var shortTime = 30,
-	longTime  = 60,
+// var shortTime = 30,
+// 	longTime  = 60,
+// 	superLongTime = 300;
+
+var shortTime = 80,
+	longTime  = 80,
 	superLongTime = 300;
 
 var plab, state, parsedText, forward, bigs;
@@ -204,7 +208,7 @@ var allEvents = [
 	// 'rewindBegin', 'rewindFinish',
 	// 'fastForwardBegin', 'fastForwardFinish',
 	// 'loopBegin', 'loopFinish',
-	// 'newWordFragment',
+	'newWordFragment',
 	// 'loopSkip',
 	// 'progress',
 	// 'done'
@@ -213,34 +217,34 @@ var allEvents = [
 // (can show 100 failures max - sometimes just one test)
 var singleTests = [
 	'testPlay',
-	// 'testRestart',
-	// 'testReset',
-	// 'testPause',
-	// 'testStop',
-	// 'testClose',
-	// 'testTogglePlayPause',
-	// 'testRewind',
-	// 'testFastForward',
-	// 'testJumpWordsNegative1',
-	// 'testJumpWords0',
-	// 'testJumpWords3',
-	// 'testJumpWords4',
-	// 'testJumpWords11',
-	// 'testJumpWords100',
-	// 'testJumpSentencesNegative1',
-	// 'testJumpSentences0',
-	// 'testJumpSentences1',
-	// 'testJumpSentences3',
-	// 'testJumpSentences100',
-	// 'testNextWord',
-	// 'testNextSentence',
-	// 'testPrevWord',
-	// 'testPrevSentence',
-	// 'testJumpToNegative1',
-	// 'testJumpTo0',
-	// 'testJumpTo6',
-	// 'testJumpTo11',
-	// 'testJumpTo100'
+	'testRestart',
+	'testReset',
+	'testPause',
+	'testStop',
+	'testClose',
+	'testTogglePlayPause',
+	'testRewind',
+	'testFastForward',
+	'testJumpWordsNegative1',
+	'testJumpWords0',
+	'testJumpWords3',
+	'testJumpWords4',
+	'testJumpWords11',
+	'testJumpWords100',
+	'testJumpSentencesNegative1',
+	'testJumpSentences0',
+	'testJumpSentences1',
+	'testJumpSentences3',
+	'testJumpSentences100',
+	'testNextWord',
+	'testNextSentence',
+	'testPrevWord',
+	'testPrevSentence',
+	'testJumpToNegative1',
+	'testJumpTo0',
+	'testJumpTo6',
+	'testJumpTo11',
+	'testJumpTo100'
 ];
 
 var thisAssert = null;

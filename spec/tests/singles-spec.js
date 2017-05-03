@@ -52,38 +52,14 @@ describe( testText, function() {
 	beforeEach(function () {
 
 		state.emitter.removeAllListeners();  // THIS HAS TO COME FIRST!!!
-		plab._reset();
-		// jasmine.clock().install();
-
-		// this.result = null;
-		// console.log( 'result:', this.result );
-
-		// None of these are defined in here
-		// // ??: Needed?
-		// thisText = null;
-		// lastText = "it should return...";
-
-		// // ??: Needed?
-		// result 	= null;
-		// whenRun = null;
-
-		// // ??: Needed?
-		// bigs 			= null;
-		// opWith 			= null;
-		// console.log('~~~~~~~~~~~~~~~')
-		// evntAssertion 	= null;
-		// mayCollectCheck = null;
-		// msTillAssert 	= null;
-		// reset 			= null;
-		// testText 		= null;
+		plab._reset();  // No event
 
 	});
 
-	afterEach(function() {
-		// state.emitter.removeAllListeners();
-		// plab.reset();
-		// jasmine.clock().uninstall();
-	});
+	// afterEach(function() {
+	// 	// state.emitter.removeAllListeners();
+	// 	// plab.reset();
+	// });
 
 
 
@@ -91,36 +67,93 @@ describe( testText, function() {
 	// =========== SINGLES ===========
 
 	// See 'spec/helpers/3-singles.js'
-
-	// jasmine.testPlay( bigObjects, null, true, testText );
-	// jasmine.testRestart( bigObjects, null, true, testText );
-	// jasmine.testReset( bigObjects, null, true, testText );
-	// jasmine.testPause( bigObjects, null, true, testText );
-	// jasmine.testStop( bigObjects, null, true, testText );
-	// jasmine.testClose( bigObjects, null, true, testText );
-	// jasmine.testTogglePlayPause( bigObjects, null, true, testText );
-	// jasmine.testRewind( bigObjects, null, true, testText );
-	// jasmine.testFastForward( bigObjects, null, true, testText );
-	// jasmine.testJumpWordsNegative1( bigObjects, null, true, testText );
-	// jasmine.testJumpWords0( bigObjects, null, true, testText );
-	// jasmine.testJumpWords3( bigObjects, null, true, testText );
-	// jasmine.testJumpWords4( bigObjects, null, true, testText );
-	// jasmine.testJumpWords11( bigObjects, null, true, testText );
-	// jasmine.testJumpWords100( bigObjects, null, true, testText );
-	// jasmine.testJumpSentencesNegative1( bigObjects, null, true, testText );
-	// jasmine.testJumpSentences0( bigObjects, null, true, testText );
-	// jasmine.testJumpSentences1( bigObjects, null, true, testText );
-	// jasmine.testJumpSentences3( bigObjects, null, true, testText );
-	// jasmine.testJumpSentences100( bigObjects, null, true, testText );
-	// jasmine.testNextWord( bigObjects, null, true, testText );
-	// jasmine.testNextSentence( bigObjects, null, true, testText );
-	// jasmine.testPrevWord( bigObjects, null, true, testText );
-	// jasmine.testPrevSentence( bigObjects, null, true, testText );
-	// jasmine.testJumpToNegative1( bigObjects, null, true, testText );
-	// jasmine.testJumpTo0( bigObjects, null, true, testText );
-	// jasmine.testJumpTo6( bigObjects, null, true, testText );
-	// jasmine.testJumpTo11( bigObjects, null, true, testText );
-	// jasmine.testJumpTo100( bigObjects, null, true, testText );
+	it("should", function () {
+		jasmine.testPlay( bigObjects, null, true, testText );
+	}, 100)
+	it("should", function () {
+		jasmine.testRestart( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testReset( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testPause( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testStop( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testClose( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testTogglePlayPause( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testRewind( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testFastForward( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpWordsNegative1( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpWords0( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpWords3( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpWords4( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpWords11( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpWords100( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpSentencesNegative1( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpSentences0( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpSentences1( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpSentences3( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpSentences100( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testNextWord( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testNextSentence( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testPrevWord( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testPrevSentence( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpToNegative1( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpTo0( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpTo6( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpTo11( bigObjects, null, true, testText );
+	}, 100);
+	it("should", function () {
+		jasmine.testJumpTo100( bigObjects, null, true, testText );
+	}, 100);
 
 	// xit("why isn't jumping causing an infinite loop in 'onceBegin'?")
 
