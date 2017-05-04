@@ -63,6 +63,9 @@
 			plab._direction 		= 'forward';
 			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
 
+			plab._queue = [];
+			plab._queueRunning = false;
+
 			return plab;
 		};  // End plab._init()
 
@@ -102,6 +105,40 @@
 
 
 		// ============== FLOW CONTROL ============== \\
+
+		plab._queueAdd = function ( funcName, args ) {
+			// in caller: var args = Array.prototype.slice.call( arguments );
+			plab._queue.push( { name: funcName, arguments: args } );
+			if ( !plab._queueRunning ) { plab._queueNext(); }
+			return plab;
+		};  // End plab._queueAdd()
+
+		plab._queueNext = function () {
+		// Everything that can be put on a queue _must_ call
+		// this when it's done
+			plab._queueRunning = true;
+			if ( plab._queue.length === 0 ) {
+
+				plab._queueRunning = false;
+
+			} else {
+
+				var pair 		= plab._queue.shift(),
+					proxyName 	= '_' + pair.name + 'Proxy',
+					func 		= plab[ proxyName ];
+
+				func.apply( func, pair.arguments );
+			}
+
+		};  // End plab._queueNext()
+
+		plab._queueFinish = function () {
+			plab._queueRunning = false;
+			if ( plab._queue.length !== 0 ) {
+				plab._queueNext();
+			}
+		};  // End plab._queueFinish()
+
 
 		plab._reset = function () {
 		/* () -> Playback

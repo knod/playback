@@ -382,7 +382,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 	// // ------------ play() + stopBegin ------------
 	// // play/stopBegin/play behavior? Should be prevented from playing when
-	// // beginning to stop?
+	// // beginning to stop? We need a queue apparently.
 	// asts[ 'doubles: play(null) + stopBegin > play(null) + newWordFragment' ] =
 	// asts[ 'doubles: play(null) + stopBegin > play(null) + playBegin' ] =
 	// asts[ 'doubles: play(null) + stopBegin > play(null) + playFinish' ] =
