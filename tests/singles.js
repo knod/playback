@@ -1,6 +1,6 @@
 // tests/singles.js
 
-var waitTime = 30;  // 20 is too short
+var waitTime = 30;  // 20 is too short, 25 maybe ok
 
 
 var SetUp 		= require('./setup-default.js'),
@@ -135,7 +135,7 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 
 		});  // End .then()
 
-	}, waitTime + 10);
+	}, waitTime + 10 );
 };  // End iterate()
 
 

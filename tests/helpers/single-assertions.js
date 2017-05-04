@@ -184,7 +184,7 @@ var makeProgressAsserter = function ( plyb, numFrags, vals ) {
 					msg 	= 'event was ' + colors.red + 'NOT' + colors.none + ' called the right number of times';
 				} else {
 					passes = arraysEqual( result.arg2s, vals );
-					if ( !passes ) { msg = 'progress expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
+					if ( !passes ) { msg = 'progress expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
 				}
 			}
 

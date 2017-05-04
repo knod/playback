@@ -3,7 +3,7 @@
 // Too long to run on every single code change, but should
 // be run sometimes, just to check
 
-var waitTime = 60;  // Double of single tests
+var waitTime = 50;  // Basically double of single tests (25 was just enough with singles)
 
 
 var SetUp 		= require('./setup-default.js'),
@@ -42,7 +42,7 @@ var events = [
 	// 'resetBegin', 'resetFinish',
 	// 'restartBegin', 'restartFinish',
 	// 'pauseBegin', 'pauseFinish',
-	// 'stopBegin', 'stopFinish',
+	'stopBegin', 'stopFinish',
 	// 'closeBegin', 'closeFinish',
 	// 'onceBegin', 'onceFinish',
 	// 'resumeBegin', 'resumeFinish',
@@ -52,7 +52,7 @@ var events = [
 	// 'newWordFragment',
 	// 'loopSkip',
 	// 'progress',
-	'done'
+	// 'done'
 ];
 
 
@@ -90,17 +90,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 
 	label = label + ' > ' + func2Name + '(' + arg2 + ')' + ' + ' + evnt2 ;
 
-	var afterFirstEvent = function () {
-		
-		// This should be mutated in `runLastEvent()`
-		var result = { playback: null, arg2s: [] };
-		/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, int, bool ) */
-		runLastEvent(
-			result, bigObjects,
-			{ op: func2Name, arg: arg2, event: evnt2 },
-			false  // reset
-		);
-
+	var runAssert = function ( result, assertWaitTime ) {
 		setTimeout( function runAssert() {
 		
 			// Run a test
@@ -173,22 +163,46 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 
 					iterate( 'doubles:', nextFunc1I, nextArg1I, nextEvent1I, nextFunc2I, nextArg2I, nextEvent2I )  // iterate
 
-					// Too long to run on every single code change, but should
-					// be run sometimes, just to check
-
 				}  // end maybe repeat
 
 			});  // End .then()
 
-		}, waitTime + 10);
+		}, assertWaitTime );
+	};  // End runAssert()
+
+
+	// This should be mutated in `runLastEvent()`
+	var result = { playback: null, arg2s: [] };
+
+	var secondCalled = false;
+	var afterFirstEvent = function () {
+	// Need it in here for the variables. Called from first event as a callback.
+
+		secondCalled = true;
+		
+		/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, int, bool ) */
+		runLastEvent(
+			result, bigObjects,
+			{ op: func2Name, arg: arg2, event: evnt2 },
+			false  // reset
+		);
+
+		runAssert( result, waitTime );		
 	};  // End afterFirstEvent()
 
 
+	// Trigger first event that will trigger the next event
+	/* ( func, {playback, emitter}, {op, arg, event}, bool ) */
 	runFirstEvent(
 		afterFirstEvent, bigObjects,
 		{ op: func1Name, arg: arg1, event: evnt1 },
 		true  // reset
 	);
+
+	// In case the first event was never triggered
+	setTimeout(function() {
+		if ( !secondCalled ) { runAssert( result, 0 ); }
+	}, waitTime )
 
 };  // End iterate()
 
