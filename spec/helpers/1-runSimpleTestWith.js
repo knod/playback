@@ -12,7 +12,7 @@ var count = 1;
 
 // ---- inner `describe` ---- \\
 jasmine.runSimpleTestWith = function ( bigs, opWith, eventAssertion, mayCollectCheck, msTillAssert, reset, testText ) {
-/* ( {playback, state}, {op, arg}, {event, assertion}, func, int, func, bool, str )
+/* ( {playback, state}, {op, arg}, {event, assertion}, func, int, bool, str )
 * 
 */
 	thisText = "`." + opWith.op + "()` with " + opWith.arg + " and we collect data on '" + eventAssertion.event + "'";

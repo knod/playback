@@ -1,7 +1,7 @@
 // node tests/example.js
 // sync example
 
-var it = require('./tests-core.js');
+var tester = require('./tests-core.js');
 
 var xs = [1, 2, 3],
     ys = [1, 2, 3],
@@ -15,7 +15,7 @@ function doOneThing ( x = 0, y = 0, z = 0 ) {
   const label = foo + ' & ' + bar + ' & ' + baz;
 
   // First run a test
-  it( label, function tests ( done ) {
+  tester.runOne( label, function tests ( done ) {
     // do stuff
     try {
         // There will be some failures on purpose
@@ -45,6 +45,7 @@ function doOneThing ( x = 0, y = 0, z = 0 ) {
     }  // end increment
 
     if (nextX >= xs.length) {
+      // tester.finish()??
       return;
     } else {
       doOneThing( nextX, nextY, nextZ )  // iterate

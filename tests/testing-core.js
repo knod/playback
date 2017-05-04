@@ -3,6 +3,8 @@
 
 // Call done() with a non-falsy argument to cause a failure
 
+var core = {};
+
 var total = 0,
   passed  = 0;
 
@@ -33,7 +35,7 @@ function tryPromise ( fn ) {
   });
 };
 
-function it ( label, callback, timeoutLength = 1000 ) {
+core.runOne = function ( label, callback, timeoutLength = 1000 ) {
   let tryer;
 
   if ( callback.length > 0 ) {
@@ -89,12 +91,12 @@ function it ( label, callback, timeoutLength = 1000 ) {
 
 
 // TODO:
-function getReport () {
-  console.log( '~~~ Report: ' + passed + ' out of ' + total + ' tests passed' );
+core.finish = function () {
+  console.log( '\n\n~~~ Report: ' + passed + ' out of ' + total + ' tests passed' );
 };
 
 
-module.exports = it;
+module.exports = core;
 
 
 
