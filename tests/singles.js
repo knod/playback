@@ -1,50 +1,15 @@
-// tests/test-singles.js
+// tests/singles.js
 
-var it = require('./tests-core.js');
-var waitTime = 30;
-
-var Playback = require( '../dist/Playback.js' );
-var EventEmitter = require( '../node_modules/wolfy87-eventemitter/EventEmitter.js' );
+var waitTime = 30;  // 20 is too short
 
 
-var state, emitter, parsedText, plab, bigObjects;
-
-var setUp = function () {
-	state = {};
-
-	emitter = state.emitter = new EventEmitter();  // Now has events
-	state.stepper 	= { maxNumCharacters: 20 };
-	state.delayer 	= { slowStartDelay: 0, _baseDelay: 1, calcDelay: function () { return 1; } };  // Speed it up a bit for testing
-	state.playback 	= {};
-	// state.playback.transformFragment = function ( frag ) {
-	// 	var changed = frag.replace(/[\n\r]+/g, '$@skip@$');
-	// 	return changed;
-	// }
-	state.playback.transformFragment = function ( frag ) {
-		return frag;
-	}
-	state.playback.accelerate = function ( frag ) {
-		return 1;
-	};
-
-	parsedText = [
-		[ 'Victorious,', 'you','brave', 'flag.' ],
-		[ 'Delirious,', 'I', 'come', 'back.' ],
-		[ '\n' ],
-		[ 'Why,', 'oh', 'wattlebird?' ]
-	];
-
-	plab = Playback( state );
-	plab.process( parsedText );
-
-	bigObjects = { playback: plab, state: state };
-};  // End setUp()
-
-setUp();
+var SetUp 		= require('./setup-default.js'),
+	bigObjects 	= SetUp(),
+	plab 		= bigObjects.playback,
+	emitter 	= bigObjects.emitter;
 
 
-
-var tester = require('./tests-core.js');
+var tester = require('./testing-core.js');
 var runLastEvent = require( './helpers/last-event.js' );
 
 
@@ -109,23 +74,21 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 	const evnt = currentAssertions[ eventIndx ].event;
 	const assert = currentAssertions[ eventIndx ].assertion;
 
-	var label = label + ' ' + funcName + '(' + arg + ')' + ' + ' + evnt ;
+	label = label + ' ' + funcName + '(' + arg + ')' + ' + ' + evnt ;
 
 	// This should be mutated in `runLastEvent()`
 	var result = { playback: null, arg2s: [] };
 	/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, int, bool ) */
 	runLastEvent(
-		result,
-		{ playback: plab, emitter: emitter },
+		result, bigObjects,
 		{ op: funcName, arg: arg, event: evnt },
-		waitTime,
 		true  // reset
 	);
 
 	setTimeout( function runAssert() {
 	
 		// Run a test
-		tester.runOne( label, function tests ( done ) {
+		tester.run( label, function tests ( done ) {
 			// do stuff
 			try {
 
@@ -166,7 +129,7 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 
 			} else {
 
-				iterate( '', nextFuncI, nextArgI, nextEventI )  // iterate
+				iterate( 'singles:', nextFuncI, nextArgI, nextEventI )  // iterate
 
 			}  // end maybe repeat
 
@@ -179,7 +142,7 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 // Get the variables we need
 var start = function () {
 	getAssertions = require('./helpers/single-assertions.js')( plab );
-	iterate('1 func, 1 event:');
+	iterate('singles:');
 }
 
 start();

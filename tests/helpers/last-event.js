@@ -1,9 +1,10 @@
-// one-event.js
+// last-event.js
+// Accumulates the result
 
 // var oneEvent = module.exports = function ( result, bigs, opWith, evnt, mayCollectCheck, msTillAssert, reset ) {
 /* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, str, func, int, func, bool ) */
-var oneEvent = module.exports = function ( result, bigs, opWith, waitTime, reset ) {
-/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, int, bool ) */
+var oneEvent = module.exports = function ( result, bigs, opWith, reset ) {
+/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, bool ) */
 
 	var plab 	= bigs.playback,
 		emitter = bigs.emitter;

@@ -35,7 +35,7 @@ function tryPromise ( fn ) {
   });
 };
 
-core.runOne = function ( label, callback, timeoutLength = 1000 ) {
+core.run = function ( label, callback, timeoutLength = 1000 ) {
   let tryer;
 
   if ( callback.length > 0 ) {
