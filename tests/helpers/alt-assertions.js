@@ -354,7 +354,55 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	asts[ 'doubles: play(null) + pauseFinish > play(null) + loopBegin' ] =
 	asts[ 'doubles: play(null) + pauseFinish > play(null) + loopFinish' ] =
 	asts[ 'doubles: play(null) + pauseFinish > play(null) + done' ] =
-	asts[ 'doubles: play(null) + pauseFinish > play(null) + progress' ] =
+	asts[ 'doubles: play(null) + pauseFinish > play(null) + progress' ] = function ( assertsOverride ) {
+		return defaultAsserts.not;
+	};
+
+
+	// ------------ play() + stopBegin ------------
+	asts[ 'doubles: play(null) + stopBegin > play(null) + playBegin' ] =
+	asts[ 'doubles: play(null) + stopBegin > play(null) + playFinish' ] = function ( assertsOverride ) {
+		return defaultAsserts.not;
+	};
+	asts[ 'doubles: play(null) + stopBegin > play(null) + restartBegin' ] =
+	asts[ 'doubles: play(null) + stopBegin > play(null) + restartFinish' ] = function ( assertsOverride ) {
+		return defaultAsserts.triggered;
+	};
+	// ------------ play() + stopFinish ------------
+	asts[ 'doubles: play(null) + stopFinish > play(null) + playBegin' ] =
+	asts[ 'doubles: play(null) + stopFinish > play(null) + playFinish' ] = function ( assertsOverride ) {
+		return defaultAsserts.not;
+	};
+	asts[ 'doubles: play(null) + stopFinish > play(null) + restartBegin' ] =
+	asts[ 'doubles: play(null) + stopFinish > play(null) + restartFinish' ] = function ( assertsOverride ) {
+		return defaultAsserts.triggered;
+	};
+
+	// // Failure on test 2:  doubles: play(null) + stopBegin > play(null) + playBegin
+	// // - Error: doubles: play(null) + stopBegin > play(null) + playBegin: event should have been triggerd but was NOT
+
+	// // Failure on test 3:  doubles: play(null) + stopBegin > play(null) + playFinish
+	// // - Error: doubles: play(null) + stopBegin > play(null) + playFinish: event should have been triggerd but was NOT
+	// // ..
+	// Failure on test 6:  doubles: play(null) + stopBegin > play(null) + restartBegin
+	// - Error: doubles: play(null) + stopBegin > play(null) + restartBegin: event should not have been triggerd but WAS
+
+	// Failure on test 7:  doubles: play(null) + stopBegin > play(null) + restartFinish
+	// - Error: doubles: play(null) + stopBegin > play(null) + restartFinish: event should not have been triggerd but WAS
+	// // ....................
+	// // Failure on test 28:  doubles: play(null) + stopFinish > play(null) + playBegin
+	// // - Error: doubles: play(null) + stopFinish > play(null) + playBegin: event should have been triggerd but was NOT
+
+	// // Failure on test 29:  doubles: play(null) + stopFinish > play(null) + playFinish
+	// // - Error: doubles: play(null) + stopFinish > play(null) + playFinish: event should have been triggerd but was NOT
+	// // ..
+	// Failure on test 32:  doubles: play(null) + stopFinish > play(null) + restartBegin
+	// - Error: doubles: play(null) + stopFinish > play(null) + restartBegin: event should not have been triggerd but WAS
+
+	// Failure on test 33:  doubles: play(null) + stopFinish > play(null) + restartFinish
+	// - Error: doubles: play(null) + stopFinish > play(null) + restartFinish: event should not have been triggerd but WAS
+
+
 	// ------------ play() + closeBegin ------------
 	asts[ 'doubles: play(null) + closeBegin > play(null) + newWordFragment' ] =
 	asts[ 'doubles: play(null) + closeBegin > play(null) + playBegin' ] =
@@ -380,28 +428,6 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 
 
-	// // ------------ play() + stopBegin ------------
-	// // play/stopBegin/play behavior? Should be prevented from playing when
-	// // beginning to stop? We need a queue apparently.
-	// asts[ 'doubles: play(null) + stopBegin > play(null) + newWordFragment' ] =
-	// asts[ 'doubles: play(null) + stopBegin > play(null) + playBegin' ] =
-	// asts[ 'doubles: play(null) + stopBegin > play(null) + playFinish' ] =
-	// asts[ 'doubles: play(null) + stopBegin > play(null) + stopBegin' ] =
-	// asts[ 'doubles: play(null) + stopBegin > play(null) + stopFinish' ] =
-	// asts[ 'doubles: play(null) + stopBegin > play(null) + loopBegin' ] =
-	// asts[ 'doubles: play(null) + stopBegin > play(null) + loopFinish' ] =
-	// asts[ 'doubles: play(null) + stopBegin > play(null) + done' ] =
-	// asts[ 'doubles: play(null) + stopBegin > play(null) + progress' ] =
-	// // ------------ play() + stopFinish ------------
-	// asts[ 'doubles: play(null) + stopFinish > play(null) + newWordFragment' ] =
-	// asts[ 'doubles: play(null) + stopFinish > play(null) + playBegin' ] =
-	// asts[ 'doubles: play(null) + stopFinish > play(null) + playFinish' ] =
-	// asts[ 'doubles: play(null) + stopFinish > play(null) + stopBegin' ] =
-	// asts[ 'doubles: play(null) + stopFinish > play(null) + stopFinish' ] =
-	// asts[ 'doubles: play(null) + stopFinish > play(null) + loopBegin' ] =
-	// asts[ 'doubles: play(null) + stopFinish > play(null) + loopFinish' ] =
-	// asts[ 'doubles: play(null) + stopFinish > play(null) + done' ] =
-	// asts[ 'doubles: play(null) + stopFinish > play(null) + progress' ] =
 
 
 	// When we get there

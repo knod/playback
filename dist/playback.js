@@ -106,45 +106,57 @@
 
 		// ============== FLOW CONTROL ============== \\
 
+		// ----- Synchronous queue -----
+
 		plab._queueAdd = function ( funcName, args ) {
-			// in caller: var args = Array.prototype.slice.call( arguments );
 			plab._queue.push( { name: funcName, arguments: args } );
 			if ( !plab._queueRunning ) { plab._queueNext(); }
 			return plab;
 		};  // End plab._queueAdd()
 
 		plab._queueNext = function () {
-		// Everything that can be put on a queue _must_ call
-		// this when it's done
+
 			plab._queueRunning = true;
+
 			if ( plab._queue.length === 0 ) {
 
 				plab._queueRunning = false;
 
 			} else {
 
-				var pair 		= plab._queue.shift(),
-					proxyName 	= '_' + pair.name + 'Proxy',
-					func 		= plab[ proxyName ];
+				var pair = plab._queue.shift(),
+					func = plab[ pair.name ];
+				func.apply( this, pair.arguments );
 
-				func.apply( func, pair.arguments );
-			}
-
-		};  // End plab._queueNext()
-
-		plab._queueFinish = function () {
-			plab._queueRunning = false;
-			if ( plab._queue.length !== 0 ) {
 				plab._queueNext();
 			}
-		};  // End plab._queueFinish()
 
+			return plab;
+		};  // End plab._queueNext()
+
+		// plab._queueFinish = function () {
+		// 	plab._queueRunning = false;
+		// 	if ( plab._queue.length !== 0 ) {
+		// 		plab._queueNext();
+		// 	}
+		// };  // End plab._queueFinish()
+
+		plab._queueReset = function () {
+			plab._queue.splice(0, plab._queue.length)
+			plab._queueRunning = false;
+		};  // End plab._queueReset()
+
+
+
+		// ----- Actions -----
 
 		plab._reset = function () {
 		/* () -> Playback
 		* 
 		* Returns to initial values
 		*/
+			// TODO: ??: Should this clear the queue?
+
 			plab._pause( null );
 
 			plab.done 		= false;
@@ -161,12 +173,18 @@
 			return plab;
 		};  // End plab._reset()
 
-		plab.reset = function () {
+
+		plab._resetProxy = function () {
 		/* () -> Playback
 		* 
 		* Returns to initial values, sends first fragment
 		*/
+
 			plab._trigger( 'resetBegin', [plab] );
+
+			// // TODO: ??: Should this clear the queue?
+			// plab._queueReset();
+
 			// console.log( 'reset begins' );
 			plab._reset();
 			plab.once( 0 );  // Send first fragment
@@ -174,6 +192,16 @@
 			// console.log( 'reset finished' );
 			return plab;
 		};
+
+		plab.reset = function () {
+		/* () -> Playback
+		* 
+		* Returns to initial values, sends first fragment
+		*/
+			plab._queueAdd( '_resetProxy', arguments );
+			return plab;
+		};
+
 
 		plab._restart = function ( eventName ) {
 
@@ -192,9 +220,14 @@
 		// 	return plab;
 		// };  // End plab.start()
 
-		plab.restart = function () {
+		plab._restartProxy = function () {
 			plab._persistentAction = 'play';
 			plab._restart( 'restart' );
+			return plab;
+		};
+
+		plab.restart = function () {
+			plab._queueAdd( '_restartProxy', arguments );
 			return plab;
 		};
 
@@ -237,7 +270,7 @@
 
 
 		var debug;  // DEBUGGING
-		plab.play = function ( frag, d ) {
+		plab._playProxy = function ( frag, d ) {
 			
 			debug = d;  // DEBUGGING
 			if ( debug ) {
@@ -253,6 +286,11 @@
 
 		// ??: Include `.open()` as a proxy for `.play()`?
 		// ??: Also `.start()`?
+
+		plab.play = function ( frag, d ) {
+			plab._queueAdd( '_playProxy', arguments );
+			return plab;
+		};
 
 
 
@@ -275,27 +313,46 @@
 		};  // End plab._pause()
 
 		// Names for "pause":
-		plab.pause = function () {
+		plab._pauseProxy = function () {
 			plab._persistentAction = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
 			plab._pause( 'pause' );
 			return plab;
 		};
-		plab.stop = function () {  // ??: plab._persistentAction = 'pause';
+		plab.pause = function () {
+			plab._queueAdd( '_pauseProxy', arguments );
+			return plab;
+		};
+
+		plab._stopProxy = function () {  // ??: plab._persistentAction = 'pause';
 			plab._persistentAction = 'pause';
 			plab._pause( 'stop' );
 			return plab;
 		};
-		plab.close = function () {  // ??: plab._persistentAction = 'pause';
+		plab.stop = function () {
+			plab._queueAdd( '_stopProxy', arguments );
+			return plab;
+		};
+
+		plab._closeProxy = function () {  // ??: plab._persistentAction = 'pause';
 			plab._persistentAction = 'pause';
 			plab._pause( 'close' );
 			return plab;
 		};
+		plab.close = function () {
+			plab._queueAdd( '_closeProxy', arguments );
+			return plab;
+		};
 
 
-		plab.togglePlayPause = function () {
+
+		plab._togglePlayPauseProxy = function () {
 			// Use `._persistentAction` instead?
 			if ( plab._currentAction !== 'pause' ) { plab.pause(); }
 			else { plab.play(); }
+			return plab;
+		};
+		plab.togglePlayPause = function () {
+			plab._queueAdd( '_togglePlayPauseProxy', arguments );
 			return plab;
 		};
 
@@ -303,7 +360,7 @@
 
 		// ========== RESUME ========== \\
 
-		plab.resume = function () {
+		plab._resumeProxy = function () {
 		/* () -> Bool
 		* 
 		* Returns true if resumed playing, false if stopped
@@ -323,11 +380,16 @@
 			return wasPlaying;
 		};  // End plab.resume()
 
+		plab.resume = function () {
+			plab._queueAdd( '_resumeProxy', arguments );
+			return plab;
+		};
+
 
 
 		// ========== ONCE ========== \\
 
-		plab.once = function ( incrementors ) {
+		plab._onceProxy = function ( incrementors ) {
 
 			plab._trigger( 'onceBegin', [plab] );  // ??: 'jumpBegin'?
 
@@ -350,11 +412,16 @@
 			return plab;
 		};  // End plab.once()
 
+		plab.once = function ( incrementors ) {
+			plab._queueAdd( '_onceProxy', arguments );
+			return plab;
+		};
+
 
 
 		// ========== NAVIGATE (arrow keys and other) ========== \\
 
-		plab.jumpWords = function ( numToJump ) {
+		plab._jumpWordsProxy = function ( numToJump ) {
 			// TODO: Should probably give beginning of current word on 0
 			
 			if ( numToJump < 0 ) { plab._direction = 'back'; }
@@ -363,7 +430,12 @@
 			plab.once( [0, numToJump, 0] );
 			return plab;
 		};
-		plab.jumpSentences = function ( numToJump ) {
+		plab.jumpWords = function ( numToJump ) {
+			plab._queueAdd( '_jumpWordsProxy', arguments );
+			return plab;
+		};
+
+		plab._jumpSentencesProxy = function ( numToJump ) {
 			// TODO: Should probably give beginning of current sentence on 0
 			
 			if ( numToJump < 0 ) { plab._direction = 'back'; }
@@ -372,7 +444,12 @@
 			plab.once( [numToJump, 0, 0] );
 			return plab;
 		};
+		plab.jumpSentences = function ( numToJump ) {
+			plab._queueAdd( '_jumpSentencesProxy', arguments );
+			return plab;
+		};
 
+		// TODO: ??: Do these need proxies too?
 		plab.nextWord 	  = function () { return plab.jumpWords( 1 ); };
 		plab.nextSentence = function() { return plab.jumpSentences( 1 ); };
 		plab.prevWord 	  = function () { return plab.jumpWords( -1 ); };
@@ -382,7 +459,7 @@
 
 		// =================== SCRUBBER BAR (probably, and maybe scrolling) =================== \\
 
-		plab.jumpTo = function ( indx ) {
+		plab._jumpToProxy = function ( indx ) {
 		/* ( int ) -> Playback
 		* 
 		*/
@@ -403,6 +480,11 @@
 
 			return plab;
 		};  // End plab.jumpTo()
+
+		plab.jumpTo = function ( indx ) {
+			plab._queueAdd( '_jumpToProxy', arguments );
+			return plab;
+		};
 
 
 
@@ -445,7 +527,7 @@
 			return 20;
 		};
 
-		plab.rewind = function ( accelerateOverride ) {
+		plab._rewindProxy = function ( accelerateOverride ) {
 		/* ( [ func ] ) -> Playback
 		* 
 		* Goes backward, acceleration controled by `accelerateOverride()` or
@@ -477,8 +559,13 @@
 			return plab;
 		};  // end plab.rewind()
 
+		plab.rewind = function ( accelerateOverride ) {
+			plab._queueAdd( '_rewindProxy', arguments );
+			return plab;
+		};
 
-		plab.fastForward = function ( accelerateOverride ) {
+
+		plab._fastForwardProxy = function ( accelerateOverride ) {
 		/* ( [ func ] ) -> Playback
 		* 
 		* Goes forward, acceleration controled by `accelerateOverride()` or
@@ -508,6 +595,11 @@
 
 			return plab;
 		};  // end plab.fastForward()
+
+		plab.fastForward = function ( accelerateOverride ) {
+			plab._queueAdd( '_fastForwardProxy', arguments );
+			return plab;
+		};
 
 
 

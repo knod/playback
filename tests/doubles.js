@@ -38,12 +38,12 @@ var functsWithArgs = [
 
 
 var events = [
-	// 'playBegin', 'playFinish',
-	// 'resetBegin', 'resetFinish',
-	// 'restartBegin', 'restartFinish',
-	// 'pauseBegin', 'pauseFinish',
+	'playBegin', 'playFinish',
+	'resetBegin', 'resetFinish',
+	'restartBegin', 'restartFinish',
+	'pauseBegin', 'pauseFinish',
 	'stopBegin', 'stopFinish',
-	// 'closeBegin', 'closeFinish',
+	'closeBegin', 'closeFinish',
 	// 'onceBegin', 'onceFinish',
 	// 'resumeBegin', 'resumeFinish',
 	// 'rewindBegin', 'rewindFinish',
