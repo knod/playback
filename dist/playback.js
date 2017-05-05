@@ -765,11 +765,11 @@
 				plab._trigger( 'newWordFragment', [plab, frag, incrementors] );
 
 
-				plab._trigger( 'loopFinish', [plab] );
-
     	    }  // end if skip fragment or not skip fragment
 
 			plab._emitProgress();
+
+			plab._trigger( 'loopFinish', [plab] );
 
 			// Need one at the start too?
 			plab._finishIfDone();
