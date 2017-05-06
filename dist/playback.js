@@ -155,17 +155,22 @@
 		* 
 		* Returns to initial values
 		*/
-			// TODO: ??: Should this clear the queue?
+			if ( plab._currentAction === 'reset' ) { return plab; }
 
 			plab._pause( null );
+			plab._persistentAction = 'pause';
 
-			plab.done 		= false;
-			plab._timeoutID = null;
+			plab._currentAction = 'reset';
+			plab.done 			= false;
+			plab._timeoutID 	= null;
 
 			plab._persistentAction 	= 'pause';  // either 'play' or 'pause'
-			plab._currentAction 	= 'pause';
 			plab._direction 		= 'forward';
 			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
+
+			// // TODO: ??: Should this clear the queue?
+			// // Would happen on `restart()`, too
+			// plab._queueReset();
 
 			// Just put the index at the right place
 			plab._stepper.restart();
@@ -187,7 +192,8 @@
 
 			// console.log( 'reset begins' );
 			plab._reset();
-			plab.once( 0 );  // Send first fragment
+			plab._once( 0 );  // Send first fragment
+
 			plab._trigger( 'resetFinish', [plab] );
 			// console.log( 'reset finished' );
 			return plab;
@@ -314,8 +320,8 @@
 
 		// Names for "pause":
 		plab._pauseProxy = function () {
-			plab._persistentAction = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
 			plab._pause( 'pause' );
+			plab._persistentAction = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
 			return plab;
 		};
 		plab.pause = function () {
@@ -324,8 +330,8 @@
 		};
 
 		plab._stopProxy = function () {  // ??: plab._persistentAction = 'pause';
-			plab._persistentAction = 'pause';
 			plab._pause( 'stop' );
+			plab._persistentAction = 'pause';
 			return plab;
 		};
 		plab.stop = function () {
@@ -334,8 +340,8 @@
 		};
 
 		plab._closeProxy = function () {  // ??: plab._persistentAction = 'pause';
-			plab._persistentAction = 'pause';
 			plab._pause( 'close' );
+			plab._persistentAction = 'pause';
 			return plab;
 		};
 		plab.close = function () {
@@ -360,7 +366,7 @@
 
 		// ========== RESUME ========== \\
 
-		plab._resumeProxy = function () {
+		plab._resume = function () {
 		/* () -> Bool
 		* 
 		* Returns true if resumed playing, false if stopped
@@ -378,18 +384,29 @@
 			plab._trigger( 'resumeFinish', [plab] );
 
 			return wasPlaying;
-		};  // End plab.resume()
+		};  // End plab._resume()
 
-		plab.resume = function () {
-			plab._queueAdd( '_resumeProxy', arguments );
-			return plab;
-		};
+		// plab._resume = function () {
+		// 	plab._queueAdd( '_resumeProxy', arguments );
+		// 	return plab;
+		// };
+
+		// // TODO: ??: Possible alternative so we can have an external
+		// // `.resume()`? Implement if needed.
+		// plab.resume = function () {
+		// 	plab._queueAdd( '_resume', arguments );
+		// 	return plab;
+		// };
 
 
 
 		// ========== ONCE ========== \\
 
-		plab._onceProxy = function ( incrementors ) {
+		plab._once = function ( incrementors ) {
+		// If this is .once and can be called from the outside,
+		// it can get added to the queue, but then weird stuff
+		// can happen. Basically, mostly don't call non `._` stuff
+		// internally.
 
 			plab._trigger( 'onceBegin', [plab] );  // ??: 'jumpBegin'?
 
@@ -406,28 +423,41 @@
 
 			plab._trigger( 'onceFinish', [plab] );  // ??: 'jumpFinish'?
 
+
+			// ??: NOOOOOOO
+			// ??: Should not happen here? If called externally, would this
+			// be expected behavior?
 			// ??: After event sent or before?
-			plab.resume();
+			plab._resume();
+			// `once()` should not assume anything about resuming, right?
 
 			return plab;
-		};  // End plab.once()
+		};  // End plab._onceProxy()
 
-		plab.once = function ( incrementors ) {
-			plab._queueAdd( '_onceProxy', arguments );
-			return plab;
-		};
+		// plab._once = function ( incrementors ) {
+		// 	plab._queueAdd( '_onceProxy', arguments );
+		// 	return plab;
+		// };
+
+		// // TODO: ??: Possible alternative so we can have an external
+		// // `.once()`? Implement if needed.
+		// plab.once = function ( incrementors ) {
+		// 	plab._queueAdd( '_once', arguments );
+		// 	return plab;
+		// };
 
 
 
 		// ========== NAVIGATE (arrow keys and other) ========== \\
 
 		plab._jumpWordsProxy = function ( numToJump ) {
+		// Moves forward or back relative to the current position
 			// TODO: Should probably give beginning of current word on 0
-			
+
 			if ( numToJump < 0 ) { plab._direction = 'back'; }
 			else { plab._direction = 'forward'; }
 
-			plab.once( [0, numToJump, 0] );
+			plab._once( [0, numToJump, 0] );
 			return plab;
 		};
 		plab.jumpWords = function ( numToJump ) {
@@ -436,12 +466,13 @@
 		};
 
 		plab._jumpSentencesProxy = function ( numToJump ) {
+		// Moves forward or back relative to the current position
 			// TODO: Should probably give beginning of current sentence on 0
 			
 			if ( numToJump < 0 ) { plab._direction = 'back'; }
 			else { plab._direction = 'forward'; }
 
-			plab.once( [numToJump, 0, 0] );
+			plab._once( [numToJump, 0, 0] );
 			return plab;
 		};
 		plab.jumpSentences = function ( numToJump ) {
@@ -462,6 +493,7 @@
 		plab._jumpToProxy = function ( indx ) {
 		/* ( int ) -> Playback
 		* 
+		* Moves to an absolute word position (not relative)
 		*/
 			// if ( plab._currentAction !== 'jump' ) {
 			// 	// Have to pause first so index doesn't change
@@ -475,8 +507,8 @@
 			if ( indx >= 0 ) { plab._direction = 'forward' }
 			else { plab._direction = 'back' }
 
-			// plab.once( [0, newIndex - oldIndex, 0] );
-			plab.once( indx );
+			// plab._once( [0, newIndex - oldIndex, 0] );
+			plab._once( indx );
 
 			return plab;
 		};  // End plab.jumpTo()
@@ -536,7 +568,7 @@
 		* `.accelerate()`)
 		* Default currently just a steady speed.
 		* 
-		* TODO: What happens when rewind and then `.jumpWord()` in the middle?
+		* TODO: Spec: What happens when rewind and then `.jumpWord()` in the middle?
 		*/
 			if ( plab._currentAction !== 'rewind' ) {
 
@@ -619,7 +651,7 @@
         		isDone = true;
         	} else if ( plab._direction === 'back' && plab.getIndex() === 0 ) {
         		// Check if resumed playing. If not resumed, done.
-        		plab.resume();  
+        		plab._resume();  
         		if ( plab._persistentAction !== 'play' ) { isDone = true; }
 	    	}
 
@@ -771,7 +803,7 @@
 
 			plab._trigger( 'loopFinish', [plab] );
 
-			// Need one at the start too?
+			// ??: Should this be before 'loopFinish' too?
 			plab._finishIfDone();
 
 			return plab;  // Return timeout id instead?

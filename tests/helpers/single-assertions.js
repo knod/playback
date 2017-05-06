@@ -154,7 +154,7 @@ var makeFragAsserter = function ( plyb, frags ) {
 };  // End makeFragAsserter()
 
 
-var makeProgressAsserter = function ( plyb, numFrags, vals ) {
+var makeProgressAsserter = function ( plyb, numItems, vals ) {
 /* ( Playback, int, [ floats ] ) -> func
 * 
 * `vals` should include all the progress vals that will come up
@@ -164,6 +164,8 @@ var makeProgressAsserter = function ( plyb, numFrags, vals ) {
 * Returns a progress assertion function with the given values
 * which asserts that the correct progress was made at
 * the 0, 2, 5, 8, and 11th triggereing of the 'progress' event.
+* 
+* TODO: Remove `numItems` from calls
 */
 	return function assertProgress ( result, testText, evnt ) {
 
@@ -178,14 +180,8 @@ var makeProgressAsserter = function ( plyb, numFrags, vals ) {
 			var triggeredVals = defaultAsserts.triggered( result, testText, evnt );
 			if ( !triggeredVals.passed ) { return triggeredVals; }
 			else {
-
-				if ( !result.arg2s.length === numFrags ) {
-					passes 	= false;
-					msg 	= 'event was ' + colors.red + 'NOT' + colors.none + ' called the right number of times';
-				} else {
-					passes = arraysEqual( result.arg2s, vals );
-					if ( !passes ) { msg = 'progress expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
-				}
+				passes = arraysEqual( result.arg2s, vals );
+				if ( !passes ) { msg = '\'progress\' expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
 			}
 
 		// }

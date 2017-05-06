@@ -160,7 +160,7 @@ var makeFragAsserter = function ( plyb, frags ) {
 };  // End makeFragAsserter()
 
 
-var makeProgressAsserter = function ( plyb, numFrags, vals ) {
+var makeProgressAsserter = function ( plyb, numItems, vals ) {
 /* ( Playback, int, [ floats ] ) -> func
 * 
 * `vals` should include all the progress vals that will come up
@@ -170,6 +170,8 @@ var makeProgressAsserter = function ( plyb, numFrags, vals ) {
 * Returns a progress assertion function with the given values
 * which asserts that the correct progress was made at
 * the 0, 2, 5, 8, and 11th triggereing of the 'progress' event.
+* 
+* TODO: Remove `numItems` from calls
 */
 	return function assertProgress ( result, testText, evnt ) {
 
@@ -184,14 +186,8 @@ var makeProgressAsserter = function ( plyb, numFrags, vals ) {
 			var triggeredVals = defaultAsserts.triggered( result, testText, evnt );
 			if ( !triggeredVals.passed ) { return triggeredVals; }
 			else {
-
-				if ( !result.arg2s.length === numFrags ) {
-					passes 	= false;
-					msg 	= 'event was ' + colors.red + 'NOT' + colors.none + ' called the right number of times';
-				} else {
-					passes = arraysEqual( result.arg2s, vals );
-					if ( !passes ) { msg = 'progress expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
-				}
+				passes = arraysEqual( result.arg2s, vals );
+				if ( !passes ) { msg = '\'progress\' expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
 			}
 
 		// }
@@ -273,17 +269,30 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 // May be necessary, though. Ex:
 // /^doubles: play(null) + resetBegin/.test(  )
 
+
+// asts[ 'doubles: play(null) + done > play(null) + playBegin' ] = function ( assertsOverride ) {
+// 	// Example of ways to do make asserts
+// 	var asserts = cloneAsserts( defaultAsserts, assertsOverride );
+// 	// asserts.frags 	 = getAssertFragsAll( plyb );
+// 	// asserts.progress = getAssertProgAll( plyb );
+// 	// asserts.frags 	 = makeFragAsserter( plyb, ['Victorious,'] );
+// 	// asserts.progress = makeProgressAsserter( plyb, 1, [ 1/12 ] );
+// 	return asserts.not;
+// };
+
 	plab = plyb;
 
 	var asts = {};
 
 
+	// =============================================================================
+	// =============================================================================
 	// ======= play() + n > play() + all =======
-
+	// =============================================================================
+	// =============================================================================
 
 	// ------------ play() + playBegin ------------
 	// Triggers before loop, so all words are still collected on the 'newWordFragmet' event
-
 
 	// ------------ play() + playFinish ------------
 	// Triggers after loop has run, so missing the first word
@@ -294,8 +303,6 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	asts[ 'doubles: play(null) + playFinish > play(null) + progress' ] = function ( assertsOverride ) {
 		return getAssertProgNoFirst( plyb );
 	};
-
-
 
 	// Beginning events that don't happen at all, so should trigger nothing
 	// ------------ play() + resetBegin ------------
@@ -361,7 +368,6 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		return defaultAsserts.not;
 	};
 
-
 	// ------------ play() + stopBegin ------------
 	asts[ 'doubles: play(null) + stopBegin > play(null) + playBegin' ] =
 	asts[ 'doubles: play(null) + stopBegin > play(null) + playFinish' ] = function ( assertsOverride ) {
@@ -380,7 +386,6 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	asts[ 'doubles: play(null) + stopFinish > play(null) + restartFinish' ] = function ( assertsOverride ) {
 		return defaultAsserts.triggered;
 	};
-
 
 	// ------------ play() + closeBegin ------------
 	asts[ 'doubles: play(null) + closeBegin > play(null) + newWordFragment' ] =
@@ -404,7 +409,6 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	asts[ 'doubles: play(null) + closeFinish > play(null) + progress' ] = function ( assertsOverride ) {
 		return defaultAsserts.not;
 	};
-
 
 	// ------------ play() + onceBegin ------------
 	asts[ 'doubles: play(null) + onceBegin > play(null) + newWordFragment' ] =
@@ -489,46 +493,286 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		return defaultAsserts.not;
 	};
 
-
 	// ------------ play() + loopBegin ------------
 
 	// ------------ play() + loopFinish ------------
 	asts[ 'doubles: play(null) + loopFinish > play(null) + newWordFragment' ] = function ( assertsOverride ) {
-		// asserts.progress = makeProgressAsserter( plyb, 1, [ 1/12 ] );  // TODO: Why not progress different?
-		return makeFragAsserter( plyb, ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"] );
+		return getAssertFragsNoFirst( plyb );
+	};
+	asts[ 'doubles: play(null) + loopFinish > play(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgNoFirst( plyb );
 	};
 
-
-
-
-	// When we get there
-
-	// ------------ play() + done ------------
-	asts[ 'doubles: play(null) + done > play(null) + playBegin' ] = function ( assertsOverride ) {
-		// Example of other ways to do make asserts
-		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
-		// asserts.frags 	 = getAssertFragsAll( plyb );
-		// asserts.progress = getAssertProgAll( plyb );
-		// asserts.frags 	 = makeFragAsserter( plyb, ['Victorious,'] );
-		// asserts.progress = makeProgressAsserter( plyb, 1, [ 1/12 ] );
-		return asserts.not;
+	// ------------ play() + newWordFragment ------------
+	asts[ 'doubles: play(null) + newWordFragment > play(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsNoFirst( plyb );
 	};
 
-	asts[ 'doubles: play(null) + done > play(null) + playFinish' ] = function ( assertsOverride ) {
+	// ------------ play() + loopSkip ------------
+	asts[ 'doubles: play(null) + loopSkip > play(null) + newWordFragment' ] =
+	asts[ 'doubles: play(null) + loopSkip > play(null) + playBegin' ] =
+	asts[ 'doubles: play(null) + loopSkip > play(null) + playFinish' ] =
+	asts[ 'doubles: play(null) + loopSkip > play(null) + stopBegin' ] =
+	asts[ 'doubles: play(null) + loopSkip > play(null) + stopFinish' ] =
+	asts[ 'doubles: play(null) + loopSkip > play(null) + loopBegin' ] =
+	asts[ 'doubles: play(null) + loopSkip > play(null) + loopFinish' ] =
+	asts[ 'doubles: play(null) + loopSkip > play(null) + done' ] =
+	asts[ 'doubles: play(null) + loopSkip > play(null) + progress' ] = function ( assertsOverride ) {
 		return defaultAsserts.not;
 	};
 
-	asts[ 'doubles: play(null) + done > play(null) + restartBegin' ] = function ( assertsOverride ) {
-		return defaultAsserts.triggered;
-
+	// ------------ play() + progress ------------
+	asts[ 'doubles: play(null) + progress > play(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsNoFirst( plyb );
+	};
+	asts[ 'doubles: play(null) + progress > play(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgNoFirst( plyb );
 	};
 
+	// ------------ play() + done ------------
+	asts[ 'doubles: play(null) + done > play(null) + playBegin' ] =
+	asts[ 'doubles: play(null) + done > play(null) + playFinish' ] = function ( assertsOverride ) {
+		return defaultAsserts.not;
+	};
+	asts[ 'doubles: play(null) + done > play(null) + restartBegin' ] =
 	asts[ 'doubles: play(null) + done > play(null) + restartFinish' ] = function ( assertsOverride ) {
 		return defaultAsserts.triggered;
 	};
 
-	// ------------ reset() + done ------------
 
+
+	// =============================================================================
+	// =============================================================================
+	// ======= reset() + n > reset() + all =======
+	// =============================================================================
+	// =============================================================================
+
+	// // ------------ reset() + playBegin ------------
+	// asts[ 'doubles: reset(null) + playBegin > reset(null) + newWordFragment' ] =
+	// asts[ 'doubles: reset(null) + playBegin > reset(null) + resetBegin' ] =
+	// asts[ 'doubles: reset(null) + playBegin > reset(null) + resetFinish' ] =
+	// asts[ 'doubles: reset(null) + playBegin > reset(null) + onceBegin' ] =
+	// asts[ 'doubles: reset(null) + playBegin > reset(null) + onceFinish' ] =
+	// asts[ 'doubles: reset(null) + playBegin > reset(null) + resumeBegin' ] =
+	// asts[ 'doubles: reset(null) + playBegin > reset(null) + resumeFinish' ] =
+	// asts[ 'doubles: reset(null) + playBegin > reset(null) + loopBegin' ] =
+	// asts[ 'doubles: reset(null) + playBegin > reset(null) + loopFinish' ] =
+	// asts[ 'doubles: reset(null) + playBegin > reset(null) + progress' ] =
+	// // ------------ reset() + playFinish ------------
+	// asts[ 'doubles: reset(null) + playFinish > reset(null) + newWordFragment' ] =
+	// asts[ 'doubles: reset(null) + playFinish > reset(null) + resetBegin' ] =
+	// asts[ 'doubles: reset(null) + playFinish > reset(null) + resetFinish' ] =
+	// asts[ 'doubles: reset(null) + playFinish > reset(null) + onceBegin' ] =
+	// asts[ 'doubles: reset(null) + playFinish > reset(null) + onceFinish' ] =
+	// asts[ 'doubles: reset(null) + playFinish > reset(null) + resumeBegin' ] =
+	// asts[ 'doubles: reset(null) + playFinish > reset(null) + resumeFinish' ] =
+	// asts[ 'doubles: reset(null) + playFinish > reset(null) + loopBegin' ] =
+	// asts[ 'doubles: reset(null) + playFinish > reset(null) + loopFinish' ] =
+	// asts[ 'doubles: reset(null) + playFinish > reset(null) + progress' ] = function ( assertsOverride ) {
+	// 	return defaultAsserts.not;
+	// };
+
+	// ------------ reset() + resetBegin ------------
+	// Listener in the middle (before 'newWordFragment') will pick up double
+	asts[ 'doubles: reset(null) + resetBegin > reset(null) + newWordFragment' ] = function ( assertsOverride ) {
+		var asserts 	= cloneAsserts( defaultAsserts, assertsOverride );
+		return makeFragAsserter( plyb, ["Victorious,","Victorious,"] );
+	};
+	asts[ 'doubles: reset(null) + resetBegin > reset(null) + progress' ] = function ( assertsOverride ) {
+		var asserts 	 = cloneAsserts( defaultAsserts, assertsOverride );
+		return makeProgressAsserter( plyb, 2, [1/12, 1/12] );
+	};
+	// ------------ reset() + resetFinish ------------
+	// Happens after loop
+
+	// // ------------ reset() + restartBegin ------------
+	// asts[ 'doubles: reset(null) + restartBegin > reset(null) + newWordFragment' ] =
+	// asts[ 'doubles: reset(null) + restartBegin > reset(null) + resetBegin' ] =
+	// asts[ 'doubles: reset(null) + restartBegin > reset(null) + resetFinish' ] =
+	// asts[ 'doubles: reset(null) + restartBegin > reset(null) + onceBegin' ] =
+	// asts[ 'doubles: reset(null) + restartBegin > reset(null) + onceFinish' ] =
+	// asts[ 'doubles: reset(null) + restartBegin > reset(null) + resumeBegin' ] =
+	// asts[ 'doubles: reset(null) + restartBegin > reset(null) + resumeFinish' ] =
+	// asts[ 'doubles: reset(null) + restartBegin > reset(null) + loopBegin' ] =
+	// asts[ 'doubles: reset(null) + restartBegin > reset(null) + loopFinish' ] =
+	// asts[ 'doubles: reset(null) + restartBegin > reset(null) + progress' ] =
+	// // ------------ reset() + restartFinish ------------
+	// asts[ 'doubles: reset(null) + restartFinish > reset(null) + newWordFragment' ] =
+	// asts[ 'doubles: reset(null) + restartFinish > reset(null) + resetBegin' ] =
+	// asts[ 'doubles: reset(null) + restartFinish > reset(null) + resetFinish' ] =
+	// asts[ 'doubles: reset(null) + restartFinish > reset(null) + onceBegin' ] =
+	// asts[ 'doubles: reset(null) + restartFinish > reset(null) + onceFinish' ] =
+	// asts[ 'doubles: reset(null) + restartFinish > reset(null) + resumeBegin' ] =
+	// asts[ 'doubles: reset(null) + restartFinish > reset(null) + resumeFinish' ] =
+	// asts[ 'doubles: reset(null) + restartFinish > reset(null) + loopBegin' ] =
+	// asts[ 'doubles: reset(null) + restartFinish > reset(null) + loopFinish' ] =
+	// asts[ 'doubles: reset(null) + restartFinish > reset(null) + progress' ] =
+	// // ------------ reset() + pauseBegin ------------
+	// asts[ 'doubles: reset(null) + pauseBegin > reset(null) + newWordFragment' ] =
+	// asts[ 'doubles: reset(null) + pauseBegin > reset(null) + resetBegin' ] =
+	// asts[ 'doubles: reset(null) + pauseBegin > reset(null) + resetFinish' ] =
+	// asts[ 'doubles: reset(null) + pauseBegin > reset(null) + onceBegin' ] =
+	// asts[ 'doubles: reset(null) + pauseBegin > reset(null) + onceFinish' ] =
+	// asts[ 'doubles: reset(null) + pauseBegin > reset(null) + resumeBegin' ] =
+	// asts[ 'doubles: reset(null) + pauseBegin > reset(null) + resumeFinish' ] =
+	// asts[ 'doubles: reset(null) + pauseBegin > reset(null) + loopBegin' ] =
+	// asts[ 'doubles: reset(null) + pauseBegin > reset(null) + loopFinish' ] =
+	// asts[ 'doubles: reset(null) + pauseBegin > reset(null) + progress' ] =
+	// // ------------ reset() + pauseFinish ------------
+	// asts[ 'doubles: reset(null) + pauseFinish > reset(null) + newWordFragment' ] =
+	// asts[ 'doubles: reset(null) + pauseFinish > reset(null) + resetBegin' ] =
+	// asts[ 'doubles: reset(null) + pauseFinish > reset(null) + resetFinish' ] =
+	// asts[ 'doubles: reset(null) + pauseFinish > reset(null) + onceBegin' ] =
+	// asts[ 'doubles: reset(null) + pauseFinish > reset(null) + onceFinish' ] =
+	// asts[ 'doubles: reset(null) + pauseFinish > reset(null) + resumeBegin' ] =
+	// asts[ 'doubles: reset(null) + pauseFinish > reset(null) + resumeFinish' ] =
+	// asts[ 'doubles: reset(null) + pauseFinish > reset(null) + loopBegin' ] =
+	// asts[ 'doubles: reset(null) + pauseFinish > reset(null) + loopFinish' ] =
+	// asts[ 'doubles: reset(null) + pauseFinish > reset(null) + progress' ] =
+	// // ------------ reset() + stopBegin ------------
+	// asts[ 'doubles: reset(null) + stopBegin > reset(null) + newWordFragment' ] =
+	// asts[ 'doubles: reset(null) + stopBegin > reset(null) + resetBegin' ] =
+	// asts[ 'doubles: reset(null) + stopBegin > reset(null) + resetFinish' ] =
+	// asts[ 'doubles: reset(null) + stopBegin > reset(null) + onceBegin' ] =
+	// asts[ 'doubles: reset(null) + stopBegin > reset(null) + onceFinish' ] =
+	// asts[ 'doubles: reset(null) + stopBegin > reset(null) + resumeBegin' ] =
+	// asts[ 'doubles: reset(null) + stopBegin > reset(null) + resumeFinish' ] =
+	// asts[ 'doubles: reset(null) + stopBegin > reset(null) + loopBegin' ] =
+	// asts[ 'doubles: reset(null) + stopBegin > reset(null) + loopFinish' ] =
+	// asts[ 'doubles: reset(null) + stopBegin > reset(null) + progress' ] =
+	// // ------------ reset() + stopFinish ------------
+	// asts[ 'doubles: reset(null) + stopFinish > reset(null) + newWordFragment' ] =
+	// asts[ 'doubles: reset(null) + stopFinish > reset(null) + resetBegin' ] =
+	// asts[ 'doubles: reset(null) + stopFinish > reset(null) + resetFinish' ] =
+	// asts[ 'doubles: reset(null) + stopFinish > reset(null) + onceBegin' ] =
+	// asts[ 'doubles: reset(null) + stopFinish > reset(null) + onceFinish' ] =
+	// asts[ 'doubles: reset(null) + stopFinish > reset(null) + resumeBegin' ] =
+	// asts[ 'doubles: reset(null) + stopFinish > reset(null) + resumeFinish' ] =
+	// asts[ 'doubles: reset(null) + stopFinish > reset(null) + loopBegin' ] =
+	// asts[ 'doubles: reset(null) + stopFinish > reset(null) + loopFinish' ] =
+	// asts[ 'doubles: reset(null) + stopFinish > reset(null) + progress' ] =
+	// // ------------ reset() + closeBegin ------------
+	// asts[ 'doubles: reset(null) + closeBegin > reset(null) + newWordFragment' ] =
+	// asts[ 'doubles: reset(null) + closeBegin > reset(null) + resetBegin' ] =
+	// asts[ 'doubles: reset(null) + closeBegin > reset(null) + resetFinish' ] =
+	// asts[ 'doubles: reset(null) + closeBegin > reset(null) + onceBegin' ] =
+	// asts[ 'doubles: reset(null) + closeBegin > reset(null) + onceFinish' ] =
+	// asts[ 'doubles: reset(null) + closeBegin > reset(null) + resumeBegin' ] =
+	// asts[ 'doubles: reset(null) + closeBegin > reset(null) + resumeFinish' ] =
+	// asts[ 'doubles: reset(null) + closeBegin > reset(null) + loopBegin' ] =
+	// asts[ 'doubles: reset(null) + closeBegin > reset(null) + loopFinish' ] =
+	// asts[ 'doubles: reset(null) + closeBegin > reset(null) + progress' ] =
+	// // ------------ reset() + closeFinish ------------
+	// asts[ 'doubles: reset(null) + closeFinish > reset(null) + newWordFragment' ] =
+	// asts[ 'doubles: reset(null) + closeFinish > reset(null) + resetBegin' ] =
+	// asts[ 'doubles: reset(null) + closeFinish > reset(null) + resetFinish' ] =
+	// asts[ 'doubles: reset(null) + closeFinish > reset(null) + onceBegin' ] =
+	// asts[ 'doubles: reset(null) + closeFinish > reset(null) + onceFinish' ] =
+	// asts[ 'doubles: reset(null) + closeFinish > reset(null) + resumeBegin' ] =
+	// asts[ 'doubles: reset(null) + closeFinish > reset(null) + resumeFinish' ] =
+	// asts[ 'doubles: reset(null) + closeFinish > reset(null) + loopBegin' ] =
+	// asts[ 'doubles: reset(null) + closeFinish > reset(null) + loopFinish' ] =
+	// asts[ 'doubles: reset(null) + closeFinish > reset(null) + progress' ] = function ( assertsOverride ) {
+	// 	return defaultAsserts.not;
+	// };
+
+	// ------------ reset() + onceBegin ------------
+	// Listener in the middle (before 'newWordFragment') will pick up double
+	asts[ 'doubles: reset(null) + onceBegin > reset(null) + newWordFragment' ] = function ( assertsOverride ) {
+		var asserts 	= cloneAsserts( defaultAsserts, assertsOverride );
+		return makeFragAsserter( plyb, ["Victorious,","Victorious,"] );
+	};
+	asts[ 'doubles: reset(null) + onceBegin > reset(null) + progress' ] = function ( assertsOverride ) {
+		var asserts 	 = cloneAsserts( defaultAsserts, assertsOverride );
+		return makeProgressAsserter( plyb, 2, [1/12, 1/12] );
+	};
+	// ------------ reset() + onceFinish ------------
+	// Happens after loop
+
+	// Happens after loop
+	// ------------ reset() + resumeBegin ------------
+	// ------------ reset() + resumeFinish ------------
+
+	// ------------ reset() + rewindBegin ------------
+	asts[ 'doubles: reset(null) + rewindBegin > reset(null) + newWordFragment' ] =
+	asts[ 'doubles: reset(null) + rewindBegin > reset(null) + resetBegin' ] =
+	asts[ 'doubles: reset(null) + rewindBegin > reset(null) + resetFinish' ] =
+	asts[ 'doubles: reset(null) + rewindBegin > reset(null) + onceBegin' ] =
+	asts[ 'doubles: reset(null) + rewindBegin > reset(null) + onceFinish' ] =
+	asts[ 'doubles: reset(null) + rewindBegin > reset(null) + resumeBegin' ] =
+	asts[ 'doubles: reset(null) + rewindBegin > reset(null) + resumeFinish' ] =
+	asts[ 'doubles: reset(null) + rewindBegin > reset(null) + loopBegin' ] =
+	asts[ 'doubles: reset(null) + rewindBegin > reset(null) + loopFinish' ] =
+	asts[ 'doubles: reset(null) + rewindBegin > reset(null) + progress' ] =
+	// ------------ reset() + rewindFinish ------------
+	asts[ 'doubles: reset(null) + rewindFinish > reset(null) + newWordFragment' ] =
+	asts[ 'doubles: reset(null) + rewindFinish > reset(null) + resetBegin' ] =
+	asts[ 'doubles: reset(null) + rewindFinish > reset(null) + resetFinish' ] =
+	asts[ 'doubles: reset(null) + rewindFinish > reset(null) + onceBegin' ] =
+	asts[ 'doubles: reset(null) + rewindFinish > reset(null) + onceFinish' ] =
+	asts[ 'doubles: reset(null) + rewindFinish > reset(null) + resumeBegin' ] =
+	asts[ 'doubles: reset(null) + rewindFinish > reset(null) + resumeFinish' ] =
+	asts[ 'doubles: reset(null) + rewindFinish > reset(null) + loopBegin' ] =
+	asts[ 'doubles: reset(null) + rewindFinish > reset(null) + loopFinish' ] =
+	asts[ 'doubles: reset(null) + rewindFinish > reset(null) + progress' ] =
+	// ------------ reset() + fastForwardBegin ------------
+	asts[ 'doubles: reset(null) + fastForwardBegin > reset(null) + newWordFragment' ] =
+	asts[ 'doubles: reset(null) + fastForwardBegin > reset(null) + resetBegin' ] =
+	asts[ 'doubles: reset(null) + fastForwardBegin > reset(null) + resetFinish' ] =
+	asts[ 'doubles: reset(null) + fastForwardBegin > reset(null) + onceBegin' ] =
+	asts[ 'doubles: reset(null) + fastForwardBegin > reset(null) + onceFinish' ] =
+	asts[ 'doubles: reset(null) + fastForwardBegin > reset(null) + resumeBegin' ] =
+	asts[ 'doubles: reset(null) + fastForwardBegin > reset(null) + resumeFinish' ] =
+	asts[ 'doubles: reset(null) + fastForwardBegin > reset(null) + loopBegin' ] =
+	asts[ 'doubles: reset(null) + fastForwardBegin > reset(null) + loopFinish' ] =
+	asts[ 'doubles: reset(null) + fastForwardBegin > reset(null) + progress' ] =
+	// ------------ reset() + fastForwardFinish ------------
+	asts[ 'doubles: reset(null) + fastForwardFinish > reset(null) + newWordFragment' ] =
+	asts[ 'doubles: reset(null) + fastForwardFinish > reset(null) + resetBegin' ] =
+	asts[ 'doubles: reset(null) + fastForwardFinish > reset(null) + resetFinish' ] =
+	asts[ 'doubles: reset(null) + fastForwardFinish > reset(null) + onceBegin' ] =
+	asts[ 'doubles: reset(null) + fastForwardFinish > reset(null) + onceFinish' ] =
+	asts[ 'doubles: reset(null) + fastForwardFinish > reset(null) + resumeBegin' ] =
+	asts[ 'doubles: reset(null) + fastForwardFinish > reset(null) + resumeFinish' ] =
+	asts[ 'doubles: reset(null) + fastForwardFinish > reset(null) + loopBegin' ] =
+	asts[ 'doubles: reset(null) + fastForwardFinish > reset(null) + loopFinish' ] =
+	asts[ 'doubles: reset(null) + fastForwardFinish > reset(null) + progress' ] = function ( assertsOverride ) {
+		return defaultAsserts.not;
+	};
+
+	// https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex/6969486#6969486
+	// https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711#3561711
+	// Construct this before so it doesn't have to be constructed every single time
+	var escapeRegex = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
+
+	var regEscape = function ( str ) {
+	/* ( str ) -> other str
+	* 
+	* Return a regex-escaped version of `str`. This is so the strings
+	* can be as searchable as possible since they're not actually the full strings
+	*/
+		return str.replace(escapeRegex, '\\$&');
+	};  // End escape()
+
+		// var str = regEscape('reset(null) + ');
+		// str += 'play|restart|pause|stop|close|rewind|fastForward'
+		// console.log(str)
+
+	asts.getAssertion = function ( label ) {
+	// Try to keep these strings as searchable as possible without having a million page doc
+
+		// reset() replacements
+		var str = regEscape('reset(null) + ');  // Inital function
+		str += 'play|restart|pause|stop|close|rewind|fastForward';  // Events
+		var regex = new RegExp( str );
+		if ( regex.test(label) ) {
+				return defaultAsserts.not;
+		}
+		// reset() no replacements needed
+		// Happen after newFragment loop is completed:
+		// resetFinish, onceFinish, resumeBegin, resumeFinish
+
+	};  // End getAssertion() (func from label)
 
 	return asts;
 

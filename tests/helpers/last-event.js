@@ -17,7 +17,7 @@ var oneEvent = module.exports = function ( result, bigs, opWith, reset ) {
 	whenRun = function ( one, two, three, four ) {
 
 		// Debugging
-		// console.log( '2:', opWith.op );
+		// console.log( '2:', evnt );
 		// if ( evnt ) { console.log( '2:', one.getIndex(), evnt, two ) }
 		// console.log( '2:' )
 		// console.trace( count, 'event === null', eventAssertion === null );
@@ -36,6 +36,7 @@ var oneEvent = module.exports = function ( result, bigs, opWith, reset ) {
 	if ( reset ) { bigs.playback.reset(); }  // ??: Needed?
 
 	emitter.on( evnt, whenRun );
+	// console.log( '========= debug: listening' );
 	plab[ op ]( arg );
 
 };  // End oneEvent()

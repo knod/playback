@@ -18,8 +18,8 @@ var runFirstEvent = require( './helpers/first-event.js' );
 
 
 var functsWithArgs = [
-	{ func: 'play', args: [ null ] },
-	// { func: 'reset', args: [ null ]},
+	// { func: 'play', args: [ null ] },
+	{ func: 'reset', args: [ null ]},
 	// { func: 'restart', args: [ null ]},
 	// { func: 'pause', args: [ null ]},
 	// { func: 'stop', args: [ null ]},
@@ -34,21 +34,23 @@ var functsWithArgs = [
 	// { func: 'prevWord', args: [ null ]},
 	// { func: 'prevSentence', args: [ null ]},
 	// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]}
+	// once?
+	// resume?
 ];
 
 
 var events = [
-	// 'playBegin', 'playFinish',
+	'playBegin', 'playFinish',
 	// 'resetBegin', 'resetFinish',
-	// 'restartBegin', 'restartFinish',
-	// 'pauseBegin', 'pauseFinish',
-	// 'stopBegin', 'stopFinish',
-	// 'closeBegin', 'closeFinish',
+	'restartBegin', 'restartFinish',
+	'pauseBegin', 'pauseFinish',
+	'stopBegin', 'stopFinish',
+	'closeBegin', 'closeFinish',
 	// 'onceBegin', 'onceFinish',
 	// 'resumeBegin', 'resumeFinish',
-	// 'rewindBegin', 'rewindFinish',
+	'rewindBegin', 'rewindFinish',
 	// 'fastForwardBegin', 'fastForwardFinish',
-	'loopBegin', 'loopFinish',
+	// 'loopBegin', 'loopFinish',
 	// 'newWordFragment',
 	// 'loopSkip',
 	// 'progress',
@@ -99,7 +101,8 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 				try {
 
 					if ( getAltAssertions[label] ) {
-						assert = getAltAssertions[label]( {} );
+						// assert = getAltAssertions[label]( {} );
+						assert = getAltAssertions.getAssertion( label );
 					}
 
 					var outcome = assert( result, label, evnt2 );
