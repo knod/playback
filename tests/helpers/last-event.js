@@ -22,7 +22,8 @@ var oneEvent = module.exports = function ( result, bigs, opWith, reset ) {
 		// console.log( '2:' )
 		// console.trace( count, 'event === null', eventAssertion === null );
 		// count++;
-		// if ( evnt === 'newWordFragment' ) { console.log( '2:', one.getIndex() ); }
+		// if ( op === 'reset' && evnt === 'newWordFragment' ) { console.log( '2:', two ); }
+		// console.log( '2:', count, op, evnt );
 
 		result.playback = one;
 		// I happen to know this will be the fragment some of the time

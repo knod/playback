@@ -81,7 +81,7 @@ defaultAsserts.not = function ( result, testText, evnt ) {
 	var passes 	= true;
 	// var msg 	= 'no arguments accumulated';
 	var msg 	= 'event NOT triggered';
-
+// console.log('checked not triggered:', evnt)
 	// var shouldFail = checkExpectedToFail( testText );
 	// if ( shouldFail ) {
 	// 	// Nothing is expected, it's failing for good reasons
@@ -100,6 +100,8 @@ defaultAsserts.triggered = function ( result, testText, evnt ) {
 
 	var passes 	= true,
 		msg 	= 'event was triggered';
+
+// console.log('checked triggered', evnt)
 
 	// var shouldFail = checkExpectedToFail( testText );
 	// if ( shouldFail ) {
@@ -135,7 +137,7 @@ var makeFragAsserter = function ( plyb, frags ) {
 
 		var passes 	= true,
 			msg 	= 'correct fragments were accumulated'
-
+// console.log('frags triggered')
 		// console.log( result.arg2s );
 
 		// var shouldFail = checkExpectedToFail( testText );

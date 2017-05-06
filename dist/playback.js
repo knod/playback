@@ -351,6 +351,7 @@
 
 
 
+		// TODO: ??: Add a 'toggle' event?
 		plab._togglePlayPauseProxy = function () {
 			// Use `._persistentAction` instead?
 			if ( plab._currentAction !== 'pause' ) { plab.pause(); }

@@ -33,25 +33,6 @@ var functsWithArgs = [
 ];
 
 
-// var events = [
-// 	// 'playBegin', 'playFinish',
-// 	// 'resetBegin', 'resetFinish',
-// 	// 'restartBegin', 'restartFinish',
-// 	// 'pauseBegin', 'pauseFinish',
-// 	// 'stopBegin', 'stopFinish',
-// 	// 'closeBegin', 'closeFinish',
-// 	// 'onceBegin', 'onceFinish',
-// 	// 'resumeBegin', 'resumeFinish',
-// 	// 'rewindBegin', 'rewindFinish',
-// 	// 'fastForwardBegin', 'fastForwardFinish',
-// 	// 'loopBegin', 'loopFinish',
-// 	// 'newWordFragment',
-// 	// 'loopSkip',
-// 	// 'progress',
-// 	'done'
-// ];
-
-
 var getAssertions = null;  // Instantiated in `start()`
 
 

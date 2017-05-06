@@ -18,13 +18,13 @@ var runFirstEvent = require( './helpers/first-event.js' );
 
 
 var functsWithArgs = [
-	// { func: 'play', args: [ null ] },
-	{ func: 'reset', args: [ null ]},
-	// { func: 'restart', args: [ null ]},
-	// { func: 'pause', args: [ null ]},
-	// { func: 'stop', args: [ null ]},
-	// { func: 'close', args: [ null ]},
-	// { func: 'togglePlayPause', args: [ null ]},
+		// { func: 'play', args: [ null ] },
+		// { func: 'reset', args: [ null ]},
+		// { func: 'restart', args: [ null ]},
+		// { func: 'pause', args: [ null ]},
+		// { func: 'stop', args: [ null ]},
+		// { func: 'close', args: [ null ]},
+	{ func: 'togglePlayPause', args: [ null ]},
 	// { func: 'rewind', args: [ null ]},
 	// { func: 'fastForward', args: [ null ]},
 	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
@@ -42,13 +42,13 @@ var functsWithArgs = [
 var events = [
 	'playBegin', 'playFinish',
 	// 'resetBegin', 'resetFinish',
-	'restartBegin', 'restartFinish',
-	'pauseBegin', 'pauseFinish',
-	'stopBegin', 'stopFinish',
-	'closeBegin', 'closeFinish',
+	// 'restartBegin', 'restartFinish',
+	// 'pauseBegin', 'pauseFinish',
+	// 'stopBegin', 'stopFinish',
+	// 'closeBegin', 'closeFinish',
 	// 'onceBegin', 'onceFinish',
 	// 'resumeBegin', 'resumeFinish',
-	'rewindBegin', 'rewindFinish',
+	// 'rewindBegin', 'rewindFinish',
 	// 'fastForwardBegin', 'fastForwardFinish',
 	// 'loopBegin', 'loopFinish',
 	// 'newWordFragment',
@@ -56,8 +56,6 @@ var events = [
 	// 'progress',
 	// 'done'
 ];
-
-
 
 
 var getStandardAssertions = null;  // Instantiated in `start()`
@@ -100,10 +98,10 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 				// do stuff
 				try {
 
-					if ( getAltAssertions[label] ) {
+					// if ( getAltAssertions[label] ) {
 						// assert = getAltAssertions[label]( {} );
-						assert = getAltAssertions.getAssertion( label );
-					}
+								assert = getAltAssertions.getAssertion( label, assert, false );
+					// }
 
 					var outcome = assert( result, label, evnt2 );
 					if ( outcome.passed ) {
@@ -213,7 +211,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 // Get the variables we need
 var start = function () {
 	getStandardAssertions 	= require('./helpers/single-assertions.js')( plab );
-	getAltAssertions 		= require('./helpers/alt-assertions.js')( plab );
+	getAltAssertions 		= require('./helpers/doubles-assertions.js')( plab );
 	iterate('doubles:');
 
 	// Too long to run on every single code change, but should
