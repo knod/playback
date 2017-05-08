@@ -58,7 +58,8 @@
 			plab.done 		= false;
 			plab._timeoutID = null;
 
-			plab._persistentAction 	= 'pause';  // either 'play' or 'pause'
+			plab._resumableState 	= 'pause';  // either 'play' or 'pause'
+			// currentGoal? as in 'rewind', even when pause is being called in `.rewind()`?
 			plab._currentAction 	= 'pause';
 			plab._direction 		= 'forward';
 			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
@@ -146,6 +147,7 @@
 			plab._queueRunning = false;
 		};  // End plab._queueReset()
 
+		// ??: _queuePause?
 
 
 		// ----- Actions -----
@@ -153,18 +155,18 @@
 		plab._reset = function () {
 		/* () -> Playback
 		* 
+		* Internal reset. No events, no sending fragments
 		* Returns to initial values
 		*/
 			if ( plab._currentAction === 'reset' ) { return plab; }
 
-			plab._pause( null );
-			plab._persistentAction = 'pause';
+			plab._currentAction  = 'reset';
+			plab._killLoop();  // Does not change state
+			plab._resumableState = 'pause';  // either 'play' or 'pause'
 
-			plab._currentAction = 'reset';
-			plab.done 			= false;
-			plab._timeoutID 	= null;
+			plab.done 		= false;
+			plab._timeoutID = null;
 
-			plab._persistentAction 	= 'pause';  // either 'play' or 'pause'
 			plab._direction 		= 'forward';
 			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
 
@@ -182,9 +184,8 @@
 		plab._resetProxy = function () {
 		/* () -> Playback
 		* 
-		* Returns to initial values, sends first fragment
+		* Returns to initial values, sends first fragment resets state
 		*/
-
 			plab._trigger( 'resetBegin', [plab] );
 
 			// // TODO: ??: Should this clear the queue?
@@ -193,6 +194,8 @@
 			// console.log( 'reset begins' );
 			plab._reset();
 			plab._once( 0 );  // Send first fragment
+			// change current and resumable state back (??: seems out of place?)
+			plab._pause();
 
 			plab._trigger( 'resetFinish', [plab] );
 			// console.log( 'reset finished' );
@@ -212,8 +215,8 @@
 		plab._restart = function ( eventName ) {
 
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
-			plab._reset();
-			plab._play();  // Also sends "play" events
+			plab._reset();  // no restart events
+			plab._play();  // no play events
 			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
 
 			return plab;
@@ -221,13 +224,13 @@
 		
 		// // Bring back if it becomes useful again
 		// plab.start = function () {
-		// 	plab._persistentAction = 'play';
+		// 	plab._resumableState = 'play';
 		// 	plab._restart( 'start' );
 		// 	return plab;
 		// };  // End plab.start()
 
 		plab._restartProxy = function () {
-			plab._persistentAction = 'play';
+			plab._resumableState = 'play';
 			plab._restart( 'restart' );
 			return plab;
 		};
@@ -264,7 +267,7 @@
 			plab._direction = 'forward';
 
 			if ( plab._currentAction !== 'play' ) {  // ??: could possibly just pause first instead
-				plab._currentAction = 'play';
+				plab._currentAction = 'play';  // ??: eventName || 'play'?
 				// Get current word first time, then get following fragments forever after
 				plab._loop( [0, 0, 0], null, null );  // Show the current word first, then it will move on
 			}
@@ -277,13 +280,13 @@
 
 		var debug;  // DEBUGGING
 		plab._playProxy = function ( frag, d ) {
-			
+
 			debug = d;  // DEBUGGING
 			if ( debug ) {
 				console.log( 'playing. done?:', plab.done );
 			}  // DEBUGGING
 
-			plab._persistentAction = 'play';
+			plab._resumableState = 'play';
 
 			if ( plab.done ) { plab.restart(); }  // Comes back here after restarted
 			else { plab._play( 'play' ); }
@@ -300,6 +303,17 @@
 
 
 
+		plab._killLoop = function ( eventName ) {
+		/* ( Str ) -> PlaybackManager
+		* 
+		* Kills the loop and resets some variables
+		* Does not change any state variables (currentAction, resumableState)
+		*/
+			clearTimeout( plab._timeoutID );
+			// Start slow when next go through loop (restore countdown)
+			plab._delayer.resetSlowStart();
+			return plab;
+		};  // End plab._killLoop()
 
 		plab._pause = function ( eventName ) {
 		/* ( Str ) -> PlaybackManager
@@ -308,20 +322,20 @@
 		*/ 
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
 
-			clearTimeout( plab._timeoutID );  // Needed? Maybe more immediate.
-			plab._currentAction = 'pause';
-			// Start slow when next go through loop (restore countdown)
-			plab._delayer.resetSlowStart();
+			// Switch order?
+			plab._resumableState = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
+			plab._currentAction = eventName || 'pause';
+			plab._killLoop()
 
 			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
 
 			return plab;
 		};  // End plab._pause()
 
+
 		// Names for "pause":
 		plab._pauseProxy = function () {
 			plab._pause( 'pause' );
-			plab._persistentAction = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
 			return plab;
 		};
 		plab.pause = function () {
@@ -329,9 +343,8 @@
 			return plab;
 		};
 
-		plab._stopProxy = function () {  // ??: plab._persistentAction = 'pause';
+		plab._stopProxy = function () {  // ??: plab._resumableState = 'pause';
 			plab._pause( 'stop' );
-			plab._persistentAction = 'pause';
 			return plab;
 		};
 		plab.stop = function () {
@@ -339,9 +352,8 @@
 			return plab;
 		};
 
-		plab._closeProxy = function () {  // ??: plab._persistentAction = 'pause';
+		plab._closeProxy = function () {  // ??: plab._resumableState = 'pause';
 			plab._pause( 'close' );
-			plab._persistentAction = 'pause';
 			return plab;
 		};
 		plab.close = function () {
@@ -353,9 +365,18 @@
 
 		// TODO: ??: Add a 'toggle' event?
 		plab._togglePlayPauseProxy = function () {
-			// Use `._persistentAction` instead?
-			if ( plab._currentAction !== 'pause' ) { plab.pause(); }
-			else { plab.play(); }
+			// Use `._resumableState` instead?
+
+			// if ( plab._currentAction !== 'pause' ) { plab.pause(); }
+			// else { plab.play(); }
+
+			// if === pause, play
+			// if === play, pause
+			// else resume
+			if ( plab._currentAction === 'pause' ) { plab.play(); }
+			else if ( plab._currentAction === 'play' ) { plab.pause(); }
+			else { plab.resume(); }
+
 			return plab;
 		};
 		plab.togglePlayPause = function () {
@@ -377,10 +398,12 @@
 
 			// notStartedAccYet = true;  // Not accelerating currently
 
-			plab._pause( null );
+			// plab._currentAction = 'resume';
+			plab._killLoop( null );
 
-			var wasPlaying = plab._persistentAction === 'play';
-			if ( wasPlaying ) { plab._play(); }  // this is the key difference from _pause()
+			var wasPlaying = plab._resumableState === 'play';
+			if ( wasPlaying ) { plab._play(); }
+			else { plab._pause( null ); }
 
 			plab._trigger( 'resumeFinish', [plab] );
 
@@ -392,12 +415,14 @@
 		// 	return plab;
 		// };
 
-		// // TODO: ??: Possible alternative so we can have an external
-		// // `.resume()`? Implement if needed.
-		// plab.resume = function () {
-		// 	plab._queueAdd( '_resume', arguments );
-		// 	return plab;
-		// };
+		// TODO: ??: Possible alternative so we can have an external
+		// `.resume()`? Implement if needed.
+		// !!!: We do need an external `.resume()` if `.rewind()`,
+		// etc. is a hold-and-release situation
+		plab.resume = function () {
+			plab._queueAdd( '_resume', arguments );
+			return plab;
+		};
 
 
 
@@ -412,7 +437,7 @@
 			plab._trigger( 'onceBegin', [plab] );  // ??: 'jumpBegin'?
 
 			// if ( plab._currentAction !== 'jump' ) {
-				plab._pause( null );
+				plab._killLoop( null );
 				plab._currentAction = 'jump';
 			// }
 
@@ -429,6 +454,7 @@
 			// ??: Should not happen here? If called externally, would this
 			// be expected behavior?
 			// ??: After event sent or before?
+			// ??: Now that there's a queue, maybe at the start
 			plab._resume();
 			// `once()` should not assume anything about resuming, right?
 
@@ -499,7 +525,7 @@
 			// if ( plab._currentAction !== 'jump' ) {
 			// 	// Have to pause first so index doesn't change
 			// 	plab._currentAction = 'jump';
-			// 	plab._pause( null );
+			// 	plab._killLoop( null );
 			// }
 
 			// var oldIndex = plab.getIndex(),
@@ -573,20 +599,29 @@
 		*/
 			if ( plab._currentAction !== 'rewind' ) {
 
-				plab._trigger( 'rewindBegin', [plab] );
-
-				plab._pause( null );
-
-				plab._incrementors = [0, -1, 0];
-				plab._direction = 'back';
 				plab._currentAction = 'rewind';
+
+				plab._trigger( 'rewindBegin', [plab] );
+// console.log( '1. ~~~~~~~ action:', plab._currentAction )
+				// plab._currentAction = 'rewind';
+				plab._killLoop( null );
+
+// console.log( '2. ~~~~~~~ action:', plab._currentAction )
+
+// 				plab._currentAction = 'rewind';
+// console.log( '3. ~~~~~~~ action:', plab._currentAction )
+				plab._incrementors 	= [0, -1, 0];
+				plab._direction 	= 'back';
 
 				var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
 
+// console.log( '4. ~~~~~~~ action:', plab._currentAction )
 				plab._loop( null, null, accelerate );  // Show the current word first, then it will move on
 
+// console.log( '5. ~~~~~~~ action:', plab._currentAction )
 				plab._trigger( 'rewindFinish', [plab] );
 
+// console.log( '6. ~~~~~~~ action:', plab._currentAction )
 			}
 
 			return plab;
@@ -611,12 +646,12 @@
 			if ( plab._currentAction !== 'fastForward' ) {
 
 				plab._trigger( 'fastForwardBegin', [plab] );
-
-				plab._pause( null );
-
-				plab._incrementors = [0, 1, 0];
-				plab._direction = 'forward';
+				
 				plab._currentAction = 'fastForward';
+				plab._killLoop( null );
+
+				plab._incrementors 	= [0, 1, 0];
+				plab._direction 	= 'forward';
 
 				var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
 
@@ -653,7 +688,7 @@
         	} else if ( plab._direction === 'back' && plab.getIndex() === 0 ) {
         		// Check if resumed playing. If not resumed, done.
         		plab._resume();  
-        		if ( plab._persistentAction !== 'play' ) { isDone = true; }
+        		if ( plab._resumableState !== 'play' ) { isDone = true; }
 	    	}
 
 	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'? 'doneBegin', 'doneFinish'?
@@ -746,6 +781,7 @@
 		* returns false, pausing between each fragment for an amount of time returned
 		* by `calcDelayOverride`, `state.clacDelay()`, or its own default.
 		*/
+
 			plab._trigger( 'loopBegin', [plab] );
 			if ( debug ) { console.log('loop begins', incrementors) }
 
@@ -790,13 +826,10 @@
 
 				}
 
-				// // Send fragment after setTimeout so that you can easily
-				// // pause on "newWordFragment" - pause kills the current
-				// // `._timeoutID`. Feels weird, though.
-				// plab._trigger( 'newWordFragment', [plab, frag] );
-
+				// Send fragment after setTimeout so that you can easily
+				// pause on "newWordFragment" - pause kills the current
+				// `._timeoutID`. Feels weird, though.
 				plab._trigger( 'newWordFragment', [plab, frag, incrementors] );
-
 
     	    }  // end if skip fragment or not skip fragment
 

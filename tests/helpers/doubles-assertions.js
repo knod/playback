@@ -94,7 +94,7 @@ defaultAsserts.not = function ( result, testText, evnt ) {
 	// } else {
 		if ( result.arg2s.length !== 0 ) {
 			passes = false;
-			msg = 'event should not have been triggerd but ' + colors.red + 'WAS' + colors.none;
+			msg = 'event should not have been triggered but ' + colors.red + 'WAS' + colors.none;
 		}
 	// }
 
@@ -113,7 +113,7 @@ defaultAsserts.triggered = function ( result, testText, evnt ) {
 	// } else {
 		if ( result.arg2s.length === 0 ) {
 			passes 	= false;
-			msg 	= 'event should have been triggerd but was ' + colors.red + 'NOT' + colors.none;
+			msg 	= 'event should have been triggered but was ' + colors.red + 'NOT' + colors.none;
 		} else if ( result.playback !== plab ) {
 			passes 	= false;
 			msg 	= 'object recieved was ' + colors.red + 'NOT' + colors.none + ' the expected Playback instance';
@@ -251,6 +251,12 @@ var getAssertProgDoubleFirstAndOn = function ( plyb ) {
 	return makeProgressAsserter( plyb, 13, [1/12, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 12/12] );
 };
 
+triggered = function ( assertsOverride ) {
+		return defaultAsserts.triggered;
+};  // Already happens to `pause(null)`
+not = function ( assertsOverride ) {
+		return defaultAsserts.not;
+};  // Already happens to `pause(null)`
 
 var cloneAsserts = function ( defaults, override ) {
 /* ( {}, {} ) -> other {}
@@ -388,18 +394,22 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// ==========================================
 	// SAME FUNCTION, REPEATED
 	// ==========================================
+	// TODO: Test removing |close from stuff (now that we have a onlyClose test)
+
 	// These don't ever trigger events after `play(null)`
-	str = regEscape('play(null) + ');  // Inital function
+	str = regEscape('play(null) + ');  // Initial function
 	str += '(?:reset|pause|close|once|resume|loopSkip)';  // Events
 	var playNot = new RegExp( str );
+	str = regEscape('doubles: play(null) + restart');
+	var playNotRestart = new RegExp( str );
 
 	// These don't ever trigger events after `reset(null)`
-	str = regEscape('reset(null) + ');  // Inital function
+	str = regEscape('reset(null) + ');  // Initial function
 	str += '(?:play|restart|pause|stop|close|loopSkip|done)';  // Events
 	var resetNot = new RegExp( str );
 
 	// These don't ever trigger events after `restart(null)`
-	str = regEscape('restart(null) + ');  // Inital function
+	str = regEscape('restart(null) + ');  // Initial function
 	str += '(?:play|reset|pause|close|once|resume|loopSkip)';  // Events
 	var restartNot = new RegExp( str );
 
@@ -407,23 +417,45 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// These don't ever trigger events after `pause(null)`, `stop(null)`, or `close(null)`
 	var regNoLoop = /\b(?:pause|stop|close)(?:\(-?\w+\)) \+ (?:play|reset|restart|once|resume|rewind|fastForward|loop|newWordFragment|progress|done)/;
 	// These don't ever trigger events after `pause(null)`
-	str = regEscape('pause(null) + ');  // Inital function
+	str = regEscape('pause(null) + ');  // Initial function
 	str += '(?:close|stop)';  // Events
 	var pauseNot = new RegExp( str );
 	// These don't ever trigger events after `pause(null)`
-	str = regEscape('stop(null) + ');  // Inital function
+	str = regEscape('stop(null) + ');  // Initial function
 	str += '(?:pause|close)';  // Events
 	var stopNot = new RegExp( str );
 	// These don't ever trigger events after `pause(null)`
-	str = regEscape('close(null) + ');  // Inital function
+	str = regEscape('close(null) + ');  // Initial function
 	str += '(?:pause|stop)';  // Events
 	var closeNot = new RegExp( str );
 
-	// Does it have a non-`rewind(null)`/`fastForward(null)` function followed by 'rewind'/'fastForward' event?
-	// If so, not triggered
-	var regNoRewind = /\b(?!rewind)\w+(?:\(-?\w+\)) \+ (?:rewind)/;
-	var regNoFfwd = /\b(?!fastForward)\w+(?:\(-?\w+\)) \+ (?:fastForward)/;
-	// same for 'close' and 'pause'?
+	// These don't ever trigger events after `togglePlayPause(null)`
+	str = regEscape('togglePlayPause(null) + ');  // Initial function
+	str += '(?:reset|close|once|resume|loopSkip)';  // Events
+	var toggleNot = new RegExp( str );
+
+	// These don't ever trigger events after `rewind(null)` anytime
+	str = regEscape('rewind(null) + ');  // Initial function
+	str += '(?:play|reset|pause|close|once|loopSkip)';  // Events
+	var rewindNot = new RegExp( str );
+	// These don't ever trigger events after `rewind(null)` (from paused)
+	str = regEscape('doubles: rewind(null) + ');  // Initial function
+	str += '(?:restart)';  // Events
+	var rewindStarts = new RegExp( str );
+	// Does 'resume' when gets to beginning, etc.
+	// will do 'restartFinish' with other stuff
+	// TODO: Check if can add 'restartBegin' to 'rewindNot', 'fastForwardNot', etc.
+
+	// These don't ever trigger events after `rewind(null)` anytime
+	str = regEscape('fastForward(null) + ');  // Initial function
+	str += '(?:play|reset|pause|close|once|resume|loopSkip)';  // Events
+	var fastForwardNot = new RegExp( str );
+	// These don't ever trigger events after `fastForward(null)` (from paused)
+	str = regEscape('doubles: fastForward(null) + ');  // Initial function
+	str += '(?:restart)';  // Events
+	var fastForwardStarts = new RegExp( str );
+
+
 
 
 	// ==========================================
@@ -434,6 +466,23 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	var selfComplete = /doubles: (.*)(?:\(-?\w+\)) \+ \1Begin > (.*)(?:\(-?\w+\)) \+ \1Finish/;
 	// Probably will need or stuff like 'newWordFragment' too
 
+	////////////////////// Not sure this will work
+	// These don't ever trigger events after `rewind(null)` (from `pause(null)` same as if started paused)
+	str = 'doubles: pause.*';  // Functions
+	str += regEscape('rewind(null) + ');  // Events
+	str += '(?:restart)';  // Events
+	var rewindFromPause = new RegExp( str );
+
+	// Does it have a non-`close(null)` function followed by 'close' event?
+	// If so, not triggered
+	var onlyClose = /\b(?!close)\w+(?:\(-?\w+\)) \+ (?:close)/;
+
+	// Does it have a non-`rewind(null)`/`fastForward(null)` function followed by 'rewind'/'fastForward' event?
+	// If so, not triggered
+	var onlyRewind = /\b(?!rewind)\w+(?:\(-?\w+\)) \+ (?:rewind)/;
+	var onlyFfwd = /\b(?!fastForward)\w+(?:\(-?\w+\)) \+ (?:fastForward)/;
+	// same for 'close'? Already taken care of before?
+
 
 	asts.getAssertion = function ( label, originalAssertion, debug ) {
 	// Try to keep these strings as searchable as possible without having a million page doc
@@ -443,14 +492,23 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// ==========================================
 		// TWO DIFFERENT FUNCTIONS
 		// ==========================================
-if ( debug ) { console.log( 'mixed functions', regNoLoop.test(label) ); }
+		if ( debug ) { console.log( 'mixed functions' ); }
 
 		// Must come before pause(null), stop(null), and close(null) are kept
 		// from interacting
-if ( debug ) { console.log( '1', regNoLoop.test(label) ); }
+		if ( debug ) { console.log( '1', regNoLoop.test(label) ); }
 		if ( selfComplete.test(label) ) {
 			return defaultAsserts.triggered;
 		}
+
+		// Nothing except `close(null)` should trigger close events
+		if ( debug ) { console.log( '2', onlyClose.test(label) ); }
+		if ( onlyClose.test(label) ) { return defaultAsserts.not; }
+
+		// onlyRewind and onlyFfwd should be here too, but I'd have to re-number everything
+
+		if ( debug ) { console.log( 'x', rewindFromPause.test(label) ); }
+		if ( rewindFromPause.test(label) ) { return defaultAsserts.not; }
 
 
 
@@ -458,27 +516,24 @@ if ( debug ) { console.log( '1', regNoLoop.test(label) ); }
 		// ==========================================
 		// SAME FUNCTION, REPEATED
 		// ==========================================
-if ( debug ) { console.log( 'repeated functions', regNoLoop.test(label) ); }
-if ( debug ) { console.log( '1', regNoRewind.test(label), regNoFfwd.test(label) ); }
-		// Nothing except `rewind(null)` and `fastForward(null)` should trigger rewind and fast forward events
-		if ( regNoRewind.test(label) || regNoFfwd.test(label) ) {
-			return defaultAsserts.not;
-		}
+		if ( debug ) { console.log( 'repeated functions' ); }
 
-if ( debug ) { console.log( '2', playNot.test(label) ); }
+		// Nothing except `rewind(null)` and `fastForward(null)` should trigger their own events
+		if ( debug ) { console.log( '1', onlyRewind.test(label), onlyFfwd.test(label) ); }
+		if ( onlyRewind.test(label) || onlyFfwd.test(label) ) { return defaultAsserts.not; }
+
 		// --- play(null) ---
-		if ( playNot.test(label) ) {
-			return defaultAsserts.not;
-		}
+		if ( debug ) { console.log( '2', playNot.test(label) ); }
+		if ( playNot.test(label) ) { return defaultAsserts.not; }
+		if ( debug ) { console.log( '2.5', playNotRestart ); }
+		if ( playNotRestart.test(label) ) { return defaultAsserts.not; }
 		// no alternate:
 		// ( if second `play` at loop begin, new fragment not collected yet, so regular output )
 		// play(null) + loopBegin > play(null) + all
 
-if ( debug ) { console.log( '3', resetNot.test(label) ); }
 		// --- reset(null) ---
-		if ( resetNot.test(label) ) {
-			return defaultAsserts.not;
-		}
+		if ( debug ) { console.log( '3', resetNot.test(label) ); }
+		if ( resetNot.test(label) ) { return defaultAsserts.not; }
 		// no alternate:
 		// ( happen after newFragment loop is completed, so regular output )
 		// reset(null) + resetFinish > reset(null) + all
@@ -487,23 +542,33 @@ if ( debug ) { console.log( '3', resetNot.test(label) ); }
 		// reset(null) + resumeFinish > reset(null) + all
 		// reset(null) + loopFinish > reset(null) + all
 
-if ( debug ) { console.log( '4', restartNot.test(label) ); }
 		// --- restart(null) ---
-		if ( restartNot.test(label) ) {
-			return defaultAsserts.not;
-		}
+		if ( debug ) { console.log( '4', restartNot.test(label) ); }
+		if ( restartNot.test(label) ) { return defaultAsserts.not; }
 
 		// --- pause(null), stop(null), close(null) ---
 		// no loop events
-if ( debug ) { console.log( '5', regNoLoop.test(label) ); }
-		if ( regNoLoop.test(label) ) {
-			return defaultAsserts.not;
-		}
+		if ( debug ) { console.log( '5', regNoLoop.test(label) ); }
+		if ( regNoLoop.test(label) ) { return defaultAsserts.not; }
 		// No other variants
-if ( debug ) { console.log( '6', regNoLoop.test(label) ); }
-		if ( pauseNot.test(label) || stopNot.test(label) || closeNot.test(label) ) {
-			return defaultAsserts.not;
-		}
+		if ( debug ) { console.log( '6', pauseNot.test(label) || stopNot.test(label) || closeNot.test(label) ); }
+		if ( pauseNot.test(label) || stopNot.test(label) || closeNot.test(label) ) { return defaultAsserts.not; }
+
+		// --- togglePlayPause(null) ---
+		if ( debug ) { console.log( '7', toggleNot.test(label) ); }
+		if ( toggleNot.test(label) ) { return defaultAsserts.not; }
+
+		// --- rewind(null) ---
+		if ( debug ) { console.log( '8', rewindNot.test(label) ); }
+		if ( rewindNot.test(label) ) { return defaultAsserts.not; }
+		if ( debug ) { console.log( '8.5', rewindStarts.test(label) ); }
+		if ( rewindStarts.test(label) ) { return defaultAsserts.not; }
+
+		// --- fastForward(null) ---
+		if ( debug ) { console.log( '9', fastForwardNot.test(label) ); }
+		if ( fastForwardNot.test(label) ) { return defaultAsserts.not; }
+		if ( debug ) { console.log( '9.5', fastForwardStarts.test(label) ); }
+		if ( fastForwardStarts.test(label) ) { return defaultAsserts.not; }
 
 
 
@@ -511,16 +576,13 @@ if ( debug ) { console.log( '6', regNoLoop.test(label) ); }
 
 
 
-
-
-
-if ( debug ) { console.log( 'pre-end' ); }
+		if ( debug ) { console.log( 'pre-end' ); }
 		// More unique cases below
 		if ( asts[label] ) {
 			return asts[label]( {} );
 		}
 
-if ( debug ) { console.log( 'end' ); }
+		if ( debug ) { console.log( 'end' ); }
 		// If none of these match, return the original assertion
 		return originalAssertion;
 	};  // End getAssertion() (func from label)
@@ -541,7 +603,6 @@ if ( debug ) { console.log( 'end' ); }
 	asts[ 'doubles: play(null) + playFinish > play(null) + newWordFragment' ] = function ( assertsOverride ) {
 		return getAssertFragsNoFirst( plyb );
 	};
-
 	asts[ 'doubles: play(null) + playFinish > play(null) + progress' ] = function ( assertsOverride ) {
 		return getAssertProgNoFirst( plyb );
 	};
@@ -549,23 +610,15 @@ if ( debug ) { console.log( 'end' ); }
 	// ------------ play() + stopBegin ------------
 	// After done, restart instead
 	asts[ 'doubles: play(null) + stopBegin > play(null) + playBegin' ] =
-	asts[ 'doubles: play(null) + stopBegin > play(null) + playFinish' ] = function ( assertsOverride ) {
-		return defaultAsserts.not;
-	};
+	asts[ 'doubles: play(null) + stopBegin > play(null) + playFinish' ] = not;
 	asts[ 'doubles: play(null) + stopBegin > play(null) + restartBegin' ] =
-	asts[ 'doubles: play(null) + stopBegin > play(null) + restartFinish' ] = function ( assertsOverride ) {
-		return defaultAsserts.triggered;
-	};
+	asts[ 'doubles: play(null) + stopBegin > play(null) + restartFinish' ] = triggered;
 	// ------------ play() + stopFinish ------------
 	// After done, restart instead
 	asts[ 'doubles: play(null) + stopFinish > play(null) + playBegin' ] =
-	asts[ 'doubles: play(null) + stopFinish > play(null) + playFinish' ] = function ( assertsOverride ) {
-		return defaultAsserts.not;
-	};
+	asts[ 'doubles: play(null) + stopFinish > play(null) + playFinish' ] = not;
 	asts[ 'doubles: play(null) + stopFinish > play(null) + restartBegin' ] =
-	asts[ 'doubles: play(null) + stopFinish > play(null) + restartFinish' ] = function ( assertsOverride ) {
-		return defaultAsserts.triggered;
-	};
+	asts[ 'doubles: play(null) + stopFinish > play(null) + restartFinish' ] = triggered;
 
 	// ------------ play() + loopBegin ------------
 
@@ -593,13 +646,9 @@ if ( debug ) { console.log( 'end' ); }
 	// ------------ play() + done ------------
 	// After done, restart instead
 	asts[ 'doubles: play(null) + done > play(null) + playBegin' ] =
-	asts[ 'doubles: play(null) + done > play(null) + playFinish' ] = function ( assertsOverride ) {
-		return defaultAsserts.not;
-	};
+	asts[ 'doubles: play(null) + done > play(null) + playFinish' ] = not;
 	asts[ 'doubles: play(null) + done > play(null) + restartBegin' ] =
-	asts[ 'doubles: play(null) + done > play(null) + restartFinish' ] = function ( assertsOverride ) {
-		return defaultAsserts.triggered;
-	};
+	asts[ 'doubles: play(null) + done > play(null) + restartFinish' ] = triggered;
 
 
 
@@ -656,13 +705,13 @@ if ( debug ) { console.log( 'end' ); }
 		return getAssertFragsDoubleFirstAndOn( plyb );
 	};
 	asts[ 'doubles: restart(null) + restartBegin > restart(null) + progress' ] = function ( assertsOverride ) {
-		return getAssertFragsDoubleFirstAndOn( plyb );
+		return getAssertProgDoubleFirstAndOn( plyb );
 	};
 
 	// ------------ restart() + loopBegin ------------
 	// Listener in the middle of loop (before 'newWordFragment') will pick up double
 	asts[ 'doubles: restart(null) + loopBegin > restart(null) + newWordFragment' ] = function ( assertsOverride ) {
-		return getAssertProgDoubleFirstAndOn( plyb );
+		return getAssertFragsDoubleFirstAndOn( plyb );
 	};
 	asts[ 'doubles: restart(null) + loopBegin > restart(null) + progress' ] = function ( assertsOverride ) {
 		return getAssertProgDoubleFirstAndOn( plyb );
@@ -673,6 +722,229 @@ if ( debug ) { console.log( 'end' ); }
 	asts[ 'doubles: restart(null) + newWordFragment > restart(null) + progress' ] = function ( assertsOverride ) {
 		return getAssertProgDoubleFirstAndOn( plyb );
 	};
+
+
+
+	// =============================================================================
+	// =============================================================================
+	// ======= togglePlayPause() + n > togglePlayPause() + all =======
+	// ======= some play() + n > pause() + all =======
+	// =============================================================================
+	// =============================================================================
+
+	// ------------ togglePlayPause() + playBegin ------------
+	asts[ 'doubles: togglePlayPause(null) + playBegin > togglePlayPause(null) + newWordFragment' ] =
+	asts[ 'doubles: play(null) + playBegin > pause(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsFirst( plyb );
+	};
+	// play then pause doesn't trigger 'playBegin'
+	asts[ 'doubles: togglePlayPause(null) + playBegin > togglePlayPause(null) + playBegin' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + playBegin > togglePlayPause(null) + pauseBegin' ] = triggered;
+	asts[ 'doubles: togglePlayPause(null) + playBegin > togglePlayPause(null) + pauseFinish' ] = triggered;
+	asts[ 'doubles: togglePlayPause(null) + playBegin > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + playBegin > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + playBegin > togglePlayPause(null) + done' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + playBegin > togglePlayPause(null) + progress' ] =
+	asts[ 'doubles: play(null) + playBegin > pause(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgFirst( plyb );
+	};
+
+	// ------------ togglePlayPause() + playFinish ------------
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + newWordFragment' ] =
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + playBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + playFinish' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + pauseBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + pauseFinish' ] = triggered;
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + loopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + done' ] =
+	asts[ 'doubles: togglePlayPause(null) + playFinish > togglePlayPause(null) + progress' ] = not;
+
+	// ------------ togglePlayPause() + restartBegin ------------
+	asts[ 'doubles: togglePlayPause(null) + restartBegin > togglePlayPause(null) + newWordFragment' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartBegin > togglePlayPause(null) + playBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartBegin > togglePlayPause(null) + playFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartBegin > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartBegin > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartBegin > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartBegin > togglePlayPause(null) + loopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartBegin > togglePlayPause(null) + done' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartBegin > togglePlayPause(null) + progress' ] =
+	// ------------ togglePlayPause() + restartFinish ------------
+	asts[ 'doubles: togglePlayPause(null) + restartFinish > togglePlayPause(null) + newWordFragment' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartFinish > togglePlayPause(null) + playBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartFinish > togglePlayPause(null) + playFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartFinish > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartFinish > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartFinish > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartFinish > togglePlayPause(null) + loopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartFinish > togglePlayPause(null) + done' ] =
+	asts[ 'doubles: togglePlayPause(null) + restartFinish > togglePlayPause(null) + progress' ] = not;
+
+	// ------------ togglePlayPause() + pauseBegin ------------
+	asts[ 'doubles: togglePlayPause(null) + pauseBegin > togglePlayPause(null) + newWordFragment' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseBegin > togglePlayPause(null) + playBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseBegin > togglePlayPause(null) + playFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseBegin > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseBegin > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseBegin > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseBegin > togglePlayPause(null) + loopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseBegin > togglePlayPause(null) + done' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseBegin > togglePlayPause(null) + progress' ] =
+	// ------------ togglePlayPause() + pauseFinish ------------
+	asts[ 'doubles: togglePlayPause(null) + pauseFinish > togglePlayPause(null) + newWordFragment' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseFinish > togglePlayPause(null) + playBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseFinish > togglePlayPause(null) + playFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseFinish > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseFinish > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseFinish > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseFinish > togglePlayPause(null) + loopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseFinish > togglePlayPause(null) + done' ] =
+	asts[ 'doubles: togglePlayPause(null) + pauseFinish > togglePlayPause(null) + progress' ] = not;
+
+	// ------------ togglePlayPause() + stopBegin ------------
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsAll( plyb );
+	};  // Already happens to `pause(null)`
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + playBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + playFinish' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + restartBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + restartFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + loopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + done' ] = triggered;
+	asts[ 'doubles: togglePlayPause(null) + stopBegin > togglePlayPause(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgAll( plyb );
+	};  // Already happens to `pause(null)`
+	// ------------ togglePlayPause() + stopFinish ------------
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsAll( plyb );
+	};  // Already happens to `pause(null)`
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + playBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + playFinish' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + restartBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + restartFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + loopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + done' ] = triggered;
+	asts[ 'doubles: togglePlayPause(null) + stopFinish > togglePlayPause(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgAll( plyb );
+	};  // Already happens to `pause(null)`
+
+	// ------------ togglePlayPause() + loopBegin ------------
+	asts[ 'doubles: togglePlayPause(null) + loopBegin > togglePlayPause(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsFirst( plyb );
+	};
+	asts[ 'doubles: togglePlayPause(null) + loopBegin > togglePlayPause(null) + playBegin' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + loopBegin > togglePlayPause(null) + pauseBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopBegin > togglePlayPause(null) + pauseFinish' ] = triggered;
+	asts[ 'doubles: togglePlayPause(null) + loopBegin > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopBegin > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopBegin > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopBegin > togglePlayPause(null) + done' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + loopBegin > togglePlayPause(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgFirst( plyb );
+	};
+	// ------------ togglePlayPause() + loopFinish ------------
+	asts[ 'doubles: togglePlayPause(null) + loopFinish > togglePlayPause(null) + newWordFragment' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopFinish > togglePlayPause(null) + playBegin' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + loopFinish > togglePlayPause(null) + pauseBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopFinish > togglePlayPause(null) + pauseFinish' ] = triggered;
+	asts[ 'doubles: togglePlayPause(null) + loopFinish > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopFinish > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopFinish > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopFinish > togglePlayPause(null) + loopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopFinish > togglePlayPause(null) + done' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopFinish > togglePlayPause(null) + progress' ] = not;
+
+	// ------------ togglePlayPause() + newWordFragment ------------
+	// Will get progress data, but not fragment data
+	asts[ 'doubles: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + newWordFragment' ] =
+	asts[ 'doubles: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + playBegin' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + pauseBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + pauseFinish' ] = triggered;
+	asts[ 'doubles: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + done' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + progress' ] =
+	asts[ 'doubles: togglePlayPause(null) + loopBegin > togglePlayPause(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgFirst( plyb );
+	};
+
+	// ------------ togglePlayPause() + progress ------------
+	asts[ 'doubles: togglePlayPause(null) + progress > togglePlayPause(null) + newWordFragment' ] =
+	asts[ 'doubles: togglePlayPause(null) + progress > togglePlayPause(null) + playBegin' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + progress > togglePlayPause(null) + pauseBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + progress > togglePlayPause(null) + pauseFinish' ] = triggered;
+	asts[ 'doubles: togglePlayPause(null) + progress > togglePlayPause(null) + stopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + progress > togglePlayPause(null) + stopFinish' ] =
+	asts[ 'doubles: togglePlayPause(null) + progress > togglePlayPause(null) + loopBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + progress > togglePlayPause(null) + done' ] =
+	asts[ 'doubles: togglePlayPause(null) + progress > togglePlayPause(null) + progress' ] = not;
+
+	// ------------ togglePlayPause() + done ------------
+	asts[ 'doubles: togglePlayPause(null) + done > togglePlayPause(null) + playBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + done > togglePlayPause(null) + playFinish' ] = not;
+	asts[ 'doubles: togglePlayPause(null) + done > togglePlayPause(null) + restartBegin' ] =
+	asts[ 'doubles: togglePlayPause(null) + done > togglePlayPause(null) + restartFinish' ] = triggered;
+
+
+
+	// =============================================================================
+	// =============================================================================
+	// ======= rewind() + n > rewind() + all =======
+	// =============================================================================
+	// =============================================================================
+
+	// ------------ rewind() + rewindBegin ------------
+	// rewindBegin can trigger rewindBegin again because when it rewinds at the start it also finishes
+	// TODO: How to test rewinding twice in a row not at the start? (combos of 3 sounds crazy)
+	asts[ 'doubles: rewind(null) + rewindBegin > rewind(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsDoubleFirst( plyb );
+	};
+	asts[ 'doubles: rewind(null) + rewindBegin > rewind(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgDoubleFirst( plyb );
+	};
+	// ------------ rewind() + loopBegin ------------
+	asts[ 'doubles: rewind(null) + loopBegin > rewind(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsDoubleFirst( plyb );
+	};
+	asts[ 'doubles: rewind(null) + loopBegin > rewind(null) + progress' ] =
+	// ------------ rewind() + newWordFragment ------------
+	asts[ 'doubles: rewind(null) + newWordFragment > rewind(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgDoubleFirst( plyb );
+	};
+
+
+
+	// =============================================================================
+	// =============================================================================
+	// ======= fastForward() + n > fastForward() + all =======
+	// =============================================================================
+	// =============================================================================
+
+	// ------------ fastForward() + stopBegin ------------
+	asts[ 'doubles: fastForward(null) + stopBegin > fastForward(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsLast( plyb );
+	};
+	asts[ 'doubles: fastForward(null) + stopBegin > fastForward(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgLast( plyb );
+	};
+	// ------------ fastForward() + stopFinish ------------
+	asts[ 'doubles: fastForward(null) + stopFinish > fastForward(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsLast( plyb );
+	};
+	asts[ 'doubles: fastForward(null) + stopFinish > fastForward(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgLast( plyb );
+	};
+
 
 
 

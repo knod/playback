@@ -1,5 +1,9 @@
 // tests/doubles.js
 
+// Rake testing at start of development to discover behavior
+// other than single behavior and to reveal bugs, then later
+// just regular tests.
+
 // Too long to run on every single code change, but should
 // be run sometimes, just to check
 
@@ -24,8 +28,8 @@ var functsWithArgs = [
 		// { func: 'pause', args: [ null ]},
 		// { func: 'stop', args: [ null ]},
 		// { func: 'close', args: [ null ]},
-	{ func: 'togglePlayPause', args: [ null ]},
-	// { func: 'rewind', args: [ null ]},
+		// { func: 'togglePlayPause', args: [ null ]},
+		{ func: 'rewind', args: [ null ]},
 	// { func: 'fastForward', args: [ null ]},
 	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
 	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
@@ -38,21 +42,20 @@ var functsWithArgs = [
 	// resume?
 ];
 
-
 var events = [
-	'playBegin', 'playFinish',
-	// 'resetBegin', 'resetFinish',
-	// 'restartBegin', 'restartFinish',
-	// 'pauseBegin', 'pauseFinish',
-	// 'stopBegin', 'stopFinish',
-	// 'closeBegin', 'closeFinish',
-	// 'onceBegin', 'onceFinish',
-	// 'resumeBegin', 'resumeFinish',
-	// 'rewindBegin', 'rewindFinish',
+		// 'playBegin', 'playFinish',
+		// 'resetBegin', 'resetFinish',
+		// 'restartBegin', 'restartFinish',
+		// 'pauseBegin', 'pauseFinish',
+		// 'stopBegin', 'stopFinish',
+		// 'closeBegin', 'closeFinish',
+		// 'onceBegin', 'onceFinish',
+		// 'resumeBegin', 'resumeFinish',
+		'rewindBegin', 'rewindFinish',
 	// 'fastForwardBegin', 'fastForwardFinish',
 	// 'loopBegin', 'loopFinish',
 	// 'newWordFragment',
-	// 'loopSkip',
+		// 'loopSkip',
 	// 'progress',
 	// 'done'
 ];
@@ -98,11 +101,12 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 				// do stuff
 				try {
 
+					var preAssert = assert;
 					// if ( getAltAssertions[label] ) {
 						// assert = getAltAssertions[label]( {} );
 								assert = getAltAssertions.getAssertion( label, assert, false );
 					// }
-
+					console.log( preAssert === assert, label )
 					var outcome = assert( result, label, evnt2 );
 					if ( outcome.passed ) {
 						done();

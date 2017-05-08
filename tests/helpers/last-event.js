@@ -15,8 +15,8 @@ var oneEvent = module.exports = function ( result, bigs, opWith, reset ) {
 
 
 	whenRun = function ( one, two, three, four ) {
-
 		// Debugging
+		// if ( evnt === 'rewindBegin' ) { console.log('2: rewoundBegun') }
 		// console.log( '2:', evnt );
 		// if ( evnt ) { console.log( '2:', one.getIndex(), evnt, two ) }
 		// console.log( '2:' )
