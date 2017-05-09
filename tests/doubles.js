@@ -7,6 +7,9 @@
 // Too long to run on every single code change, but should
 // be run sometimes, just to check
 
+// TODO: Allow setting for picking ranges of tests
+// example desired result: run test #3 to test #100
+
 var waitTime = 50;  // Basically double of single tests (25 was just enough with singles)
 
 
@@ -31,8 +34,8 @@ var functsWithArgs = [
 		// { func: 'togglePlayPause', args: [ null ]},
 		// { func: 'rewind', args: [ null ]},
 		// { func: 'fastForward', args: [ null ]},
-	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
+		// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
 	// { func: 'nextWord', args: [ null ]},
 	// { func: 'nextSentence', args: [ null ]},
 	// { func: 'prevWord', args: [ null ]},

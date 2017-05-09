@@ -8,11 +8,20 @@ var core = {};
 var total = 0,
   passed  = 0;
 
+var report = {
+  total: 0,
+  passed: 0
+}
+
 // Colors
 let colors = {
   green: '\x1B[32m', red: '\x1B[31m',
   yellow: '\x1B[33m', none: '\x1B[0m'
 };
+
+
+// ======== PROPERTIES ========
+core.report = report;
 
 // Functions
 function tryPromise ( fn ) {
@@ -66,7 +75,7 @@ core.run = function ( label, callback, timeoutLength = 1000 ) {
 
   }  // end if callback
 
-  total += 1;
+  report.total += 1;
 
   let success = function () {
 
@@ -74,12 +83,12 @@ core.run = function ( label, callback, timeoutLength = 1000 ) {
     // console.log( colors.green + 'Success:' + colors.none, label );
     // Print multiple successes on one line
     process.stdout.write( msg );
-    passed += 1;
+    report.passed += 1;
   }
 
   let failure = function ( error ) {
 
-    console.log( '\n' + colors.red + 'Failure on test ' + total + ': ' + colors.none, label );
+    console.log( '\n' + colors.red + 'Failure on test ' + report.total + ': ' + colors.none, label );
     console.log( '- Error:', error );
     // console.log( error.stack );
 
@@ -90,9 +99,8 @@ core.run = function ( label, callback, timeoutLength = 1000 ) {
 };  // End it()
 
 
-// TODO:
 core.finish = function () {
-  console.log( '\n\n~~~ Report: ' + passed + ' out of ' + total + ' tests passed' );
+  console.log( '\n\n~~~ Report: ' + report.passed + ' out of ' + report.total + ' tests passed' );
 };
 
 
