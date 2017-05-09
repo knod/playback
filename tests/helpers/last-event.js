@@ -34,7 +34,7 @@ var oneEvent = module.exports = function ( result, bigs, opWith, reset ) {
 
 
 	emitter.removeAllListeners();
-	if ( reset ) { bigs.playback.reset(); }  // ??: Needed?
+	if ( reset ) { bigs.playback.reset(); }
 
 	emitter.on( evnt, whenRun );
 	// console.log( '========= debug: listening' );

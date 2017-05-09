@@ -15,7 +15,6 @@ var firstEvent = module.exports = function ( doOnEvent, bigs, opWith, reset ) {
 
 	whenRun = function ( one, two, three, four ) {
 
-if ( evnt === 'rewindBegin' ) { console.log('1: rewoundBegun') }
 		emitter.removeAllListeners();
 		doOnEvent( evnt, one, two, three, four );
 

@@ -29,9 +29,10 @@ var functsWithArgs = [
 		// { func: 'stop', args: [ null ]},
 		// { func: 'close', args: [ null ]},
 		// { func: 'togglePlayPause', args: [ null ]},
-		{ func: 'rewind', args: [ null ]},
-	// { func: 'fastForward', args: [ null ]},
+		// { func: 'rewind', args: [ null ]},
+		// { func: 'fastForward', args: [ null ]},
 	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+	{ func: 'jumpWords', args: [ 100 ]},
 	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
 	// { func: 'nextWord', args: [ null ]},
 	// { func: 'nextSentence', args: [ null ]},
@@ -43,22 +44,27 @@ var functsWithArgs = [
 ];
 
 var events = [
-		// 'playBegin', 'playFinish',
-		// 'resetBegin', 'resetFinish',
-		// 'restartBegin', 'restartFinish',
-		// 'pauseBegin', 'pauseFinish',
-		// 'stopBegin', 'stopFinish',
-		// 'closeBegin', 'closeFinish',
-		// 'onceBegin', 'onceFinish',
-		// 'resumeBegin', 'resumeFinish',
-		'rewindBegin', 'rewindFinish',
-	// 'fastForwardBegin', 'fastForwardFinish',
-	// 'loopBegin', 'loopFinish',
-	// 'newWordFragment',
-		// 'loopSkip',
-	// 'progress',
-	// 'done'
+	'playBegin', 'playFinish',
+	'resetBegin', 'resetFinish',
+	'restartBegin', 'restartFinish',
+	'pauseBegin', 'pauseFinish',
+	'stopBegin', 'stopFinish',
+	'closeBegin', 'closeFinish',
+	'onceBegin', 'onceFinish',
+	'resumeBegin', 'resumeFinish',
+	'rewindBegin', 'rewindFinish',
+	'fastForwardBegin', 'fastForwardFinish',
+	'loopBegin', 'loopFinish',
+	'newWordFragment',
+	'loopSkip',
+	'progress',
+	'done'
 ];
+
+
+// One function with itself calling all combos of events: #tests: 676
+// 676 * 4 = 2704? Yup. `doingOnlyTwoOfSameFunction` works!
+var doingOnlyTwoOfSameFunction = true;
 
 
 var getStandardAssertions = null;  // Instantiated in `start()`
@@ -91,6 +97,8 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 	const evnt2 = currentAssertions[ event2Indx ].event;
 	var assert 	= currentAssertions[ event2Indx ].assertion;
 
+	// console.log( func1Name, evnt1, func2Name, evnt2 );
+
 	label = label + ' > ' + func2Name + '(' + arg2 + ')' + ' + ' + evnt2 ;
 
 	var runAssert = function ( result, assertWaitTime ) {
@@ -106,7 +114,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 						// assert = getAltAssertions[label]( {} );
 								assert = getAltAssertions.getAssertion( label, assert, false );
 					// }
-					console.log( preAssert === assert, label )
+					// console.log( preAssert === assert, label )
 					var outcome = assert( result, label, evnt2 );
 					if ( outcome.passed ) {
 						done();
@@ -133,33 +141,59 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 				let nextArg1I 	= arg1Indx;
 				let nextFunc1I 	= func1Indx;
 
-				if (nextEvent2I >= currentAssertions.length) {
-					nextEvent2I = 0;  // reset
-					nextArg2I++;  // increment the next array
+
+
+				// For inital tests to reduce commenting and uncommenting
+				if ( !doingOnlyTwoOfSameFunction ) {
+
+					if (nextEvent2I >= currentAssertions.length) {
+						nextEvent2I = 0;  // reset
+						nextArg2I++;  // increment the next array
+					}
+
+					if (nextArg2I >= funcWArg2.args.length) {
+						nextArg2I = 0;  // reset
+						nextFunc2I++;  // increment the next array
+					}
+
+					if (nextFunc2I >= functsWithArgs.length) {  // num functions
+						nextFunc2I = 0;  // reset
+						nextEvent1I++;  // increment the next array
+					}
+
+					if (nextEvent1I >= events.length) {
+						nextEvent1I = 0;  // reset
+						nextArg1I++;  // increment the next array
+					}
+
+					if (nextArg1I >= funcWArg1.args.length) {
+						nextArg1I = 0;  // reset
+						nextFunc1I++;  // increment the next array
+					}
+
+				} else {
+
+					if (nextEvent2I >= currentAssertions.length) {
+						nextEvent2I = 0;  // reset
+						nextEvent1I++;  // increment the next array
+					}
+
+					if (nextEvent1I >= events.length) {
+						nextEvent1I = 0;  // reset
+						nextArg1I++;  // increment the next array
+					}
+
+					if (nextArg1I >= funcWArg1.args.length) {
+						nextArg1I = 0;  // reset
+						nextFunc1I++;  // increment the next array
+					}
 				}
 
-				if (nextArg2I >= funcWArg2.args.length) {
-					nextArg2I = 0;  // reset
-					nextFunc2I++;  // increment the next array
-				}
-
-				if (nextFunc2I >= functsWithArgs.length) {  // num functions
-					nextFunc2I = 0;  // reset
-					nextEvent1I++;  // increment the next array
-				}
-
-				if (nextEvent1I >= events.length) {
-					nextEvent1I = 0;  // reset
-					nextArg1I++;  // increment the next array
-				}
-
-				if (nextArg1I >= funcWArg1.args.length) {
-					nextArg1I = 0;  // reset
-					nextFunc1I++;  // increment the next array
-				}
+				// For inital tests to reduce commenting and uncommenting
+				if ( doingOnlyTwoOfSameFunction ) { nextFunc2I = nextFunc1I; nextArg2I = nextArg1I; }
 
 				// If top most level is done, all done
-				if (nextFunc1I >= functsWithArgs.length) {  // num functions
+				if (nextFunc1I >= functsWithArgs.length ) {  // num functions
 
 					tester.finish();
 					return;

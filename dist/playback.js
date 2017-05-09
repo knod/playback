@@ -158,10 +158,10 @@
 		* Internal reset. No events, no sending fragments
 		* Returns to initial values
 		*/
-			if ( plab._currentAction === 'reset' ) { return plab; }
+			if ( plab._currentAction === 'reset' ) { return plab; }  // ??: needed?
 
-			plab._currentAction  = 'reset';
-			plab._killLoop();  // Does not change state
+			plab._currentAction  = 'reset';  // ??: needed? ^
+			plab._killLoop();  // Does not change state of `._currentAction`
 			plab._resumableState = 'pause';  // either 'play' or 'pause'
 
 			plab.done 		= false;
@@ -188,8 +188,8 @@
 		*/
 			plab._trigger( 'resetBegin', [plab] );
 
-			// // TODO: ??: Should this clear the queue?
-			// plab._queueReset();
+			// TODO: ??: Should this clear the queue?
+			plab._queueReset();
 
 			// console.log( 'reset begins' );
 			plab._reset();
@@ -199,6 +199,7 @@
 
 			plab._trigger( 'resetFinish', [plab] );
 			// console.log( 'reset finished' );
+
 			return plab;
 		};
 
@@ -251,6 +252,7 @@
 		/* ( Str ) -> PlaybackManager
 		* 
 		* For all 'play'-like activities
+		* TODO: ??: Reset delay on `._play()` instead?
 		*/
 			if ( debug ) {
 				console.log('count:', count, eventName);
@@ -264,6 +266,9 @@
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
 			// console.log( 'began playing eventName:', eventName );  // DEBUGGING
 
+			// plab._delayer.resetSlowStart();  // ??: In here instead of in `._pause()`?
+
+			plab._resumableState = 'play';  // In `._play()` instead?
 			plab._direction = 'forward';
 
 			if ( plab._currentAction !== 'play' ) {  // ??: could possibly just pause first instead
@@ -282,11 +287,7 @@
 		plab._playProxy = function ( frag, d ) {
 
 			debug = d;  // DEBUGGING
-			if ( debug ) {
-				console.log( 'playing. done?:', plab.done );
-			}  // DEBUGGING
-
-			plab._resumableState = 'play';
+			if ( debug ) { console.log( 'playing. done?:', plab.done ); }  // DEBUGGING
 
 			if ( plab.done ) { plab.restart(); }  // Comes back here after restarted
 			else { plab._play( 'play' ); }
@@ -323,9 +324,9 @@
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
 
 			// Switch order?
+			plab._killLoop()
 			plab._resumableState = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
 			plab._currentAction = eventName || 'pause';
-			plab._killLoop()
 
 			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
 
@@ -373,7 +374,7 @@
 			// if === pause, play
 			// if === play, pause
 			// else resume
-			if ( plab._currentAction === 'pause' ) { plab.play(); }
+			if (  /pause|stop|close/.test(plab._currentAction) ) { plab.play(); }
 			else if ( plab._currentAction === 'play' ) { plab.pause(); }
 			else { plab.resume(); }
 
@@ -393,6 +394,7 @@
 		* 
 		* Returns true if resumed playing, false if stopped
 		* completely
+		* TODO: ??: Should this set of the 'play' and 'pause' events?
 		*/
 			plab._trigger( 'resumeBegin', [plab] );
 
@@ -597,6 +599,7 @@
 		* 
 		* TODO: Spec: What happens when rewind and then `.jumpWord()` in the middle?
 		*/
+			// Make sure there's only ever one loop
 			if ( plab._currentAction !== 'rewind' ) {
 
 				plab._currentAction = 'rewind';
@@ -643,6 +646,7 @@
 		* 
 		* Default currently just a steady speed.
 		*/
+			// Make sure there's only ever one loop
 			if ( plab._currentAction !== 'fastForward' ) {
 
 				plab._trigger( 'fastForwardBegin', [plab] );
@@ -658,7 +662,6 @@
 				plab._loop( null, null, accelerate );  // Show the current word first, then it will move on
 
 				plab._trigger( 'fastForwardFinish', [plab] );
-
 			}
 
 			return plab;
