@@ -502,7 +502,8 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	var onlyFfwd = /\b(?!fastForward)\w+(?:\(-?\w+\)) \+ (?:fastForward)/;
 	// same for 'close'? Already taken care of before?
 
-	var jumpNot = /jumpWords(?:\(-?\w+\)) \+ (?:play|reset|restart|pause)/;
+	// If it comes second, it could hear the remnants of a different function being triggered
+	var jumpNot = /doubles: jump(?:.*\(-?\w+\)) \+ (?:pause|restart|play|reset)/;
 
 
 

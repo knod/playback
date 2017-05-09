@@ -8,7 +8,6 @@ var expectedFailures = module.exports = {
 	// jumpWords should never trigger: play, reset, restart (only a second `play()` restarts), pause
 	// jumpWords(>-1 && <11) should never trigger: stop, done
 	// already taken care of elsewhere: rewind, fastForward, close, loopSkip?
-
 	'doubles: jumpWords(-1) + onceBegin > jumpWords(-1) + newWordFragment': false,  // frags expected ["Victorious,"], but got ["Victorious,","Victorious,"]
 	'doubles: jumpWords(-1) + onceBegin > jumpWords(-1) + progress': false,  // 'progress' expected [0.08333333333333333], but got [0.08333333333333333,0.08333333333333333]
 	'doubles: jumpWords(-1) + loopBegin > jumpWords(-1) + newWordFragment': false,  // frags expected ["Victorious,"], but got ["Victorious,","Victorious,"]
@@ -136,15 +135,13 @@ var expectedFailures = module.exports = {
 	'doubles: jumpWords(11) + loopBegin > jumpWords(11) + newWordFragment': false,  // frags expected ["wattlebird?"], but got ["wattlebird?","wattlebird?"]
 	'doubles: jumpWords(11) + loopBegin > jumpWords(11) + progress': false,  // 'progress' expected [1], but got [1,1]
 	'doubles: jumpWords(11) + newWordFragment > jumpWords(11) + progress': false,  // 'progress' expected [1], but got [1,1]
-
-	// jump 11 + progress > jump 11 + progress =============== 1 progress? Why not? Because not resumed yet until loop is done?
+	// jump 11 + progress > jump 11 + progress/frag gets expected values because only gets it's own item (thus) [1], etc.
 
 	'doubles: jumpWords(100) + onceBegin > jumpWords(100) + newWordFragment': false,  // frags expected ["wattlebird?"], but got ["wattlebird?","wattlebird?"]
 	'doubles: jumpWords(100) + onceBegin > jumpWords(100) + progress': false,  // 'progress' expected [1], but got [1,1]
 	'doubles: jumpWords(100) + loopBegin > jumpWords(100) + newWordFragment': false,  // frags expected ["wattlebird?"], but got ["wattlebird?","wattlebird?"]
 	'doubles: jumpWords(100) + loopBegin > jumpWords(100) + progress': false,  // 'progress' expected [1], but got [1,1]
 	'doubles: jumpWords(100) + newWordFragment > jumpWords(100) + progress': false,  // 'progress' expected [1], but got [1,1]
-
-	// jump 100 + progress > jump 100 + progress =============== 1 progress? Why not? Because not resumed yet until loop is done?
+	// jump 100 + progress > jump 100 + progress/frag gets expected values because only gets it's own item (thus) [1], etc.
 
 };
