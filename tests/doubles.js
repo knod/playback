@@ -234,8 +234,8 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 
 				if ( finished ) {
 					tester.finish();
-					var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
-					console.log( utc ) // time
+					var time = (new Date()).toString().split(' ')[4];
+					console.log( time ) // time
 					console.log( (Date.now() - startTime) + 'ms' );
 				}
 
@@ -290,8 +290,8 @@ var startTime = 0;
 var start = function () {
 	
 	startTime = Date.now();
-	var utc = new Date().toJSON().slice(0,10).replace(/-/g,'/');
-	console.log( utc ) // time
+	var time = (new Date()).toString().split(' ')[4];
+	console.log( time ) // time
 
 	getStandardAssertions 	= require('./helpers/single-assertions.js')( plab );
 	getAltAssertions 		= require('./helpers/doubles-assertions.js')( plab );
