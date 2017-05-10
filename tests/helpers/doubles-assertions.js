@@ -5,6 +5,8 @@
 // All these tests should pass as well, though, so nothing
 // should be failing in the 'doubles'? tests.
 
+// Note: double values not caused by actual second function, just by listener that's added to the test
+
 
 // ------------ setup ------------
 
@@ -503,7 +505,23 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// same for 'close'? Already taken care of before?
 
 	// If it comes second, it could hear the remnants of a different function being triggered
-	var jumpNot = /doubles: jump(?:.*\(-?\w+\)) \+ (?:pause|restart|play|reset)/;
+	var jumpNot = /doubles: jump(?:.*\(-?\w+\)) \+ (?:play|reset|restart|pause|close)/;
+
+	// nextWord (as the first function) also never triggers play, reset, restart, pause, stop, close, done
+	str = regEscape( 'doubles: nextWord(null) + ' ) + '(?:play|reset|restart|pause|stop|close|done)';
+	var nextWordNot = new RegExp( str );
+
+	// nextSentence (as the first function) also never triggers play, reset, restart, pause, stop, close, done
+	str = regEscape( 'doubles: nextSentence(null) + ' ) + '(?:play|reset|restart|pause|stop|close|done)';
+	var nextSentenceNot = new RegExp( str );
+
+	// prevWord (as the first function) also never triggers play, reset, restart, pause, close (stop/done when hits beginning)
+	str = regEscape( 'doubles: prevWord(null) + ' ) + '(?:play|reset|restart|pause|close)';
+	var prevWordNot = new RegExp( str );
+
+	// nextSentence (as the first function) also never triggers play, reset, restart, pause, stop, close, done
+	str = regEscape( 'doubles: prevSentence(null) + ' ) + '(?:play|reset|restart|pause|close)';
+	var prevSentenceNot = new RegExp( str );
 
 
 
@@ -563,9 +581,26 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		if ( debug ) { console.log( '6', /loopSkip/.test(label) ); }
 		if ( /loopSkip/.test(label) ) { return defaultAsserts.not; }
 
-		// jumpWords, jumpSentences, jumpTo should not ever trigger play|reset|restart|pause
+		// jumpWords, jumpSentences, jumpTo, when the first function, should not ever trigger stuff listed above
 		if ( debug ) { console.log( '7', jumpNot.test(label) ); }
 		if ( jumpNot.test(label) ) { return defaultAsserts.not; }
+
+		// nextWord, when the first function, should not ever trigger stuff listed above
+		if ( debug ) { console.log( '8', nextWordNot.test(label) ); }
+		if ( nextWordNot.test(label) ) { return defaultAsserts.not; }
+
+		// nextSentence, when the first function, should not ever trigger stuff listed above
+		if ( debug ) { console.log( '9', nextSentenceNot.test(label) ); }
+		if ( nextSentenceNot.test(label) ) { return defaultAsserts.not; }
+
+		// prevWord, when the first function, should not ever trigger stuff listed above
+		if ( debug ) { console.log( '10', prevWordNot.test(label) ); }
+		if ( prevWordNot.test(label) ) { return defaultAsserts.not; }
+
+		// prevSentence, when the first function, should not ever trigger stuff listed above
+		if ( debug ) { console.log( '11', prevSentenceNot.test(label) ); }
+		if ( prevSentenceNot.test(label) ) { return defaultAsserts.not; }
+
 
 
 		if ( debug ) { console.log( 'x', rewindFromPause.test(label) ); }

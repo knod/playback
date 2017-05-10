@@ -15,7 +15,7 @@ function doOneThing ( x = 0, y = 0, z = 0 ) {
   const label = foo + ' & ' + bar + ' & ' + baz;
 
   // First run a test
-  tester.runOne( label, function tests ( done ) {
+  tester.run( label, function tests ( done ) {
     // do stuff
     try {
         // There will be some failures on purpose

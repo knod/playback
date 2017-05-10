@@ -3,6 +3,8 @@
 // true = I've looked it over
 // false = I haven't looked it over
 
+// Note: double values not caused by actual second function, just by listener that's added to the test
+
 var expectedFailures = module.exports = {
 	// --- jumpWords ---
 	// jumpWords should never trigger: play, reset, restart (only a second `play()` restarts),
@@ -243,7 +245,6 @@ var expectedFailures = module.exports = {
 	'doubles: jumpSentences(3) + stopFinish > jumpSentences(3) + loopBegin': true,  // event should have been triggerd but was NOT
 	'doubles: jumpSentences(3) + stopFinish > jumpSentences(3) + loopFinish': true,  // event should have been triggerd but was NOT
 	'doubles: jumpSentences(3) + stopFinish > jumpSentences(3) + progress': true,  // event should have been triggerd but was NOT
-
 	// Second jump goes past end of sentence
 	'doubles: jumpSentences(3) + onceBegin > jumpSentences(3) + newWordFragment': false,  // frags expected ["Why,"], but got ["Why,","wattlebird?"]
 	'doubles: jumpSentences(3) + onceBegin > jumpSentences(3) + stopBegin': false,  // event should not have been triggerd but WAS
@@ -301,6 +302,159 @@ var expectedFailures = module.exports = {
 	'doubles: jumpSentences(100) + loopBegin > jumpSentences(100) + progress': false,  // 'progress' expected [1], but got [1,1]
 	'doubles: jumpSentences(100) + newWordFragment > jumpSentences(100) + progress': false,  // 'progress' expected [1], but got [1,1]
 	// jump 100 + progress > jump 100 + progress/frag gets expected values because only gets it's own item (thus) [1], etc.
+
+	// --- nextWord ---
+	// Never triggers (as the first function): play, reset, restart, pause, stop, close, done, other stuff...?
+	'doubles: nextWord(null) + onceBegin > nextWord(null) + newWordFragment': false,  // frags expected ["you"], but got ["you","brave"]
+	'doubles: nextWord(null) + onceBegin > nextWord(null) + progress': false,  // 'progress' expected [0.16666666666666666], but got [0.16666666666666666,0.25]
+	'doubles: nextWord(null) + onceFinish > nextWord(null) + newWordFragment': false,  // frags expected ["you"], but got ["brave"]
+	'doubles: nextWord(null) + onceFinish > nextWord(null) + progress': false,  // 'progress' expected [0.16666666666666666], but got [0.25]
+	'doubles: nextWord(null) + resumeBegin > nextWord(null) + newWordFragment': false,  // frags expected ["you"], but got ["brave"]
+	'doubles: nextWord(null) + resumeBegin > nextWord(null) + progress': false,  // 'progress' expected [0.16666666666666666], but got [0.25]
+	'doubles: nextWord(null) + resumeFinish > nextWord(null) + newWordFragment': false,  // frags expected ["you"], but got ["brave"]
+	'doubles: nextWord(null) + resumeFinish > nextWord(null) + progress': false,  // 'progress' expected [0.16666666666666666], but got [0.25]
+	'doubles: nextWord(null) + loopBegin > nextWord(null) + newWordFragment': false,  // frags expected ["you"], but got ["you","brave"]
+	'doubles: nextWord(null) + loopBegin > nextWord(null) + progress': false,  // 'progress' expected [0.16666666666666666], but got [0.16666666666666666,0.25]
+	'doubles: nextWord(null) + loopFinish > nextWord(null) + newWordFragment': false,  // frags expected ["you"], but got ["brave"]
+	'doubles: nextWord(null) + loopFinish > nextWord(null) + progress': false,  // 'progress' expected [0.16666666666666666], but got [0.25]
+	'doubles: nextWord(null) + newWordFragment > nextWord(null) + newWordFragment': false,  // frags expected ["you"], but got ["brave"]
+	'doubles: nextWord(null) + newWordFragment > nextWord(null) + progress': false,  // 'progress' expected [0.16666666666666666], but got [0.16666666666666666,0.25]
+	'doubles: nextWord(null) + progress > nextWord(null) + newWordFragment': false,  // frags expected ["you"], but got ["brave"]
+	'doubles: nextWord(null) + progress > nextWord(null) + progress': false,  // 'progress' expected [0.16666666666666666], but got [0.25]
+	// --- nextSentence ---
+	'doubles: nextSentence(null) + onceBegin > nextSentence(null) + newWordFragment': false,  // frags expected ["Delirious,"], but got ["Delirious,","\n"]
+	'doubles: nextSentence(null) + onceBegin > nextSentence(null) + progress': false,  // 'progress' expected [0.4166666666666667], but got [0.4166666666666667,0.75]
+	'doubles: nextSentence(null) + onceFinish > nextSentence(null) + newWordFragment': false,  // frags expected ["Delirious,"], but got ["\n"]
+	'doubles: nextSentence(null) + onceFinish > nextSentence(null) + progress': false,  // 'progress' expected [0.4166666666666667], but got [0.75]
+	'doubles: nextSentence(null) + resumeBegin > nextSentence(null) + newWordFragment': false,  // frags expected ["Delirious,"], but got ["\n"]
+	'doubles: nextSentence(null) + resumeBegin > nextSentence(null) + progress': false,  // 'progress' expected [0.4166666666666667], but got [0.75]
+	'doubles: nextSentence(null) + resumeFinish > nextSentence(null) + newWordFragment': false,  // frags expected ["Delirious,"], but got ["\n"]
+	'doubles: nextSentence(null) + resumeFinish > nextSentence(null) + progress': false,  // 'progress' expected [0.4166666666666667], but got [0.75]
+	'doubles: nextSentence(null) + loopBegin > nextSentence(null) + newWordFragment': false,  // frags expected ["Delirious,"], but got ["Delirious,","\n"]
+	'doubles: nextSentence(null) + loopBegin > nextSentence(null) + progress': false,  // 'progress' expected [0.4166666666666667], but got [0.4166666666666667,0.75]
+	'doubles: nextSentence(null) + loopFinish > nextSentence(null) + newWordFragment': false,  // frags expected ["Delirious,"], but got ["\n"]
+	'doubles: nextSentence(null) + loopFinish > nextSentence(null) + progress': false,  // 'progress' expected [0.4166666666666667], but got [0.75]
+	'doubles: nextSentence(null) + newWordFragment > nextSentence(null) + newWordFragment': false,  // frags expected ["Delirious,"], but got ["\n"]
+	'doubles: nextSentence(null) + newWordFragment > nextSentence(null) + progress': false,  // 'progress' expected [0.4166666666666667], but got [0.4166666666666667,0.75]
+	'doubles: nextSentence(null) + progress > nextSentence(null) + newWordFragment': false,  // frags expected ["Delirious,"], but got ["\n"]
+	'doubles: nextSentence(null) + progress > nextSentence(null) + progress': false,  // 'progress' expected [0.4166666666666667], but got [0.75]
+	// --- prevWord ---
+	'doubles: prevWord(null) + onceBegin > prevWord(null) + newWordFragment': false,  // frags expected ["Victorious,"], but got ["Victorious,","Victorious,"]
+	'doubles: prevWord(null) + onceBegin > prevWord(null) + progress': false,  // 'progress' expected [0.08333333333333333], but got [0.08333333333333333,0.08333333333333333]
+	'doubles: prevWord(null) + loopBegin > prevWord(null) + newWordFragment': false,  // frags expected ["Victorious,"], but got ["Victorious,","Victorious,"]
+	'doubles: prevWord(null) + loopBegin > prevWord(null) + progress': false,  // 'progress' expected [0.08333333333333333], but got [0.08333333333333333,0.08333333333333333]
+	'doubles: prevWord(null) + newWordFragment > prevWord(null) + progress': false,  // 'progress' expected [0.08333333333333333], but got [0.08333333333333333,0.08333333333333333]
+	// --- prevSentence ---
+	'doubles: prevSentence(null) + onceBegin > prevSentence(null) + newWordFragment': false,  // frags expected ["Victorious,"], but got ["Victorious,","Victorious,"]
+	'doubles: prevSentence(null) + onceBegin > prevSentence(null) + progress': false,  // 'progress' expected [0.08333333333333333], but got [0.08333333333333333,0.08333333333333333]
+	'doubles: prevSentence(null) + loopBegin > prevSentence(null) + newWordFragment': false,  // frags expected ["Victorious,"], but got ["Victorious,","Victorious,"]
+	'doubles: prevSentence(null) + loopBegin > prevSentence(null) + progress': false,  // 'progress' expected [0.08333333333333333], but got [0.08333333333333333,0.08333333333333333]
+	'doubles: prevSentence(null) + newWordFragment > prevSentence(null) + progress': false,  // 'progress' expected [0.08333333333333333], but got [0.08333333333333333,0.08333333333333333]
+	// --- jumpTo ---
+	'doubles: jumpTo(-1) + stopBegin > jumpTo(-1) + newWordFragment': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopBegin > jumpTo(-1) + onceBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopBegin > jumpTo(-1) + onceFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopBegin > jumpTo(-1) + resumeBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopBegin > jumpTo(-1) + resumeFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopBegin > jumpTo(-1) + loopBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopBegin > jumpTo(-1) + loopFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopBegin > jumpTo(-1) + progress': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopFinish > jumpTo(-1) + newWordFragment': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopFinish > jumpTo(-1) + onceBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopFinish > jumpTo(-1) + onceFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopFinish > jumpTo(-1) + resumeBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopFinish > jumpTo(-1) + resumeFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopFinish > jumpTo(-1) + loopBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopFinish > jumpTo(-1) + loopFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + stopFinish > jumpTo(-1) + progress': false,  // event should have been triggerd but was NOT
+
+	'doubles: jumpTo(-1) + onceBegin > jumpTo(-1) + newWordFragment': false,  // frags expected ["wattlebird?"], but got ["wattlebird?","wattlebird?"]
+	'doubles: jumpTo(-1) + onceBegin > jumpTo(-1) + progress': false,  // 'progress' expected [1], but got [1,1]
+	'doubles: jumpTo(-1) + loopBegin > jumpTo(-1) + newWordFragment': false,  // frags expected ["wattlebird?"], but got ["wattlebird?","wattlebird?"]
+	'doubles: jumpTo(-1) + loopBegin > jumpTo(-1) + progress': false,  // 'progress' expected [1], but got [1,1]
+	'doubles: jumpTo(-1) + newWordFragment > jumpTo(-1) + progress': false,  // 'progress' expected [1], but got [1,1]
+
+	'doubles: jumpTo(-1) + done > jumpTo(-1) + newWordFragment': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + done > jumpTo(-1) + onceBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + done > jumpTo(-1) + onceFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + done > jumpTo(-1) + resumeBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + done > jumpTo(-1) + resumeFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + done > jumpTo(-1) + loopBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + done > jumpTo(-1) + loopFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(-1) + done > jumpTo(-1) + progress': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopBegin > jumpTo(0) + newWordFragment': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopBegin > jumpTo(0) + onceBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopBegin > jumpTo(0) + onceFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopBegin > jumpTo(0) + resumeBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopBegin > jumpTo(0) + resumeFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopBegin > jumpTo(0) + loopBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopBegin > jumpTo(0) + loopFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopBegin > jumpTo(0) + progress': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopFinish > jumpTo(0) + newWordFragment': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopFinish > jumpTo(0) + onceBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopFinish > jumpTo(0) + onceFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopFinish > jumpTo(0) + resumeBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopFinish > jumpTo(0) + resumeFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopFinish > jumpTo(0) + loopBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopFinish > jumpTo(0) + loopFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + stopFinish > jumpTo(0) + progress': false,  // event should have been triggerd but was NOT
+
+	'doubles: jumpTo(0) + onceBegin > jumpTo(0) + newWordFragment': false,  // frags expected ["Victorious,"], but got ["Victorious,","Victorious,"]
+	'doubles: jumpTo(0) + onceBegin > jumpTo(0) + progress': false,  // 'progress' expected [0.08333333333333333], but got [0.08333333333333333,0.08333333333333333]
+	'doubles: jumpTo(0) + loopBegin > jumpTo(0) + newWordFragment': false,  // frags expected ["Victorious,"], but got ["Victorious,","Victorious,"]
+	'doubles: jumpTo(0) + loopBegin > jumpTo(0) + progress': false,  // 'progress' expected [0.08333333333333333], but got [0.08333333333333333,0.08333333333333333]
+	'doubles: jumpTo(0) + newWordFragment > jumpTo(0) + progress': false,  // 'progress' expected [0.08333333333333333], but got [0.08333333333333333,0.08333333333333333]
+
+	'doubles: jumpTo(0) + done > jumpTo(0) + newWordFragment': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + done > jumpTo(0) + onceBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + done > jumpTo(0) + onceFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + done > jumpTo(0) + resumeBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + done > jumpTo(0) + resumeFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + done > jumpTo(0) + loopBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + done > jumpTo(0) + loopFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(0) + done > jumpTo(0) + progress': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopBegin > jumpTo(6) + newWordFragment': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopBegin > jumpTo(6) + onceBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopBegin > jumpTo(6) + onceFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopBegin > jumpTo(6) + resumeBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopBegin > jumpTo(6) + resumeFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopBegin > jumpTo(6) + loopBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopBegin > jumpTo(6) + loopFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopBegin > jumpTo(6) + progress': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopFinish > jumpTo(6) + newWordFragment': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopFinish > jumpTo(6) + onceBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopFinish > jumpTo(6) + onceFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopFinish > jumpTo(6) + resumeBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopFinish > jumpTo(6) + resumeFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopFinish > jumpTo(6) + loopBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopFinish > jumpTo(6) + loopFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + stopFinish > jumpTo(6) + progress': false,  // event should have been triggerd but was NOT
+
+	'doubles: jumpTo(6) + onceBegin > jumpTo(6) + newWordFragment': false,  // frags expected ["come"], but got ["come","come"]
+	'doubles: jumpTo(6) + onceBegin > jumpTo(6) + progress': false,  // 'progress' expected [0.5833333333333334], but got [0.5833333333333334,0.5833333333333334]
+	'doubles: jumpTo(6) + loopBegin > jumpTo(6) + newWordFragment': false,  // frags expected ["come"], but got ["come","come"]
+	'doubles: jumpTo(6) + loopBegin > jumpTo(6) + progress': false,  // 'progress' expected [0.5833333333333334], but got [0.5833333333333334,0.5833333333333334]
+	'doubles: jumpTo(6) + newWordFragment > jumpTo(6) + progress': false,  // 'progress' expected [0.5833333333333334], but got [0.5833333333333334,0.5833333333333334]
+
+	'doubles: jumpTo(6) + done > jumpTo(6) + newWordFragment': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + done > jumpTo(6) + onceBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + done > jumpTo(6) + onceFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + done > jumpTo(6) + resumeBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + done > jumpTo(6) + resumeFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + done > jumpTo(6) + loopBegin': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + done > jumpTo(6) + loopFinish': false,  // event should have been triggerd but was NOT
+	'doubles: jumpTo(6) + done > jumpTo(6) + progress': false,  // event should have been triggerd but was NOT
+
+	'doubles: jumpTo(11) + onceBegin > jumpTo(11) + newWordFragment': false,  // frags expected ["wattlebird?"], but got ["wattlebird?","wattlebird?"]
+	'doubles: jumpTo(11) + onceBegin > jumpTo(11) + progress': false,  // 'progress' expected [1], but got [1,1]
+	'doubles: jumpTo(11) + loopBegin > jumpTo(11) + newWordFragment': false,  // frags expected ["wattlebird?"], but got ["wattlebird?","wattlebird?"]
+	'doubles: jumpTo(11) + loopBegin > jumpTo(11) + progress': false,  // 'progress' expected [1], but got [1,1]
+	'doubles: jumpTo(11) + newWordFragment > jumpTo(11) + progress': false,  // 'progress' expected [1], but got [1,1]
+	'doubles: jumpTo(100) + onceBegin > jumpTo(100) + newWordFragment': false,  // frags expected ["wattlebird?"], but got ["wattlebird?","wattlebird?"]
+	'doubles: jumpTo(100) + onceBegin > jumpTo(100) + progress': false,  // 'progress' expected [1], but got [1,1]
+	'doubles: jumpTo(100) + loopBegin > jumpTo(100) + newWordFragment': false,  // frags expected ["wattlebird?"], but got ["wattlebird?","wattlebird?"]
+	'doubles: jumpTo(100) + loopBegin > jumpTo(100) + progress': false,  // 'progress' expected [1], but got [1,1]
+	'doubles: jumpTo(100) + newWordFragment > jumpTo(100) + progress': false,  // 'progress' expected [1], but got [1,1]
 
 
 };

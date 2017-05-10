@@ -22,6 +22,12 @@ let colors = {
 
 // ======== PROPERTIES ========
 core.report = report;
+// core.time = {
+//   start: 0,
+//   end: 0,
+//   total: 0
+// }
+// core.started = false;
 
 // Functions
 function tryPromise ( fn ) {
@@ -47,6 +53,8 @@ function tryPromise ( fn ) {
 core.run = function ( label, callback, timeoutLength = 1000 ) {
   let tryer;
 
+  // if ( !core.started ) { core.time.started = Date.now(); core.started = true; }
+
   if ( callback.length > 0 ) {
 
     tryer = function () {
@@ -57,8 +65,18 @@ core.run = function ( label, callback, timeoutLength = 1000 ) {
 
         let done = function ( error ) {
           doneCalled = true;
+
+          // core.time.end = Date.now();
+          // core.time.total = core.time.end - core.time.start;
+
           if ( error ) { reject( error ); }
           else { resolve(); }
+        }
+
+        let skip = function ( error ) {
+          doneCalled = true;
+          if ( error ) { reject( error ); }
+          else { resolve( true ); }
         }
         
         setTimeout( function () {
@@ -67,7 +85,7 @@ core.run = function ( label, callback, timeoutLength = 1000 ) {
           }
         }, timeoutLength );
         
-        callback( done );
+        callback( done, skip );
 
       });  // End Promise
 
@@ -75,22 +93,24 @@ core.run = function ( label, callback, timeoutLength = 1000 ) {
 
   }  // end if callback
 
-  report.total += 1;
+  let success = function ( shouldSkip ) {
 
-  let success = function () {
+    if ( !shouldSkip ) {
+      report.total += 1;
+      report.passed += 1;
+      var msg = colors.green + '.' + colors.none;
+      // console.log( colors.green + 'Success:' + colors.none, label );
+      // Print multiple successes on one line
+      process.stdout.write( msg );
+    }
 
-    var msg = colors.green + '.' + colors.none;
-    // console.log( colors.green + 'Success:' + colors.none, label );
-    // Print multiple successes on one line
-    process.stdout.write( msg );
-    report.passed += 1;
   }
 
   let failure = function ( error ) {
 
+    report.total += 1;
     console.log( '\n' + colors.red + 'Failure on test ' + report.total + ': ' + colors.none, label );
     console.log( '- Error:', error );
-    // console.log( error.stack );
 
   }
 
