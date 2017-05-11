@@ -17,19 +17,19 @@ var functsWithArgs = [
 	{ func: 'play', args: [ null ] },
 	{ func: 'reset', args: [ null ]},
 	{ func: 'restart', args: [ null ]},
-	{ func: 'pause', args: [ null ]},
-	{ func: 'stop', args: [ null ]},
-	{ func: 'close', args: [ null ]},
-	{ func: 'togglePlayPause', args: [ null ]},
-	{ func: 'rewind', args: [ null ]},
-	{ func: 'fastForward', args: [ null ]},
-	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
-	{ func: 'nextWord', args: [ null ]},
-	{ func: 'nextSentence', args: [ null ]},
-	{ func: 'prevWord', args: [ null ]},
-	{ func: 'prevSentence', args: [ null ]},
-	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]}
+	// { func: 'pause', args: [ null ]},
+	// { func: 'stop', args: [ null ]},
+	// { func: 'close', args: [ null ]},
+	// { func: 'togglePlayPause', args: [ null ]},
+	// { func: 'rewind', args: [ null ]},
+	// { func: 'fastForward', args: [ null ]},
+	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
+	// { func: 'nextWord', args: [ null ]},
+	// { func: 'nextSentence', args: [ null ]},
+	// { func: 'prevWord', args: [ null ]},
+	// { func: 'prevSentence', args: [ null ]},
+	// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]}
 ];
 
 

@@ -14,8 +14,9 @@ var oneEvent = module.exports = function ( result, bigs, opWith, reset ) {
 		evnt = opWith.event;
 
 
-	whenRun = function ( one, two, three, four ) {
+	var whenRun = function ( one, two, three, four ) {
 		// Debugging
+		// console.log( '2:', one._queue.slice(0) );
 		// if ( evnt === 'rewindBegin' ) { console.log('2: rewoundBegun') }
 		// console.log( '2:', evnt );
 		// if ( evnt ) { console.log( '2:', one.getIndex(), evnt, two ) }
@@ -32,11 +33,23 @@ var oneEvent = module.exports = function ( result, bigs, opWith, reset ) {
 
 	};
 
+	var startListening = function () {
+		emitter.removeAllListeners();
+		emitter.on( evnt, whenRun );
+	};
+
 
 	emitter.removeAllListeners();
 	if ( reset ) { bigs.playback.reset(); }
 
-	emitter.on( evnt, whenRun );
+	// emitter.on( 'queued', function ( obj, item ) { console.log( 'queued @2:', item ) } );
+	// emitter.on( 'dequeued', function ( obj, item ) { console.log( 'dequeued @2:', item ) } );
+
+	// Start listening after func actually runs
+	emitter.on( 'dequeued', startListening );
+	// console.log( '2 listeing for', evnt );
+
+	// emitter.on( evnt, whenRun );
 	// console.log( '========= debug: listening' );
 	plab[ op ]( arg );
 

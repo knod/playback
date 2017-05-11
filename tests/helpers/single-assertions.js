@@ -134,9 +134,11 @@ var makeFragAsserter = function ( plyb, frags ) {
 * were collected.
 */
 	return function assertFrags( result, testText, evnt ) {
+		
+		var arg2sStr = JSON.stringify( result.arg2s )
 
 		var passes 	= true,
-			msg 	= 'correct fragments were accumulated'
+			msg 	= 'expected and got ' + arg2sStr;
 // console.log('frags triggered')
 		// console.log( result.arg2s );
 
@@ -148,7 +150,7 @@ var makeFragAsserter = function ( plyb, frags ) {
 			if ( !triggeredVals.passed ) { return triggeredVals; }
 			else {
 				passes = arraysEqual( result.arg2s, frags );
-				if ( !passes ) { msg = 'frags expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
+				if ( !passes ) { msg = 'frags expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + arg2sStr + colors.none }
 			}
 		// }
 		return { message: msg, passed: passes };
@@ -171,8 +173,10 @@ var makeProgressAsserter = function ( plyb, numItems, vals ) {
 */
 	return function assertProgress ( result, testText, evnt ) {
 
+		var arg2sStr = JSON.stringify( result.arg2s )
+
 		var passes 	= true,
-			msg 	= 'correct progress values were accumulated'
+			msg 	= 'expected and got ' + arg2sStr;
 
 		// var shouldFail = checkExpectedToFail( testText );
 		// if ( supressExpectedFailures && shouldFail ) {
@@ -183,7 +187,7 @@ var makeProgressAsserter = function ( plyb, numItems, vals ) {
 			if ( !triggeredVals.passed ) { return triggeredVals; }
 			else {
 				passes = arraysEqual( result.arg2s, vals );
-				if ( !passes ) { msg = '\'progress\' expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
+				if ( !passes ) { msg = '\'progress\' expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + arg2sStr + colors.none }
 			}
 
 		// }

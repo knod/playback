@@ -448,7 +448,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	str = regEscape('rewind(null) + ');  // Initial function
 	str += '(?:play|reset|pause|close|once|loopSkip)';  // Events
 	var rewindNot = new RegExp( str );
-	// These don't ever trigger events after `rewind(null)` (from paused)
+	// These don't ever trigger events after `rewind(null)` (from paused at start)
 	str = regEscape('doubles: rewind(null) + ');  // Initial function
 	str += '(?:restart)';  // Events
 	var rewindStarts = new RegExp( str );
@@ -456,11 +456,11 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// will do 'restartFinish' with other stuff
 	// TODO: Check if can add 'restartBegin' to 'rewindNot', 'fastForwardNot', etc.
 
-	// These don't ever trigger events after `rewind(null)` anytime
+	// These don't ever trigger events after `fastForward(null)` anytime
 	str = regEscape('fastForward(null) + ');  // Initial function
 	str += '(?:play|reset|pause|close|once|resume|loopSkip)';  // Events
 	var fastForwardNot = new RegExp( str );
-	// These don't ever trigger events after `fastForward(null)` (from paused)
+	// These don't ever trigger events after `fastForward(null)` (from paused at start)
 	str = regEscape('doubles: fastForward(null) + ');  // Initial function
 	str += '(?:restart)';  // Events
 	var fastForwardStarts = new RegExp( str );
@@ -471,20 +471,31 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 
 	// ==========================================
-	// TWO DIFFERENT FUNCTIONS
+	// TWO DIFFERENT OR SAME FUNCTIONS
 	// ==========================================
 	// Like 'doubles: stop(null) + stopBegin > close(null) + stopFinish'
 	// Basically 'doubles: word1(null) + word1Begin > word2(null) + word1Finish'
 	var selfComplete = /doubles: (.*)(?:\(-?\w+\)) \+ \1Begin > (.*)(?:\(-?\w+\)) \+ \1Finish/;
 	// Probably will need or stuff like 'newWordFragment' too
 
-	// Only `reset()` things should fire after 'resetBegin' since it destroys the queue
-	str = regEscape('doubles: reset(null) + resetBegin >') + '.*new';  // Events
-	var resetBeginFrag = new RegExp( str );
-	str = regEscape('doubles: reset(null) + resetBegin >') + '.*progress';  // Events
-	var resetBeginProg = new RegExp( str );
-	str = regEscape('doubles: reset(null) + resetBegin > ') + '.*?' + regEscape(' + ') + '(?!new|progress|once|loop|resume)';
-	var resetBeginOther = new RegExp( str );
+	// // Only `reset()` things should fire after 'resetBegin' since it destroys the queue
+	// str = regEscape('doubles: reset(null) + resetBegin >') + '.*new';  // Events
+	// var resetBeginFrag = new RegExp( str );
+	// str = regEscape('doubles: reset(null) + resetBegin >') + '.*progress';  // Events
+	// var resetBeginProg = new RegExp( str );
+	// str = regEscape('doubles: reset(null) + resetBegin > ') + '.*?' + regEscape(' + ') + '(?!new|progress|once|loop|resume)';
+	// var resetBeginOther = new RegExp( str );
+
+	// Queue gets destroyed in reset, so anythind added before that should not be called
+	str = regEscape('doubles: reset(null) + resetBegin >');
+	var resetBeginNot = new RegExp( str );
+
+	// TODO: Wish I could do: When playing and finish then toggle, run restart assertions
+
+	// When set to playing then toggled, only pause should be triggered
+	var doneThenToggle = /doubles: (?:play|restart|toggle).*\(-?\w+\) \+ (?:stop|done).* > toggle.*\(-?\w+\) \+ (?:new|restart|loopBegin|loopFinish|progress|stop|done).*/;
+	var playThenToggle = /doubles: (?:play|restart|toggle).*\(-?\w+\) \+ .* > toggle.*\(-?\w+\) \+ (?!pause).*/;
+	var playTogglePause = /doubles: ((?:play|restart|toggle)).*\(-?\w+\) \+ (?:new|progress|\1)(?:.*) > toggle.*\(-?\w+\) \+ pause.*/;
 
 	////////////////////// Not sure this will work
 	// These events don't trigger after `rewind(null)` (from `pause(null)` same as if started paused)
@@ -533,6 +544,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// Try to keep these strings as searchable as possible without having a million page doc
 		var str, regex;
 
+		// TODO: Expect opposite?
 		expectFailure = function ( result, testText, evnt ) {
 			var result = originalAssertion(  result, testText, evnt  )
 
@@ -555,25 +567,42 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// ==========================================
 		if ( debug ) { console.log( 'mixed functions' ); }
 
-		// Must come before pause(null), stop(null), and close(null) are kept
-		// from interacting
-		if ( debug ) { console.log( '1', selfComplete.test(label) ); }
-		if ( selfComplete.test(label) ) {
-			return defaultAsserts.triggered;
-		}
+		// // Must come before pause(null), stop(null), and close(null) are kept
+		// // from interacting
+		// if ( debug ) { console.log( '1', selfComplete.test(label) ); }
+		// if ( selfComplete.test(label) ) {
+		// 	return defaultAsserts.triggered;
+		// }
 
 		// Nothing except `close(null)` should trigger close events
 		if ( debug ) { console.log( '2', onlyClose.test(label) ); }
 		if ( onlyClose.test(label) ) { return defaultAsserts.not; }
 
-		// Only first-function 'reset' stuff (`._once()`) triggers after 'resetBegin' because the queue is killed
-		if ( debug ) { console.log( '3', resetBeginFrag.test(label) ); }
-		if ( resetBeginFrag.test(label) ) { return getAssertFragsFirst( plyb ); }
-		if ( debug ) { console.log( '4', resetBeginProg.test(label) ); }
-		if ( resetBeginProg.test(label) ) { return getAssertProgFirst( plyb ); }
-		// Other stuff (other than 'once', 'loop', and 'resume') doesn't trigger
-		if ( debug ) { console.log( '5', resetBeginOther.test(label) ); }
-		if ( resetBeginOther.test(label) ) { return defaultAsserts.not; }
+		// // Only first-function 'reset' stuff (`._once()`) triggers after 'resetBegin' because the queue is killed
+		// if ( debug ) { console.log( '3', resetBeginFrag.test(label) ); }
+		// if ( resetBeginFrag.test(label) ) { return getAssertFragsFirst( plyb ); }
+		// if ( debug ) { console.log( '4', resetBeginProg.test(label) ); }
+		// if ( resetBeginProg.test(label) ) { return getAssertProgFirst( plyb ); }
+		// // Other stuff (other than 'once', 'loop', and 'resume') doesn't trigger
+		// if ( debug ) { console.log( '5', resetBeginOther.test(label) ); }
+		// if ( resetBeginOther.test(label) ) { return defaultAsserts.not; }
+
+		// Queue gets destroyed in reset, so anything added before that destruction should not be called
+		if ( debug ) { console.log( '3', resetBeginNot.test(label) ); }
+		if ( resetBeginNot.test(label) ) { return defaultAsserts.not; }
+
+		// toggle has a bunch of weird behavior
+		// At end, restarts
+		if ( debug ) { console.log( '4', doneThenToggle.test(label) ); }
+		if ( doneThenToggle.test(label) ) { return defaultAsserts.triggered; }
+		// From play it pauses, so no playing stuff
+		if ( debug ) { console.log( '5', playThenToggle.test(label) ); }
+		if ( playThenToggle.test(label) ) { return defaultAsserts.not; }
+		// From play it pauses, so yes pausing stuff
+		if ( debug ) { console.log( '5.5', playTogglePause.test(label) ); }
+		if ( playTogglePause.test(label) ) { return defaultAsserts.triggered; }
+
+		
 
 		// onlyRewind and onlyFfwd should be here too, but I'd have to re-number everything
 		
@@ -697,8 +726,13 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// =============================================================================
 
 	// ------------ play() + playBegin ------------
-	// Triggers before loop, so all words are still collected on the 'newWordFragmet' event
-
+	// Second play is after first loop
+	asts[ 'doubles: play(null) + playBegin > play(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsNoFirst( plyb );
+	};
+	asts[ 'doubles: play(null) + playBegin > play(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgNoFirst( plyb );
+	};
 	// ------------ play() + playFinish ------------
 	// Triggers after loop has run, so missing the first word
 	asts[ 'doubles: play(null) + playFinish > play(null) + newWordFragment' ] = function ( assertsOverride ) {
@@ -721,6 +755,12 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	asts[ 'doubles: play(null) + stopFinish > play(null) + restartFinish' ] = triggered;
 	// ------------ play() + loopBegin ------------
 	// ------------ play() + loopFinish ------------
+	asts[ 'doubles: play(null) + loopBegin > play(null) + newWordFragment' ] = function ( assertsOverride ) {
+		return getAssertFragsNoFirst( plyb );
+	};
+	asts[ 'doubles: play(null) + loopBegin > play(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgNoFirst( plyb );
+	};
 	asts[ 'doubles: play(null) + loopFinish > play(null) + newWordFragment' ] = function ( assertsOverride ) {
 		return getAssertFragsNoFirst( plyb );
 	};
@@ -736,6 +776,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		return getAssertFragsNoFirst( plyb );
 	};
 	asts[ 'doubles: play(null) + progress > play(null) + progress' ] = function ( assertsOverride ) {
+		return getAssertProgNoFirst( plyb );
+	};
+	// ------------ play() + newWordFragment ------------
+	asts[ 'doubles: play(null) + newWordFragment > play(null) + progress' ] = function ( assertsOverride ) {
 		return getAssertProgNoFirst( plyb );
 	};
 	// ------------ play() + done ------------
@@ -758,22 +802,27 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// ------------ reset() + onceBegin ------------
 	// Listener in the middle of loop (before 'newWordFragment') will pick up double
 	asts[ 'doubles: reset(null) + onceBegin > reset(null) + newWordFragment' ] = function ( assertsOverride ) {
+		console.log( '1 reset' );
 		return getAssertFragsDoubleFirst( plyb );
 	};
 	asts[ 'doubles: reset(null) + onceBegin > reset(null) + progress' ] = function ( assertsOverride ) {
+		console.log( '2 reset' );
 		return getAssertProgDoubleFirst( plyb );
 	};
 	// ------------ reset() + loopeBegin ------------
 	// Listener in the middle of loop (before 'newWordFragment') will pick up double
 	asts[ 'doubles: reset(null) + loopBegin > reset(null) + newWordFragment' ] = function ( assertsOverride ) {
+		console.log( '3 reset' );
 		return getAssertFragsDoubleFirst( plyb );
 	};
 	asts[ 'doubles: reset(null) + loopBegin > reset(null) + progress' ] = function ( assertsOverride ) {
+		console.log( '4 reset' );
 		return getAssertProgDoubleFirst( plyb );
 	};
 	// ------------ reset() + newWordFragment ------------
 	// Listener in the middle of loop (after 'newWordFragment', but before) will pick up double
 	asts[ 'doubles: reset(null) + newWordFragment > reset(null) + progress' ] = function ( assertsOverride ) {
+		console.log( '5 reset' );
 		return getAssertProgDoubleFirst( plyb );
 	};
 
@@ -785,27 +834,27 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// =============================================================================
 	// =============================================================================
 
-	// ------------ restart() + restartBegin ------------
-	// Listener in the middle of loop (before 'newWordFragment') will pick up double
-	asts[ 'doubles: restart(null) + restartBegin > restart(null) + newWordFragment' ] = function ( assertsOverride ) {
-		return getAssertFragsDoubleFirstAndOn( plyb );
-	};
-	asts[ 'doubles: restart(null) + restartBegin > restart(null) + progress' ] = function ( assertsOverride ) {
-		return getAssertProgDoubleFirstAndOn( plyb );
-	};
-	// ------------ restart() + loopBegin ------------
-	// Listener in the middle of loop (before 'newWordFragment') will pick up double
-	asts[ 'doubles: restart(null) + loopBegin > restart(null) + newWordFragment' ] = function ( assertsOverride ) {
-		return getAssertFragsDoubleFirstAndOn( plyb );
-	};
-	asts[ 'doubles: restart(null) + loopBegin > restart(null) + progress' ] = function ( assertsOverride ) {
-		return getAssertProgDoubleFirstAndOn( plyb );
-	};
-	// ------------ restart() + newWordFragment ------------
-	// Listener in the middle of loop (after 'newWordFragment', but before) will pick up double
-	asts[ 'doubles: restart(null) + newWordFragment > restart(null) + progress' ] = function ( assertsOverride ) {
-		return getAssertProgDoubleFirstAndOn( plyb );
-	};
+	// // ------------ restart() + restartBegin ------------
+	// // Listener in the middle of loop (before 'newWordFragment') will pick up double
+	// asts[ 'doubles: restart(null) + restartBegin > restart(null) + newWordFragment' ] = function ( assertsOverride ) {
+	// 	return getAssertFragsDoubleFirstAndOn( plyb );
+	// };
+	// asts[ 'doubles: restart(null) + restartBegin > restart(null) + progress' ] = function ( assertsOverride ) {
+	// 	return getAssertProgDoubleFirstAndOn( plyb );
+	// };
+	// // ------------ restart() + loopBegin ------------
+	// // Listener in the middle of loop (before 'newWordFragment') will pick up double
+	// asts[ 'doubles: restart(null) + loopBegin > restart(null) + newWordFragment' ] = function ( assertsOverride ) {
+	// 	return getAssertFragsDoubleFirstAndOn( plyb );
+	// };
+	// asts[ 'doubles: restart(null) + loopBegin > restart(null) + progress' ] = function ( assertsOverride ) {
+	// 	return getAssertProgDoubleFirstAndOn( plyb );
+	// };
+	// // ------------ restart() + newWordFragment ------------
+	// // Listener in the middle of loop (after 'newWordFragment', but before) will pick up double
+	// asts[ 'doubles: restart(null) + newWordFragment > restart(null) + progress' ] = function ( assertsOverride ) {
+	// 	return getAssertProgDoubleFirstAndOn( plyb );
+	// };
 
 
 
@@ -979,32 +1028,39 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// =============================================================================
 	// =============================================================================
 
-	// ------------ rewind() + rewindBegin ------------
-	// rewindBegin can trigger rewindBegin again because when it rewinds at the start it also finishes
-	// TODO: How to test rewinding twice in a row not at the start? (combos of 3 sounds crazy)
-	asts[ 'doubles: rewind(null) + rewindBegin > rewind(null) + newWordFragment' ] = function ( assertsOverride ) {
-		return getAssertFragsDoubleFirst( plyb );
-	};
-	asts[ 'doubles: rewind(null) + rewindBegin > rewind(null) + progress' ] = function ( assertsOverride ) {
-		return getAssertProgDoubleFirst( plyb );
-	};
-	// ------------ rewind() + loopBegin ------------
-	asts[ 'doubles: rewind(null) + loopBegin > rewind(null) + newWordFragment' ] = function ( assertsOverride ) {
-		return getAssertFragsDoubleFirst( plyb );
-	};
-	asts[ 'doubles: rewind(null) + loopBegin > rewind(null) + progress' ] =
-	// ------------ rewind() + newWordFragment ------------
-	asts[ 'doubles: rewind(null) + newWordFragment > rewind(null) + progress' ] = function ( assertsOverride ) {
-		return getAssertProgDoubleFirst( plyb );
-	};
+	// Why has second rewind() + rewindBegin > rewind() anything been getting triggered? There's an `if` preventing that.
+	// Ah, because it stops before the next rewind is called from the queue, so it's `currentAction` is paused
+
+	// // ------------ rewind() + rewindBegin ------------
+	// // rewindBegin can trigger rewindBegin again because when it rewinds at the start it also finishes
+	// // TODO: How to test rewinding twice in a row not at the start? (combos of 3 sounds crazy)
+	// asts[ 'doubles: rewind(null) + rewindBegin > rewind(null) + newWordFragment' ] = function ( assertsOverride ) {
+	// 	return getAssertFragsDoubleFirst( plyb );
+	// };
+	// asts[ 'doubles: rewind(null) + rewindBegin > rewind(null) + progress' ] = function ( assertsOverride ) {
+	// 	return getAssertProgDoubleFirst( plyb );
+	// };
+	// // ------------ rewind() + loopBegin ------------
+	// asts[ 'doubles: rewind(null) + loopBegin > rewind(null) + newWordFragment' ] = function ( assertsOverride ) {
+	// 	return getAssertFragsDoubleFirst( plyb );
+	// };
+	// asts[ 'doubles: rewind(null) + loopBegin > rewind(null) + progress' ] =
+	// // ------------ rewind() + newWordFragment ------------
+	// asts[ 'doubles: rewind(null) + newWordFragment > rewind(null) + progress' ] = function ( assertsOverride ) {
+	// 	return getAssertProgDoubleFirst( plyb );
+	// };
 
 
 
-	// =============================================================================
-	// =============================================================================
-	// ======= fastForward() + n > fastForward() + all =======
-	// =============================================================================
-	// =============================================================================
+	// // =============================================================================
+	// // =============================================================================
+	// // ======= fastForward() + n > fastForward() + all =======
+	// // =============================================================================
+	// // =============================================================================
+
+	// ffwd + ffwdBegin > ffwd + someThings are triggered because, unlike rewind, the value
+	// of `currentAction` doesn't change before the new ffwd() is called from the queue, so
+	// it can't repeat itself. This may change.
 
 	// ------------ fastForward() + stopBegin ------------
 	asts[ 'doubles: fastForward(null) + stopBegin > fastForward(null) + newWordFragment' ] = function ( assertsOverride ) {
@@ -1032,23 +1088,36 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 	// --- fastForward(null) ---
 	asts[ 'doubles: fastForward(null) + fastForwardBegin > fastForward(null) + fastForwardBegin' ] = // should have been triggerd but was NOT
+	asts[ 'doubles: fastForward(null) + fastForwardBegin > fastForward(null) + newWordFragment' ] =  // frags expected ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
+	asts[ 'doubles: fastForward(null) + fastForwardBegin > fastForward(null) + fastForwardFinish' ] =  // event should have been triggerd but was NOT
+	asts[ 'doubles: fastForward(null) + fastForwardBegin > fastForward(null) + progress' ] =  // 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 	asts[ 'doubles: fastForward(null) + fastForwardFinish > fastForward(null) + newWordFragment' ] = // expected ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 	asts[ 'doubles: fastForward(null) + fastForwardFinish > fastForward(null) + fastForwardBegin' ] = // should have been triggerd but was NOT
 	asts[ 'doubles: fastForward(null) + fastForwardFinish > fastForward(null) + fastForwardFinish' ] = // should have been triggerd but was NOT
 	asts[ 'doubles: fastForward(null) + fastForwardFinish > fastForward(null) + progress' ] = // progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 	asts[ 'doubles: fastForward(null) + loopBegin > fastForward(null) + fastForwardBegin' ] = // should have been triggerd but was NOT
+	asts[ 'doubles: fastForward(null) + loopBegin > fastForward(null) + newWordFragment' ] =  // frags expected ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
+	asts[ 'doubles: fastForward(null) + loopBegin > fastForward(null) + fastForwardFinish' ] =  // event should have been triggerd but was NOT
+	asts[ 'doubles: fastForward(null) + loopBegin > fastForward(null) + progress' ] =  // 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 	asts[ 'doubles: fastForward(null) + loopFinish > fastForward(null) + newWordFragment' ] = // expected ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 	asts[ 'doubles: fastForward(null) + loopFinish > fastForward(null) + fastForwardBegin' ] = // should have been triggerd but was NOT
+	asts[ 'doubles: fastForward(null) + loopFinish > fastForward(null) + fastForwardFinish' ] =  // event should have been triggerd but was NOT
 	asts[ 'doubles: fastForward(null) + loopFinish > fastForward(null) + progress' ] = // progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 	asts[ 'doubles: fastForward(null) + newWordFragment > fastForward(null) + newWordFragment' ] = // expected ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 	asts[ 'doubles: fastForward(null) + newWordFragment > fastForward(null) + fastForwardBegin' ] = // should have been triggerd but was NOT
+	asts[ 'doubles: fastForward(null) + newWordFragment > fastForward(null) + fastForwardFinish' ] =  // event should have been triggerd but was NOT
+	asts[ 'doubles: fastForward(null) + newWordFragment > fastForward(null) + progress' ] =  // 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 	asts[ 'doubles: fastForward(null) + progress > fastForward(null) + newWordFragment' ] = // expected ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 	asts[ 'doubles: fastForward(null) + progress > fastForward(null) + fastForwardBegin' ] = // should have been triggerd but was NOT
+	asts[ 'doubles: fastForward(null) + progress > fastForward(null) + fastForwardFinish' ] =  // event should have been triggerd but was NOT
 	asts[ 'doubles: fastForward(null) + progress > fastForward(null) + progress' ] = // progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 	asts[ 'doubles: fastForward(null) + done > fastForward(null) + newWordFragment' ] = // expected ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["wattlebird?"]
 	asts[ 'doubles: fastForward(null) + done > fastForward(null) + progress' ] = // progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [1]
-	// --- fastForward(null) ---
-	function () { return getExpectFailure(); }
+	asts[ 'doubles: fastForward(null) + stopBegin > fastForward(null) + newWordFragment' ] =  // frags expected ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["wattlebird?"]
+	asts[ 'doubles: fastForward(null) + stopBegin > fastForward(null) + progress' ] =  // 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [1]
+	asts[ 'doubles: fastForward(null) + stopFinish > fastForward(null) + newWordFragment' ] =  // frags expected ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["wattlebird?"]
+	asts[ 'doubles: fastForward(null) + stopFinish > fastForward(null) + progress' ] =  // 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [1]
+	function () { return getExpectFailure() };
 
 
 

@@ -108,9 +108,18 @@
 		// ============== FLOW CONTROL ============== \\
 
 		// ----- Synchronous queue -----
-
+		// This is the only place that should be calling `._queueNext()`
+var idNum = 1;
 		plab._queueAdd = function ( funcName, args ) {
-			plab._queue.push( { name: funcName, arguments: args } );
+			var item = { name: funcName, arguments: args, id: idNum }
+			idNum++;
+
+			plab._queue.push( item );
+
+			plab._trigger( 'queued', [plab, item, plab._queue] );
+
+// console.log('queued:', plab._queue.slice(0) );
+
 			if ( !plab._queueRunning ) { plab._queueNext(); }
 			return plab;
 		};  // End plab._queueAdd()
@@ -125,9 +134,13 @@
 
 			} else {
 
-				var pair = plab._queue.shift(),
-					func = plab[ pair.name ];
-				func.apply( this, pair.arguments );
+				var item = plab._queue.shift();
+				// Before func runs so it can be listened for
+				plab._trigger( 'dequeued', [plab, item, plab._queue] );
+// console.log( 'dequeued:', item );
+
+				var func = plab[ item.name ];
+				func.apply( this, item.arguments );
 
 				plab._queueNext();
 			}
@@ -389,7 +402,7 @@
 
 		// ========== RESUME ========== \\
 
-		plab._resume = function () {
+		plab._resumeProxy = function () {
 		/* () -> Bool
 		* 
 		* Returns true if resumed playing, false if stopped
@@ -410,7 +423,7 @@
 			plab._trigger( 'resumeFinish', [plab] );
 
 			return wasPlaying;
-		};  // End plab._resume()
+		};  // End plab._resumeProxy()
 
 		// plab._resume = function () {
 		// 	plab._queueAdd( '_resumeProxy', arguments );
@@ -422,7 +435,7 @@
 		// !!!: We do need an external `.resume()` if `.rewind()`,
 		// etc. is a hold-and-release situation
 		plab.resume = function () {
-			plab._queueAdd( '_resume', arguments );
+			plab._queueAdd( '_resumeProxy', arguments );
 			return plab;
 		};
 
@@ -457,7 +470,7 @@
 			// be expected behavior?
 			// ??: After event sent or before?
 			// ??: Now that there's a queue, maybe at the start
-			plab._resume();
+			plab._resumeProxy();
 			// `once()` should not assume anything about resuming, right?
 
 			return plab;
@@ -600,7 +613,7 @@
 		* TODO: Spec: What happens when rewind and then `.jumpWord()` in the middle?
 		*/
 			// Make sure there's only ever one loop
-			if ( plab._currentAction !== 'rewind' ) {
+			if ( plab._currentAction !== 'rewind' ) {  // TODO: ??: `if` between events? Just for loop? Like `play()`?
 
 				plab._currentAction = 'rewind';
 
@@ -647,7 +660,7 @@
 		* Default currently just a steady speed.
 		*/
 			// Make sure there's only ever one loop
-			if ( plab._currentAction !== 'fastForward' ) {
+			if ( plab._currentAction !== 'fastForward' ) {  // TODO: ??: `if` between events? Just for loop? Like `play()`?
 
 				plab._trigger( 'fastForwardBegin', [plab] );
 				
@@ -690,7 +703,7 @@
         		isDone = true;
         	} else if ( plab._direction === 'back' && plab.getIndex() === 0 ) {
         		// Check if resumed playing. If not resumed, done.
-        		plab._resume();  
+        		plab._resumeProxy();  
         		if ( plab._resumableState !== 'play' ) { isDone = true; }
 	    	}
 

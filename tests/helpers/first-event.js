@@ -15,7 +15,9 @@ var firstEvent = module.exports = function ( doOnEvent, bigs, opWith, reset ) {
 
 	whenRun = function ( one, two, three, four ) {
 
+		// console.log( '1:', one._queue.slice(0) );
 		emitter.removeAllListeners();
+
 		doOnEvent( evnt, one, two, three, four );
 
 	};
@@ -24,7 +26,11 @@ var firstEvent = module.exports = function ( doOnEvent, bigs, opWith, reset ) {
 	emitter.removeAllListeners();
 	if ( reset ) { bigs.playback.reset(); }  // ??: Needed?
 
+	// emitter.on( 'queued', function ( obj, item ) { console.log( 'queued @1:', item ) } );
+	// emitter.on( 'dequeued', function ( obj, item ) { console.log( 'dequeued @1:', item ) } );
+
 	emitter.on( evnt, whenRun );
+	// console.log('1: listening')
 	plab[ op ]( arg );
 
 };  // End firstEvent()

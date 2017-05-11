@@ -32,43 +32,48 @@ var runFirstEvent = require( './helpers/first-event.js' );
 // 16 funcs
 // + args = 29
 var functsWithArgs = [
-		{ func: 'play', args: [ null ] },  // * 26 for 1 event
-		{ func: 'reset', args: [ null ]},
-		{ func: 'restart', args: [ null ]},
-		{ func: 'pause', args: [ null ]},
-		{ func: 'stop', args: [ null ]},
-		{ func: 'close', args: [ null ]},
-		{ func: 'togglePlayPause', args: [ null ]},
-		{ func: 'rewind', args: [ null ]},
-		{ func: 'fastForward', args: [ null ]},
-		{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-		{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
+			// { func: 'play', args: [ null ] },  // * 26 for 1 event
+			// { func: 'reset', args: [ null ]},
+			// { func: 'restart', args: [ null ]},
+			// { func: 'pause', args: [ null ]},
+			// { func: 'stop', args: [ null ]},
+			// { func: 'close', args: [ null ]},
+			// { func: 'togglePlayPause', args: [ null ]},
+			// { func: 'rewind', args: [ null ]},
+			// { func: 'fastForward', args: [ null ]},
+			// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+			// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
 		{ func: 'nextWord', args: [ null ]},
 		{ func: 'nextSentence', args: [ null ]},
 		{ func: 'prevWord', args: [ null ]},
 		{ func: 'prevSentence', args: [ null ]},
-		{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]}
+		// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]}
 	// TODO: { func: 'resume', args: [ null ]}  // Put it in singles first
 	// once?
+];
+
+var alreadyTestedCombos = [
+
+
 ];
 
 // 26 events
 var events = [
 	'playBegin', 'playFinish',
-	// 'resetBegin', 'resetFinish',
-	// 'restartBegin', 'restartFinish',
-	// 'pauseBegin', 'pauseFinish',
-	// 'stopBegin', 'stopFinish',
-	// 'closeBegin', 'closeFinish',
-	// 'onceBegin', 'onceFinish',
-	// 'resumeBegin', 'resumeFinish',
-	// 'rewindBegin', 'rewindFinish',
-	// 'fastForwardBegin', 'fastForwardFinish',
-	// 'loopBegin', 'loopFinish',
-	// 'newWordFragment',
-	// 'loopSkip',
-	// 'progress',
-	// 'done'
+	'resetBegin', 'resetFinish',
+	'restartBegin', 'restartFinish',
+	'pauseBegin', 'pauseFinish',
+	'stopBegin', 'stopFinish',
+	'closeBegin', 'closeFinish',
+	'onceBegin', 'onceFinish',
+	'resumeBegin', 'resumeFinish',
+	'rewindBegin', 'rewindFinish',
+	'fastForwardBegin', 'fastForwardFinish',
+	'loopBegin', 'loopFinish',
+	'newWordFragment',
+	'loopSkip',
+	'progress',
+	'done'
 ];
 
 // Just doubles = 26 * 26 * 29 =  19,604 tests (about 1777325ms = 1777.325s = 29.6220833min )
@@ -84,7 +89,6 @@ var getAltAssertions = null;
 var currentAssertions = null;
 
 
-var finished = false;
 var increment = function ( indices ) {
 
 	var two = indices.two, one = indices.one;
@@ -209,6 +213,10 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 						done( err, label );
 					}  // end try
 
+					if ( tester.report.total !== 0 && tester.report.total % 500 === 0 ) {
+						console.log('\n~~~~~~~~' + tester.report.total + ' tests done. ' + (Date.now() - startTime) + 'ms elapsed. On: ' + label );
+					}
+
 				} else {
 					skip();
 				}  // end if !shouldSkip
@@ -216,10 +224,6 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 			})  // End it()
 			// Then increment and run this function again, testing again
 			.then(() => {
-
-				if ( tester.report.total % 200 === 0 ) {
-					console.log('\n' + tester.report.total + ' tests done. ' + (Date.now() - startTime) + 'ms elapsed. On: ' + label );
-				}
 
 				var finished = increment({
 					one: {
@@ -235,8 +239,8 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 				if ( finished ) {
 					tester.finish();
 					var time = (new Date()).toString().split(' ')[4];
-					console.log( time ) // time
-					console.log( (Date.now() - startTime) + 'ms' );
+					console.log( 'End:', time )
+					console.log( (Date.now() - startTime)/1000 + 's' );
 				}
 
 			});  // End .then()
@@ -268,6 +272,9 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 	if ( shouldSkip ) {
 		runAssert( null, 0, shouldSkip )
 	} else {
+
+		// console.log( label );
+
 		// Trigger first event that will trigger the next event
 		/* ( func, {playback, emitter}, {op, arg, event}, bool ) */
 		runFirstEvent(
@@ -291,7 +298,7 @@ var start = function () {
 	
 	startTime = Date.now();
 	var time = (new Date()).toString().split(' ')[4];
-	console.log( time ) // time
+	console.log( 'Start:', time )
 
 	getStandardAssertions 	= require('./helpers/single-assertions.js')( plab );
 	getAltAssertions 		= require('./helpers/doubles-assertions.js')( plab );
