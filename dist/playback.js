@@ -618,33 +618,23 @@ var idNum = 1;
 		* 
 		* TODO: Spec: What happens when rewind and then `.jumpWord()` in the middle?
 		*/
-			// Make sure there's only ever one loop
-			if ( plab._currentAction !== 'rewind' ) {  // TODO: ??: `if` between events? Just for loop? Like `play()`?
-
+			// No need to prevent new `rewind()` calls since this kills
+			// the old loop before starting the new loop
 				plab._currentAction = 'rewind';
 
 				plab._trigger( 'rewindBegin', [plab] );
-// console.log( '1. ~~~~~~~ action:', plab._currentAction )
-				// plab._currentAction = 'rewind';
+
 				plab._killLoop( null );
+				plab._currentAction = 'rewind';
 
-// console.log( '2. ~~~~~~~ action:', plab._currentAction )
-
-// 				plab._currentAction = 'rewind';
-// console.log( '3. ~~~~~~~ action:', plab._currentAction )
 				plab._incrementors 	= [0, -1, 0];
 				plab._direction 	= 'back';
 
 				var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
 
-// console.log( '4. ~~~~~~~ action:', plab._currentAction )
 				plab._loop( null, null, accelerate );  // Show the current word first, then it will move on
 
-// console.log( '5. ~~~~~~~ action:', plab._currentAction )
 				plab._trigger( 'rewindFinish', [plab] );
-
-// console.log( '6. ~~~~~~~ action:', plab._currentAction )
-			}
 
 			return plab;
 		};  // end plab.rewind()
@@ -665,23 +655,21 @@ var idNum = 1;
 		* 
 		* Default currently just a steady speed.
 		*/
-			// Make sure there's only ever one loop
-			if ( plab._currentAction !== 'fastForward' ) {  // TODO: ??: `if` between events? Just for loop? Like `play()`?
+			// No need to prevent new `fastForward()` calls since this kills
+			// the old loop before starting the new loop
+			plab._trigger( 'fastForwardBegin', [plab] );
 
-				plab._trigger( 'fastForwardBegin', [plab] );
-				
-				plab._currentAction = 'fastForward';
-				plab._killLoop( null );
+			plab._killLoop( null );
+			plab._currentAction = 'fastForward';
 
-				plab._incrementors 	= [0, 1, 0];
-				plab._direction 	= 'forward';
+			plab._incrementors 	= [0, 1, 0];
+			plab._direction 	= 'forward';
 
-				var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
+			var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
 
-				plab._loop( null, null, accelerate );  // Show the current word first, then it will move on
+			plab._loop( null, null, accelerate );  // Show the current word first, then it will move on
 
-				plab._trigger( 'fastForwardFinish', [plab] );
-			}
+			plab._trigger( 'fastForwardFinish', [plab] );
 
 			return plab;
 		};  // end plab.fastForward()
