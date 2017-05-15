@@ -118,7 +118,7 @@ var idNum = 1;
 
 			plab._trigger( 'queued', [plab, item, plab._queue] );
 
-// console.log('queued:', plab._queue.slice(0) );
+// console.log( 'queued:', plab._queue.slice(0) );
 
 			if ( !plab._queueRunning ) { plab._queueNext(); }
 			return plab;
@@ -130,6 +130,9 @@ var idNum = 1;
 
 			if ( plab._queue.length === 0 ) {
 
+				// THIS SHOULD BE THE ONLY PLACE WHERE `._queueRunning` GETS RESET TO FALSE.
+				// IT IS THE ONLY PLACE THAT WAITS UNTIL THE PREVIOUS FUNCTION HAS FINISHED
+				// RUNNING.
 				plab._queueRunning = false;
 
 			} else {
@@ -137,7 +140,7 @@ var idNum = 1;
 				var item = plab._queue.shift();
 				// Before func runs so it can be listened for
 				plab._trigger( 'dequeued', [plab, item, plab._queue] );
-// console.log( 'dequeued:', item );
+// console.log( 'dequeued:', plab._queueRunning, item );
 
 				var func = plab[ item.name ];
 				func.apply( this, item.arguments );
@@ -157,7 +160,8 @@ var idNum = 1;
 
 		plab._queueReset = function () {
 			plab._queue.splice(0, plab._queue.length)
-			plab._queueRunning = false;
+			// CANNOT SET `._queueRunning` TO `false`. A PREVIOUSLY QUEUED FUNCTION
+			// MAY STILL BE RUNNING AND ONE COULD BE PLACED ON TOP OF THAT
 		};  // End plab._queueReset()
 
 		// ??: _queuePause?
@@ -171,7 +175,7 @@ var idNum = 1;
 		* Internal reset. No events, no sending fragments
 		* Returns to initial values
 		*/
-			if ( plab._currentAction === 'reset' ) { return plab; }  // ??: needed?
+			// if ( plab._currentAction === 'reset' ) { return plab; }  // ??: needed?
 
 			plab._currentAction  = 'reset';  // ??: needed? ^
 			plab._killLoop();  // Does not change state of `._currentAction`
@@ -201,14 +205,14 @@ var idNum = 1;
 		*/
 			plab._trigger( 'resetBegin', [plab] );
 
-			// TODO: ??: Should this clear the queue?
-			plab._queueReset();
-
-			// console.log( 'reset begins' );
 			plab._reset();
-			plab._once( 0 );  // Send first fragment
+			plab._once( 0 );  // Send first fragment (now that resumable state is 'pause')
 			// change current and resumable state back (??: seems out of place?)
 			plab._pause();
+
+			// TODO: ??: Should this clear the queue?
+			// Clear last so it does the most resetting possible
+			plab._queueReset();
 
 			plab._trigger( 'resetFinish', [plab] );
 			// console.log( 'reset finished' );
@@ -417,6 +421,8 @@ var idNum = 1;
 			plab._killLoop( null );
 
 			var wasPlaying = plab._resumableState === 'play';
+			// ??: run .play/.pause instead to trigger the events and to
+			// restart if done? Wait, do we want to restart on `jump`s?
 			if ( wasPlaying ) { plab._play(); }
 			else { plab._pause( null ); }
 
@@ -698,11 +704,12 @@ var idNum = 1;
         */
         	var isDone = false;
 
-        	// Stop if we've reached the end
+        	// Stop if we've reached the end (if `fastForward`ing, no resume)
         	if ( plab._direction !== 'back' && plab.getProgress() === 1 ) {
         		isDone = true;
         	} else if ( plab._direction === 'back' && plab.getIndex() === 0 ) {
         		// Check if resumed playing. If not resumed, done.
+        		// ??: Is this expected behavior?
         		plab._resumeProxy();  
         		if ( plab._resumableState !== 'play' ) { isDone = true; }
 	    	}

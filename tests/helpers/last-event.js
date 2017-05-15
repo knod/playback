@@ -34,6 +34,7 @@ var oneEvent = module.exports = function ( result, bigs, opWith, reset ) {
 	};
 
 	var startListening = function () {
+		// console.log( 'starting to listen' );
 		emitter.removeAllListeners();
 		emitter.on( evnt, whenRun );
 	};

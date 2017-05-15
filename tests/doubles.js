@@ -32,24 +32,24 @@ var runFirstEvent = require( './helpers/first-event.js' );
 // 16 funcs
 // + args = 29
 var functsWithArgs = [
-			// { func: 'play', args: [ null ] },  // * 26 for 1 event
-			// { func: 'reset', args: [ null ]},
-			// { func: 'restart', args: [ null ]},
-			// { func: 'pause', args: [ null ]},
-			// { func: 'stop', args: [ null ]},
-			// { func: 'close', args: [ null ]},
-			// { func: 'togglePlayPause', args: [ null ]},
-			// { func: 'rewind', args: [ null ]},
-			// { func: 'fastForward', args: [ null ]},
-			// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-			// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
-		{ func: 'nextWord', args: [ null ]},
-		{ func: 'nextSentence', args: [ null ]},
-		{ func: 'prevWord', args: [ null ]},
-		{ func: 'prevSentence', args: [ null ]},
-		// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]}
-	// TODO: { func: 'resume', args: [ null ]}  // Put it in singles first
-	// once?
+		// { func: 'play', args: [ null ] },  // * 26 for 1 event
+		// { func: 'togglePlayPause', args: [ null ]},
+		// { func: 'restart', args: [ null ]},
+		// { func: 'reset', args: [ null ]},
+		// { func: 'pause', args: [ null ]},
+		// { func: 'stop', args: [ null ]},
+		// { func: 'close', args: [ null ]},
+		// { func: 'rewind', args: [ null ]},
+	{ func: 'fastForward', args: [ null ]},
+	// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
+	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
+	// { func: 'nextWord', args: [ null ]},
+	// { func: 'nextSentence', args: [ null ]},
+	// { func: 'prevWord', args: [ null ]},
+	// { func: 'prevSentence', args: [ null ]}
+	// // TODO: { func: 'resume', args: [ null ]}  // Put it in singles first
+	// // once?
 ];
 
 var alreadyTestedCombos = [
@@ -57,7 +57,7 @@ var alreadyTestedCombos = [
 
 ];
 
-// 26 events
+// 26 events * 21115 tests = 548990 tests
 var events = [
 	'playBegin', 'playFinish',
 	'resetBegin', 'resetFinish',
@@ -80,8 +80,8 @@ var events = [
 
 
 // One function with itself calling all combos of events: #tests: 676
-// 676 * 4 = 2704? Yup. `doingOnlyTwoOfSameFunction` works!
-var doingOnlyTwoOfSameFunction = true;
+// 676 * 4 = 2704? Yup. `doingOnlyRepeatSameFunction` works!
+var doingOnlyRepeatSameFunction = true;
 
 
 var getStandardAssertions = null;  // Instantiated in `start()`
@@ -175,7 +175,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 
 
 	var shouldSkip = false;
-	if ( doingOnlyTwoOfSameFunction ) {
+	if ( doingOnlyRepeatSameFunction ) {
 		// If the second func and arg aren't the same, it's not a double. Skip
 		if ( func1Name !== func2Name || arg1 !== arg2 ) { shouldSkip = true; }
 	} else {
@@ -198,8 +198,9 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 					// do stuff
 					try {
 
+						var debugTests = false;
 						// var preAssert = assert;
-						assert = getAltAssertions.getAssertion( label, assert, false );
+						assert = getAltAssertions.getAssertion( label, assert, debugTests );
 						// console.log( preAssert === assert, label )
 
 						var outcome = assert( result, label, evnt2 );
@@ -214,7 +215,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 					}  // end try
 
 					if ( tester.report.total !== 0 && tester.report.total % 500 === 0 ) {
-						console.log('\n~~~~~~~~' + tester.report.total + ' tests done. ' + (Date.now() - startTime) + 'ms elapsed. On: ' + label );
+						console.log('\n======== ' + tester.report.total + ' tests done. ' + (Date.now() - startTime) + 'ms elapsed. On: ' + label );
 					}
 
 				} else {
