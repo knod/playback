@@ -14,22 +14,45 @@ var runLastEvent = require( './helpers/last-event.js' );
 
 
 var functsWithArgs = [
-	{ func: 'play', args: [ null ] },
-	{ func: 'reset', args: [ null ]},
-	{ func: 'restart', args: [ null ]},
-	{ func: 'pause', args: [ null ]},
-	{ func: 'stop', args: [ null ]},
-	{ func: 'close', args: [ null ]},
-	{ func: 'togglePlayPause', args: [ null ]},
-	{ func: 'rewind', args: [ null ]},
-	{ func: 'fastForward', args: [ null ]},
-	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
-	{ func: 'nextWord', args: [ null ]},
-	{ func: 'nextSentence', args: [ null ]},
-	{ func: 'prevWord', args: [ null ]},
-	{ func: 'prevSentence', args: [ null ]},
-	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]}
+		// { func: 'play', args: [ null ] },  // * 26 for 1 event
+		// { func: 'togglePlayPause', args: [ null ]},
+		// { func: 'restart', args: [ null ]},
+		// { func: 'reset', args: [ null ]},
+		// { func: 'pause', args: [ null ]},
+		// { func: 'stop', args: [ null ]},
+		// { func: 'close', args: [ null ]},
+		// { func: 'rewind', args: [ null ]},
+		// { func: 'fastForward', args: [ null ]},
+	// These could go on forever... but they do get tested somewhat with
+	// jump, next, and prev, so don't /really/ need to tests singles or
+	// word or sentence incrementations. If that changes, these tests need
+	// to change
+	{ func: 'once', args: [ [0,0,-2], [0,0,0], [0,0,2] ]},
+	// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
+	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
+	// { func: 'nextWord', args: [ null ]},
+	// { func: 'nextSentence', args: [ null ]},
+	// { func: 'prevWord', args: [ null ]},
+	// { func: 'prevSentence', args: [ null ]},
+	// { func: 'revert', args: [ null ]}
+
+	// { func: 'play', args: [ null ] },
+	// { func: 'reset', args: [ null ]},
+	// { func: 'restart', args: [ null ]},
+	// { func: 'pause', args: [ null ]},
+	// { func: 'stop', args: [ null ]},
+	// { func: 'close', args: [ null ]},
+	// { func: 'togglePlayPause', args: [ null ]},
+	// { func: 'rewind', args: [ null ]},
+	// { func: 'fastForward', args: [ null ]},
+	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
+	// { func: 'nextWord', args: [ null ]},
+	// { func: 'nextSentence', args: [ null ]},
+	// { func: 'prevWord', args: [ null ]},
+	// { func: 'prevSentence', args: [ null ]},
+	// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]}
 ];
 
 

@@ -1,7 +1,7 @@
 not
 
 Functions
-play|togglePlayPause|restart|reset|pause|stop|close|resume|rewind|fastForward|
+play|togglePlayPause|restart|reset|pause|stop|close|revert|rewind|fastForward|
 nextWord|nextSentence|
 prevWord|prevSentence|
 jumpTo(<0)|
@@ -15,24 +15,24 @@ jumpSentences(>=0, < 11)|
 jumpSentences(>11)|  ([ -1, 0, 1, 3, 100 ])
 
 
-Note: resume() does not trigger 'play' or 'pause', but maybe it should... but then some of this would have to change
+Note: revert() does not trigger 'play' or 'pause', but maybe it should... but then some of this would have to change
 
 ### Always not triggered directly 
 Events
-play|reset|restart|pause|stop|close|once|resume|rewind|fast|loop|new|loopSkip|progress|done
+play|reset|restart|pause|stop|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done
 
 The event 'loopSkip' (different tests for state change)
 
-play 			+ reset|pause|close|once|resume|rewind|fast|loopSkip
-togglePlayPause + reset|close|once|resume|rewind|fast|loopSkip
+play 			+ reset|pause|close|once|revert|rewind|fast|loopSkip
+togglePlayPause + reset|close|once|revert|rewind|fast|loopSkip
 restart 		+ play?|reset|pause|close|rewind|fast|loopSkip
-reset 			+ play|restart|pause|stop|close|once|resume|rewind|fast|loopSkip|done
-pause 			+ play|reset|restart|stop|close|once|resume|rewind|fast|loop|new|loopSkip|progress|done (only itself)
-stop 			+ play|reset|restart|pause|close|once|resume|rewind|fast|loop|new|loopSkip|progress|done (only itself)
-close 			+ play|reset|restart|pause|stop|once|resume|rewind|fast|loop|new|loopSkip|progress|done (only itself)
-resume			+ play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done? (maybe should trigger play/pause) ('stop' and 'done' may fire if 'play', then go to just before the end)
-rewind 			+ play?|reset|restart|pause|close|once|fast|loopSkip  // play if resume? but goes to start and then done, so...
-fastForward 	+ play|reset|restart|pause|close|once|resume|rewind|loopSkip  // never resumes on its own, always goes to end
+reset 			+ play|restart|pause|stop|close|once|revert|rewind|fast|loopSkip|done
+pause 			+ play|reset|restart|stop|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done (only itself)
+stop 			+ play|reset|restart|pause|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done (only itself)
+close 			+ play|reset|restart|pause|stop|once|revert|rewind|fast|loop|new|loopSkip|progress|done (only itself)
+revert			+ play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done? (maybe should trigger play/pause) ('stop' and 'done' may fire if 'play', then go to just before the end)
+rewind 			+ play?|reset|restart|pause|close|once|fast|loopSkip  // play if revert? but goes to start and then done, so...
+fastForward 	+ play|reset|restart|pause|close|once|revert|rewind|loopSkip  // never reverts on its own, always goes to end
 next 			+ reset|restart?|pause?|close|rewind|fast|loopSkip
 prev 			+ reset|restart?|pause?|close|rewind|fast|loopSkip
 jump			+ reset|restart?|pause?|close|rewind|fast|loopSkip  // Should this be expected behavior, even if >0 at very end? Let's say yes for now.
@@ -56,16 +56,16 @@ jumpSentences(>3)		+ play?
 
 ### Not triggerd if at start (considering it could be called twice?) or after pause|stop|close|reset|rewind?|prev?|jumpW/jumpS<0|jumpTo<0?
 Events
-play|reset|restart|pause|stop|close|once|resume|rewind|fast|loop|new|loopSkip|progress|done
+play|reset|restart|pause|stop|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done
 
 doubles: play					+ restart
-doubles: togglePlayPause		+ reset|restart|pause|close|once|resume|rewind|fast|loopSkip (restart|pause)
+doubles: togglePlayPause		+ reset|restart|pause|close|once|revert|rewind|fast|loopSkip (restart|pause)
 doubles: restart				+ same
 doubles: reset					+ same
 doubles: pause					+ same
 doubles: stop					+ same
 doubles: close					+ same
-doubles: resume					+ same
+doubles: revert					+ same
 doubles: rewind					+ play for sure
 doubles: fastForward			+ same
 doubles: next					+ play|reset|restart|pause?|stop|close|rewind|fast|loopSkip|done (play|stop|done)
@@ -87,7 +87,7 @@ doubles: jumpSentences(>3)		+ above
 
 ### Triggered/Not with other conditions?
 Events
-play|reset|restart|pause|stop|close|once|resume|rewind|fast|loop|new|loopSkip|progress|done
+play|reset|restart|pause|stop|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done
 
 any + stop|done > play|toggle + play 		= not
 any + stop|done > play|toggle + restart 	= yes
@@ -102,7 +102,7 @@ doubles: reset					+
 doubles: pause					+ 
 doubles: stop					+ 
 doubles: close					+ 
-doubles: resume					+ 
+doubles: revert					+ 
 doubles: rewind					+ 
 doubles: fastForward			+ 
 doubles: next					+ 
@@ -128,7 +128,7 @@ doubles: jumpSentences(>3)		+
 // pause
 // stop
 // close
-// resume
+// revert
 // rewind
 // fastForward
 // next
@@ -151,7 +151,7 @@ next
 prev
 jump
 
-(not: toggle, resume (pause, stop, close))
+(not: toggle, revert (pause, stop, close))
 
 
 // _From Pause Trigger Loop_ (not 'loopSkip', though)
@@ -166,7 +166,7 @@ prev
 jump
 
 (added to _Always_: toggle)
-(not: resume (pause, close, stop))
+(not: revert (pause, close, stop))
 
 
 // _From Pause Change Pos_ (starting at start) change the position in the text
@@ -181,14 +181,14 @@ jumpW >0
 jumpS >0
 
 (added to _Always_: toggle)
-(not: reset, rewind, prev, jump0, jumpW/S -1/0, resume (pause, close, stop))
+(not: reset, rewind, prev, jump0, jumpW/S -1/0, revert (pause, close, stop))
 
 
 // _Not to Ends_ As single function changes position to not start or end
 
 play
 toggle
-resume? If not paused
+revert? If not paused
 next
 jumpTo !0
 jumpW/S >0
@@ -212,7 +212,7 @@ next
 prev
 jump
 
-(not: toggle, (resume (pause, close, stop)))
+(not: toggle, (revert (pause, close, stop)))
 
 
 // todo
@@ -225,7 +225,7 @@ jump
 // pause
 // stop
 // close
-// resume
+// revert
 // rewind
 // fastForward
 // next
@@ -234,7 +234,7 @@ jump
 
 play
 toggle
-resume? If not paused
+revert? If not paused
 rewind
 fastForward
 next
@@ -246,7 +246,7 @@ jumpTo !0
 
 
 
-// _resume_ output changes after play-like
+// _revert_ output changes after play-like
 
 
 
@@ -278,7 +278,7 @@ jumpS >0 && (<4?) + ... > play() + new|progress
 // xxxToggle is second is more complex
 // second after !play-like that goes to not-start and not-end
 xxx(?!play|toggle|restart)
-xxxdoubles: reset|pause|stop|close|resume|
+xxxdoubles: reset|pause|stop|close|revert|
 doubles: 
 	next
 	jumpTo(!0 <11?)
@@ -308,7 +308,7 @@ Ex: play(null) + playBegin > nextWord + progress
 
 // ========== 3 ==========
 
-// resume output changes after play-like
+// revert output changes after play-like
 
 1:
 play
@@ -316,12 +316,12 @@ toggle
 restart
 
 2:
-resume
+revert
 
-Ex: play(null) + playBegin > resume(null) + progress
-Ex: play(null) + playBegin > resume(null) + loopBegin
+Ex: play(null) + playBegin > revert(null) + progress
+Ex: play(null) + playBegin > revert(null) + loopBegin
 
-/doubles: (?:play|toggle|restart)(paren) + (?:.* >) resume(paren)
+/doubles: (?:play|toggle|restart)(paren) + (?:.* >) revert(paren)
 
 
 // ========== 4 ==========
@@ -339,7 +339,7 @@ jumpW >0
 jumpS >0
 
 (added to _Always_: toggle)
-(not: reset, rewind, prev, jump0, jumpW/S -1/0, resume (pause, close, stop))
+(not: reset, rewind, prev, jump0, jumpW/S -1/0, revert (pause, close, stop))
 
 
 2:
@@ -347,7 +347,7 @@ jumpS >0
 
 play
 toggle
-resume? If not paused
+revert? If not paused
 next
 jumpTo !0 < 11
 jumpW/S >0
@@ -355,6 +355,8 @@ jumpW/S >0
 
 
 // ========== 5 ==========
+
+(if reach end (stop|done), play and toggle restart, so not expect failure)
 
 1:
 // _1st Func Change Pos_ (starting at start, function 1) change the position in the text (changes position from pause)
@@ -369,7 +371,7 @@ jumpW >0
 jumpS >0
 
 (added to _Always_: toggle)
-(not: reset, rewind, prev, jump0, jumpW/S -1/0, resume (pause, close, stop))
+(not: reset, rewind, prev, jump0, jumpW/S -1/0, revert (pause, close, stop))
 
 
 2:
@@ -377,7 +379,7 @@ jumpS >0
 
 play
 toggle
-resume? If not paused
+revert? If not paused
 rewind
 fastForward
 next

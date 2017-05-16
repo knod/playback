@@ -58,7 +58,7 @@
 			plab.done 		= false;
 			plab._timeoutID = null;
 
-			plab._resumableState 	= 'pause';  // either 'play' or 'pause'
+			plab._revertableState 	= 'pause';  // either 'play' or 'pause'
 			// currentGoal? as in 'rewind', even when pause is being called in `.rewind()`?
 			plab._currentAction 	= 'pause';
 			plab._direction 		= 'forward';
@@ -179,7 +179,7 @@ var idNum = 1;
 
 			plab._currentAction  = 'reset';  // ??: needed? ^
 			plab._killLoop();  // Does not change state of `._currentAction`
-			plab._resumableState = 'pause';  // either 'play' or 'pause'
+			plab._revertableState = 'pause';  // either 'play' or 'pause'
 
 			plab.done 		= false;
 			plab._timeoutID = null;
@@ -206,8 +206,8 @@ var idNum = 1;
 			plab._trigger( 'resetBegin', [plab] );
 
 			plab._reset();
-			plab._once( 0 );  // Send first fragment (now that resumable state is 'pause')
-			// change current and resumable state back (??: seems out of place?)
+			plab._onceProxy( 0 );  // Send first fragment (now that revertable state is 'pause')
+			// change current and revertable state back (??: seems out of place?)
 			plab._pause();
 
 			// TODO: ??: Should this clear the queue?
@@ -242,13 +242,13 @@ var idNum = 1;
 		
 		// // Bring back if it becomes useful again
 		// plab.start = function () {
-		// 	plab._resumableState = 'play';
+		// 	plab._revertableState = 'play';
 		// 	plab._restart( 'start' );
 		// 	return plab;
 		// };  // End plab.start()
 
 		plab._restartProxy = function () {
-			plab._resumableState = 'play';
+			plab._revertableState = 'play';
 			plab._restart( 'restart' );
 			return plab;
 		};
@@ -285,7 +285,7 @@ var idNum = 1;
 
 			// plab._delayer.resetSlowStart();  // ??: In here instead of in `._pause()`?
 
-			plab._resumableState = 'play';  // In `._play()` instead?
+			plab._revertableState = 'play';  // In `._play()` instead?
 			plab._direction = 'forward';
 
 			if ( plab._currentAction !== 'play' ) {  // ??: could possibly just pause first instead
@@ -325,7 +325,7 @@ var idNum = 1;
 		/* ( Str ) -> PlaybackManager
 		* 
 		* Kills the loop and resets some variables
-		* Does not change any state variables (currentAction, resumableState)
+		* Does not change any state variables (currentAction, revertableState)
 		*/
 			clearTimeout( plab._timeoutID );
 			// Start slow when next go through loop (restore countdown)
@@ -337,12 +337,12 @@ var idNum = 1;
 		/* ( Str ) -> PlaybackManager
 		* 
 		* For all 'pause'-like activities
-		*/ 
+		*/
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
 
 			// Switch order?
 			plab._killLoop()
-			plab._resumableState = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
+			plab._revertableState = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
 			plab._currentAction = eventName || 'pause';
 
 			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
@@ -361,7 +361,7 @@ var idNum = 1;
 			return plab;
 		};
 
-		plab._stopProxy = function () {  // ??: plab._resumableState = 'pause';
+		plab._stopProxy = function () {  // ??: plab._revertableState = 'pause';
 			plab._pause( 'stop' );
 			return plab;
 		};
@@ -370,7 +370,7 @@ var idNum = 1;
 			return plab;
 		};
 
-		plab._closeProxy = function () {  // ??: plab._resumableState = 'pause';
+		plab._closeProxy = function () {  // ??: plab._revertableState = 'pause';
 			plab._pause( 'close' );
 			return plab;
 		};
@@ -383,17 +383,17 @@ var idNum = 1;
 
 		// TODO: ??: Add a 'toggle' event?
 		plab._togglePlayPauseProxy = function () {
-			// Use `._resumableState` instead?
+			// Use `._revertableState` instead?
 
 			// if ( plab._currentAction !== 'pause' ) { plab.pause(); }
 			// else { plab.play(); }
 
 			// if === pause, play
 			// if === play, pause
-			// else resume
+			// else revert
 			if (  /pause|stop|close/.test(plab._currentAction) ) { plab.play(); }
 			else if ( plab._currentAction === 'play' ) { plab.pause(); }
-			else { plab.resume(); }
+			else { plab.revert(); }
 
 			return plab;
 		};
@@ -406,42 +406,37 @@ var idNum = 1;
 
 		// ========== RESUME ========== \\
 
-		plab._resumeProxy = function () {
+		plab._revertProxy = function () {
 		/* () -> Bool
 		* 
-		* Returns true if resumed playing, false if stopped
+		* Returns true if revertd playing, false if stopped
 		* completely
 		* TODO: ??: Should this set of the 'play' and 'pause' events?
 		*/
-			plab._trigger( 'resumeBegin', [plab] );
+			plab._trigger( 'revertBegin', [plab] );
 
 			// notStartedAccYet = true;  // Not accelerating currently
 
-			// plab._currentAction = 'resume';
+			// plab._currentAction = 'revert';
 			plab._killLoop( null );
 
-			var wasPlaying = plab._resumableState === 'play';
+			var wasPlaying = plab._revertableState === 'play';
 			// ??: run .play/.pause instead to trigger the events and to
 			// restart if done? Wait, do we want to restart on `jump`s?
-			if ( wasPlaying ) { plab._play(); }
-			else { plab._pause( null ); }
 
-			plab._trigger( 'resumeFinish', [plab] );
+			// Want events to be triggered, but don't want to put in queue
+			if ( wasPlaying ) { plab._playProxy(); }
+			else { plab._pauseProxy(); }
+
+			plab._trigger( 'revertFinish', [plab] );
 
 			return wasPlaying;
-		};  // End plab._resumeProxy()
+		};  // End plab._revertProxy()
 
-		// plab._resume = function () {
-		// 	plab._queueAdd( '_resumeProxy', arguments );
-		// 	return plab;
-		// };
-
-		// TODO: ??: Possible alternative so we can have an external
-		// `.resume()`? Implement if needed.
-		// !!!: We do need an external `.resume()` if `.rewind()`,
+		// We need an external `.revert()` if `.rewind()`,
 		// etc. is a hold-and-release situation
-		plab.resume = function () {
-			plab._queueAdd( '_resumeProxy', arguments );
+		plab.revert = function () {
+			plab._queueAdd( '_revertProxy', arguments );
 			return plab;
 		};
 
@@ -449,7 +444,8 @@ var idNum = 1;
 
 		// ========== ONCE ========== \\
 
-		plab._once = function ( incrementors ) {
+		// plab._onceProxy = function ( incrementors, revertToRevertableState ) {
+		plab._onceProxy = function ( incrementors ) {
 		// If this is .once and can be called from the outside,
 		// it can get added to the queue, but then weird stuff
 		// can happen. Basically, mostly don't call non `._` stuff
@@ -470,29 +466,23 @@ var idNum = 1;
 
 			plab._trigger( 'onceFinish', [plab] );  // ??: 'jumpFinish'?
 
-
-			// ??: NOOOOOOO
-			// ??: Should not happen here? If called externally, would this
-			// be expected behavior?
-			// ??: After event sent or before?
-			// ??: Now that there's a queue, maybe at the start
-			plab._resumeProxy();
-			// `once()` should not assume anything about resuming, right?
+			// // ??: NOOOOOOO
+			// // ??: Should not happen here? If called externally, would this
+			// // be expected behavior?
+			// // ??: After event sent or before?
+			// // ??: Now that there's a queue, maybe at the start
+			// if (revertToRevertableState) { plab._revertProxy(); }
+			// // `once()` should not assume anything about resuming, right?
 
 			return plab;
 		};  // End plab._onceProxy()
 
-		// plab._once = function ( incrementors ) {
-		// 	plab._queueAdd( '_onceProxy', arguments );
-		// 	return plab;
-		// };
-
-		// // TODO: ??: Possible alternative so we can have an external
-		// // `.once()`? Implement if needed.
-		// plab.once = function ( incrementors ) {
-		// 	plab._queueAdd( '_once', arguments );
-		// 	return plab;
-		// };
+		// TODO: ??: Possible alternative so we can have an external
+		// `.once()`? Implement if needed.
+		plab.once = function ( incrementors ) {
+			plab._queueAdd( '_onceProxy', arguments );
+			return plab;
+		};
 
 
 
@@ -505,7 +495,7 @@ var idNum = 1;
 			if ( numToJump < 0 ) { plab._direction = 'back'; }
 			else { plab._direction = 'forward'; }
 
-			plab._once( [0, numToJump, 0] );
+			plab._onceProxy( [0, numToJump, 0] );
 			return plab;
 		};
 		plab.jumpWords = function ( numToJump ) {
@@ -520,7 +510,7 @@ var idNum = 1;
 			if ( numToJump < 0 ) { plab._direction = 'back'; }
 			else { plab._direction = 'forward'; }
 
-			plab._once( [numToJump, 0, 0] );
+			plab._onceProxy( [numToJump, 0, 0] );
 			return plab;
 		};
 		plab.jumpSentences = function ( numToJump ) {
@@ -555,8 +545,8 @@ var idNum = 1;
 			if ( indx >= 0 ) { plab._direction = 'forward' }
 			else { plab._direction = 'back' }
 
-			// plab._once( [0, newIndex - oldIndex, 0] );
-			plab._once( indx );
+			// plab._onceProxy( [0, newIndex - oldIndex, 0] );
+			plab._onceProxy( indx );
 
 			return plab;
 		};  // End plab.jumpTo()
@@ -692,14 +682,14 @@ var idNum = 1;
         */
         	var isDone = false;
 
-        	// Stop if we've reached the end (if `fastForward`ing, no resume)
+        	// Stop if we've reached the end (if `fastForward`ing, no revert)
         	if ( plab._direction !== 'back' && plab.getProgress() === 1 ) {
         		isDone = true;
         	} else if ( plab._direction === 'back' && plab.getIndex() === 0 ) {
-        		// Check if resumed playing. If not resumed, done.
+        		// Check if revertd playing. If not revertd, done.
         		// ??: Is this expected behavior?
-        		plab._resumeProxy();  
-        		if ( plab._resumableState !== 'play' ) { isDone = true; }
+        		plab._revertProxy();  
+        		if ( plab._revertableState !== 'play' ) { isDone = true; }
 	    	}
 
 	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'? 'doneBegin', 'doneFinish'?
@@ -734,12 +724,36 @@ var idNum = 1;
 	        return plab;
         };  // End plab._emitProgress()
 
+        plab._getDirection = function ( incrementors ) {
+
+        	var direction = 'forward';
+
+        	if ( typeof incrementors === 'number' ) {
+        		if ( plab._signOf( incrementors ) === -1 ) { direction = 'back'; }
+        	} else {
+
+        		for ( var inci = 0; inci < incrementors.length; inci++ ) {
+        			if ( plab._signOf( incrementors[inci] ) === -1 ) {
+        				direction = 'back';
+        				break;
+        			}
+        		}  // end for incrementor
+        	}  // end if number
+
+        	return direction;
+        };  // End plab._getDirection()
+
         plab._skipDirection = function ( incrementors, frag ) {
         /* ( [ int, int, int ], str ) -> [ int, int, int ] of 0, 1, or -1
         * 
         * "$@skip@$" will be skipped. If you want fragments of certain
         * types to be skipped, detect and transform them with
         * `state.playback.transformFragment()` into "$@skip@$".
+        * 
+        * TODO: Problem - if end or beginning needs to be skipped and
+        * we're traveling in that direction, will this repeat infinitely?
+        * We can't just stop on repeated skips because there may be a bunch
+        * of whitespace to skip.
         */
 			var vector = null;
 
@@ -753,6 +767,12 @@ var idNum = 1;
 			// TODO: ??: use state property with a fallback?
 			if ( frag === '$@skip@$' ) {
 
+				// var direction = plab._getDirection( incrementors );
+				// if ( direction === 'forward' ) { vector = [0, 0, 1] }
+				// else { vector = [0, 0, -1] }
+
+				// ??: This model would go back or forward one sentence, one
+				// word, or one fragment. Is that what we want?
 				vector = [0, 0, 0];  // Need to be able to manipulate an array
 
 				if ( incrementors[0] !== 0 ) {

@@ -5,7 +5,7 @@ Events that only happen internally
 - dequeue
 
 Events that happen no matter what, if the user called the function or if it was called internally:
-- resume
+- revert
 - stop
 
 Events that sometimes get triggered internally as well as externally, but not all the time internally

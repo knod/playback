@@ -332,7 +332,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// { func: 'prevSentence', args: [ null ]},
 		// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]}
 		// once?
-		// resume?
+		// revert?
 
 		// play
 		// reset
@@ -351,7 +351,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// prevSentence
 		// jumpTo
 		// once?
-		// resume?
+		// revert?
 	];
 
 
@@ -363,7 +363,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// 'stopBegin', 'stopFinish',
 		// 'closeBegin', 'closeFinish',
 		// 'onceBegin', 'onceFinish',
-		// 'resumeBegin', 'resumeFinish',
+		// 'revertBegin', 'revertFinish',
 		// 'rewindBegin', 'rewindFinish',  // only rewind
 		// 'fastForwardBegin', 'fastForwardFinish',  // only fastForward
 		// 'loopBegin', 'loopFinish',
@@ -380,7 +380,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// Skip (maybe)
 		// progress
 		// Fragment
-		// resume
+		// revert
 
 
 	// https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex/6969486#6969486
@@ -406,20 +406,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// ==========================================
 	
 	// === NEVER TRIGGERS (play + event combos) ===
-	var playAlwaysNot = /play(?:\(-?\w+\)) \+ (?:reset|pause|close|once|resume|rewind|fast|loopSkip)/;
-	var toggleAlwaysNot = /togglePlayPause(?:\(-?\w+\)) \+ (?:reset|close|once|resume|rewind|fast|loopSkip)/;
-	// restart + play?|reset|pause|close|once|resume|rewind|fast|loopSkip
-	var restartAlwaysNot = /restart(?:\(-?\w+\)) \+ (?:play|reset|pause|close|once|resume|rewind|fast|loopSkip)/;
+	var playAlwaysNot = /play(?:\(-?\w+\)) \+ (?:reset|pause|close|once|revert|rewind|fast|loopSkip)/;
+	var toggleAlwaysNot = /togglePlayPause(?:\(-?\w+\)) \+ (?:reset|close|once|revert|rewind|fast|loopSkip)/;
+	// restart + play?|reset|pause|close|once|revert|rewind|fast|loopSkip
+	var restartAlwaysNot = /restart(?:\(-?\w+\)) \+ (?:play|reset|pause|close|once|revert|rewind|fast|loopSkip)/;
 	var resetAlwaysNot = /reset(?:\(-?\w+\)) \+ (?:play|restart|pause|stop|close|rewind|fast|loopSkip|done)/;
 	// alternatively to the below: /(?:pause|stop|close)(?:\(-?\w+\)) \+ (?!\1)/;  // (only itself)
-	var pauseAlwaysNot = /pause(?:\(-?\w+\)) \+ (?:play|reset|restart|stop|close|once|resume|rewind|fast|loop|new|loopSkip|progress|done)/;  // (only itself)
-	var stopAlwaysNot = /stop(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|close|once|resume|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
-	var closeAlwaysNot = /close(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|stop|once|resume|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
-	// resume + play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done? (maybe should trigger play/pause) ('stop' and 'done' may fire if 'play', then go to just before the end)
-	var resumeAlwaysNot = /resume(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done)/;
-	// rewind + play?|reset|restart|pause|close|once|fast|loopSkip  // play if resume? but goes to start and then done, so...
+	var pauseAlwaysNot = /pause(?:\(-?\w+\)) \+ (?:play|reset|restart|stop|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  // (only itself)
+	var stopAlwaysNot = /stop(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
+	var closeAlwaysNot = /close(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|stop|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
+	// revert + play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done? (maybe should trigger play/pause) ('stop' and 'done' may fire if 'play', then go to just before the end)
+	var revertAlwaysNot = /revert(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done)/;
+	// rewind + play?|reset|restart|pause|close|once|fast|loopSkip  // play if revert? but goes to start and then done, so...
 	var rewindAlwaysNot = /rewind(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|close|once|fast|loopSkip)/;
-	var fastForwardAlwaysNot = /fastForward(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|close|once|resume|rewind|loopSkip)/;  // never resumes on its own, always goes to end
+	var fastForwardAlwaysNot = /fastForward(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|close|once|revert|rewind|loopSkip)/;  // never reverts on its own, always goes to end
 	// next + reset|restart?|pause?|close|rewind|fast|loopSkip
 	var nextAlwaysNot = /next(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;
 	var prevAlwaysNot = /prev(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;
@@ -463,7 +463,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	var playTogglePauseYes = /doubles: (?:play|restart|toggle)(?:.*\(-?\w+\)) \+ (?!stop|done).* > (?:toggle)(?:.*\(-?\w+\)) \+ (?:pause)/;
 	// NOT TRIGGERED. If event added to queue anytime before 'resetFinish'
 	// it gets removed from queue. It isn't called and its events don't get triggerd.
-	var resetKillsQueue = /doubles: reset(?:.*\(-?\w+\)) \+ (?:resetBegin|once|resume|loopBegin|loopFinish|new|progress)(.* >)/;
+	var resetKillsQueue = /doubles: reset(?:.*\(-?\w+\)) \+ (?:resetBegin|once|revert|loopBegin|loopFinish|new|progress)(.* >)/;
 
 
 	// ==========================================
@@ -497,15 +497,49 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	str = 'doubles: (?:play|toggle|restart|fast|next';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
-	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:play|stop|fast|loopBegin|loopFinish|new|progress|done)(?:.* > )(?:play|toggle|fast|next|prev';
+	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:stop|done)(?:.* > )(?:fast|next|prev';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
 	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:new|progress)';
 	// Maybe separate ones for jumps
 
-	var posChangeInMiddle1 = new RegExp( str );
-	// console.log(posChangeInMiddle1)
+	var noRestartersChangePosInMiddle = new RegExp( str );
+	// console.log(noRestartersChangePosInMiddle)
 	// doubles: (?:play|toggle|restart|fast|next)(?:.*\(-?\w+\)) \+ (?:play|loopBegin|loopEnd|new|progress)(?:.* > )(?:play|toggle|fast|next|prev)(?:.*\(-?\w+\)) \+ (?:new|progress)
+
+	// But play or toggle on stop|done restarts, so it gets the same new|progress values
+	str = 'doubles: (?:play|toggle|restart|fast|next';
+	str += ''; // Something with jump turned into regex
+	// continue that till all the jump things are in here
+	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:play|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev';
+	str += ''; // Something with jump turned into regex
+	// continue that till all the jump things are in here
+	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:new|progress)';
+	var changePosInMiddleWithoutReachingEnd = new RegExp( str );
+
+	// Things like next and prev use `once()` and the stuff that comes with it,
+	// so the change in position is going to show during those events
+	str = 'doubles: (?:fast|next';
+	str += ''; // Something with jump turned into regex
+	// continue that till all the jump things are in here
+	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:once|revert)(?:.* > )(?:play|toggle|next|prev';
+	str += ''; // Something with jump turned into regex
+	// continue that till all the jump things are in here
+	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:new|progress)';
+	var diffPosOnOnceAsFirst = new RegExp( str );
+
+	// // ??: This one too?
+	// // Things like next and prev use `once()` and the stuff that comes with it,
+	// // so the change in position is going to show during those events
+	// // Does this include when play and such start?
+	// str = 'doubles: (?:fast|next';
+	// str += ''; // Something with jump turned into regex
+	// // continue that till all the jump things are in here
+	// str += ')(?:.*\\(-?\\w+\\)) \\+ (?:once|revert)(?:.* > )(?:play|toggle|next|prev';
+	// str += ''; // Something with jump turned into regex
+	// // continue that till all the jump things are in here
+	// str += ')(?:.*\\(-?\\w+\\)) \\+ (?:new|progress)';
+	// var diffPosOnOnceAsSecond = new RegExp( str );
 
 
 	// ==========================================
@@ -515,7 +549,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 	// // These don't ever trigger events after `play(null)`
 	// str = regEscape('play(null) + ');  // Initial function
-	// str += '(?:reset|pause|close|once|resume|loopSkip)';  // Events
+	// str += '(?:reset|pause|close|once|revert|loopSkip)';  // Events
 	// var playNot = new RegExp( str );
 	// // // Only if there's no play afterwards!
 	// // str = regEscape('doubles: play(null) + restart');
@@ -528,12 +562,12 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 	// // These don't ever trigger events after `restart(null)`
 	// str = regEscape('restart(null) + ');  // Initial function
-	// str += '(?:play|reset|pause|close|once|resume|loopSkip)';  // Events
+	// str += '(?:play|reset|pause|close|once|revert|loopSkip)';  // Events
 	// var restartNot = new RegExp( str );
 
 
 	// // These don't ever trigger events after `pause(null)`, `stop(null)`, or `close(null)`
-	// var regNoLoop = /\b(?:pause|stop|close)(?:\(-?\w+\)) \+ (?:play|reset|restart|once|resume|rewind|fastForward|loop|newWordFragment|progress|done)/;
+	// var regNoLoop = /\b(?:pause|stop|close)(?:\(-?\w+\)) \+ (?:play|reset|restart|once|revert|rewind|fastForward|loop|newWordFragment|progress|done)/;
 	// // These don't ever trigger events after `pause(null)`
 	// str = regEscape('pause(null) + ');  // Initial function
 	// str += '(?:close|stop)';  // Events
@@ -550,7 +584,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 	// // These don't ever trigger events after `togglePlayPause(null)`
 	// str = regEscape('togglePlayPause(null) + ');  // Initial function
-	// str += '(?:reset|close|once|resume|loopSkip)';  // Events
+	// str += '(?:reset|close|once|revert|loopSkip)';  // Events
 	// var toggleNot = new RegExp( str );
 
 	// // These don't ever trigger events after `rewind(null)` anytime
@@ -562,13 +596,13 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// str = regEscape('doubles: rewind(null) + ');  // Initial function
 	// str += '(?:restart)';  // Events
 	// var rewindStarts = new RegExp( str );
-	// // Does 'resume' when gets to beginning, etc.
+	// // Does 'revert' when gets to beginning, etc.
 	// // will do 'restartFinish' with other stuff
 	// // TODO: Check if can add 'restartBegin' to 'rewindNot', 'fastForwardNot', etc.
 
 	// // These don't ever trigger events after `fastForward(null)` anytime
 	// str = regEscape('fastForward(null) + ');  // Initial function
-	// str += '(?:play|reset|pause|close|once|resume|loopSkip)';  // Events
+	// str += '(?:play|reset|pause|close|once|revert|loopSkip)';  // Events
 	// var fastForwardNot = new RegExp( str );
 	// // These don't ever trigger events after `fastForward(null)` (from paused at start)
 	// str = regEscape('doubles: fastForward(null) + ');  // Initial function
@@ -595,7 +629,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// // var resetBeginFrag = new RegExp( str );
 	// // str = regEscape('doubles: reset(null) + resetBegin >') + '.*progress';  // Events
 	// // var resetBeginProg = new RegExp( str );
-	// // str = regEscape('doubles: reset(null) + resetBegin > ') + '.*?' + regEscape(' + ') + '(?!new|progress|once|loop|resume)';
+	// // str = regEscape('doubles: reset(null) + resetBegin > ') + '.*?' + regEscape(' + ') + '(?!new|progress|once|loop|revert)';
 	// // var resetBeginOther = new RegExp( str );
 
 	// // Queue gets destroyed in reset, so anythind added before that should not be called
@@ -666,9 +700,9 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 			var msg, passed = !result.passed;
 			// If failed, that was the expected result
 			if ( passed ) {
-				msg = 'Combos. Expected a failure and recieved a failure.';
+				msg = 'Combos. Expected a failure and recieved a failure at combo test #' + testNum + '.';
 			} else {
-				msg = 'Combos. Expected test to fail, but it ' + colors.red + 'DIDN\'T FAIL.' + colors.none;
+				msg = 'Combos. Expected test to fail, but it ' + colors.red + 'DIDN\'T FAIL' + colors.none +  ' at combo test #' + testNum + '.';
 			}
 
 			msg += '\n--- Unexpected success: ' + colors.red + result.message + colors.none;
@@ -687,76 +721,76 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// Must come before pause(null), stop(null), and close(null) are kept
 		// from interacting
-		if ( debug ) { console.log( pre + '1', selfComplete.test(label) ); }
+		if ( debug && selfComplete.test(label) ) { console.log( pre + '1' ); }
 		if ( selfComplete.test(label) ) { return defaultAsserts.triggered; }
 
-		if ( debug ) { console.log( pre + '2', playAlwaysNot.test(label) ); }
+		if ( debug && playAlwaysNot.test(label) ) { console.log( pre + '2' ); }
 		if ( playAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '3', toggleAlwaysNot.test(label) ); }
+		if ( debug && toggleAlwaysNot.test(label) ) { console.log( pre + '3' ); }
 		if ( toggleAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '4', restartAlwaysNot.test(label) ); }
+		if ( debug && restartAlwaysNot.test(label) ) { console.log( pre + '4' ); }
 		if ( restartAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '5', resetAlwaysNot.test(label) ); }
+		if ( debug && resetAlwaysNot.test(label) ) { console.log( pre + '5' ); }
 		if ( resetAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '6', pauseAlwaysNot.test(label) ); }
+		if ( debug && pauseAlwaysNot.test(label) ) { console.log( pre + '6' ); }
 		if ( pauseAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '7', stopAlwaysNot.test(label) ); }
+		if ( debug && stopAlwaysNot.test(label) ) { console.log( pre + '7' ); }
 		if ( stopAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '8', closeAlwaysNot.test(label) ); }
+		if ( debug && closeAlwaysNot.test(label) ) { console.log( pre + '8' ); }
 		if ( closeAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '9', resumeAlwaysNot.test(label) ); }
-		if ( resumeAlwaysNot.test(label) ) { return defaultAsserts.not; }
+		if ( debug && revertAlwaysNot.test(label) ) { console.log( pre + '9' ); }
+		if ( revertAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '10', rewindAlwaysNot.test(label) ); }
+		if ( debug && rewindAlwaysNot.test(label) ) { console.log( pre + '10' ); }
 		if ( rewindAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '11', fastForwardAlwaysNot.test(label) ); }
+		if ( debug && fastForwardAlwaysNot.test(label) ) { console.log( pre + '11' ); }
 		if ( fastForwardAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '12', nextAlwaysNot.test(label) ); }
+		if ( debug && nextAlwaysNot.test(label) ) { console.log( pre + '12' ); }
 		if ( nextAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '13', prevAlwaysNot.test(label) ); }
+		if ( debug && prevAlwaysNot.test(label) ) { console.log( pre + '13' ); }
 		if ( prevAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '14', jumpAlwaysNot.test(label) ); }
+		if ( debug && jumpAlwaysNot.test(label) ) { console.log( pre + '14' ); }
 		if ( jumpAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '15', jumpPastEndAlwaysNot.test(label) ); }
+		if ( debug && jumpPastEndAlwaysNot.test(label) ) { console.log( pre + '15' ); }
 		if ( jumpPastEndAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '16', playAtStartNot.test(label) ); }
+		if ( debug && playAtStartNot.test(label) ) { console.log( pre + '16' ); }
 		if ( playAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '17', toggleAtStartNot.test(label) ); }
+		if ( debug && toggleAtStartNot.test(label) ) { console.log( pre + '17' ); }
 		if ( toggleAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '18', rewindAtStartNot.test(label) ); }
+		if ( debug && rewindAtStartNot.test(label) ) { console.log( pre + '18' ); }
 		if ( rewindAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '19', nextAtStartNot.test(label) ); }
+		if ( debug && nextAtStartNot.test(label) ) { console.log( pre + '19' ); }
 		if ( nextAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '20', prevAtStartNot.test(label) ); }
+		if ( debug && prevAtStartNot.test(label) ) { console.log( pre + '20' ); }
 		if ( prevAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '21', jumpAtStartNot.test(label) ); }
+		if ( debug && jumpAtStartNot.test(label) ) { console.log( pre + '21' ); }
 		if ( jumpAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '22', jumpToAtStartNot.test(label) ); }
+		if ( debug && jumpToAtStartNot.test(label) ) { console.log( pre + '22' ); }
 		if ( jumpToAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '23', jumpWordsAtStartNot.test(label) ); }
+		if ( debug && jumpWordsAtStartNot.test(label) ) { console.log( pre + '23' ); }
 		if ( jumpWordsAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '24', jumpSentencesAtStartNot.test(label) ); }
+		if ( debug && jumpSentencesAtStartNot.test(label) ) { console.log( pre + '24' ); }
 		if ( jumpSentencesAtStartNot.test(label) ) { return defaultAsserts.not; }
 
 
@@ -769,19 +803,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// if ( debug ) { console.log( 'Complex Combos' ); }
 		pre = 'Complex Combos ';
 
-		if ( debug ) { console.log( pre + '1', doneThenPlayThenPlayNot.test(label) ); }
+		if ( debug && doneThenPlayThenPlayNot.test(label) ) { console.log( pre + '1' ); }
 		if ( doneThenPlayThenPlayNot.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '2', doneThenPlayThenRestartYes.test(label) ); }
+		if ( debug && doneThenPlayThenRestartYes.test(label) ) { console.log( pre + '2' ); }
 		if ( doneThenPlayThenRestartYes.test(label) ) { return defaultAsserts.triggered; }
 
-		if ( debug ) { console.log( pre + '3', playToggleNotPauseNo.test(label) ); }
+		if ( debug && playToggleNotPauseNo.test(label) ) { console.log( pre + '3' ); }
 		if ( playToggleNotPauseNo.test(label) ) { return defaultAsserts.not; }
 
-		if ( debug ) { console.log( pre + '4', playTogglePauseYes.test(label) ); }
+		if ( debug && playTogglePauseYes.test(label) ) { console.log( pre + '4' ); }
 		if ( playTogglePauseYes.test(label) ) { return defaultAsserts.triggered; }
 
-		if ( debug ) { console.log( pre + '5', resetKillsQueue.test(label) ); }
+		if ( debug && resetKillsQueue.test(label) ) { console.log( pre + '5' ); }
 		if ( resetKillsQueue.test(label) ) { return defaultAsserts.not; }
 
 
@@ -796,8 +830,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// if ( debug ) { console.log( 'Expect Failure' ); }
 		pre = 'Expect Failure ';
 
-		if ( debug ) { console.log( pre + '1', posChangeInMiddle1.test(label) ); }
-		if ( posChangeInMiddle1.test(label) ) { return expectFailure; }
+		if ( debug && noRestartersChangePosInMiddle.test(label) ) { console.log( pre + '1' ); }
+		if ( noRestartersChangePosInMiddle.test(label) ) { testNum = 'E1'; return expectFailure; }
+
+		if ( debug && changePosInMiddleWithoutReachingEnd.test(label) ) { console.log( pre + '2' ); }
+		if ( changePosInMiddleWithoutReachingEnd.test(label) ) { testNum = 'E2'; return expectFailure; }
+
+		if ( debug && diffPosOnOnceAsFirst.test(label) ) { console.log( pre + '3' ); }
+		if ( diffPosOnOnceAsFirst.test(label) ) { testNum = 'E3'; return expectFailure; }
+
+
 		
 
 
@@ -816,7 +858,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// // if ( resetBeginFrag.test(label) ) { return getAssertFragsFirst( plyb ); }
 		// // if ( debug ) { console.log( '4', resetBeginProg.test(label) ); }
 		// // if ( resetBeginProg.test(label) ) { return getAssertProgFirst( plyb ); }
-		// // // Other stuff (other than 'once', 'loop', and 'resume') doesn't trigger
+		// // // Other stuff (other than 'once', 'loop', and 'revert') doesn't trigger
 		// // if ( debug ) { console.log( '5', resetBeginOther.test(label) ); }
 		// // if ( resetBeginOther.test(label) ) { return defaultAsserts.not; }
 
@@ -899,8 +941,8 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// // ( happen after newFragment loop is completed, so regular output )
 		// // reset(null) + resetFinish > reset(null) + all
 		// // reset(null) + onceFinish > reset(null) + all
-		// // reset(null) + resumeBegin > reset(null) + all
-		// // reset(null) + resumeFinish > reset(null) + all
+		// // reset(null) + revertBegin > reset(null) + all
+		// // reset(null) + revertFinish > reset(null) + all
 		// // reset(null) + loopFinish > reset(null) + all
 
 		// // --- restart(null) ---

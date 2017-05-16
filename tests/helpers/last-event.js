@@ -20,7 +20,7 @@ var oneEvent = module.exports = function ( result, bigs, opWith, reset ) {
 		// if ( evnt === 'rewindBegin' ) { console.log('2: rewoundBegun') }
 		// console.log( '2:', evnt );
 		// if ( evnt ) { console.log( '2:', one.getIndex(), evnt, two ) }
-		// console.log( '2:' )
+		// console.log( '2:', two )
 		// console.trace( count, 'event === null', eventAssertion === null );
 		// count++;
 		// if ( op === 'reset' && evnt === 'newWordFragment' ) { console.log( '2:', two ); }

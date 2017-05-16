@@ -15,7 +15,7 @@ var firstEvent = module.exports = function ( doOnEvent, bigs, opWith, reset ) {
 
 	whenRun = function ( one, two, three, four ) {
 
-		// console.log( '1:', one._queue.slice(0) );
+		// console.log( '1:', two );
 		emitter.removeAllListeners();
 
 		doOnEvent( evnt, one, two, three, four );

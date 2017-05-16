@@ -278,7 +278,7 @@ module.exports = gets = function ( plyb ) {
 
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 			{ event: 'onceBegin', assertion: asserts.not }, 		{ event: 'onceFinish', assertion: asserts.not },
-			{ event: 'resumeBegin', assertion: asserts.not }, 		{ event: 'resumeFinish', assertion: asserts.not },
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, { event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -315,7 +315,7 @@ module.exports = gets = function ( plyb ) {
 
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 			{ event: 'onceBegin', assertion: asserts.not }, 		{ event: 'onceFinish', assertion: asserts.not },
-			{ event: 'resumeBegin', assertion: asserts.not }, 		{ event: 'resumeFinish', assertion: asserts.not },
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -351,8 +351,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -383,7 +383,7 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 			{ event: 'onceBegin', assertion: asserts.not }, 		{ event: 'onceFinish', assertion: asserts.not },
-			{ event: 'resumeBegin', assertion: asserts.not }, 		{ event: 'resumeFinish', assertion: asserts.not },
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 			{ event: 'loopBegin', assertion: asserts.not }, 		{ event: 'loopFinish', assertion: asserts.not },
@@ -413,7 +413,7 @@ module.exports = gets = function ( plyb ) {
 
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 			{ event: 'onceBegin', assertion: asserts.not }, 		{ event: 'onceFinish', assertion: asserts.not },
-			{ event: 'resumeBegin', assertion: asserts.not }, 		{ event: 'resumeFinish', assertion: asserts.not },
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 			{ event: 'loopBegin', assertion: asserts.not }, 		{ event: 'loopFinish', assertion: asserts.not },
@@ -443,7 +443,7 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.triggered }, 	{ event: 'closeFinish', assertion: asserts.triggered },
 
 			{ event: 'onceBegin', assertion: asserts.not }, 		{ event: 'onceFinish', assertion: asserts.not },
-			{ event: 'resumeBegin', assertion: asserts.not }, 		{ event: 'resumeFinish', assertion: asserts.not },
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 			{ event: 'loopBegin', assertion: asserts.not }, 		{ event: 'loopFinish', assertion: asserts.not },
@@ -477,7 +477,7 @@ module.exports = gets = function ( plyb ) {
 
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 			{ event: 'onceBegin', assertion: asserts.not }, 		{ event: 'onceFinish', assertion: asserts.not },
-			{ event: 'resumeBegin', assertion: asserts.not }, 		{ event: 'resumeFinish', assertion: asserts.not },
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, { event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -494,6 +494,9 @@ module.exports = gets = function ( plyb ) {
 	// ----------- rewind(null) -----------
 	asts.rewind = {};
 	asts.rewind["null"] = function ( assertsOverride ) {
+		// 'pause' triggered here because when going backwards, `revert()` is
+		// called and that pauses if it was paused. Forward doesn't have the same
+		// issue. That triggers just 'stop'
 
 		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
 
@@ -506,14 +509,14 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
 			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
-			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
 
+			{ event: 'pauseBegin', assertion: asserts.triggered }, 	{ event: 'pauseFinish', assertion: asserts.triggered },
 			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
 
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 			{ event: 'onceBegin', assertion: asserts.not }, 		{ event: 'onceFinish', assertion: asserts.not },
 
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
+			{ event: 'revertBegin', assertion: asserts.triggered }, { event: 'revertFinish', assertion: asserts.triggered },
 			{ event: 'rewindBegin', assertion: asserts.triggered }, { event: 'rewindFinish', assertion: asserts.triggered },
 
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
@@ -550,7 +553,7 @@ module.exports = gets = function ( plyb ) {
 
 			{ event: 'closeBegin', assertion: asserts.not }, 			 { event: 'closeFinish', assertion: asserts.not },
 			{ event: 'onceBegin', assertion: asserts.not }, 			 { event: 'onceFinish', assertion: asserts.not },
-			{ event: 'resumeBegin', assertion: asserts.not }, 			 { event: 'resumeFinish', assertion: asserts.not },
+			{ event: 'revertBegin', assertion: asserts.not }, 			 { event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 			 { event: 'rewindFinish', assertion: asserts.not },
 
 			{ event: 'fastForwardBegin', assertion: asserts.triggered }, { event: 'fastForwardFinish', assertion: asserts.triggered },
@@ -562,6 +565,304 @@ module.exports = gets = function ( plyb ) {
 		];
 
 	};  // End get fastForward(null)
+
+
+	// ----------- once() -----------
+	asts.once = {};
+
+	// ----------- once([0,0,-2]) -----------
+	asts.once["[0,0,-2]"] = function ( assertsOverride ) {
+
+		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
+
+		asserts.frags 	 = getAssertFragsFirst( plyb );
+		asserts.progress = getAssertProgFirst( plyb );
+
+		return [
+			{ event: 'newWordFragment', assertion: asserts.frags },
+
+			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+
+			{ event: 'pauseBegin', assertion: asserts.triggered }, 	{ event: 'pauseFinish', assertion: asserts.triggered },
+			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
+
+			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
+
+			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
+			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
+
+			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
+
+			{ event: 'loopSkip', assertion: asserts.not },
+			{ event: 'done', assertion: asserts.not },
+			{ event: 'progress', assertion: asserts.progress }
+		];
+
+	};  // End get once([0,0,-2])
+
+
+	// ----------- once([0,0,0]) -----------
+	asts.once["[0,0,0]"] = function ( assertsOverride ) {
+
+		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
+
+		asserts.frags 	 = getAssertFragsFirst( plyb );
+		asserts.progress = getAssertProgFirst( plyb );
+
+		return [
+			{ event: 'newWordFragment', assertion: asserts.frags },
+
+			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
+			{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
+
+			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
+			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
+
+			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
+
+			{ event: 'loopSkip', assertion: asserts.not },
+			{ event: 'done', assertion: asserts.not },
+			{ event: 'progress', assertion: asserts.progress }
+		];
+
+	};  // End get once([0,0,0])
+
+
+	// ----------- once([0,0,2]) -----------
+	asts.once["[0,0,2]"] = function ( assertsOverride ) {
+
+		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
+
+		asserts.frags 	 = makeFragAsserter( plyb, [ 'you' ] );
+		asserts.progress = makeProgressAsserter( plyb, 1, [ 2/12 ] );
+
+		return [
+			{ event: 'newWordFragment', assertion: asserts.frags },
+
+			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
+			{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
+
+			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
+			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
+
+			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
+
+			{ event: 'loopSkip', assertion: asserts.not },
+			{ event: 'done', assertion: asserts.not },
+			{ event: 'progress', assertion: asserts.progress }
+		];
+
+	};  // End get once([0,0,2])
+
+
+
+	// ----------- jumpTo -----------
+	asts.jumpTo = {};
+	// Needed? Basically the same as `jumpWords()`, though -1 seems to behave differently for some reason
+	// TODO: look into why -1 behaves differently here than at `jumpWords()`
+
+
+	// ----------- jumpTo( -1 ) -----------
+	// Loops around to the end
+	// ??: Should this really trigger 'done', etc.?
+	// ??: Is `.jumpToWord()` needed? They do the same thing
+	asts.jumpTo["-1"] = function ( assertsOverride ) {
+
+		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
+
+		asserts.frags 	 = getAssertFragsLast( plyb );
+		asserts.progress = getAssertProgLast( plyb );
+
+		return [
+			{ event: 'newWordFragment', assertion: asserts.frags },
+
+			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+
+			{ event: 'pauseBegin', assertion: asserts.triggered }, 	{ event: 'pauseFinish', assertion: asserts.triggered },
+			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
+
+			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
+
+			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
+			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
+
+			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
+
+			{ event: 'loopSkip', assertion: asserts.not },
+			{ event: 'done', assertion: asserts.not },
+			{ event: 'progress', assertion: asserts.progress }
+		];
+
+	};  // End get jumpTo( -1 )
+
+
+
+	// ----------- jumpTo( 0 ) -----------
+	asts.jumpTo["0"] = function ( assertsOverride ) {
+
+		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
+
+		asserts.frags 	 = getAssertFragsFirst( plyb );
+		asserts.progress = getAssertProgFirst( plyb );
+
+		return [
+			{ event: 'newWordFragment', assertion: asserts.frags },
+
+			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
+			{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
+
+			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
+			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
+
+			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
+
+			{ event: 'loopSkip', assertion: asserts.not },
+			{ event: 'done', assertion: asserts.not },
+			{ event: 'progress', assertion: asserts.progress }
+		];
+
+	};  // End get jumpTo( 0 )
+
+
+
+	// ----------- jumpTo( 6 ) -----------
+	asts.jumpTo["6"] = function ( assertsOverride ) {
+
+		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
+
+		asserts.frags 	 = makeFragAsserter( plyb, [ 'come' ] );
+		asserts.progress = makeProgressAsserter( plyb, 1, [ 7/12 ] );
+
+		return [
+			{ event: 'newWordFragment', assertion: asserts.frags },
+
+			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
+			{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
+			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
+
+			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
+			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
+
+			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
+
+			{ event: 'loopSkip', assertion: asserts.not },
+			{ event: 'done', assertion: asserts.not },
+			{ event: 'progress', assertion: asserts.progress }
+		];
+
+	};  // End get jumpTo( 6 )
+
+
+
+	// ----------- jumpTo( 11 ) -----------
+	asts.jumpTo["11"] = function ( assertsOverride ) {
+
+		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
+
+		asserts.frags 	 = getAssertFragsLast( plyb );
+		asserts.progress = getAssertProgLast( plyb );
+
+		return [
+			{ event: 'newWordFragment', assertion: asserts.frags },
+
+			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
+
+			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
+
+			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
+
+			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
+			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
+
+			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
+
+			{ event: 'loopSkip', assertion: asserts.not },
+			{ event: 'done', assertion: asserts.triggered },
+			{ event: 'progress', assertion: asserts.progress }
+		];
+
+	};  // End get jumpTo( 11 )
+
+
+
+	// ----------- jumpTo( 100 ) -----------
+	asts.jumpTo["100"] = function ( assertsOverride ) {
+
+		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
+
+		asserts.frags 	 = getAssertFragsLast( plyb );
+		asserts.progress = getAssertProgLast( plyb );
+
+		return [
+			{ event: 'newWordFragment', assertion: asserts.frags },
+
+			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
+			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
+			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
+			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
+
+			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
+
+			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
+
+			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
+
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
+			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
+			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
+
+			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
+
+			{ event: 'loopSkip', assertion: asserts.not },
+			{ event: 'done', assertion: asserts.triggered },
+			{ event: 'progress', assertion: asserts.progress }
+		];
+
+	};  // End get jumpTo( 100 )
+
 
 
 
@@ -582,15 +883,17 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
 			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
-			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
+
+
+			{ event: 'pauseBegin', assertion: asserts.triggered }, 	{ event: 'pauseFinish', assertion: asserts.triggered },
 			// Expected behavior? Not moving forwards, so maybe not
 			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
 
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -623,8 +926,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -658,8 +961,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -693,8 +996,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -731,8 +1034,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -768,8 +1071,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -800,15 +1103,16 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
 			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
-			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
+
+			{ event: 'pauseBegin', assertion: asserts.triggered }, 	{ event: 'pauseFinish', assertion: asserts.triggered },
 			// Expected behavior? Not moving forward, so maybe not
 			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
 
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -841,8 +1145,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -876,8 +1180,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -911,8 +1215,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -949,8 +1253,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -985,8 +1289,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -1021,8 +1325,8 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -1052,15 +1356,15 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
 			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
-			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
 
+			{ event: 'pauseBegin', assertion: asserts.triggered }, 	{ event: 'pauseFinish', assertion: asserts.triggered },
 			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
 
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -1090,15 +1394,15 @@ module.exports = gets = function ( plyb ) {
 			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
 			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
-			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
 
+			{ event: 'pauseBegin', assertion: asserts.triggered }, 	{ event: 'pauseFinish', assertion: asserts.triggered },
 			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
 
 			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
 			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
 
+			{ event: 'revertBegin', assertion: asserts.not }, 		{ event: 'revertFinish', assertion: asserts.not },
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
 
@@ -1113,191 +1417,38 @@ module.exports = gets = function ( plyb ) {
 
 
 
-	// ----------- jumpTo -----------
-	asts.jumpTo = {};
-	// Needed? Basically the same as `jumpWords()`, though -1 seems to behave differently for some reason
-	// TODO: look into why -1 behaves differently here than at `jumpWords()`
-
-
-	// ----------- jumpTo( -1 ) -----------
-	// Loops around to the end
-	// ??: Should this really trigger 'done', etc.?
-	// ??: Is `.jumpToWord()` needed? They do the same thing
-	asts.jumpTo["-1"] = function ( assertsOverride ) {
+	// ----------- revert() -----------
+	asts.revert = {};
+	asts.revert["null"] = function ( assertsOverride ) {
 
 		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
 
-		asserts.frags 	 = getAssertFragsLast( plyb );
-		asserts.progress = getAssertProgLast( plyb );
+		// asserts.frags 	 = getAssertFragsFirst( plyb );
+		// asserts.progress = getAssertProgFirst( plyb );
 
 		return [
-			{ event: 'newWordFragment', assertion: asserts.frags },
-
+			{ event: 'newWordFragment', assertion: asserts.not },
 			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
 			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
 			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
-			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-			{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
-			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
 
-			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
+			{ event: 'pauseBegin', assertion: asserts.triggered }, 		{ event: 'pauseFinish', assertion: asserts.triggered },
+
+			{ event: 'stopBegin', assertion: asserts.not }, 	{ event: 'stopFinish', assertion: asserts.not },
+			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
+			{ event: 'onceBegin', assertion: asserts.not }, 	{ event: 'onceFinish', assertion: asserts.not },
+
+			{ event: 'revertBegin', assertion: asserts.triggered }, { event: 'revertFinish', assertion: asserts.triggered },
 
 			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
 			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
-
-			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
-
+			{ event: 'loopBegin', assertion: asserts.not }, 	{ event: 'loopFinish', assertion: asserts.not },
 			{ event: 'loopSkip', assertion: asserts.not },
 			{ event: 'done', assertion: asserts.not },
-			{ event: 'progress', assertion: asserts.progress }
+			{ event: 'progress', assertion: asserts.not }
 		];
 
-	};  // End get jumpTo( -1 )
-
-
-
-	// ----------- jumpTo( 0 ) -----------
-	asts.jumpTo["0"] = function ( assertsOverride ) {
-
-		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
-
-		asserts.frags 	 = getAssertFragsFirst( plyb );
-		asserts.progress = getAssertProgFirst( plyb );
-
-		return [
-			{ event: 'newWordFragment', assertion: asserts.frags },
-
-			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
-			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
-			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
-			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-			{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
-			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
-
-			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
-
-			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
-			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
-
-			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
-
-			{ event: 'loopSkip', assertion: asserts.not },
-			{ event: 'done', assertion: asserts.not },
-			{ event: 'progress', assertion: asserts.progress }
-		];
-
-	};  // End get jumpTo( 0 )
-
-
-
-	// ----------- jumpTo( 6 ) -----------
-	asts.jumpTo["6"] = function ( assertsOverride ) {
-
-		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
-
-		asserts.frags 	 = makeFragAsserter( plyb, [ 'come' ] );
-		asserts.progress = makeProgressAsserter( plyb, 1, [ 7/12 ] );
-
-		return [
-			{ event: 'newWordFragment', assertion: asserts.frags },
-
-			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
-			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
-			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
-			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-			{ event: 'stopBegin', assertion: asserts.not }, 		{ event: 'stopFinish', assertion: asserts.not },
-			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
-
-			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
-
-			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
-			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
-
-			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
-
-			{ event: 'loopSkip', assertion: asserts.not },
-			{ event: 'done', assertion: asserts.not },
-			{ event: 'progress', assertion: asserts.progress }
-		];
-
-	};  // End get jumpTo( 6 )
-
-
-
-	// ----------- jumpTo( 11 ) -----------
-	asts.jumpTo["11"] = function ( assertsOverride ) {
-
-		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
-
-		asserts.frags 	 = getAssertFragsLast( plyb );
-		asserts.progress = getAssertProgLast( plyb );
-
-		return [
-			{ event: 'newWordFragment', assertion: asserts.frags },
-
-			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
-			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
-			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
-			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-
-			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
-
-			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
-
-			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
-
-			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
-			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
-
-			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
-
-			{ event: 'loopSkip', assertion: asserts.not },
-			{ event: 'done', assertion: asserts.triggered },
-			{ event: 'progress', assertion: asserts.progress }
-		];
-
-	};  // End get jumpTo( 11 )
-
-
-
-	// ----------- jumpTo( 100 ) -----------
-	asts.jumpTo["100"] = function ( assertsOverride ) {
-
-		var asserts = cloneAsserts( defaultAsserts, assertsOverride );
-
-		asserts.frags 	 = getAssertFragsLast( plyb );
-		asserts.progress = getAssertProgLast( plyb );
-
-		return [
-			{ event: 'newWordFragment', assertion: asserts.frags },
-
-			{ event: 'playBegin', assertion: asserts.not }, 		{ event: 'playFinish', assertion: asserts.not },
-			{ event: 'resetBegin', assertion: asserts.not }, 		{ event: 'resetFinish', assertion: asserts.not },
-			{ event: 'restartBegin', assertion: asserts.not }, 		{ event: 'restartFinish', assertion: asserts.not },
-			{ event: 'pauseBegin', assertion: asserts.not }, 		{ event: 'pauseFinish', assertion: asserts.not },
-
-			{ event: 'stopBegin', assertion: asserts.triggered }, 	{ event: 'stopFinish', assertion: asserts.triggered },
-
-			{ event: 'closeBegin', assertion: asserts.not }, 		{ event: 'closeFinish', assertion: asserts.not },
-
-			{ event: 'onceBegin', assertion: asserts.triggered }, 	{ event: 'onceFinish', assertion: asserts.triggered },
-			{ event: 'resumeBegin', assertion: asserts.triggered }, { event: 'resumeFinish', assertion: asserts.triggered },
-
-			{ event: 'rewindBegin', assertion: asserts.not }, 		{ event: 'rewindFinish', assertion: asserts.not },
-			{ event: 'fastForwardBegin', assertion: asserts.not }, 	{ event: 'fastForwardFinish', assertion: asserts.not },
-
-			{ event: 'loopBegin', assertion: asserts.triggered }, 	{ event: 'loopFinish', assertion: asserts.triggered },
-
-			{ event: 'loopSkip', assertion: asserts.not },
-			{ event: 'done', assertion: asserts.triggered },
-			{ event: 'progress', assertion: asserts.progress }
-		];
-
-	};  // End get jumpTo( 100 )
+	};  // End get revert()
 
 
 	return asts;
