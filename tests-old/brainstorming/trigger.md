@@ -432,19 +432,4 @@ jumpTo\((?:-1|6|11|100)\) > jumpTo(-1|0|6|11?) or jumpWords(-1|0|3|4) or ??jumpS
 reset(), between resetBegin and resetFinish, clears the queue. There won't be any events firing after that.
 
 
-// ========== 8
-past end
-
-js(3) + any > js(3) + done|stop|new|prog = triggered
-js(3) + any > js(1) + ...
-s(3) + any > nextSentence + ...
-
-js(100) + any > js(1) + done|stop|new|prog = triggered
-js(100) + any > js(3) + ...
-js(100) + any > nextSentence + ...
-
-
-// ========== 8
-past start
-
 

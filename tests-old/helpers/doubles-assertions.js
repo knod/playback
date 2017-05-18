@@ -16,28 +16,15 @@ var colors = {
 };
 
 var	parsedText = [
-	[ 'Victorious,', 'you','brave', 'flag.' ],
-	[ 'Delirious,', 'I', 'come', 'back.' ],
-	[ '\n' ],
-	[ 'Why,', 'oh', 'wattlebird?' ]
-];
+		[ 'Victorious,', 'you','brave', 'flag.' ],
+		[ 'Delirious,', 'I', 'come', 'back.' ],
+		[ '\n' ],
+		[ 'Why,', 'oh', 'wattlebird?' ]
+	];
 
 var	forward = parsedText[0].concat(parsedText[1]).concat(parsedText[2]).concat(parsedText[3]);
 
 var plab = null;
-
-var wordIndicies = [],
-	wordIndex = -1;
-
-for ( let senti = 0; senti < parsedText.length; senti++ ) {
-	// Need the position number of the first word in each sentence
-	if ( parsedText[ senti - 1 ] ) {
-		let sent = parsedText[ senti - 1 ];
-		wordIndex += sent.length;
-	}
-
-	wordIndicies.push( wordIndex );
-}
 
 
 // ------------ helpers ------------
@@ -441,35 +428,32 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// revert, [ null ]
 	
 	// === NEVER TRIGGERS (play + event combos) ===
+	var playAlwaysNot = /play(?:\(-?\w+\)) \+ (?:reset|pause|close|once|revert|rewind|fast|loopSkip)/;
+	var toggleAlwaysNot = /togglePlayPause(?:\(-?\w+\)) \+ (?:reset|close|once|revert|rewind|fast|loopSkip)/;
+	// restart + play?|reset|pause|close|once|revert|rewind|fast|loopSkip
+	var restartAlwaysNot = /restart(?:\(-?\w+\)) \+ (?:play|reset|pause|close|once|revert|rewind|fast|loopSkip)/;
+	var resetAlwaysNot = /reset(?:\(-?\w+\)) \+ (?:play|restart|pause|stop|close|rewind|fast|loopSkip|done)/;
+	// alternatively to the below: /(?:pause|stop|close)(?:\(-?\w+\)) \+ (?!\1)/;  // (only itself)
+	var pauseAlwaysNot = /pause(?:\(-?\w+\)) \+ (?:play|reset|restart|stop|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  // (only itself)
+	var stopAlwaysNot = /stop(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
+	var closeAlwaysNot = /close(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|stop|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
+	// revert + play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done? (maybe should trigger play/pause) ('stop' and 'done' may fire if 'play', then go to just before the end)
+	var revertAlwaysNot = /revert(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done)/;
 
-	// var playAlwaysNot = /play(?:\(-?\w+\)) \+ (?:reset|pause|close|once|revert|rewind|fast|loopSkip)/;
-	// var toggleAlwaysNot = /togglePlayPause(?:\(-?\w+\)) \+ (?:reset|close|once|revert|rewind|fast|loopSkip)/;
-	// // restart + play?|reset|pause|close|once|revert|rewind|fast|loopSkip
-	// var restartAlwaysNot = /restart(?:\(-?\w+\)) \+ (?:play|reset|pause|close|once|revert|rewind|fast|loopSkip)/;
-	// var resetAlwaysNot = /reset(?:\(-?\w+\)) \+ (?:play|restart|pause|stop|close|rewind|fast|loopSkip|done)/;
-	// // alternatively to the below: /(?:pause|stop|close)(?:\(-?\w+\)) \+ (?!\1)/;  // (only itself)
-	// var pauseAlwaysNot = /pause(?:\(-?\w+\)) \+ (?:play|reset|restart|stop|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  // (only itself)
-	// var stopAlwaysNot = /stop(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
-	// var closeAlwaysNot = /close(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|stop|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
-	// // revert + play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done? (maybe should trigger play/pause) ('stop' and 'done' may fire if 'play', then go to just before the end)
-	// var revertAlwaysNot = /revert(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done)/;
+	// rewind + play|reset|restart|close|once|fast|loopSkip  // if play, revert to play if revert? but goes to start and then done, so...
+	var rewindAlwaysNot = /rewind(?:\(-?\w+\)) \+ (?:play|reset|restart|close|once|fast|loopSkip)/;
+	var fastForwardAlwaysNot = /fastForward(?:\(.*\)) \+ (?:play|reset|restart|pause|close|once|revert|rewind|loopSkip)/;  // never reverts on its own, always goes to end
 
-	// // rewind + play|reset|restart|close|once|fast|loopSkip  // if play, revert to play if revert? but goes to start and then done, so...
-	// var rewindAlwaysNot = /rewind(?:\(-?\w+\)) \+ (?:play|reset|restart|close|once|fast|loopSkip)/;
-	// var fastForwardAlwaysNot = /fastForward(?:\(.*\)) \+ (?:play|reset|restart|pause|close|once|revert|rewind|loopSkip)/;  // never reverts on its own, always goes to end
+	// Both negative and positive should not trigger these
+	var onceAlwaysNot = /once(?:\(.*\)) \+ (?:play|reset|restart|close|rewind|fast|loopSkip)/;
+	// Only positive should not trigger these
+	var oncePositiveAlwaysNot = /once\([^)-]+\) \+ (?:pause|stop|revert|done)/;
 
-	// // Both negative and positive should not trigger these
-	// var onceAlwaysNot = /once(?:\(.*\)) \+ (?:play|reset|restart|close|rewind|fast|loopSkip)/;
-	// // Only positive should not trigger these
-	// var oncePositiveAlwaysNot = /once\([^)-]+\) \+ (?:pause|stop|revert|done)/;
-
-	// // next + reset|restart?|pause?|close|rewind|fast|loopSkip
-	// var nextAlwaysNot = /next(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;
-	// var prevAlwaysNot = /prev(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;
-	// var jumpAlwaysNot = /jump(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;  // Should this be expected behavior, even if >0 at very end?
-
-	// Should be in different area
-	// TODO: Needed?
+	
+	// next + reset|restart?|pause?|close|rewind|fast|loopSkip
+	var nextAlwaysNot = /next(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;
+	var prevAlwaysNot = /prev(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;
+	var jumpAlwaysNot = /jump(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;  // Should this be expected behavior, even if >0 at very end?
 	var jumpPastEndAlwaysNot = /(?:jumpTo\(11\)|jumpTo\(100\)|jumpWords\(11\)|jumpWords\(100\)|jumpSentences\(100\)) \+ (?:play)/;
 	
 	// === IF AT START, NEVER TRIGGERS ===
@@ -512,14 +496,6 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	var resetKillsQueue = /doubles: reset(?:.*\(-?\w+\)) \+ (?:resetBegin|once|revert|loopBegin|loopFinish|new|progress)(.* >)/;
 
 
-	// #1: Test bug
-	// ============ play|toggle|restart + any? except done & stop?
-	// > revert + play = triggered
-	// > revert + pause = not triggered
-	var revertsToPlayTriggersPlay = /doubles: (?:play|restart|toggle)(?:.*\(.+\)) \+ (?!stop|done).* > revert(?:.*\(.+\)) \+ play/;
-	var revertsToPlayNoTriggersPause = /doubles: (?:play|restart|toggle)(?:.*\(.+\)) \+ (?!stop|done).* > revert(?:.*\(.+\)) \+ pause/
-
-
 	// ==========================================
 	// EXPECT FAILURE
 	// ==========================================
@@ -548,13 +524,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// _1st Func Change Pos_ (starting at start, function 1) change the position in the text
 	// to
 	// _Middle_ as second function would change output if was in middle
-	// BUT
-	// Play only does 'current word' before ffwd|next cancels loop and goes to next word|sentence as usual.
 	str = 'doubles: (?:play|toggle|restart|fast|next';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
-	// str += ')(?:.*\\(-?\\w+\\)) \\+ (?:play|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
-	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
+	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:play|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
 	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:new|progress)';
@@ -604,29 +577,6 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	str += ')(?:.*\\(.+\\)) \\+ (?:new|progress)';
 	var onceArrayChangesPosition = new RegExp( str );
 	// console.log(onceArrayChangesPosition)
-
-	var changesPositionAtStart = /doubles: (?:play|restart|toggle|once|fast|rewind|next|prev|jump)/;
-	var getsValuesAtEnd = /> (?:play|toggle|once|fast|rewind|next|prev|jump)(?:.*\(.+\)) \+ (?:new|progress)/;
-	var doneAtEnd = /> jump(?:.*\(.+\)) \+ (?:done|stop)/;
-
-	var jumpAndDoneThenLoopShouldRestart = '?';
-
-
-
-	// TODO: Just add list of combos that would hit done/stop (at start or end)
-
-
-
-
-	// jumpTo( -1 ) + play|toggle = restart?
-	// jumpTo( 11 ) + play|toggle = restart?
-	// jumpTo( 100 ) + play|toggle = restart?
-	// jumpW( 11 ) + play|toggle = restart?
-	// jumpW( 100 ) + play|toggle = restart?
-	// jumpS( 100 ) + play|toggle = restart?
-
-
-
 
 
 	// // ??: This one too?
@@ -786,30 +736,22 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 
 
-	asts.assert = function ( label, originalAssertion, result, debug ) {
-	// By this point, the first test/assertion was passed and gotten some
-	// result, so nothing should be interfereing with the possibility of further results
 
-		// Try to keep these tests as searchable as possible without having a million
-		// page doc of each individual label
 
-		var assert = originalAssertion.assertion;
 
-		// If the asser
-		if ( result.arg2s.length <= 0 && originalAssertion.type === 'not' ) {
-			// return defaultAsserts.not( result, label, evnt2 );
-			return defaultAsserts.not( result, label );
-		}
 
-		var testNum = '';
+	asts.getAssertion = function ( label, originalAssertion, debug ) {
+	// Try to keep these strings as searchable as possible without having a million page doc
+		var str, regex;
+
 		// TODO: Expect opposite?
 		expectFailure = function ( result, testText, evnt ) {
-			var result = assert(  result, testText, evnt  )
+			var result = originalAssertion(  result, testText, evnt  )
 
 			var msg, passed = !result.passed;
 			// If failed, that was the expected result
 			if ( passed ) {
-				msg = 'Combos #' + testNum + '. Expected a failure and recieved a failure at combo test.';
+				msg = 'Combos. Expected a failure and recieved a failure at combo test #' + testNum + '.';
 			} else {
 				msg = 'Combos. Expected test to fail, but it ' + colors.red + 'DIDN\'T FAIL' + colors.none +  ' at combo test #' + testNum + '.';
 			}
@@ -831,82 +773,82 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// Must come before pause(null), stop(null), and close(null) are kept
 		// from interacting
 		if ( debug && selfComplete.test(label) ) { console.log( pre + '1' ); }
-		if ( selfComplete.test(label) ) { return defaultAsserts.triggered( result, label ); }
+		if ( selfComplete.test(label) ) { return defaultAsserts.triggered; }
 
-		// if ( debug && playAlwaysNot.test(label) ) { console.log( pre + '2' ); }
-		// if ( playAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && playAlwaysNot.test(label) ) { console.log( pre + '2' ); }
+		if ( playAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && toggleAlwaysNot.test(label) ) { console.log( pre + '3' ); }
-		// if ( toggleAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && toggleAlwaysNot.test(label) ) { console.log( pre + '3' ); }
+		if ( toggleAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && restartAlwaysNot.test(label) ) { console.log( pre + '4' ); }
-		// if ( restartAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && restartAlwaysNot.test(label) ) { console.log( pre + '4' ); }
+		if ( restartAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && resetAlwaysNot.test(label) ) { console.log( pre + '5' ); }
-		// if ( resetAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && resetAlwaysNot.test(label) ) { console.log( pre + '5' ); }
+		if ( resetAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && pauseAlwaysNot.test(label) ) { console.log( pre + '6' ); }
-		// if ( pauseAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && pauseAlwaysNot.test(label) ) { console.log( pre + '6' ); }
+		if ( pauseAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && stopAlwaysNot.test(label) ) { console.log( pre + '7' ); }
-		// if ( stopAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && stopAlwaysNot.test(label) ) { console.log( pre + '7' ); }
+		if ( stopAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && closeAlwaysNot.test(label) ) { console.log( pre + '8' ); }
-		// if ( closeAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && closeAlwaysNot.test(label) ) { console.log( pre + '8' ); }
+		if ( closeAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && revertAlwaysNot.test(label) ) { console.log( pre + '9' ); }
-		// if ( revertAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && revertAlwaysNot.test(label) ) { console.log( pre + '9' ); }
+		if ( revertAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && rewindAlwaysNot.test(label) ) { console.log( pre + '10' ); }
-		// if ( rewindAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && rewindAlwaysNot.test(label) ) { console.log( pre + '10' ); }
+		if ( rewindAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && fastForwardAlwaysNot.test(label) ) { console.log( pre + '11' ); }
-		// if ( fastForwardAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && fastForwardAlwaysNot.test(label) ) { console.log( pre + '11' ); }
+		if ( fastForwardAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && onceAlwaysNot.test(label) ) { console.log( pre + '11.5' ); }
-		// if ( onceAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && onceAlwaysNot.test(label) ) { console.log( pre + '11.5' ); }
+		if ( onceAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && oncePositiveAlwaysNot.test(label) ) { console.log( pre + '11.55' ); }
-		// if ( oncePositiveAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && oncePositiveAlwaysNot.test(label) ) { console.log( pre + '11.55' ); }
+		if ( oncePositiveAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && nextAlwaysNot.test(label) ) { console.log( pre + '12' ); }
-		// if ( nextAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && nextAlwaysNot.test(label) ) { console.log( pre + '12' ); }
+		if ( nextAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && prevAlwaysNot.test(label) ) { console.log( pre + '13' ); }
-		// if ( prevAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && prevAlwaysNot.test(label) ) { console.log( pre + '13' ); }
+		if ( prevAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && jumpAlwaysNot.test(label) ) { console.log( pre + '14' ); }
-		// if ( jumpAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && jumpAlwaysNot.test(label) ) { console.log( pre + '14' ); }
+		if ( jumpAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
 		if ( debug && jumpPastEndAlwaysNot.test(label) ) { console.log( pre + '15' ); }
-		if ( jumpPastEndAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( jumpPastEndAlwaysNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && playAtStartNot.test(label) ) { console.log( pre + '16' ); }
-		// if ( playAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && playAtStartNot.test(label) ) { console.log( pre + '16' ); }
+		if ( playAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && toggleAtStartNot.test(label) ) { console.log( pre + '17' ); }
-		// if ( toggleAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && toggleAtStartNot.test(label) ) { console.log( pre + '17' ); }
+		if ( toggleAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && rewindAtStartNot.test(label) ) { console.log( pre + '18' ); }
-		// if ( rewindAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && rewindAtStartNot.test(label) ) { console.log( pre + '18' ); }
+		if ( rewindAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && nextAtStartNot.test(label) ) { console.log( pre + '19' ); }
-		// if ( nextAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && nextAtStartNot.test(label) ) { console.log( pre + '19' ); }
+		if ( nextAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && prevAtStartNot.test(label) ) { console.log( pre + '20' ); }
-		// if ( prevAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && prevAtStartNot.test(label) ) { console.log( pre + '20' ); }
+		if ( prevAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && jumpAtStartNot.test(label) ) { console.log( pre + '21' ); }
-		// if ( jumpAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && jumpAtStartNot.test(label) ) { console.log( pre + '21' ); }
+		if ( jumpAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && jumpToAtStartNot.test(label) ) { console.log( pre + '22' ); }
-		// if ( jumpToAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && jumpToAtStartNot.test(label) ) { console.log( pre + '22' ); }
+		if ( jumpToAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && jumpWordsAtStartNot.test(label) ) { console.log( pre + '23' ); }
-		// if ( jumpWordsAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && jumpWordsAtStartNot.test(label) ) { console.log( pre + '23' ); }
+		if ( jumpWordsAtStartNot.test(label) ) { return defaultAsserts.not; }
 
-		// if ( debug && jumpSentencesAtStartNot.test(label) ) { console.log( pre + '24' ); }
-		// if ( jumpSentencesAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( debug && jumpSentencesAtStartNot.test(label) ) { console.log( pre + '24' ); }
+		if ( jumpSentencesAtStartNot.test(label) ) { return defaultAsserts.not; }
 
 
 
@@ -914,30 +856,24 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// COMPLEX COMBOS
 		// ==========================================
 		// if ( debug ) { console.log( '24', playNotAfterRestart.test(label) ); }
-		// if ( playNotAfterRestart.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( playNotAfterRestart.test(label) ) { return defaultAsserts.not; }
 		// if ( debug ) { console.log( 'Complex Combos' ); }
 		pre = 'Complex Combos ';
 
 		if ( debug && doneThenPlayThenPlayNot.test(label) ) { console.log( pre + '1' ); }
-		if ( doneThenPlayThenPlayNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( doneThenPlayThenPlayNot.test(label) ) { return defaultAsserts.not; }
 
 		if ( debug && doneThenPlayThenRestartYes.test(label) ) { console.log( pre + '2' ); }
-		if ( doneThenPlayThenRestartYes.test(label) ) { return defaultAsserts.triggered( result, label ); }
+		if ( doneThenPlayThenRestartYes.test(label) ) { return defaultAsserts.triggered; }
 
 		if ( debug && playToggleNotPauseNo.test(label) ) { console.log( pre + '3' ); }
-		if ( playToggleNotPauseNo.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( playToggleNotPauseNo.test(label) ) { return defaultAsserts.not; }
 
 		if ( debug && playTogglePauseYes.test(label) ) { console.log( pre + '4' ); }
-		if ( playTogglePauseYes.test(label) ) { return defaultAsserts.triggered( result, label ); }
+		if ( playTogglePauseYes.test(label) ) { return defaultAsserts.triggered; }
 
 		if ( debug && resetKillsQueue.test(label) ) { console.log( pre + '5' ); }
-		if ( resetKillsQueue.test(label) ) { return defaultAsserts.not( result, label ); }
-
-		if ( debug && revertsToPlayTriggersPlay.test(label) ) { console.log( pre + '6' ); }
-		if ( revertsToPlayTriggersPlay.test(label) ) { return defaultAsserts.triggered( result, label ); }
-
-		if ( debug && revertsToPlayNoTriggersPause.test(label) ) { console.log( pre + '7' ); }
-		if ( revertsToPlayNoTriggersPause.test(label) ) { return defaultAsserts.not( result, label ); }
+		if ( resetKillsQueue.test(label) ) { return defaultAsserts.not; }
 
 
 
@@ -952,103 +888,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		pre = 'Expect Failure ';
 
 		if ( debug && noRestartersChangePosInMiddle.test(label) ) { console.log( pre + '1' ); }
-		if ( noRestartersChangePosInMiddle.test(label) ) { testNum = 'E1'; return expectFailure( result, label ); }
+		if ( noRestartersChangePosInMiddle.test(label) ) { testNum = 'E1'; return expectFailure; }
 
 		if ( debug && changePosInMiddleWithoutReachingEnd.test(label) ) { console.log( pre + '2' ); }
-		if ( changePosInMiddleWithoutReachingEnd.test(label) ) { testNum = 'E2'; return expectFailure( result, label ); }
+		if ( changePosInMiddleWithoutReachingEnd.test(label) ) { testNum = 'E2'; return expectFailure; }
 
 		if ( debug && diffPosOnOnceAsFirst.test(label) ) { console.log( pre + '3' ); }
-		if ( diffPosOnOnceAsFirst.test(label) ) { testNum = 'E3'; return expectFailure( result, label ); }
+		if ( diffPosOnOnceAsFirst.test(label) ) { testNum = 'E3'; return expectFailure; }
 
 		if ( debug && onceArrayChangesPosition.test(label) ) { console.log( pre + '4' ); }
-		if ( onceArrayChangesPosition.test(label) ) { testNum = 'E4'; return expectFailure( result, label ); }
-
-		// If it could have changed position at the start and the end function can
-		// trigger loops
-		var couldMessUpValues = changesPositionAtStart.test( label ) && getsValuesAtEnd.test( label );
-
-		if ( couldMessUpValues ) {
-			if ( debug ) { console.log( pre + '5' ); }
-			// Then we'll assume that's what messed up values if those values were messed up
-			// so we'll just test for triggering (since ones that were supposed to not trigger
-			// were weeded out earlier)
-			return defaultAsserts.triggered( result, label );
-		}
-
-		// Are we checking for done at end after jump (TODO: Maybe add once with positives)
-		if ( doneAtEnd.test( label ) ) {
-
-			// If the numbers add up to past the end, we should trigger done and stop
-			// TODO: Change this into plain old list of regex later
-			var matches = /doubles: (?:(.*)\((.*)\) \+ )(?:.* > )(?:(.*)\((.*)\) \+ )/.exec( label );
-
-			var func1 	= matches[1],
-				arg1 	= JSON.parse(matches[2]),
-				func2 	= matches[3],
-				arg2 	= JSON.parse(matches[4]);
-
-			var wordPos = 0;
-			var sentencePos = 0;
-
-			if ( /(?:play|restart|toggle)/.test( func1 ) ) {
-				wordPos = 11;
-			} else if ( /(?:nextWord)/.test( func1 ) ) {
-				wordPos += 1;
-			} else if ( /(?:nextSentence)/.test( func1 ) ) {
-				wordPos += wordIndicies[0] + 1;
-				sentencePos += 1;
-			} else if ( /jumpTo/.test( func1 ) ) {
-
-				if ( arg1 < 0 ) { wordPos = 11 + arg1 }
-				else { wordPos += Math.min( 11, arg1 ) }
-			
-			} else if ( /jumpWord/.test( func1 ) ) {
-			
-				if ( arg1 > 0 )	{ wordPos += Math.min( 11, arg1 ) }
-			
-			} else if ( /jumpSentence/.test( func1 ) ) {
-			
-				if ( arg1 > 0 ) {
-					var num = Math.min( 4, arg1 );
-					sentencePos = num;
-					// If it was 4, it got to the last word
-					wordPos = wordIndicies[ num ] || 11;
-				}
-			
-			}  // ??: If `once()`??
+		if ( onceArrayChangesPosition.test(label) ) { testNum = 'E4'; return expectFailure; }
 
 
-			// if ( /(?:play|restart|toggle)/.test( func2 ) ) {
-			// 	wordPos = 11;
-			// } else
-
-			// Add up to find out finishing position
-			if ( /jumpTo/.test( func2 ) ) {
-
-				wordPos += arg2
-			
-			} else if ( /jumpWord/.test( func2 ) ) {
-			
-				wordPos += arg2
-			
-			} else if ( /jumpSentence/.test( func2 ) ) {
-
-				sentencePos += arg2;
-
-				// If near the end and pushed over the edge (0 counts as forward)
-				if ( wordPos >= wordIndicies[3] &&  arg2 >= 0 ) {
-					wordPos = 11;
-				// if at the start and go backward
-				} else if ( wordPos <= 0 && arg2 < 0 ) {
-					wordPos = -1;
-				}
-			}  // ??: If `once()`??
-
-			// If final word position would be before the start or at the end
-			if ( wordPos >= 11 || wordPos < 0 ) {
-				return defaultAsserts.triggered( result, label );
-			}
-		}  // End if 'done' or 'stop' event
+		
 
 
 		// old
@@ -1059,7 +911,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// // Nothing except `close(null)` should trigger close events
 		// if ( debug ) { console.log( '2', onlyClose.test(label) ); }
-		// if ( onlyClose.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( onlyClose.test(label) ) { return defaultAsserts.not; }
 
 		// // // Only first-function 'reset' stuff (`._once()`) triggers after 'resetBegin' because the queue is killed
 		// // if ( debug ) { console.log( '3', resetBeginFrag.test(label) ); }
@@ -1068,25 +920,25 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// // if ( resetBeginProg.test(label) ) { return getAssertProgFirst( plyb ); }
 		// // // Other stuff (other than 'once', 'loop', and 'revert') doesn't trigger
 		// // if ( debug ) { console.log( '5', resetBeginOther.test(label) ); }
-		// // if ( resetBeginOther.test(label) ) { return defaultAsserts.not( result, label ); }
+		// // if ( resetBeginOther.test(label) ) { return defaultAsserts.not; }
 
 		// // Queue gets destroyed in reset, so anything added before that destruction should not be called
 		// if ( debug ) { console.log( '3', resetBeginNot.test(label) ); }
-		// if ( resetBeginNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( resetBeginNot.test(label) ) { return defaultAsserts.not; }
 
 		// // toggle has a bunch of weird behavior
 		// // At end, restarts
 		// if ( debug ) { console.log( '4', doneThenToggle.test(label) ); }
-		// if ( doneThenToggle.test(label) ) { return defaultAsserts.triggered( result, label ); }
+		// if ( doneThenToggle.test(label) ) { return defaultAsserts.triggered; }
 		// // From play it pauses, so no playing stuff
 		// if ( debug ) { console.log( '5', playThenToggle.test(label) ); }
-		// if ( playThenToggle.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( playThenToggle.test(label) ) { return defaultAsserts.not; }
 		// // From play it pauses, so yes pausing stuff
 		// if ( debug ) { console.log( '5.5', playTogglePause.test(label) ); }
-		// if ( playTogglePause.test(label) ) { return defaultAsserts.triggered( result, label ); }
+		// if ( playTogglePause.test(label) ) { return defaultAsserts.triggered; }
 		// // Toggle as the first thing never triggers 'restart' for itself
 		// if ( debug ) { console.log( '5.55', toggleStartsThenNot.test(label) ); }
-		// if ( toggleStartsThenNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( toggleStartsThenNot.test(label) ) { return defaultAsserts.not; }
 
 		
 
@@ -1094,32 +946,32 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		
 		// // 'loopSkip' doesn't come into it at all till we start playing with state
 		// if ( debug ) { console.log( '6', /loopSkip/.test(label) ); }
-		// if ( /loopSkip/.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( /loopSkip/.test(label) ) { return defaultAsserts.not; }
 
 		// // jumpWords, jumpSentences, jumpTo, when the first function, should not ever trigger stuff listed above
 		// if ( debug ) { console.log( '7', jumpNot.test(label) ); }
-		// if ( jumpNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( jumpNot.test(label) ) { return defaultAsserts.not; }
 
 		// // nextWord, when the first function, should not ever trigger stuff listed above
 		// if ( debug ) { console.log( '8', nextWordNot.test(label) ); }
-		// if ( nextWordNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( nextWordNot.test(label) ) { return defaultAsserts.not; }
 
 		// // nextSentence, when the first function, should not ever trigger stuff listed above
 		// if ( debug ) { console.log( '9', nextSentenceNot.test(label) ); }
-		// if ( nextSentenceNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( nextSentenceNot.test(label) ) { return defaultAsserts.not; }
 
 		// // prevWord, when the first function, should not ever trigger stuff listed above
 		// if ( debug ) { console.log( '10', prevWordNot.test(label) ); }
-		// if ( prevWordNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( prevWordNot.test(label) ) { return defaultAsserts.not; }
 
 		// // prevSentence, when the first function, should not ever trigger stuff listed above
 		// if ( debug ) { console.log( '11', prevSentenceNot.test(label) ); }
-		// if ( prevSentenceNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( prevSentenceNot.test(label) ) { return defaultAsserts.not; }
 
 
 
 		// if ( debug ) { console.log( 'x', rewindFromPause.test(label) ); }
-		// if ( rewindFromPause.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( rewindFromPause.test(label) ) { return defaultAsserts.not; }
 
 
 
@@ -1131,20 +983,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// // Nothing except `rewind(null)` and `fastForward(null)` should trigger their own events
 		// if ( debug ) { console.log( '1', onlyRewind.test(label), onlyFfwd.test(label) ); }
-		// if ( onlyRewind.test(label) || onlyFfwd.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( onlyRewind.test(label) || onlyFfwd.test(label) ) { return defaultAsserts.not; }
 
 		// // --- play(null) ---
 		// if ( debug ) { console.log( '2', playNot.test(label) ); }
-		// if ( playNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( playNot.test(label) ) { return defaultAsserts.not; }
 		// if ( debug ) { console.log( '2.5', playNotRestart.test(label) ); }
-		// if ( playNotRestart.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( playNotRestart.test(label) ) { return defaultAsserts.not; }
 		// // no alternate:
 		// // ( if second `play` at loop begin, new fragment not collected yet, so regular output )
 		// // play(null) + loopBegin > play(null) + all
 
 		// // --- reset(null) ---
 		// if ( debug ) { console.log( '3', resetNot.test(label) ); }
-		// if ( resetNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( resetNot.test(label) ) { return defaultAsserts.not; }
 		// // no alternate:
 		// // ( happen after newFragment loop is completed, so regular output )
 		// // reset(null) + resetFinish > reset(null) + all
@@ -1155,31 +1007,31 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// // --- restart(null) ---
 		// if ( debug ) { console.log( '4', restartNot.test(label) ); }
-		// if ( restartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( restartNot.test(label) ) { return defaultAsserts.not; }
 
 		// // --- pause(null), stop(null), close(null) ---
 		// // no loop events
 		// if ( debug ) { console.log( '5', regNoLoop.test(label) ); }
-		// if ( regNoLoop.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( regNoLoop.test(label) ) { return defaultAsserts.not; }
 		// // No other variants
 		// if ( debug ) { console.log( '6', pauseNot.test(label) || stopNot.test(label) || closeNot.test(label) ); }
-		// if ( pauseNot.test(label) || stopNot.test(label) || closeNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( pauseNot.test(label) || stopNot.test(label) || closeNot.test(label) ) { return defaultAsserts.not; }
 
 		// // --- togglePlayPause(null) ---
 		// if ( debug ) { console.log( '7', toggleNot.test(label) ); }
-		// if ( toggleNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( toggleNot.test(label) ) { return defaultAsserts.not; }
 
 		// // --- rewind(null) ---
 		// if ( debug ) { console.log( '8', rewindNot.test(label) ); }
-		// if ( rewindNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( rewindNot.test(label) ) { return defaultAsserts.not; }
 		// if ( debug ) { console.log( '8.5', rewindStarts.test(label) ); }
-		// if ( rewindStarts.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( rewindStarts.test(label) ) { return defaultAsserts.not; }
 
 		// // --- fastForward(null) ---
 		// if ( debug ) { console.log( '9', fastForwardNot.test(label) ); }
-		// if ( fastForwardNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( fastForwardNot.test(label) ) { return defaultAsserts.not; }
 		// if ( debug ) { console.log( '9.5', fastForwardStarts.test(label) ); }
-		// if ( fastForwardStarts.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( fastForwardStarts.test(label) ) { return defaultAsserts.not; }
 
 
 
@@ -1198,11 +1050,11 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// 	return expectFailure;
 		// }
 
-		if ( debug ) { console.log( 'end' ); }
+		// if ( debug ) { console.log( 'end' ); }
 
 		// If none of these match, return the original assertion
-		return assert( result, label );
-	};  // End getAssertion() ( func from label)
+		return originalAssertion;
+	};  // End getAssertion() (func from label)
 
 
 

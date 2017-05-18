@@ -18,6 +18,8 @@
 * - Where possible, return Playback so functions can be chained
 * - Always send Playback as the first argument to events to
 * 	stay consistent.
+* - NO 'reverting' to revertable state internally. Module user
+* 	should handle that.
 */
 
 (function (root, playbackFactory) {  // root is usually `window`
@@ -121,7 +123,8 @@ var idNum = 1;
 // console.log( 'queued:', plab._queue.slice(0) );
 
 			if ( !plab._queueRunning ) { plab._queueNext(); }
-			return plab;
+
+			return item;
 		};  // End plab._queueAdd()
 
 		plab._queueNext = function () {
@@ -205,6 +208,7 @@ var idNum = 1;
 		*/
 			plab._trigger( 'resetBegin', [plab] );
 
+			// Nothing gets put onto queue
 			plab._reset();
 			plab._onceProxy( 0 );  // Send first fragment (now that revertable state is 'pause')
 			// change current and revertable state back (??: seems out of place?)
@@ -225,6 +229,7 @@ var idNum = 1;
 		* 
 		* Returns to initial values, sends first fragment
 		*/
+			// TODO: Reset goes to front of queue? Or bypasses queue?
 			plab._queueAdd( '_resetProxy', arguments );
 			return plab;
 		};
@@ -455,6 +460,7 @@ var idNum = 1;
 
 			// if ( plab._currentAction !== 'jump' ) {
 				plab._killLoop( null );
+				plab._direction = plab._getDirection( incrementors );
 				plab._currentAction = 'jump';
 			// }
 
@@ -686,10 +692,11 @@ var idNum = 1;
         	if ( plab._direction !== 'back' && plab.getProgress() === 1 ) {
         		isDone = true;
         	} else if ( plab._direction === 'back' && plab.getIndex() === 0 ) {
-        		// Check if revertd playing. If not revertd, done.
-        		// ??: Is this expected behavior?
-        		plab._revertProxy();  
-        		if ( plab._revertableState !== 'play' ) { isDone = true; }
+        		// // Check if revertd playing. If not revertd, done.
+        		// // ??: Is this expected behavior?
+        		// plab._revertProxy();
+        		// if ( plab._revertableState !== 'play' ) { isDone = true; }
+        		isDone = true;
 	    	}
 
 	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'? 'doneBegin', 'doneFinish'?
@@ -767,30 +774,30 @@ var idNum = 1;
 			// TODO: ??: use state property with a fallback?
 			if ( frag === '$@skip@$' ) {
 
-				// var direction = plab._getDirection( incrementors );
-				// if ( direction === 'forward' ) { vector = [0, 0, 1] }
-				// else { vector = [0, 0, -1] }
+				var direction = plab._getDirection( incrementors );
+				if ( direction === 'forward' ) { vector = [0, 0, 1] }
+				else { vector = [0, 0, -1] }
 
-				// ??: This model would go back or forward one sentence, one
-				// word, or one fragment. Is that what we want?
-				vector = [0, 0, 0];  // Need to be able to manipulate an array
+				// // ??: This model would go back or forward one sentence, one
+				// // word, or one fragment. Is that what we want?
+				// vector = [0, 0, 0];  // Need to be able to manipulate an array
 
-				if ( incrementors[0] !== 0 ) {
-					vector[0] = plab._signOf(incrementors[0]);
+				// if ( incrementors[0] !== 0 ) {
+				// 	vector[0] = plab._signOf(incrementors[0]);
 
-				} else if( incrementors[1] !== 0 ) {
-					vector[1] = plab._signOf(incrementors[1]);
+				// } else if( incrementors[1] !== 0 ) {
+				// 	vector[1] = plab._signOf(incrementors[1]);
 
-				} else if( incrementors[2] !== 0 ) {
-					vector[2] = plab._signOf(incrementors[2]);
+				// } else if( incrementors[2] !== 0 ) {
+				// 	vector[2] = plab._signOf(incrementors[2]);
 
-				// For when play passes in [0, 0, 0]. ??: Does anything else ever do this?
-				// We're going to have to skip in some direction or we'll never get anywhere
-				} else {
-					// This is going to be a problem if we ever to [0, 0, 0] on whitespace
-					// while rewinding
-					vector = [0, 0, 1];  // ??: Always true?
-				}
+				// // For when play passes in [0, 0, 0]. ??: Does anything else ever do this?
+				// // We're going to have to skip in some direction or we'll never get anywhere
+				// } else {
+				// 	// This is going to be a problem if we ever to [0, 0, 0] on whitespace
+				// 	// while rewinding
+				// 	vector = [0, 0, 1];  // ??: Always true?
+				// }
 			}
 
 			return vector;

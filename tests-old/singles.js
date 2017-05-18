@@ -1,6 +1,6 @@
 // tests/singles.js
 
-var waitTime = 25;  // 20 is too short, 25 maybe ok
+var waitTime = 30;  // 20 is too short, 25 maybe ok
 
 
 var SetUp 		= require('./setup-default.js'),
@@ -10,7 +10,7 @@ var SetUp 		= require('./setup-default.js'),
 
 
 var tester = require('./testing-core.js');
-var runEvent = require( './helpers/last-event.js' );
+var runLastEvent = require( './helpers/last-event.js' );
 
 
 var functsWithArgs = [
@@ -38,29 +38,11 @@ var functsWithArgs = [
 	{ func: 'revert', args: [ null ]}
 ];
 
-var events = [
-	'playBegin', 'playFinish',
-	'resetBegin', 'resetFinish',
-	'restartBegin', 'restartFinish',
-	'pauseBegin', 'pauseFinish',
-	'stopBegin', 'stopFinish',
-	'closeBegin', 'closeFinish',
-	'onceBegin', 'onceFinish',
-	'revertBegin', 'revertFinish',
-	'rewindBegin', 'rewindFinish',
-	'fastForwardBegin', 'fastForwardFinish',
-	'loopBegin', 'loopFinish',
-	'newWordFragment',
-	'loopSkip',
-	'progress',
-	'done'
-];
+
+var getAssertions = null;  // Instantiated in `start()`
 
 
-var assertions = null;  // Instantiated in `start()`
-
-
-var currentAssertion = null;
+var currentAssertions = null;
 
 function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 
@@ -70,19 +52,21 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 
 	const funcName 	= funcWArg.func;
 	const arg 		= funcWArg.args[ argIndx ];
-	const evnt 	= events[ eventIndx ];
+	// const evnt 	= events[ eventIndx ];
+
+	if ( eventIndx === 0 ) {
+		currentAssertions = getAssertions[ funcName ][ JSON.stringify( arg ) ]( {} );
+	}
+
+	const evnt = currentAssertions[ eventIndx ].event;
+	const assert = currentAssertions[ eventIndx ].assertion;
 
 	label = label + ' ' + funcName + '(' + JSON.stringify( arg ) + ')' + ' + ' + evnt ;
 
-	currentAssertion = assertions[ funcName ][ JSON.stringify( arg ) ][ evnt ];
-
-	const assert = currentAssertion.assertion;
-	const type 	 = currentAssertion.type;
-
-	// This should be mutated in `runEvent()`
+	// This should be mutated in `runLastEvent()`
 	var result = { playback: null, arg2s: [] };
-	/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, bool ) */
-	runEvent(
+	/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, int, bool ) */
+	runLastEvent(
 		result, bigObjects,
 		{ op: funcName, arg: arg, event: evnt },
 		true  // reset
@@ -115,7 +99,7 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 			let nextArgI 	= argIndx;
 			let nextFuncI 	= funcIndx;
 
-			if (nextEventI >= events.length) {
+			if (nextEventI >= currentAssertions.length) {
 				nextEventI = 0;  // reset
 				nextArgI++;  // increment the next array
 			}
@@ -144,7 +128,7 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 
 // Get the variables we need
 var start = function () {
-	assertions = require('./helpers/single-assertions.js')( plab );
+	getAssertions = require('./helpers/single-assertions.js')( plab );
 	iterate('singles:');
 }
 

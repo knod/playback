@@ -1,5 +1,4 @@
 /* tests/doubles.js
-* (Actually doubles and combos now)
 * 
 * Rake testing at start of development to discover behavior
 * other than single behavior and to reveal bugs, then later
@@ -16,13 +15,6 @@
 * been run)
 */
 
-var debugTests = false;
-// One function with itself calling all combos of events: #tests: 676
-// 676 * 4 = 2704? Yup. `doingOnlyRepeatSameFunction` works!
-var doingOnlyRepeatSameFunction = true;
-
-// Why does this take so long? It's really just for one test
-// (the first test runs independently)
 var waitTime = 50;  // Basically double of single tests (25 was just enough with singles)
 
 
@@ -38,63 +30,48 @@ var runFirstEvent = require( './helpers/first-event.js' );
 
 
 
+
+
+var debugTests = true;
+// One function with itself calling all combos of events: #tests: 676
+// 676 * 4 = 2704? Yup. `doingOnlyRepeatSameFunction` works!
+var doingOnlyRepeatSameFunction = true;
+
+
 // 16 funcs
 // + args = 29
 var functsWithArgs = [
-	{ func: 'play', args: [ null ] },  // * 26 for 1 event
-	{ func: 'togglePlayPause', args: [ null ]},
-	{ func: 'restart', args: [ null ]},
-	{ func: 'reset', args: [ null ]},
-	{ func: 'pause', args: [ null ]},
-	{ func: 'stop', args: [ null ]},
-	{ func: 'close', args: [ null ]},
+		// { func: 'play', args: [ null ] },  // * 26 for 1 event
+		// { func: 'togglePlayPause', args: [ null ]},
+		// { func: 'restart', args: [ null ]},
+		// { func: 'reset', args: [ null ]},
+		// { func: 'pause', args: [ null ]},
+		// { func: 'stop', args: [ null ]},
+		// { func: 'close', args: [ null ]},
 	{ func: 'revert', args: [ null ]},
-	{ func: 'rewind', args: [ null ]},
-	{ func: 'fastForward', args: [ null ]},
-	// These could go on forever... but they do get tested somewhat with
-	// jump, next, and prev, so don't /really/ need to tests singles or
-	// word or sentence incrementations. If that changes, these tests need
-	// to change
-	{ func: 'once', args: [ [0,0,-2], [0,0,0], [0,0,2] ]},
+		// { func: 'rewind', args: [ null ]},
+		// { func: 'fastForward', args: [ null ]},
+		// // These could go on forever... but they do get tested somewhat with
+		// // jump, next, and prev, so don't /really/ need to tests singles or
+		// // word or sentence incrementations. If that changes, these tests need
+		// // to change
+		// { func: 'once', args: [ [0,0,-2], [0,0,0], [0,0,2] ]},
 	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
 	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
 	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
-	{ func: 'nextWord', args: [ null ]},
-	{ func: 'nextSentence', args: [ null ]},
-	{ func: 'prevWord', args: [ null ]},
-	{ func: 'prevSentence', args: [ null ]}
+	// { func: 'nextWord', args: [ null ]},
+	// { func: 'nextSentence', args: [ null ]},
+	// { func: 'prevWord', args: [ null ]},
+	// { func: 'prevSentence', args: [ null ]}
+];
+
+var alreadyTestedCombos = [
+
+
 ];
 
 // 26 events * 21115 tests = 548990 tests
-var events1 = [
-	'playBegin',
-	'playFinish',
-	'resetBegin',
-	'resetFinish',
-	'restartBegin',
-	'restartFinish',
-	'pauseBegin',
-	'pauseFinish',
-	'stopBegin',
-	'stopFinish',
-	'closeBegin',
-	'closeFinish',
-	'onceBegin',
-	'onceFinish',
-	'revertBegin',
-	'revertFinish',
-	'rewindBegin',
-	'rewindFinish',
-	'fastForwardBegin',
-	'fastForwardFinish',
-	'loopBegin',
-	'loopFinish',
-	'newWordFragment',
-	'loopSkip',
-	'progress',
-	'done'
-];
-var events2 = [
+var events = [
 	'playBegin', 'playFinish',
 	'resetBegin', 'resetFinish',
 	'restartBegin', 'restartFinish',
@@ -114,13 +91,11 @@ var events2 = [
 
 // Just doubles = 26 * 26 * 29 =  19,604 tests (about 1777325ms = 1777.325s = 29.6220833min )
 
-var alreadyTestedCombos = [];
 
 
-
-var singleAssertions = null;  // Instantiated in `start()`
-var altAssertionater = null;
-var currentAssertion = null;
+var getStandardAssertions = null;  // Instantiated in `start()`
+var getAltAssertions = null;
+var currentAssertions = null;
 
 
 var increment = function ( indices ) {
@@ -162,8 +137,6 @@ var increment = function ( indices ) {
 		func1i++;  // increment the next array
 	}
 
-
-
 	var finished = false;
 	// If top most level is done, all done
 	if ( func1i >= one.funcs.length ) {  // num functions
@@ -180,37 +153,34 @@ var increment = function ( indices ) {
 };  // End increment()
 
 
-
 function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func2Indx = 0, arg2Indx = 0, event2Indx = 0 ) {
 	// console.log(func1Indx, arg1Indx, event1Indx, func2Indx, arg2Indx, event2Indx)
+
 	emitter.removeAllListeners();
 
-	// var assert1Obj, assert2Obj, assert1, type1, assert2, type2;
-	var assert1Obj, assert2Obj;
-
 	// Loop 1
-	const funcWArg1 = functsWithArgs[ func1Indx ];
+	const funcWArg1  = functsWithArgs[ func1Indx ];
 
 	const func1Name = funcWArg1.func;
 	const arg1		= funcWArg1.args[ arg1Indx ];
-	const evnt1 	= events1[ event1Indx ];
+	const evnt1 	= events[ event1Indx ];
 
 	label = label + ' ' + func1Name + '(' + JSON.stringify( arg1 ) + ')' + ' + ' + evnt1
-	// The single assertion for this combo. May end up matching up just fine.
-	// Not currently checking if the match up is a false positive
-	assert1Obj 	= singleAssertions[ func1Name ][ JSON.stringify( arg1 ) ][ evnt1 ];
 	
 	// Loop 2
-	const funcWArg2 = functsWithArgs[ func2Indx ];
+	const funcWArg2  = functsWithArgs[ func2Indx ];
 
 	const func2Name = funcWArg2.func;
 	const arg2		= funcWArg2.args[ arg2Indx ];
-	const evnt2 	= events2[ event2Indx ]
-	// The single assertion for this combo. May end up matching up just fine.
-	// Not currently checking if the match up is a false positive
-	assert2Obj 		= singleAssertions[ func2Name ][ JSON.stringify( arg2 ) ][ evnt2 ];
 
-	label = label + ' > ' + func2Name + '(' + JSON.stringify( arg2 ) + ')' + ' + ' + evnt2 ;
+	if ( event2Indx === 0 ) {
+		currentAssertions = getStandardAssertions[ func2Name ][ JSON.stringify( arg2 ) ]( {} );
+	}
+
+	var events2AndAsserts = currentAssertions[ event2Indx ]
+
+	const evnt2 = events2AndAsserts.event;
+	var assert 	= events2AndAsserts.assertion;
 
 
 	var shouldSkip = false;
@@ -223,13 +193,13 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 	}
 
 
-	var runAssert = function ( result, assertNum, skip ) {
-	// console.log('called');
-	// `result`: First test is pre-asserted, so this could be just
-	// the outcome being sent here
-		// setTimeout( function runAssert() {
+	// console.log( func1Name, evnt1, func2Name, evnt2 );
+
+	label = label + ' > ' + func2Name + '(' + JSON.stringify( arg2 ) + ')' + ' + ' + evnt2 ;
+
+	var runAssert = function ( result, assertWaitTime, skip ) {
+		setTimeout( function runAssert() {
 			// Run a test
-			// tester.store? tester.complete? No, it's running a function
 			tester.run( label, function tests ( done, skip ) {
 				// console.log( 'skip?', skip, 'same?', label );
 				if ( !shouldSkip ) {
@@ -237,23 +207,22 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 					// do stuff
 					try {
 
-						var outcome;
+						// var preAssert = assert;
+						assert = getAltAssertions.getAssertion( label, assert, debugTests );
+						// console.log( preAssert === assert, label )
 
-						if ( assertNum === 1 ) { outcome = assert1Obj.assertion( result ); }
-						else {
-							// assert = altAssertionater.assert( label, assertObj, result, debugTests );
-							/* label, originalAssertion, result, debug */
-							outcome = altAssertionater.assert( label, assert2Obj, result, debugTests );
+						var outcome = assert( result, label, evnt2 );
+						if ( outcome.passed ) {
+							done();
+						} else {
+							done( outcome.message );
 						}
-
-						if ( outcome.passed ) { done(); }
-						else { done( outcome.message ); }
 
 					} catch (err) {
 						done( err, label );
 					}  // end try
 
-					if ( tester.report.total > 0 && tester.report.total % 500 === 0 ) {
+					if ( tester.report.total !== 0 && tester.report.total % 500 === 0 ) {
 						console.log('\n======== ' + tester.report.total + ' tests done. ' + (Date.now() - startTime) + 'ms elapsed. On: ' + label );
 					}
 
@@ -268,13 +237,14 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 				var finished = increment({
 					one: {
 						func: func1Indx, arg: arg1Indx, event: event1Indx,
-						funcs: functsWithArgs, args: funcWArg1.args, events: events1
+						funcs: functsWithArgs, args: funcWArg1.args, events: events
 					},
 					two: {
 						func: func2Indx, arg: arg2Indx, event: event2Indx,
-						funcs: functsWithArgs, args: funcWArg2.args, events: events2
+						funcs: functsWithArgs, args: funcWArg2.args, events: currentAssertions
 					}
 				});
+
 				if ( finished ) {
 					tester.finish();
 					var time = (new Date()).toString().split(' ')[4];
@@ -284,54 +254,50 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 
 			});  // End .then()
 
-		// }, assertWaitTime );
+		}, assertWaitTime );
 	};  // End runAssert()
 
 
 	// This should be mutated in `runLastEvent()`
 	var result = { playback: null, arg2s: [] };
 
-	var firstCalled = false;
+	var secondCalled = false;
 	var afterFirstEvent = function () {
 	// Need it in here for the variables. Called from first event as a callback.
 
-		firstCalled = true;
-		// console.trace( 'triggered:', firstCalled );
-
-		/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, bool ) */
+		secondCalled = true;
+		
+		/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, int, bool ) */
 		runLastEvent(
 			result, bigObjects,
 			{ op: func2Name, arg: arg2, event: evnt2 },
-			false  // don't reset
+			false  // reset
 		);
 
-		setTimeout( function () {
-			runAssert( result, 2, shouldSkip );
-		}, waitTime);	
-	
+		runAssert( result, waitTime, shouldSkip );		
 	};  // End afterFirstEvent()
 
 
 	if ( shouldSkip ) {
-		runAssert( null, null, shouldSkip )
+		runAssert( null, 0, shouldSkip )
 	} else {
+
 		// console.log( label );
 
 		// Trigger first event that will trigger the next event
-		/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, func, func, bool ) */
+		/* ( func, {playback, emitter}, {op, arg, event}, bool ) */
 		runFirstEvent(
-			{ playback: null, arg2s: [] }, bigObjects,
+			afterFirstEvent, bigObjects,
 			{ op: func1Name, arg: arg1, event: evnt1 },
-			afterFirstEvent,
 			true  // reset
 		);
 
 		// In case the first event was never triggered
 		setTimeout(function() {
-			// console.trace( 'not triggered:', firstCalled );
-			if ( !firstCalled ) { runAssert( result, 1, shouldSkip ); }
-		}, waitTime );  // the first one should have been triggered sooner
+			if ( !secondCalled ) { runAssert( result, 0, shouldSkip ); }
+		}, waitTime )
 	}
+
 };  // End iterate()
 
 
@@ -343,8 +309,8 @@ var start = function () {
 	var time = (new Date()).toString().split(' ')[4];
 	console.log( 'Start:', time )
 
-	singleAssertions 	= require('./helpers/single-assertions.js')( plab );
-	altAssertionater 	= require('./helpers/doubles-assertions.js')( plab );
+	getStandardAssertions 	= require('./helpers/single-assertions.js')( plab );
+	getAltAssertions 		= require('./helpers/doubles-assertions.js')( plab );
 	iterate('doubles:');
 
 	// Too long to run on every single code change, but should

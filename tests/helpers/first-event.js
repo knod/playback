@@ -1,9 +1,10 @@
 // first-event.js
+// Accumulates the result
 
 // var firstEvent = module.exports = function ( result, bigs, opWith, evnt, mayCollectCheck, msTillAssert, reset ) {
 /* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, str, func, int, func, bool ) */
-var firstEvent = module.exports = function ( doOnEvent, bigs, opWith, reset ) {
-/* ( func, {playback, emitter}, {op, arg, event}, bool ) */
+var firstEvent = module.exports = function ( result, bigs, opWith, doOnEvent, reset ) {
+/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, func, bool ) */
 
 	var plab 	= bigs.playback,
 		emitter = bigs.emitter;
@@ -13,24 +14,60 @@ var firstEvent = module.exports = function ( doOnEvent, bigs, opWith, reset ) {
 		evnt = opWith.event;
 
 
-	whenRun = function ( one, two, three, four ) {
+	var whenRun = function ( one, two, three, four ) {
+		// Debugging
+		// console.log( '1:', one._queue.slice(0) );
+		// if ( evnt === 'rewindBegin' ) { console.log('1: rewoundBegun') }
+		// console.log( '1:', evnt );
+		// if ( evnt ) { console.log( '1:', one.getIndex(), evnt, two ) }
+		// console.log( '1:', two )
+		// console.trace( count, 'event === null', eventAssertion === null );
+		// count++;
+		// console.log( '1:', count, op, evnt );
 
-		// console.log( '1:', two );
-		emitter.removeAllListeners();
+		if ( doOnEvent ) {  // If this is the first of two tests
+				emitter.removeAllListeners();
+				doOnEvent( evnt, one, two, three, four );
+		} else {
 
-		doOnEvent( evnt, one, two, three, four );
+			// I happen to know this will be the fragment some of the time
+			// and, most of the time it'll be the argument I'm interested in.
+			result.arg2s.push( two );
+			result.playback = one;
+
+		}
 
 	};
 
 
+	// This assumes we're the only thing queueing and dequeueing right now...
+
+	var getFuncID = function (plab, item, queue) {
+		// console.log( 'queued @1:', item );
+		emitter.off( 'queued', getFuncID );
+		ourFuncID = item.id;
+	};
+
+	var startListening = function (plab, item, queue) {
+		// console.log( 'dequeued @1:', item )
+		if ( item.id === ourFuncID ) {
+			// console.log( 'starting to listen' );
+			emitter.removeAllListeners();
+			emitter.on( evnt, whenRun );
+		}
+	};
+
+
 	emitter.removeAllListeners();
-	if ( reset ) { bigs.playback.reset(); }  // ??: Needed?
+	if ( reset ) { bigs.playback.reset(); }
 
-	// emitter.on( 'queued', function ( obj, item ) { console.log( 'queued @1:', item ) } );
-	// emitter.on( 'dequeued', function ( obj, item ) { console.log( 'dequeued @1:', item ) } );
+	var ourFuncID;
+	emitter.on( 'queued', getFuncID );
+	// Start listening after func actually runs
+	emitter.on( 'dequeued', startListening );
 
-	emitter.on( evnt, whenRun );
 	// console.log('1: listening')
+	// console.log( '========= debug: listening' );
 	plab[ op ]( arg );
 
 };  // End firstEvent()
