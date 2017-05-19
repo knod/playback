@@ -444,7 +444,24 @@ js(100) + any > js(3) + ...
 js(100) + any > nextSentence + ...
 
 
-// ========== 8
+// ========== 9
 past start
+
+
+// ========== 10
+
+state to play:
+	play|toggle|restart
+play-like:
+	play|toggle|restart|fast
+forward not to end:
+	next|once([0,0,0])|once([0,0,2])|jumpTo(0/6)|jumpWords(0|3|4)|jumpS(0||1|3)
+backward:
+	prev|once([0,0,-2])|jumpW|S(-1)
+forward to end:
+	jumpTo(11|100)|jumpW(11|100)|jumpS(100)
+backward to "end":
+	jumpTo(-1)
+
 
 

@@ -7,6 +7,9 @@
 
 // Note: double values not caused by actual second function, just by listener that's added to the test
 
+// TODO: This isn't great - it matters which thing comes before
+// what. It should be more robust than that
+
 
 // ------------ setup ------------
 
@@ -97,19 +100,20 @@ var defaultAsserts = {
 	progress: null
 }
 
-defaultAsserts.not = function ( result, testText, evnt ) {
+defaultAsserts.not = function ( result, testID, evnt ) {
 
 	var passes 	= true;
 	// var msg 	= 'no arguments accumulated';
-	var msg 	= 'Combos. Event NOT triggered';
+	var msg 	= 'Combos-' + testID +': Event NOT triggered';
 
-	// var shouldFail = checkExpectedToFail( testText );
+	// var shouldFail = checkExpectedToFail( testID );
 	// if ( shouldFail ) {
 	// 	// Nothing is expected, it's failing for good reasons
 	// } else {
 		if ( result.arg2s.length !== 0 ) {
 			passes = false;
-			msg = 'Combos. Event should not have been triggered but ' + colors.red + 'WAS' + colors.none;
+			var testID
+			msg = 'Combos-' + testID +': Event should not have been triggered but ' + colors.red + 'WAS' + colors.none;
 		}
 	// }
 
@@ -117,21 +121,21 @@ defaultAsserts.not = function ( result, testText, evnt ) {
 
 };
 
-defaultAsserts.triggered = function ( result, testText, evnt ) {
+defaultAsserts.triggered = function ( result, testID, evnt ) {
 
 	var passes 	= true,
-		msg 	= 'Combos. Event was triggered';
+		msg 	= 'Combos-' + testID +': Event was triggered';
 
-	// var shouldFail = checkExpectedToFail( testText );
+	// var shouldFail = checkExpectedToFail( testID );
 	// if ( shouldFail ) {
 	// 	// Nothing is expected, it's failing for good reasons
 	// } else {
 		if ( result.arg2s.length === 0 ) {
 			passes 	= false;
-			msg 	= 'Combos. Event should have been triggered but was ' + colors.red + 'NOT' + colors.none;
+			msg 	= 'Combos-' + testID +': Event should have been triggered but was ' + colors.red + 'NOT' + colors.none;
 		} else if ( result.playback !== plab ) {
 			passes 	= false;
-			msg 	= 'Combos. Object recieved was ' + colors.red + 'NOT' + colors.none + ' the expected Playback instance';
+			msg 	= 'Combos-' + testID +': Object recieved was ' + colors.red + 'NOT' + colors.none + ' the expected Playback instance';
 		}
 	// }
 
@@ -152,22 +156,22 @@ var makeFragAsserter = function ( plyb, frags ) {
 * which asserts that the given fragments are the ones that
 * were collected.
 */
-	return function assertFrags( result, testText, evnt ) {
+	return function assertFrags( result, testID, evnt ) {
 
 		var passes 	= true,
-			msg 	= 'Combos. Correct fragments were accumulated'
+			msg 	= 'Combos-' + testID +': Correct fragments were accumulated'
 
 		// console.log( result.arg2s );
 
-		// var shouldFail = checkExpectedToFail( testText );
+		// var shouldFail = checkExpectedToFail( testID );
 		// if ( supressExpectedFailures && shouldFail ) {
 		// 	// Nothing is expected, it's failing for good reasons
 		// } else {
-			var triggeredVals = defaultAsserts.triggered( result, testText, evnt );
+			var triggeredVals = defaultAsserts.triggered( result, testID, evnt );
 			if ( !triggeredVals.passed ) { return triggeredVals; }
 			else {
 				passes = arraysEqual( result.arg2s, frags );
-				if ( !passes ) { msg = 'Combos. Frags expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
+				if ( !passes ) { msg = 'Combos-' + testID +': Frags expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
 			}
 		// }
 		return { message: msg, passed: passes };
@@ -188,21 +192,21 @@ var makeProgressAsserter = function ( plyb, numItems, vals ) {
 * 
 * TODO: Remove `numItems` from calls
 */
-	return function assertProgress ( result, testText, evnt ) {
+	return function assertProgress ( result, testID, evnt ) {
 
 		var passes 	= true,
-			msg 	= 'Combos. Correct progress values were accumulated'
+			msg 	= 'Combos-' + testID +': Correct progress values were accumulated'
 
-		// var shouldFail = checkExpectedToFail( testText );
+		// var shouldFail = checkExpectedToFail( testID );
 		// if ( supressExpectedFailures && shouldFail ) {
 		// 	// Nothing is expected, it's failing for good reasons
 		// } else {
 
-			var triggeredVals = defaultAsserts.triggered( result, testText, evnt );
+			var triggeredVals = defaultAsserts.triggered( result, testID, evnt );
 			if ( !triggeredVals.passed ) { return triggeredVals; }
 			else {
 				passes = arraysEqual( result.arg2s, vals );
-				if ( !passes ) { msg = 'Combos. \'progress\' expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
+				if ( !passes ) { msg = 'Combos-' + testID +': \'progress\' expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
 			}
 
 		// }
@@ -442,20 +446,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	
 	// === NEVER TRIGGERS (play + event combos) ===
 
-	// var playAlwaysNot = /play(?:\(-?\w+\)) \+ (?:reset|pause|close|once|revert|rewind|fast|loopSkip)/;
-	// var toggleAlwaysNot = /togglePlayPause(?:\(-?\w+\)) \+ (?:reset|close|once|revert|rewind|fast|loopSkip)/;
+	// var playAlwaysNot = /play(?:\(.*\)) \+ (?:reset|pause|close|once|revert|rewind|fast|loopSkip)/;
+	// var toggleAlwaysNot = /togglePlayPause(?:\(.*\)) \+ (?:reset|close|once|revert|rewind|fast|loopSkip)/;
 	// // restart + play?|reset|pause|close|once|revert|rewind|fast|loopSkip
-	// var restartAlwaysNot = /restart(?:\(-?\w+\)) \+ (?:play|reset|pause|close|once|revert|rewind|fast|loopSkip)/;
-	// var resetAlwaysNot = /reset(?:\(-?\w+\)) \+ (?:play|restart|pause|stop|close|rewind|fast|loopSkip|done)/;
-	// // alternatively to the below: /(?:pause|stop|close)(?:\(-?\w+\)) \+ (?!\1)/;  // (only itself)
-	// var pauseAlwaysNot = /pause(?:\(-?\w+\)) \+ (?:play|reset|restart|stop|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  // (only itself)
-	// var stopAlwaysNot = /stop(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
-	// var closeAlwaysNot = /close(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|stop|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
+	// var restartAlwaysNot = /restart(?:\(.*\)) \+ (?:play|reset|pause|close|once|revert|rewind|fast|loopSkip)/;
+	// var resetAlwaysNot = /reset(?:\(.*\)) \+ (?:play|restart|pause|stop|close|rewind|fast|loopSkip|done)/;
+	// // alternatively to the below: /(?:pause|stop|close)(?:\(.*\)) \+ (?!\1)/;  // (only itself)
+	// var pauseAlwaysNot = /pause(?:\(.*\)) \+ (?:play|reset|restart|stop|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  // (only itself)
+	// var stopAlwaysNot = /stop(?:\(.*\)) \+ (?:play|reset|restart|pause|close|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
+	// var closeAlwaysNot = /close(?:\(.*\)) \+ (?:play|reset|restart|pause|stop|once|revert|rewind|fast|loop|new|loopSkip|progress|done)/;  //(only itself)
 	// // revert + play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done? (maybe should trigger play/pause) ('stop' and 'done' may fire if 'play', then go to just before the end)
-	// var revertAlwaysNot = /revert(?:\(-?\w+\)) \+ (?:play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done)/;
+	// var revertAlwaysNot = /revert(?:\(.*\)) \+ (?:play|reset|restart|pause|stop?|close|once|rewind|fast|loopSkip|done)/;
 
 	// // rewind + play|reset|restart|close|once|fast|loopSkip  // if play, revert to play if revert? but goes to start and then done, so...
-	// var rewindAlwaysNot = /rewind(?:\(-?\w+\)) \+ (?:play|reset|restart|close|once|fast|loopSkip)/;
+	// var rewindAlwaysNot = /rewind(?:\(.*\)) \+ (?:play|reset|restart|close|once|fast|loopSkip)/;
 	// var fastForwardAlwaysNot = /fastForward(?:\(.*\)) \+ (?:play|reset|restart|pause|close|once|revert|rewind|loopSkip)/;  // never reverts on its own, always goes to end
 
 	// // Both negative and positive should not trigger these
@@ -464,60 +468,85 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// var oncePositiveAlwaysNot = /once\([^)-]+\) \+ (?:pause|stop|revert|done)/;
 
 	// // next + reset|restart?|pause?|close|rewind|fast|loopSkip
-	// var nextAlwaysNot = /next(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;
-	// var prevAlwaysNot = /prev(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;
-	// var jumpAlwaysNot = /jump(?:.*\(-?\w+\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;  // Should this be expected behavior, even if >0 at very end?
+	// var nextAlwaysNot = /next(?:.*\(.*\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;
+	// var prevAlwaysNot = /prev(?:.*\(.*\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;
+	// var jumpAlwaysNot = /jump(?:.*\(.*\)) \+ (?:reset|restart|pause|close|rewind|fast|loopSkip)/;  // Should this be expected behavior, even if >0 at very end?
 
 	// Should be in different area
 	// TODO: Needed?
 	var jumpPastEndAlwaysNot = /(?:jumpTo\(11\)|jumpTo\(100\)|jumpWords\(11\)|jumpWords\(100\)|jumpSentences\(100\)) \+ (?:play)/;
 	
-	// === IF AT START, NEVER TRIGGERS ===
-	// Only things additional to the above (Always) ones
-	var playAtStartNot = /doubles: play(?:\(-?\w+\)) \+ (?:restart)/;
-	var toggleAtStartNot = /doubles: togglePlayPause(?:\(-?\w+\)) \+ (?:restart|pause)/;
-	var rewindAtStartNot = /doubles: rewind(?:\(-?\w+\)) \+ (?:play)/;  // TODO: May be unnecessary
-	var nextAtStartNot = /doubles: next(?:.*\(-?\w+\)) \+ (?:play|stop|done)/;
-	var prevAtStartNot = /doubles: prev(?:.*\(-?\w+\)) \+ (?:play)/;
-	var jumpAtStartNot = /doubles: jump(?:.*\(-?\w+\)) \+ (?:play)/;
-	var jumpToAtStartNot = /doubles: (?:jumpTo\(0\)|jumpTo\(6\)) \+ (?:play|stop|done)/;  // [ -1, 0, 6, 11, 100 ]
-	var jumpWordsAtStartNot = /doubles: (?:jumpWords\(0\)|jumpWords\(3\)|jumpWords\(4\)) \+ (?:play|stop|done)/;  // [ -1, 0, 3, 4, 11, 100 ]
-	var jumpSentencesAtStartNot = /doubles: (?:jumpSentences\(0\)|jumpSentences\(1\)|jumpSentences\(3\)) \+ (?:play|stop|done)/;  // [ -1, 0, 1, 3, 100 ]
+	// // === IF AT START, NEVER TRIGGERS ===
+	// // Only things additional to the above (Always) ones
+	// var playAtStartNot = /doubles: play(?:\(.*\)) \+ (?:restart)/;
+	// var toggleAtStartNot = /doubles: togglePlayPause(?:\(.*\)) \+ (?:restart|pause)/;
+	// var rewindAtStartNot = /doubles: rewind(?:\(.*\)) \+ (?:play)/;  // TODO: May be unnecessary
+	// var nextAtStartNot = /doubles: next(?:.*\(.*\)) \+ (?:play|stop|done)/;
+	// var prevAtStartNot = /doubles: prev(?:.*\(.*\)) \+ (?:play)/;
+	// var jumpAtStartNot = /doubles: jump(?:.*\(.*\)) \+ (?:play)/;
+	// var jumpToAtStartNot = /doubles: (?:jumpTo\(0\)|jumpTo\(6\)) \+ (?:play|stop|done)/;  // [ -1, 0, 6, 11, 100 ]
+	// var jumpWordsAtStartNot = /doubles: (?:jumpWords\(0\)|jumpWords\(3\)|jumpWords\(4\)) \+ (?:play|stop|done)/;  // [ -1, 0, 3, 4, 11, 100 ]
+	// var jumpSentencesAtStartNot = /doubles: (?:jumpSentences\(0\)|jumpSentences\(1\)|jumpSentences\(3\)) \+ (?:play|stop|done)/;  // [ -1, 0, 1, 3, 100 ]
 
 
 	// ==========================================
 	// COMPLEX COMBOS
 	// ==========================================
-	// var playOnceNoRestart = /doubles: play(?:\(-?\w+\)) \+ (?:restart.* > )(?!play)/;  // ??: What? Does this make sense?
-	// var playNotAfterRestart = /doubles: .*(?:\(-?\w+\)) \+ (?:restart.* > )(?!play)/;  // ??: What? Does this make sense?
+	// var playOnceNoRestart = /doubles: play(?:\(.*\)) \+ (?:restart.* > )(?!play)/;  // ??: What? Does this make sense?
+	// var playNotAfterRestart = /doubles: .*(?:\(.*\)) \+ (?:restart.* > )(?!play)/;  // ??: What? Does this make sense?
 	
 	// // If play-like gets to done, no play, yes restart
-	// // var doneThenNotPlay = /doubles: (?:play|restart|toggle|rewind|fastForward|prev)(?:\(-?\w+\)) \+ (?:stop|done)(?:.* > play)/;
-	// var doneThenYesRestart = /doubles: (?:play|restart|toggle|rewind|fastForward|prev)(?:\(-?\w+\)) \+ (?:stop|done)(?:.* > play)/;
+	// // var doneThenNotPlay = /doubles: (?:play|restart|toggle|rewind|fastForward|prev)(?:\(.*\)) \+ (?:stop|done)(?:.* > play)/;
+	// var doneThenYesRestart = /doubles: (?:play|restart|toggle|rewind|fastForward|prev)(?:\(.*\)) \+ (?:stop|done)(?:.* > play)/;
 	// var jumpPreStartNotPlay = /doubles: (?:jump.*)(?:\(-\w+\)) \+ (?:stop|done)(?:.* > play)/;
 	// var jumpPreStartYesRestart = /doubles: (?:jump.*)(?:\(-\w+\)) \+ (?:stop|done)(?:.* > restart)/;
-	// var jumpPastEndNotPlay = /doubles: (?:jump)(?:\(-?\w+\)) \+ (?:stop|done)(?:.* > play)/;
-	// var jumpPastEndYesRestart = /doubles: (?:jump)(?:\(-?\w+\)) \+ (?:stop|done)(?:.* > restart)/;
+	// var jumpPastEndNotPlay = /doubles: (?:jump)(?:\(.*\)) \+ (?:stop|done)(?:.* > play)/;
+	// var jumpPastEndYesRestart = /doubles: (?:jump)(?:\(.*\)) \+ (?:stop|done)(?:.* > restart)/;
 
 	// stop/done then play = not play, yes restart (but only if the previous one was triggered)
 	// Needs extensive testing
-	var doneThenPlayThenPlayNot = /doubles: (?:.*\(-?\w+\)) \+ (?:stop|done).* > (?:play|toggle)(?:.*\(-?\w+\)) \+ play/;
+	var doneThenPlayThenPlayNot = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:play|toggle)(?:.*\(.*\)) \+ play/;
 	// stop/done > play + restart = triggered
-	var doneThenPlayThenRestartYes = /doubles: (?:.*\(-?\w+\)) \+ (?:stop|done).* > (?:play|toggle)(?:.*\(-?\w+\)) \+ restart/;
+	var doneThenPlayThenRestartYes = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:play|toggle)(?:.*\(.*\)) \+ restart/;
 
-	var playToggleNotPauseNo = /doubles: (?:play|restart|toggle)(?:.*\(-?\w+\)) \+ (?!stop|done).* > (?:toggle)(?:.*\(-?\w+\)) \+ (?!pause)/;
-	var playTogglePauseYes = /doubles: (?:play|restart|toggle)(?:.*\(-?\w+\)) \+ (?!stop|done).* > (?:toggle)(?:.*\(-?\w+\)) \+ (?:pause)/;
+	var playToggleNotPauseNo = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > (?:toggle)(?:.*\(.*\)) \+ (?!pause)/;
+	var playTogglePauseYes = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > (?:toggle)(?:.*\(.*\)) \+ (?:pause)/;
 	// NOT TRIGGERED. If event added to queue anytime before 'resetFinish'
 	// it gets removed from queue. It isn't called and its events don't get triggerd.
-	var resetKillsQueue = /doubles: reset(?:.*\(-?\w+\)) \+ (?:resetBegin|once|revert|loopBegin|loopFinish|new|progress)(.* >)/;
+	var resetKillsQueue = /doubles: reset(?:.*\(.*\)) \+ (?:resetBegin|once|revert|loopBegin|loopFinish|new|progress)(.* >)/;
 
 
-	// #1: Test bug
+	// Test bug
 	// ============ play|toggle|restart + any? except done & stop?
 	// > revert + play = triggered
 	// > revert + pause = not triggered
-	var revertsToPlayTriggersPlay = /doubles: (?:play|restart|toggle)(?:.*\(.+\)) \+ (?!stop|done).* > revert(?:.*\(.+\)) \+ play/;
-	var revertsToPlayNoTriggersPause = /doubles: (?:play|restart|toggle)(?:.*\(.+\)) \+ (?!stop|done).* > revert(?:.*\(.+\)) \+ pause/
+	var revertsToPlayTriggersPlay = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > revert(?:.*\(.*\)) \+ play/;
+	var revertsToPlayNoTriggersPause = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > revert(?:.*\(.*\)) \+ pause/
+
+	// Was #E5-ish (doesn't run expectFailure, but does sort of mean it)
+	// Now here - it just makes sure these were triggered
+	var changesPositionAtStart = /doubles: (?:play|restart|toggle|once|fast|rewind|next|prev|jump)/;
+	var getsValuesAtEnd = /> (?:play|toggle|once|fast|rewind|next|prev|jump)(?:.*\(.*\)) \+ (?:new|progress)/;
+
+	// test bug - play-like (!stop) + stop|done? > moveForward with not play-like (jump etc. that's >=0) + stop|done = triggered
+	var doneThenForwardYes = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:next|once|jump)(?:.*\([^)-]*\)) \+ (?:stop|done)/;
+	var doneThenBackNo = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:next|once|jump)(?:.*\(.*(?:-).*\)) \+ (?:stop|done)/
+
+
+	// ========== 10
+	// state to play:
+	//	play|toggle|restart
+	// play-like:
+	// 	play|toggle|restart|fast
+	// forward not to end:
+	// 	next|once([0,0,0])|once([0,0,2])|jumpTo(0/6)|jumpWords(0|3|4)|jumpS(0||1|3)
+	// backward:
+	// 	prev|once([0,0,-2])|jumpW|S(-1)
+	// forward to end:
+	// 	jumpTo(11|100)|jumpW(11|100)|jumpS(100)
+	// backward to "end":
+	// 	jumpTo(-1)
+
 
 
 	// ==========================================
@@ -542,23 +571,54 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// ... might = (!loopSkip)play|loop|new|progress
 	// = expect error
 
+
+
+
+
+
 	// in tests/brainstorming/trigger.md
 	// ========== 5 ==========
 	// from
 	// _1st Func Change Pos_ (starting at start, function 1) change the position in the text
 	// to
 	// _Middle_ as second function would change output if was in middle
+	// TODO
+	// 'play-like' first does [0, 0, 0] and then moves on
+	// CODE BUG? Why does the same not happen for `once([0,0,-2])`?
+	
 	// BUT
-	// Play only does 'current word' before ffwd|next cancels loop and goes to next word|sentence as usual.
+	// Play only does 'current word' before ffwd|next cancels loop and goes to next
+	// word|sentence as usual, so don't include that
 	str = 'doubles: (?:play|toggle|restart|fast|next';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
-	// str += ')(?:.*\\(-?\\w+\\)) \\+ (?:play|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
-	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
+	// str += ')(?:.*\\(.*\\)) \\+ (?:play|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
+	// str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
+	str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
-	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:new|progress)';
+	str += ')(?:.*\\([^)-]*\\)) \\+ (?:new|progress)'; // Nothing with a negative in it
+	// #E2
 	var changePosInMiddleWithoutReachingEnd = new RegExp( str );
+	// console.log(changePosInMiddleWithoutReachingEnd)
+	
+	
+	// // TODO
+	// // 'play-like' first does [0, 0, 0] and then moves on
+	// // CODE BUG? Why does the same not happen for `once([0,0,-2])`?
+
+	// str = 'doubles: (?:play|toggle|restart|fast|next';
+	// str += ''; // Something with jump turned into regex
+	// // continue that till all the jump things are in here
+	// // str += ')(?:.*\\(.*\\)) \\+ (?:play|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
+	// // str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
+	// str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
+	// str += ''; // Something with jump turned into regex
+	// // continue that till all the jump things are in here
+	// str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
+	// // #E2
+	// var changePosInMiddleWithoutReachingEnd = new RegExp( str );
+	// console.log(changePosInMiddleWithoutReachingEnd)
 
 
 	// But play or toggle on stop|done `restart()`s, so it gets the same new|progress values as before
@@ -566,32 +626,34 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	str = 'doubles: (?:play|toggle|restart|fast|next';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
-	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:stop|done)(?:.* > )(?:fast|next|prev|once';
+	str += ')(?:.*\\(.*\\)) \\+ (?:stop|done)(?:.* > )(?:fast|next|prev|once';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
-	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:new|progress)';
+	str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
 	// Maybe separate ones for jumps
+	// #E1 (why does this come first?)
 	var noRestartersChangePosInMiddle = new RegExp( str );
 	// console.log(noRestartersChangePosInMiddle)
-	// doubles: (?:play|toggle|restart|fast|next)(?:.*\(-?\w+\)) \+ (?:play|loopBegin|loopEnd|new|progress)(?:.* > )(?:play|toggle|fast|next|prev)(?:.*\(-?\w+\)) \+ (?:new|progress)
+	// doubles: (?:play|toggle|restart|fast|next)(?:.*\(.*\)) \+ (?:play|loopBegin|loopEnd|new|progress)(?:.* > )(?:play|toggle|fast|next|prev)(?:.*\(.*\)) \+ (?:new|progress)
 
 
 	// Things like next and prev use `once()` and the stuff that comes with it,
-	// so the change in position is going to show during after events
+	// so the change in position is going to show during those events
 	str = 'doubles: (?:fast|next';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
-	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:once|revert)(?:.* > )(?:play|toggle|next|prev';
+	str += ')(?:.*\\(.*\\)) \\+ (?:once|revert)(?:.* > )(?:play|toggle|next|prev';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
-	str += ')(?:.*\\(-?\\w+\\)) \\+ (?:new|progress)';
+	str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
+	// #E3
 	var diffPosOnOnceAsFirst = new RegExp( str );
 
 	// // /Positive/ /ARRAY/ incrementors with `once()` change position as well and
 	// // position change = change of output for `once()` as well
 	// str = 'doubles: (?:once'
 	// str += ')(?:.*\\(\\[[^)-]+\\]\\)) \\+ (?:once|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
-	// str += ')(?:.*\\(.+\\)) \\+ (?:new|progress)';
+	// str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
 	// var onceArrayChangesPosition = new RegExp( str );
 	// console.log(onceArrayChangesPosition)
 
@@ -601,18 +663,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// I guess that's what you get
 	str = 'doubles: (?:once'
 	str += ')(?:.*\\(\\[0,0,2\\]\\)) \\+ (?:once|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
-	str += ')(?:.*\\(.+\\)) \\+ (?:new|progress)';
+	str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
+	// #E4
 	var onceArrayChangesPosition = new RegExp( str );
 	// console.log(onceArrayChangesPosition)
 
-	var changesPositionAtStart = /doubles: (?:play|restart|toggle|once|fast|rewind|next|prev|jump)/;
-	var getsValuesAtEnd = /> (?:play|toggle|once|fast|rewind|next|prev|jump)(?:.*\(.+\)) \+ (?:new|progress)/;
-	var doneAtEnd = /> jump(?:.*\(.+\)) \+ (?:done|stop)/;
+	// #E6-sh (doesn't run expectFailure, but does sort of mean it)
+	// I think this only works because it comes after everything else
+	var doneAtEnd = /> jump(?:.*\(.*\)) \+ (?:done|stop)/;
 
+
+
+	// TODO:
 	var jumpAndDoneThenLoopShouldRestart = '?';
-
-
-
 	// TODO: Just add list of combos that would hit done/stop (at start or end)
 
 
@@ -636,10 +699,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// str = 'doubles: (?:fast|next';
 	// str += ''; // Something with jump turned into regex
 	// // continue that till all the jump things are in here
-	// str += ')(?:.*\\(-?\\w+\\)) \\+ (?:once|revert)(?:.* > )(?:play|toggle|next|prev';
+	// str += ')(?:.*\\(.*\\)) \\+ (?:once|revert)(?:.* > )(?:play|toggle|next|prev';
 	// str += ''; // Something with jump turned into regex
 	// // continue that till all the jump things are in here
-	// str += ')(?:.*\\(-?\\w+\\)) \\+ (?:new|progress)';
+	// str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
 	// var diffPosOnOnceAsSecond = new RegExp( str );
 
 
@@ -668,7 +731,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 
 	// // These don't ever trigger events after `pause(null)`, `stop(null)`, or `close(null)`
-	// var regNoLoop = /\b(?:pause|stop|close)(?:\(-?\w+\)) \+ (?:play|reset|restart|once|revert|rewind|fastForward|loop|newWordFragment|progress|done)/;
+	// var regNoLoop = /\b(?:pause|stop|close)(?:\(.*\)) \+ (?:play|reset|restart|once|revert|rewind|fastForward|loop|newWordFragment|progress|done)/;
 	// // These don't ever trigger events after `pause(null)`
 	// str = regEscape('pause(null) + ');  // Initial function
 	// str += '(?:close|stop)';  // Events
@@ -722,7 +785,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// Basically 'doubles: word1(null) + word1Begin > word2(null) + word1Finish'
 	// Once everything that shouldn't have been triggered wasn't triggered... that may not work
 	// Maybe change 1st one calls own events, second one calls own events
-	var selfComplete = /doubles: (?:.*)(?:\(-?\w+\)) \+ (?: > )(.*)(?:\(-?\w+\)) \+ \1Finish/;
+	var selfComplete = /doubles: (?:.*)(?:\(.*\)) \+ (?: > )(.*)(?:\(.*\)) \+ \1Finish/;
 	// Probably will need or stuff like 'newWordFragment' too
 
 	// // // Only `reset()` things should fire after 'resetBegin' since it destroys the queue
@@ -740,12 +803,12 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// // TODO: Wish I could do: When playing and finish then toggle, run restart assertions
 
 	// // When set to playing then toggled, only pause should be triggered
-	// var doneThenToggle = /doubles: (?:play|restart|toggle).*\(-?\w+\) \+ (?:stop|done).* > toggle.*\(-?\w+\) \+ (?:new|restart|loopBegin|loopFinish|progress|stop|done).*/;
-	// var playThenToggle = /doubles: (?:play|restart|toggle).*\(-?\w+\) \+ .* > toggle.*\(-?\w+\) \+ (?!pause).*/;
-	// var playTogglePause = /doubles: ((?:play|restart|toggle)).*\(-?\w+\) \+ (?:new|progress|\1)(?:.*) > toggle.*\(-?\w+\) \+ pause.*/;
+	// var doneThenToggle = /doubles: (?:play|restart|toggle).*\(.*\) \+ (?:stop|done).* > toggle.*\(.*\) \+ (?:new|restart|loopBegin|loopFinish|progress|stop|done).*/;
+	// var playThenToggle = /doubles: (?:play|restart|toggle).*\(.*\) \+ .* > toggle.*\(.*\) \+ (?!pause).*/;
+	// var playTogglePause = /doubles: ((?:play|restart|toggle)).*\(.*\) \+ (?:new|progress|\1)(?:.*) > toggle.*\(.*\) \+ pause.*/;
 
 	// // toggle never restarts if it is the first function
-	// var toggleStartsThenNot = /doubles: (?:toggle).*\(-?\w+\) \+ .*(?:restart|pause).* >/i
+	// var toggleStartsThenNot = /doubles: (?:toggle).*\(.*\) \+ .*(?:restart|pause).* >/i
 
 	// ////////////////////// Not sure this will work
 	// // These events don't trigger after `rewind(null)` (from `pause(null)` same as if started paused)
@@ -757,16 +820,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 	// // Does it have a non-`close(null)` function followed by 'close' event?
 	// // If so, not triggered
-	// var onlyClose = /\b(?!close)\w+(?:\(-?\w+\)) \+ (?:close)/;
+	// var onlyClose = /\b(?!close)\w+(?:\(.*\)) \+ (?:close)/;
 
 	// // Does it have a non-`rewind(null)`/`fastForward(null)` function followed by 'rewind'/'fastForward' event?
 	// // If so, not triggered
-	// var onlyRewind = /\b(?!rewind)\w+(?:\(-?\w+\)) \+ (?:rewind)/;
-	// var onlyFfwd = /\b(?!fastForward)\w+(?:\(-?\w+\)) \+ (?:fastForward)/;
+	// var onlyRewind = /\b(?!rewind)\w+(?:\(.*\)) \+ (?:rewind)/;
+	// var onlyFfwd = /\b(?!fastForward)\w+(?:\(.*\)) \+ (?:fastForward)/;
 	// // same for 'close'? Already taken care of before?
 
 	// // If it comes second, it could hear the remnants of a different function being triggered
-	// var jumpNot = /doubles: jump(?:.*\(-?\w+\)) \+ (?:play|reset|restart|pause|close)/;
+	// var jumpNot = /doubles: jump(?:.*\(.*\)) \+ (?:play|reset|restart|pause|close)/;
 
 	// // nextWord (as the first function) also never triggers play, reset, restart, pause, stop, close, done
 	// str = regEscape( 'doubles: nextWord(null) + ' ) + '(?:play|reset|restart|pause|stop|close|done)';
@@ -785,6 +848,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// var prevSentenceNot = new RegExp( str );
 
 
+	var onesRun = [];
+	asts.getWhichOnesWereRun = function () {
+		return onesRun;
+	}
 
 	asts.assert = function ( label, originalAssertion, result, debug ) {
 	// By this point, the first test/assertion was passed and gotten some
@@ -793,25 +860,28 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// Try to keep these tests as searchable as possible without having a million
 		// page doc of each individual label
 
+		if ( debug ) { console.log( label ); }
+
 		var assert = originalAssertion.assertion;
 
 		// If the asser
 		if ( result.arg2s.length <= 0 && originalAssertion.type === 'not' ) {
+			if ( debug ) { console.log( 'Combos result is not?', defaultAsserts.not( result, label ) ); }
 			// return defaultAsserts.not( result, label, evnt2 );
 			return defaultAsserts.not( result, label );
 		}
 
 		var testNum = '';
 		// TODO: Expect opposite?
-		expectFailure = function ( result, testText, evnt ) {
-			var result = assert(  result, testText, evnt  )
+		expectFailure = function ( result, testID, evnt ) {
+			var result = assert(  result, testID, evnt  )
 
 			var msg, passed = !result.passed;
 			// If failed, that was the expected result
 			if ( passed ) {
-				msg = 'Combos #' + testNum + '. Expected a failure and recieved a failure at combo test.';
+				msg = 'Combos-' + testID +': Expected a failure and recieved a failure at combo test.';
 			} else {
-				msg = 'Combos. Expected test to fail, but it ' + colors.red + 'DIDN\'T FAIL' + colors.none +  ' at combo test #' + testNum + '.';
+				msg = 'Combos-' + testID +': Expected test to fail, but it ' + colors.red + 'DIDN\'T FAIL' + colors.none + '.';
 			}
 
 			msg += '\n--- Unexpected success: ' + colors.red + result.message + colors.none;
@@ -830,83 +900,109 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// Must come before pause(null), stop(null), and close(null) are kept
 		// from interacting
-		if ( debug && selfComplete.test(label) ) { console.log( pre + '1' ); }
-		if ( selfComplete.test(label) ) { return defaultAsserts.triggered( result, label ); }
+		testNum = 'B1'; 
+		if ( debug && selfComplete.test(label) ) { onsole.log( testNum ); }
+		if ( selfComplete.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
 
-		// if ( debug && playAlwaysNot.test(label) ) { console.log( pre + '2' ); }
-		// if ( playAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B2'; 
+		// if ( debug && playAlwaysNot.test(label) ) { onsole.log( testNum ); }
+		// if ( playAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && toggleAlwaysNot.test(label) ) { console.log( pre + '3' ); }
-		// if ( toggleAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B3'; 
+		// if ( debug && toggleAlwaysNot.test(label) ) { onsole.log( testNum ); }
+		// if ( toggleAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && restartAlwaysNot.test(label) ) { console.log( pre + '4' ); }
-		// if ( restartAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B4'; 
+		// if ( debug && restartAlwaysNot.test(label) ) { onsole.log( testNum ); }
+		// if ( restartAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && resetAlwaysNot.test(label) ) { console.log( pre + '5' ); }
-		// if ( resetAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B5'; 
+		// if ( debug && resetAlwaysNot.test(label) ) { onsole.log( testNum ); }
+		// if ( resetAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && pauseAlwaysNot.test(label) ) { console.log( pre + '6' ); }
-		// if ( pauseAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B6'; 
+		// if ( debug && pauseAlwaysNot.test(label) ) { onsole.log( testNum ); }
+		// if ( pauseAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && stopAlwaysNot.test(label) ) { console.log( pre + '7' ); }
-		// if ( stopAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B7'; 
+		// if ( debug && stopAlwaysNot.test(label) ) { onsole.log( testNum ); }
+		// if ( stopAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && closeAlwaysNot.test(label) ) { console.log( pre + '8' ); }
-		// if ( closeAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B8'; 
+		// if ( debug && closeAlwaysNot.test(label) ) { onsole.log( testNum ); }
+		// if ( closeAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && revertAlwaysNot.test(label) ) { console.log( pre + '9' ); }
-		// if ( revertAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B9'; 
+		// if ( debug && revertAlwaysNot.test(label) ) { onsole.log( testNum ); }
+		// if ( revertAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && rewindAlwaysNot.test(label) ) { console.log( pre + '10' ); }
-		// if ( rewindAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B10';
+		// if ( debug && rewindAlwaysNot.test(label) ) { console.log( testNum ); }
+		// if ( rewindAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && fastForwardAlwaysNot.test(label) ) { console.log( pre + '11' ); }
-		// if ( fastForwardAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B11';
+		// if ( debug && fastForwardAlwaysNot.test(label) ) { console.log( testNum ); }
+		// if ( fastForwardAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && onceAlwaysNot.test(label) ) { console.log( pre + '11.5' ); }
-		// if ( onceAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B11';
+		// if ( debug && onceAlwaysNot.test(label) ) { console.log( testNum5' ); }
+		// if ( onceAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && oncePositiveAlwaysNot.test(label) ) { console.log( pre + '11.55' ); }
-		// if ( oncePositiveAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B11';
+		// if ( debug && oncePositiveAlwaysNot.test(label) ) { console.log( testNum55' ); }
+		// if ( oncePositiveAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && nextAlwaysNot.test(label) ) { console.log( pre + '12' ); }
-		// if ( nextAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B12';
+		// if ( debug && nextAlwaysNot.test(label) ) { console.log( testNum ); }
+		// if ( nextAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && prevAlwaysNot.test(label) ) { console.log( pre + '13' ); }
-		// if ( prevAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B13';
+		// if ( debug && prevAlwaysNot.test(label) ) { console.log( testNum ); }
+		// if ( prevAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && jumpAlwaysNot.test(label) ) { console.log( pre + '14' ); }
-		// if ( jumpAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B14';
+		// if ( debug && jumpAlwaysNot.test(label) ) { console.log( testNum ); }
+		// if ( jumpAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		if ( debug && jumpPastEndAlwaysNot.test(label) ) { console.log( pre + '15' ); }
-		if ( jumpPastEndAlwaysNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		testNum = 'B2-last';
+		if ( debug && jumpPastEndAlwaysNot.test(label) ) { console.log( testNum ); }
+		if ( jumpPastEndAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && playAtStartNot.test(label) ) { console.log( pre + '16' ); }
-		// if ( playAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B16';
+		// if ( debug && playAtStartNot.test(label) ) { console.log( testNum ); }
+		// if ( playAtStartNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && toggleAtStartNot.test(label) ) { console.log( pre + '17' ); }
-		// if ( toggleAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B17';
+		// if ( debug && toggleAtStartNot.test(label) ) { console.log( testNum ); }
+		// if ( toggleAtStartNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && rewindAtStartNot.test(label) ) { console.log( pre + '18' ); }
-		// if ( rewindAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B18';
+		// if ( debug && rewindAtStartNot.test(label) ) { console.log( testNum ); }
+		// if ( rewindAtStartNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && nextAtStartNot.test(label) ) { console.log( pre + '19' ); }
-		// if ( nextAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B19';
+		// if ( debug && nextAtStartNot.test(label) ) { console.log( testNum ); }
+		// if ( nextAtStartNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && prevAtStartNot.test(label) ) { console.log( pre + '20' ); }
-		// if ( prevAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B20';
+		// if ( debug && prevAtStartNot.test(label) ) { console.log( testNum ); }
+		// if ( prevAtStartNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && jumpAtStartNot.test(label) ) { console.log( pre + '21' ); }
-		// if ( jumpAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B21';
+		// if ( debug && jumpAtStartNot.test(label) ) { console.log( testNum ); }
+		// if ( jumpAtStartNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && jumpToAtStartNot.test(label) ) { console.log( pre + '22' ); }
-		// if ( jumpToAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B22';
+		// if ( debug && jumpToAtStartNot.test(label) ) { console.log( testNum ); }
+		// if ( jumpToAtStartNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && jumpWordsAtStartNot.test(label) ) { console.log( pre + '23' ); }
-		// if ( jumpWordsAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B23';
+		// if ( debug && jumpWordsAtStartNot.test(label) ) { console.log( testNum ); }
+		// if ( jumpWordsAtStartNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		// if ( debug && jumpSentencesAtStartNot.test(label) ) { console.log( pre + '24' ); }
-		// if ( jumpSentencesAtStartNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		// testNum = 'B24';
+		// if ( debug && jumpSentencesAtStartNot.test(label) ) { console.log( testNum ); }
+		// if ( jumpSentencesAtStartNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
 
 
@@ -914,30 +1010,59 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// COMPLEX COMBOS
 		// ==========================================
 		// if ( debug ) { console.log( '24', playNotAfterRestart.test(label) ); }
-		// if ( playNotAfterRestart.test(label) ) { return defaultAsserts.not( result, label ); }
+		// if ( playNotAfterRestart.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, label ); }
 		// if ( debug ) { console.log( 'Complex Combos' ); }
 		pre = 'Complex Combos ';
 
-		if ( debug && doneThenPlayThenPlayNot.test(label) ) { console.log( pre + '1' ); }
-		if ( doneThenPlayThenPlayNot.test(label) ) { return defaultAsserts.not( result, label ); }
+		testNum = 'CC1';
+		if ( debug && doneThenPlayThenPlayNot.test(label) ) { console.log( testNum ); }
+		if ( doneThenPlayThenPlayNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		if ( debug && doneThenPlayThenRestartYes.test(label) ) { console.log( pre + '2' ); }
-		if ( doneThenPlayThenRestartYes.test(label) ) { return defaultAsserts.triggered( result, label ); }
+		testNum = 'CC2';
+		if ( debug && doneThenPlayThenRestartYes.test(label) ) { console.log( testNum ); }
+		if ( doneThenPlayThenRestartYes.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
 
-		if ( debug && playToggleNotPauseNo.test(label) ) { console.log( pre + '3' ); }
-		if ( playToggleNotPauseNo.test(label) ) { return defaultAsserts.not( result, label ); }
+		testNum = 'CC3';
+		if ( debug && playToggleNotPauseNo.test(label) ) { console.log( testNum ); }
+		if ( playToggleNotPauseNo.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		if ( debug && playTogglePauseYes.test(label) ) { console.log( pre + '4' ); }
-		if ( playTogglePauseYes.test(label) ) { return defaultAsserts.triggered( result, label ); }
+		testNum = 'CC4';
+		if ( debug && playTogglePauseYes.test(label) ) { console.log( testNum ); }
+		if ( playTogglePauseYes.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
 
-		if ( debug && resetKillsQueue.test(label) ) { console.log( pre + '5' ); }
-		if ( resetKillsQueue.test(label) ) { return defaultAsserts.not( result, label ); }
+		testNum = 'CC5';
+		if ( debug && resetKillsQueue.test(label) ) { console.log( testNum ); }
+		if ( resetKillsQueue.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
-		if ( debug && revertsToPlayTriggersPlay.test(label) ) { console.log( pre + '6' ); }
-		if ( revertsToPlayTriggersPlay.test(label) ) { return defaultAsserts.triggered( result, label ); }
+		testNum = 'CC6';
+		if ( debug && revertsToPlayTriggersPlay.test(label) ) { console.log( testNum ); }
+		if ( revertsToPlayTriggersPlay.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
 
-		if ( debug && revertsToPlayNoTriggersPause.test(label) ) { console.log( pre + '7' ); }
-		if ( revertsToPlayNoTriggersPause.test(label) ) { return defaultAsserts.not( result, label ); }
+		testNum = 'CC7';
+		if ( debug && revertsToPlayNoTriggersPause.test(label) ) { console.log( testNum ); }
+		if ( revertsToPlayNoTriggersPause.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
+
+		// If it could have changed position at the start function and the end function can
+		// trigger loops
+		var couldMessUpValues = changesPositionAtStart.test( label ) && getsValuesAtEnd.test( label );
+
+		if ( couldMessUpValues ) {
+			testNum = 'CC8';
+			if ( debug ) { console.log( testNum ); }
+			// Then we'll assume that's what messed up values if those values were messed up
+			// so we'll just test for triggering (since ones that were supposed to not trigger
+			// were weeded out earlier)
+			if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); }
+		 	return defaultAsserts.triggered( result, testNum );
+		}
+
+		testNum = 'CC9';
+		if ( debug && doneThenForwardYes.test(label) ) { console.log( testNum ); }
+		if ( doneThenForwardYes.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
+
+		testNum = 'CC10-last';
+		if ( debug && doneThenBackNo.test(label) ) { console.log( testNum ); }
+		if ( doneThenBackNo.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
 
 
@@ -951,104 +1076,117 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// if ( debug ) { console.log( 'Expect Failure' ); }
 		pre = 'Expect Failure ';
 
-		if ( debug && noRestartersChangePosInMiddle.test(label) ) { console.log( pre + '1' ); }
-		if ( noRestartersChangePosInMiddle.test(label) ) { testNum = 'E1'; return expectFailure( result, label ); }
+		testNum = 'E1';
+		if ( debug && noRestartersChangePosInMiddle.test(label) ) { console.log( testNum ); }
+		if ( noRestartersChangePosInMiddle.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
 
-		if ( debug && changePosInMiddleWithoutReachingEnd.test(label) ) { console.log( pre + '2' ); }
-		if ( changePosInMiddleWithoutReachingEnd.test(label) ) { testNum = 'E2'; return expectFailure( result, label ); }
+		testNum = 'E2';
+		if ( debug && changePosInMiddleWithoutReachingEnd.test(label) ) { console.log( testNum ); }
+		if ( changePosInMiddleWithoutReachingEnd.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
 
-		if ( debug && diffPosOnOnceAsFirst.test(label) ) { console.log( pre + '3' ); }
-		if ( diffPosOnOnceAsFirst.test(label) ) { testNum = 'E3'; return expectFailure( result, label ); }
+		testNum = 'E3';
+		if ( debug && diffPosOnOnceAsFirst.test(label) ) { console.log( testNum ); }
+		if ( diffPosOnOnceAsFirst.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
 
-		if ( debug && onceArrayChangesPosition.test(label) ) { console.log( pre + '4' ); }
-		if ( onceArrayChangesPosition.test(label) ) { testNum = 'E4'; return expectFailure( result, label ); }
+		testNum = 'E4-last';
+		if ( debug && onceArrayChangesPosition.test(label) ) { console.log( testNum ); }
+		if ( onceArrayChangesPosition.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
 
-		// If it could have changed position at the start and the end function can
-		// trigger loops
-		var couldMessUpValues = changesPositionAtStart.test( label ) && getsValuesAtEnd.test( label );
 
-		if ( couldMessUpValues ) {
-			if ( debug ) { console.log( pre + '5' ); }
-			// Then we'll assume that's what messed up values if those values were messed up
-			// so we'll just test for triggering (since ones that were supposed to not trigger
-			// were weeded out earlier)
-			return defaultAsserts.triggered( result, label );
-		}
 
-		// Are we checking for done at end after jump (TODO: Maybe add once with positives)
-		if ( doneAtEnd.test( label ) ) {
+		// // Are we checking for done at end after jump (TODO: Maybe add once with positives)
+		// if ( doneAtEnd.test( label ) ) {
+		// 	testNum = 'E6';
+		// 	if ( debug ) { console.log( testNum ); }
+		// 	// If the numbers add up to past the end, we should trigger done and stop
+		// 	// TODO: Change this into plain old list of regex later
+		// 	var matches = /doubles: (?:(.*)\((.*)\) \+ )(?:.* > )(?:(.*)\((.*)\) \+ )/.exec( label );
 
-			// If the numbers add up to past the end, we should trigger done and stop
-			// TODO: Change this into plain old list of regex later
-			var matches = /doubles: (?:(.*)\((.*)\) \+ )(?:.* > )(?:(.*)\((.*)\) \+ )/.exec( label );
+		// 	var func1 	= matches[1],
+		// 		arg1 	= JSON.parse(matches[2]),
+		// 		func2 	= matches[3],
+		// 		arg2 	= JSON.parse(matches[4]);
 
-			var func1 	= matches[1],
-				arg1 	= JSON.parse(matches[2]),
-				func2 	= matches[3],
-				arg2 	= JSON.parse(matches[4]);
+		// 	var wordPos = 0;
+		// 	var sentencePos = 0;
 
-			var wordPos = 0;
-			var sentencePos = 0;
+		// 	if ( /(?:play|restart|toggle)/.test( func1 ) ) {
+		// 		wordPos = 11;
+		// 	} else if ( /(?:nextWord)/.test( func1 ) ) {
+		// 		wordPos += 1;
+		// 	} else if ( /(?:nextSentence)/.test( func1 ) ) {
+		// 		wordPos += wordIndicies[0] + 1;
+		// 		sentencePos += 1;
+		// 	} else if ( /jumpTo/.test( func1 ) ) {
 
-			if ( /(?:play|restart|toggle)/.test( func1 ) ) {
-				wordPos = 11;
-			} else if ( /(?:nextWord)/.test( func1 ) ) {
-				wordPos += 1;
-			} else if ( /(?:nextSentence)/.test( func1 ) ) {
-				wordPos += wordIndicies[0] + 1;
-				sentencePos += 1;
-			} else if ( /jumpTo/.test( func1 ) ) {
-
-				if ( arg1 < 0 ) { wordPos = 11 + arg1 }
-				else { wordPos += Math.min( 11, arg1 ) }
+		// 		if ( arg1 < 0 ) { wordPos = 11 + arg1 }
+		// 		else { wordPos += Math.min( 11, arg1 ) }
 			
-			} else if ( /jumpWord/.test( func1 ) ) {
+		// 	} else if ( /jumpWord/.test( func1 ) ) {
 			
-				if ( arg1 > 0 )	{ wordPos += Math.min( 11, arg1 ) }
+		// 		if ( arg1 > 0 )	{ wordPos += Math.min( 11, arg1 ) }
 			
-			} else if ( /jumpSentence/.test( func1 ) ) {
+		// 	} else if ( /jumpSentence/.test( func1 ) ) {
 			
-				if ( arg1 > 0 ) {
-					var num = Math.min( 4, arg1 );
-					sentencePos = num;
-					// If it was 4, it got to the last word
-					wordPos = wordIndicies[ num ] || 11;
-				}
+		// 		if ( arg1 > 0 ) {
+		// 			var num = Math.min( 4, arg1 );
+		// 			sentencePos = num;
+		// 			// If it was 4, it got to the last word
+		// 			wordPos = wordIndicies[ num ] || 11;
+		// 		}
 			
-			}  // ??: If `once()`??
+		// 	}  // ??: If `once()`?
 
 
-			// if ( /(?:play|restart|toggle)/.test( func2 ) ) {
-			// 	wordPos = 11;
-			// } else
+		// 	// if ( /(?:play|restart|toggle)/.test( func2 ) ) {
+		// 	// 	wordPos = 11;
+		// 	// } else
 
-			// Add up to find out finishing position
-			if ( /jumpTo/.test( func2 ) ) {
+		// 	// Add up to find out finishing position
+		// 	if ( /jumpTo/.test( func2 ) ) {
 
-				wordPos += arg2
+		// 		wordPos += arg2
 			
-			} else if ( /jumpWord/.test( func2 ) ) {
+		// 	} else if ( /jumpWord/.test( func2 ) ) {
 			
-				wordPos += arg2
+		// 		wordPos += arg2
 			
-			} else if ( /jumpSentence/.test( func2 ) ) {
+		// 	} else if ( /jumpSentence/.test( func2 ) ) {
 
-				sentencePos += arg2;
+		// 		sentencePos += arg2;
 
-				// If near the end and pushed over the edge (0 counts as forward)
-				if ( wordPos >= wordIndicies[3] &&  arg2 >= 0 ) {
-					wordPos = 11;
-				// if at the start and go backward
-				} else if ( wordPos <= 0 && arg2 < 0 ) {
-					wordPos = -1;
-				}
-			}  // ??: If `once()`??
+		// 		// If near the end and pushed over the edge (0 counts as forward)
+		// 		if ( wordPos >= wordIndicies[3] &&  arg2 >= 0 ) {
+		// 			wordPos = 11;
+		// 		// if at the start and go backward
+		// 		} else if ( wordPos <= 0 && arg2 < 0 ) {
+		// 			wordPos = -1;
+		// 		}
 
-			// If final word position would be before the start or at the end
-			if ( wordPos >= 11 || wordPos < 0 ) {
-				return defaultAsserts.triggered( result, label );
-			}
-		}  // End if 'done' or 'stop' event
+		// 	// Is this needed or is it taken care of elsewhere?
+		// 	}  else if ( /(?:prevWord)/.test( func1 ) ) {
+
+		// 		wordPos -= 1;
+		// 		// If was traveling backward and hit start,
+		// 		// that will trigger stop and done
+		// 		if ( wordPos === 0 ) { wordPos = -1 }
+
+		// 	} else if ( /(?:prevSentence)/.test( func1 ) ) {
+
+		// 		sentencePos -= 1;
+		// 		wordPos = wordIndicies[ sentencePos ]
+		// 		// If was traveling backward and hit start,
+		// 		// that will trigger stop and done
+		// 		if ( wordPos === 0 ) { wordPos = -1 }
+
+		// 	} // ??: If `once()`?
+
+		// 	// If final word position would be before the start or at the end
+		// 	if ( wordPos >= 11 || wordPos < 0 ) {
+		// 		 if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); }
+		// 		return defaultAsserts.triggered( result, testNum );
+		// 	}
+		// }  // End if 'done' or 'stop' event
 
 
 		// old

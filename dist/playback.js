@@ -143,8 +143,7 @@ var idNum = 1;
 				var item = plab._queue.shift();
 				// Before func runs so it can be listened for
 				plab._trigger( 'dequeued', [plab, item, plab._queue] );
-// console.log( 'dequeued:', plab._queueRunning, item );
-
+console.log( 'dequeueing', item.name );
 				var func = plab[ item.name ];
 				func.apply( this, item.arguments );
 
@@ -701,8 +700,9 @@ var idNum = 1;
 
 	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'? 'doneBegin', 'doneFinish'?
 	        if ( isDone ) {
+	        	console.log( 'stopping' );
 				plab.done = true;
-				plab.stop();
+				plab._stopProxy();
 
 				plab._trigger( 'done', [plab] );
 	        } else {
@@ -804,7 +804,7 @@ var idNum = 1;
         };  // End plab._skipDirection()
 
 
-        plab._loop = function( incrementors, checkRepeatOverride, calcDelayOverride ) {
+        plab._loopProxy = function( incrementors, checkRepeatOverride, calcDelayOverride ) {
 		/* ( [ [int, int, int], int, func ] )
 		* 
 		* `incrementors` will only be used for the first loop. loop calls itself
@@ -875,11 +875,17 @@ var idNum = 1;
 
 			plab._trigger( 'loopFinish', [plab] );
 
+			// infinite repeat - to solve, put this after loopSkip too
 			// ??: Should this be before 'loopFinish' too?
 			plab._finishIfDone();
 
 			return plab;  // Return timeout id instead?
         };  // End plab._loop()
+
+		plab._loop = function ( incrementors, checkRepeatOverride, calcDelayOverride ) {
+			plab._queueAdd( '_loopProxy', arguments );
+			return plab;
+		};
 
 
 
