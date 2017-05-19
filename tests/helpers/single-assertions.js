@@ -338,13 +338,13 @@ module.exports = gets = function ( plyb ) {
 	reset['pauseBegin'] 		= reset['pauseFinish'] 		 = { assertion: asserts.not, type: 'not' };
 	reset['stopBegin'] 			= reset['stopFinish'] 		 = { assertion: asserts.not, type: 'not' };
 	reset['closeBegin'] 		= reset['closeFinish'] 		 = { assertion: asserts.not, type: 'not' };
-	reset['onceBegin'] 			= reset['onceFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
+	reset['onceBegin'] 			= reset['onceFinish'] 		 = { assertion: asserts.not, type: 'not' };
 	reset['revertBegin'] 		= reset['revertFinish'] 	 = { assertion: asserts.not, type: 'not' };
 	reset['rewindBegin'] 		= reset['rewindFinish'] 	 = { assertion: asserts.not, type: 'not' };
 	reset['fastForwardBegin'] 	= reset['fastForwardFinish'] = { assertion: asserts.not, type: 'not' };
-	reset['loopBegin'] 			= reset['loopFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
-	reset['newWordFragment'] 	= { assertion: asserts.frags, type: 'frags' };
-	reset['progress'] 			= { assertion: asserts.progress, type: 'progress' };
+	reset['loopBegin'] 			= reset['loopFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	reset['newWordFragment'] 	= { assertion: asserts.not, type: 'not' };
+	reset['progress'] 			= { assertion: asserts.not, type: 'not' };
 	reset['done'] 				= { assertion: asserts.not, type: 'not' };
 	reset['loopSkip'] 			= { assertion: asserts.not, type: 'not' };
 

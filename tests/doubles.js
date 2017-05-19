@@ -19,7 +19,7 @@
 var debugTests = false;
 // One function with itself calling all combos of events: #tests: 676
 // 676 * 4 = 2704? Yup. `doingOnlyRepeatSameFunction` works!
-var doingOnlyRepeatSameFunction = false;
+var doingOnlyRepeatSameFunction = true;
 
 // Why does this take so long? It's really just for one test
 // (the first test runs independently)
@@ -42,74 +42,74 @@ var runFirstEvent = require( './helpers/first-event.js' );
 // + args = 29
 var functsWithArgs = [
 	{ func: 'play', args: [ null ] },  // * 26 for 1 event
-	// { func: 'togglePlayPause', args: [ null ]},
-	// { func: 'restart', args: [ null ]},
-	// { func: 'reset', args: [ null ]},
-	// { func: 'pause', args: [ null ]},
-	// { func: 'stop', args: [ null ]},
-	// { func: 'close', args: [ null ]},
-	// { func: 'revert', args: [ null ]},
-	// { func: 'rewind', args: [ null ]},
-	// { func: 'fastForward', args: [ null ]},
+	{ func: 'togglePlayPause', args: [ null ]},
+	{ func: 'restart', args: [ null ]},
+	{ func: 'reset', args: [ null ]},
+	{ func: 'pause', args: [ null ]},
+	{ func: 'stop', args: [ null ]},
+	{ func: 'close', args: [ null ]},
+	{ func: 'revert', args: [ null ]},
+	{ func: 'rewind', args: [ null ]},
+	{ func: 'fastForward', args: [ null ]},
 	// These could go on forever... but they do get tested somewhat with
 	// jump, next, and prev, so don't /really/ need to tests singles or
 	// word or sentence incrementations. If that changes, these tests need
 	// to change
-	// { func: 'once', args: [ [0,0,-2], [0,0,0], [0,0,2] ]},
-	// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
+	{ func: 'once', args: [ [0,0,-2], [0,0,0], [0,0,2] ]},
+	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
 	{ func: 'jumpTo', args: [ -1 ]},
-	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
-	// { func: 'nextWord', args: [ null ]},
-	// { func: 'nextSentence', args: [ null ]},
-	// { func: 'prevWord', args: [ null ]},
-	// { func: 'prevSentence', args: [ null ]}
+	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
+	{ func: 'nextWord', args: [ null ]},
+	{ func: 'nextSentence', args: [ null ]},
+	{ func: 'prevWord', args: [ null ]},
+	{ func: 'prevSentence', args: [ null ]}
 ];
 
 // 26 events * 21115 tests = 548990 tests
 var events1 = [
-	// 'playBegin',
-	// 'playFinish',
-	// 'resetBegin',
-	// 'resetFinish',
-	// 'restartBegin',
-	// 'restartFinish',
-	// 'pauseBegin',
-	// 'pauseFinish',
-	// 'stopBegin',
+	'playBegin',
+	'playFinish',
+	'resetBegin',
+	'resetFinish',
+	'restartBegin',
+	'restartFinish',
+	'pauseBegin',
+	'pauseFinish',
+	'stopBegin',
 	'stopFinish',
-	// 'closeBegin',
-	// 'closeFinish',
-	// 'onceBegin',
-	// 'onceFinish',
-	// 'revertBegin',
-	// 'revertFinish',
-	// 'rewindBegin',
-	// 'rewindFinish',
-	// 'fastForwardBegin',
-	// 'fastForwardFinish',
-	// 'loopBegin',
-	// 'loopFinish',
-	// 'newWordFragment',
-	// 'loopSkip',
-	// 'progress',
-	// 'done'
+	'closeBegin',
+	'closeFinish',
+	'onceBegin',
+	'onceFinish',
+	'revertBegin',
+	'revertFinish',
+	'rewindBegin',
+	'rewindFinish',
+	'fastForwardBegin',
+	'fastForwardFinish',
+	'loopBegin',
+	'loopFinish',
+	'newWordFragment',
+	'loopSkip',
+	'progress',
+	'done'
 ];
 var events2 = [
-	// 'playBegin', 'playFinish',
-	// 'resetBegin', 'resetFinish',
-	// 'restartBegin', 'restartFinish',
-	// 'pauseBegin', 'pauseFinish',
-	// 'stopBegin', 'stopFinish',
-	// 'closeBegin', 'closeFinish',
-	// 'onceBegin', 'onceFinish',
-	// 'revertBegin', 'revertFinish',
-	// 'rewindBegin', 'rewindFinish',
-	// 'fastForwardBegin', 'fastForwardFinish',
-	// 'loopBegin', 'loopFinish',
-	// 'newWordFragment',
-	// 'loopSkip',
-	// 'progress',
+	'playBegin', 'playFinish',
+	'resetBegin', 'resetFinish',
+	'restartBegin', 'restartFinish',
+	'pauseBegin', 'pauseFinish',
+	'stopBegin', 'stopFinish',
+	'closeBegin', 'closeFinish',
+	'onceBegin', 'onceFinish',
+	'revertBegin', 'revertFinish',
+	'rewindBegin', 'rewindFinish',
+	'fastForwardBegin', 'fastForwardFinish',
+	'loopBegin', 'loopFinish',
+	'newWordFragment',
+	'loopSkip',
+	'progress',
 	'done'
 ];
 
@@ -212,7 +212,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 	assert2Obj 		= singleAssertions[ func2Name ][ JSON.stringify( arg2 ) ][ evnt2 ];
 
 	label = label + ' > ' + func2Name + '(' + JSON.stringify( arg2 ) + ')' + ' + ' + evnt2 ;
-	console.log( label );
+	// console.log( label );
 
 	var shouldSkip = false;
 	if ( doingOnlyRepeatSameFunction ) {
@@ -254,7 +254,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 						done( err, label );
 					}  // end try
 
-					if ( tester.report.total > 0 && tester.report.total % 500 === 0 ) {
+					if ( tester.report.total > 0 && tester.report.total % 676 === 0 ) {  // should get on switch to new test
 						console.log('\n======== ' + tester.report.total + ' tests done. ' + (Date.now() - startTime) + 'ms elapsed. On: ' + label );
 					}
 

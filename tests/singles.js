@@ -1,6 +1,6 @@
 // tests/singles.js
 
-var waitTime = 25;  // 20 is too short, 25 maybe ok
+var waitTime = 30;  // 20 is too short, 25 maybe ok
 
 
 var SetUp 		= require('./setup-default.js'),
@@ -51,9 +51,9 @@ var events = [
 	'fastForwardBegin', 'fastForwardFinish',
 	'loopBegin', 'loopFinish',
 	'newWordFragment',
-	'loopSkip',
 	'progress',
-	'done'
+	'done',
+	'loopSkip'
 ];
 
 

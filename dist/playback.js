@@ -143,7 +143,7 @@ var idNum = 1;
 				var item = plab._queue.shift();
 				// Before func runs so it can be listened for
 				plab._trigger( 'dequeued', [plab, item, plab._queue] );
-console.log( 'dequeueing', item.name );
+
 				var func = plab[ item.name ];
 				func.apply( this, item.arguments );
 
@@ -209,13 +209,19 @@ console.log( 'dequeueing', item.name );
 
 			// Nothing gets put onto queue
 			plab._reset();
-			plab._onceProxy( 0 );  // Send first fragment (now that revertable state is 'pause')
-			// change current and revertable state back (??: seems out of place?)
-			plab._pause();
 
 			// TODO: ??: Should this clear the queue?
 			// Clear last so it does the most resetting possible
+			// Has to be before `_onceProxy()` so it lets `_loop()` get on the queue and play once
+			// Otherwise `_onceProxy()` has to use `_loopProxy`, which would give inconsistent
+			// behavior for functions that use `_onceProxy()`
 			plab._queueReset();
+
+			// plab._onceProxy( 0 );  // Send first fragment (now that revertable state is 'pause')
+			// // change current and revertable state back (??: seems out of place?)
+			// reset state to allow `toggle` to go to play next from `_currentAction`
+			// This seems squirrely
+			plab._pause();  // to stop reversion to play. Not needed anymore?
 
 			plab._trigger( 'resetFinish', [plab] );
 			// console.log( 'reset finished' );
@@ -295,7 +301,7 @@ console.log( 'dequeueing', item.name );
 			if ( plab._currentAction !== 'play' ) {  // ??: could possibly just pause first instead
 				plab._currentAction = 'play';  // ??: eventName || 'play'?
 				// Get current word first time, then get following fragments forever after
-				plab._loop( [0, 0, 0], null, null );  // Show the current word first, then it will move on
+				plab._loopProxy( [0, 0, 0], null, null );  // Show the current word first, then it will move on
 			}
 
 			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
@@ -395,7 +401,7 @@ console.log( 'dequeueing', item.name );
 			// if === pause, play
 			// if === play, pause
 			// else revert
-			if (  /pause|stop|close/.test(plab._currentAction) ) { plab.play(); }
+			if (  /pause|stop|close/.test( plab._currentAction ) ) { plab.play(); }
 			else if ( plab._currentAction === 'play' ) { plab.pause(); }
 			else { plab.revert(); }
 
@@ -467,7 +473,7 @@ console.log( 'dequeueing', item.name );
 
 			var shouldRepeat = function () { return false; },
 				calcDelay 	 = function () { return 0; };
-			plab._loop( incrementors, shouldRepeat, calcDelay );
+			plab._loopProxy( incrementors, shouldRepeat, calcDelay );
 
 			plab._trigger( 'onceFinish', [plab] );  // ??: 'jumpFinish'?
 
@@ -492,6 +498,15 @@ console.log( 'dequeueing', item.name );
 
 
 		// ========== NAVIGATE (arrow keys and other) ========== \\
+
+		// plab._currentProxy = function () {
+		// 	plab._onceProxy( [0, 0, 0] );
+		// 	return plab;
+		// };
+		// plab._current = function () {
+		// 	plab._queueAdd( '_currentProxy', arguments );
+		// 	return plab;
+		// };
 
 		plab._jumpWordsProxy = function ( numToJump ) {
 		// Moves forward or back relative to the current position
@@ -627,7 +642,7 @@ console.log( 'dequeueing', item.name );
 
 				var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
 
-				plab._loop( null, null, accelerate );  // Show the current word first, then it will move on
+				plab._loopProxy( null, null, accelerate );  // Show the current word first, then it will move on
 
 				plab._trigger( 'rewindFinish', [plab] );
 
@@ -662,7 +677,7 @@ console.log( 'dequeueing', item.name );
 
 			var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
 
-			plab._loop( null, null, accelerate );  // Show the current word first, then it will move on
+			plab._loopProxy( null, null, accelerate );  // Show the current word first, then it will move on
 
 			plab._trigger( 'fastForwardFinish', [plab] );
 
@@ -685,6 +700,7 @@ console.log( 'dequeueing', item.name );
 		* prepare for a possible restart. Otherwise save not
 		* done.
         */
+        	// console.log( 'checking for stop. progress:', plab.getProgress() );
         	var isDone = false;
 
         	// Stop if we've reached the end (if `fastForward`ing, no revert)
@@ -700,7 +716,7 @@ console.log( 'dequeueing', item.name );
 
 	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'? 'doneBegin', 'doneFinish'?
 	        if ( isDone ) {
-	        	console.log( 'stopping' );
+	        	// console.log( 'stopping' );
 				plab.done = true;
 				plab._stopProxy();
 
@@ -843,7 +859,7 @@ console.log( 'dequeueing', item.name );
 
     	    	// TODO: ??: Also add 'loopSkipFinish'? (with 'loopSkipBegin')
 				plab._trigger( 'loopSkip', [plab, frag] );
-    	    	plab._loop( skipVector, checkRepeatOverride, calcDelayOverride );  // Don't decrease repeats
+    	    	plab._loopProxy( skipVector, checkRepeatOverride, calcDelayOverride );  // Don't decrease repeats
     	    
     	    } else {
 
@@ -859,7 +875,7 @@ console.log( 'dequeueing', item.name );
 				if ( checkRepeat && checkRepeat( plab, frag ) ) {
 
 					plab._timeoutID = setTimeout( function () {
-						plab._loop( null, checkRepeat, calcDelay );
+						plab._loopProxy( null, checkRepeat, calcDelay );
 					}, delay );
 
 				}
@@ -880,7 +896,7 @@ console.log( 'dequeueing', item.name );
 			plab._finishIfDone();
 
 			return plab;  // Return timeout id instead?
-        };  // End plab._loop()
+        };  // End plab._loopProxy()
 
 		plab._loop = function ( incrementors, checkRepeatOverride, calcDelayOverride ) {
 			plab._queueAdd( '_loopProxy', arguments );
