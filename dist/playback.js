@@ -203,7 +203,7 @@ var idNum = 1;
 		plab._resetProxy = function () {
 		/* () -> Playback
 		* 
-		* Returns to initial values, sends first fragment resets state
+		* Returns to initial values and pauses
 		*/
 			plab._trigger( 'resetBegin', [plab] );
 
@@ -232,10 +232,19 @@ var idNum = 1;
 		plab.reset = function () {
 		/* () -> Playback
 		* 
-		* Returns to initial values, sends first fragment
+		* Returns to initial values and pauses
 		*/
-			// TODO: Reset goes to front of queue? Or bypasses queue?
 			plab._queueAdd( '_resetProxy', arguments );
+			return plab;
+		};
+
+		plab.forceReset = function () {
+		/* () -> Playback
+		* 
+		* Returns to initial values and pauses
+		* Bypasses queue and empties it immediately
+		*/
+			plab._resetProxy( arguments );
 			return plab;
 		};
 

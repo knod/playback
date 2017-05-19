@@ -13,6 +13,9 @@ var runEvent = require( './helpers/last-event.js' );
 
 
 var functsWithArgs = [
+	// These two at the top for now for ease of debugging
+	{ func: 'forceReset', args: [ null ]},
+	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
 	{ func: 'play', args: [ null ] },  // * 26 for 1 event
 	{ func: 'togglePlayPause', args: [ null ]},
 	{ func: 'restart', args: [ null ]},
@@ -27,7 +30,6 @@ var functsWithArgs = [
 	// word or sentence incrementations. If that changes, these tests need
 	// to change
 	{ func: 'once', args: [ [0,0,-2], [0,0,2] ]},
-	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
 	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
 	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
 	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},

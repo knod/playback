@@ -329,8 +329,6 @@ module.exports = gets = function ( plyb ) {
 	// ----------- reset(null) -----------
 	asts.reset 		 = {};
 	var reset 		 = asts.reset["null"] = {};
-	asserts.frags 	 = makeFragAsserter( plyb, ['Victorious,'] );
-	asserts.progress = makeProgressAsserter( plyb, 1, [ 1/12 ] );
 
 	reset['playBegin'] 			= reset['playFinish'] 		 = { assertion: asserts.not, type: 'not' };
 	reset['resetBegin'] 		= reset['resetFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
@@ -347,6 +345,27 @@ module.exports = gets = function ( plyb ) {
 	reset['progress'] 			= { assertion: asserts.not, type: 'not' };
 	reset['done'] 				= { assertion: asserts.not, type: 'not' };
 	reset['loopSkip'] 			= { assertion: asserts.not, type: 'not' };
+
+
+	// ----------- forceReset(null) -----------
+	asts.forceReset  = {};
+	var fReset 		 = asts.forceReset["null"] = {};
+
+	fReset['playBegin'] 		= fReset['playFinish'] 		  = { assertion: asserts.not, type: 'not' };
+	fReset['resetBegin'] 		= fReset['resetFinish'] 	  = { assertion: asserts.triggered, type: 'triggered' };
+	fReset['restartBegin'] 		= fReset['restartFinish'] 	  = { assertion: asserts.not, type: 'not' };
+	fReset['pauseBegin'] 		= fReset['pauseFinish'] 	  = { assertion: asserts.not, type: 'not' };
+	fReset['stopBegin'] 		= fReset['stopFinish'] 		  = { assertion: asserts.not, type: 'not' };
+	fReset['closeBegin'] 		= fReset['closeFinish'] 	  = { assertion: asserts.not, type: 'not' };
+	fReset['onceBegin'] 		= fReset['onceFinish'] 		  = { assertion: asserts.not, type: 'not' };
+	fReset['revertBegin'] 		= fReset['revertFinish'] 	  = { assertion: asserts.not, type: 'not' };
+	fReset['rewindBegin'] 		= fReset['rewindFinish'] 	  = { assertion: asserts.not, type: 'not' };
+	fReset['fastForwardBegin'] 	= fReset['fastForwardFinish'] = { assertion: asserts.not, type: 'not' };
+	fReset['loopBegin'] 		= fReset['loopFinish'] 		  = { assertion: asserts.not, type: 'not' };
+	fReset['newWordFragment'] 	= { assertion: asserts.not, type: 'not' };
+	fReset['progress'] 			= { assertion: asserts.not, type: 'not' };
+	fReset['done'] 				= { assertion: asserts.not, type: 'not' };
+	fReset['loopSkip'] 			= { assertion: asserts.not, type: 'not' };
 
 
 	// ----------- pause(null) -----------

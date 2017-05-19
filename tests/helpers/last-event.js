@@ -44,12 +44,19 @@ var lastEvent = module.exports = function ( result, bigs, opWith, reset ) {
 
 
 	emitter.removeAllListeners();
-	if ( reset ) { bigs.playback._resetProxy(); }
+	if ( reset ) { bigs.playback.forceReset(); }
 
 	var ourFuncID;
-	emitter.on( 'queued', getFuncID );
-	// Start listening after func actually runs
-	emitter.on( 'dequeued', startListening );
+
+	// console.log(op);
+	// `forceReset()` skips the queue
+	if ( op !== 'forceReset' ) {
+		emitter.on( 'queued', getFuncID );
+		// Start listening after func actually runs
+		emitter.on( 'dequeued', startListening );
+	} else {
+		emitter.on( evnt, whenRun );
+	}
 
 	// console.log('2: listening')
 	// console.log( '========= debug: listening' );

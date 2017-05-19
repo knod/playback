@@ -34,9 +34,7 @@ var firstEvent = module.exports = function ( result, bigs, opWith, doOnEvent, re
 			// and, most of the time it'll be the argument I'm interested in.
 			result.arg2s.push( two );
 			result.playback = one;
-
 		}
-
 	};
 
 
@@ -62,9 +60,15 @@ var firstEvent = module.exports = function ( result, bigs, opWith, doOnEvent, re
 	if ( reset ) { bigs.playback.reset(); }
 
 	var ourFuncID;
-	emitter.on( 'queued', getFuncID );
-	// Start listening after func actually runs
-	emitter.on( 'dequeued', startListening );
+
+	// `forceReset()` skips the queue
+	if ( op !== 'forceRest' ) {
+		emitter.on( 'queued', getFuncID );
+		// Start listening after func actually runs
+		emitter.on( 'dequeued', startListening );
+	} else {
+		emitter.on( evnt, whenRun );
+	}
 
 	// console.log('1: listening')
 	// console.log( '========= debug: listening' );

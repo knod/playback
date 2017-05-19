@@ -40,7 +40,10 @@ var runFirstEvent = require( './helpers/first-event.js' );
 
 // 16 funcs
 // + args = 29
-var functsWithArgs = [
+var functsWithArgs1 = [
+	// These two at the top for now for ease of debugging
+	{ func: 'forceReset', args: [ null ]},
+	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
 	{ func: 'play', args: [ null ] },  // * 26 for 1 event
 	{ func: 'togglePlayPause', args: [ null ]},
 	{ func: 'restart', args: [ null ]},
@@ -56,7 +59,31 @@ var functsWithArgs = [
 	// word or sentence incrementations. If that changes, these tests need
 	// to change
 	{ func: 'once', args: [ [0,0,-2], [0,0,2] ]},
+	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
+	{ func: 'jumpTo', args: [ -1 ]},
+	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
+	{ func: 'nextWord', args: [ null ]},
+	{ func: 'nextSentence', args: [ null ]},
+	{ func: 'prevWord', args: [ null ]},
+	{ func: 'prevSentence', args: [ null ]}
+];
+
+var functsWithArgs2 = [
+	// These two at the top for now for ease of debugging
+	{ func: 'forceReset', args: [ null ]},
 	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
+	{ func: 'play', args: [ null ] },  // * 26 for 1 event
+	{ func: 'togglePlayPause', args: [ null ]},
+	{ func: 'restart', args: [ null ]},
+	{ func: 'reset', args: [ null ]},
+	{ func: 'pause', args: [ null ]},
+	{ func: 'stop', args: [ null ]},
+	{ func: 'close', args: [ null ]},
+	{ func: 'revert', args: [ null ]},
+	{ func: 'rewind', args: [ null ]},
+	{ func: 'fastForward', args: [ null ]},
+	{ func: 'once', args: [ [0,0,-2], [0,0,2] ]},
 	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
 	{ func: 'jumpTo', args: [ -1 ]},
 	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
@@ -191,7 +218,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 	var assert1Obj, assert2Obj;
 
 	// Loop 1
-	const funcWArg1 = functsWithArgs[ func1Indx ];
+	const funcWArg1 = functsWithArgs1[ func1Indx ];
 
 	const func1Name = funcWArg1.func;
 	const arg1		= funcWArg1.args[ arg1Indx ];
@@ -203,7 +230,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 	assert1Obj 	= singleAssertions[ func1Name ][ JSON.stringify( arg1 ) ][ evnt1 ];
 	
 	// Loop 2
-	const funcWArg2 = functsWithArgs[ func2Indx ];
+	const funcWArg2 = functsWithArgs2[ func2Indx ];
 
 	const func2Name = funcWArg2.func;
 	const arg2		= funcWArg2.args[ arg2Indx ];
@@ -270,11 +297,11 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 				var finished = increment({
 					one: {
 						func: func1Indx, arg: arg1Indx, event: event1Indx,
-						funcs: functsWithArgs, args: funcWArg1.args, events: events1
+						funcs: functsWithArgs1, args: funcWArg1.args, events: events1
 					},
 					two: {
 						func: func2Indx, arg: arg2Indx, event: event2Indx,
-						funcs: functsWithArgs, args: funcWArg2.args, events: events2
+						funcs: functsWithArgs2, args: funcWArg2.args, events: events2
 					}
 				});
 				if ( finished ) {
