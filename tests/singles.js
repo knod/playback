@@ -1,14 +1,13 @@
 // tests/singles.js
 
-var waitTime = 30;  // 20 is too short, 25 maybe ok
+var debug = false;
 
+var waitTime = 30;  // 20 is too short, 25 maybe ok
 
 var SetUp 		= require('./setup-default.js'),
 	bigObjects 	= SetUp(),
 	plab 		= bigObjects.playback,
 	emitter 	= bigObjects.emitter;
-
-
 var tester = require('./testing-core.js');
 var runEvent = require( './helpers/last-event.js' );
 
@@ -27,7 +26,8 @@ var functsWithArgs = [
 	// jump, next, and prev, so don't /really/ need to tests singles or
 	// word or sentence incrementations. If that changes, these tests need
 	// to change
-	{ func: 'once', args: [ [0,0,-2], [0,0,0], [0,0,2] ]},
+	{ func: 'once', args: [ [0,0,-2], [0,0,2] ]},
+	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
 	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
 	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
 	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
@@ -72,7 +72,9 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 	const arg 		= funcWArg.args[ argIndx ];
 	const evnt 	= events[ eventIndx ];
 
-	label = label + ' ' + funcName + '(' + JSON.stringify( arg ) + ')' + ' + ' + evnt ;
+	label = label + ' ' + funcName + '(' + JSON.stringify( arg ) + ')' + ' + ' + evnt;
+
+	if ( debug ) { console.log( label ); }
 
 	currentAssertion = assertions[ funcName ][ JSON.stringify( arg ) ][ evnt ];
 

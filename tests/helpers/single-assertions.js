@@ -488,28 +488,6 @@ module.exports = gets = function ( plyb ) {
 	onceNeg['loopSkip'] 		= { assertion: asserts.not, type: 'not' };
 
 
-	// ----------- once([0,0,0]) -----------
-	var once0 		 = asts.once["[0,0,0]"] = {};
-	asserts.frags 	 = getAssertFragsFirst( plyb );
-	asserts.progress = getAssertProgFirst( plyb );
-
-	once0['playBegin'] 		  = once0['playFinish'] 	   = { assertion: asserts.not, type: 'not' };
-	once0['resetBegin'] 	  = once0['resetFinish'] 	   = { assertion: asserts.not, type: 'not' };
-	once0['restartBegin'] 	  = once0['restartFinish'] 	   = { assertion: asserts.not, type: 'not' };
-	once0['pauseBegin'] 	  = once0['pauseFinish'] 	   = { assertion: asserts.not, type: 'not' };
-	once0['stopBegin'] 		  = once0['stopFinish'] 	   = { assertion: asserts.not, type: 'not' };
-	once0['closeBegin'] 	  = once0['closeFinish'] 	   = { assertion: asserts.not, type: 'not' };
-	once0['onceBegin'] 		  = once0['onceFinish'] 	   = { assertion: asserts.triggered, type: 'triggered' };
-	once0['revertBegin'] 	  = once0['revertFinish'] 	   = { assertion: asserts.not, type: 'not' };
-	once0['rewindBegin'] 	  = once0['rewindFinish'] 	   = { assertion: asserts.not, type: 'not' };
-	once0['fastForwardBegin'] = once0['fastForwardFinish'] = { assertion: asserts.not, type: 'not' };
-	once0['loopBegin'] 		  = once0['loopFinish'] 	   = { assertion: asserts.triggered, type: 'triggered' };
-	once0['newWordFragment']  = { assertion: asserts.frags, type: 'frags' };
-	once0['progress'] 		  = { assertion: asserts.progress, type: 'progress' };
-	once0['done'] 			  = { assertion: asserts.not, type: 'not' };
-	once0['loopSkip'] 		  = { assertion: asserts.not, type: 'not' };
-
-
 	// ----------- once([0,0,2]) -----------
 	var once2 		 = asts.once["[0,0,2]"] = {};
 	asserts.frags 	 = makeFragAsserter( plyb, [ 'you' ] );
@@ -530,6 +508,31 @@ module.exports = gets = function ( plyb ) {
 	once2['progress'] 		  = { assertion: asserts.progress, type: 'progress' };
 	once2['done'] 			  = { assertion: asserts.not, type: 'not' };
 	once2['loopSkip'] 		  = { assertion: asserts.not, type: 'not' };
+
+
+	// ----------- current() -----------
+	asts.current = {};
+
+	// ----------- current(null) -----------
+	var current 	 = asts.current["null"] = {};
+	asserts.frags 	 = getAssertFragsFirst( plyb );
+	asserts.progress = getAssertProgFirst( plyb );
+
+	current['playBegin'] 		= current['playFinish'] 		= { assertion: asserts.not, type: 'not' };
+	current['resetBegin'] 		= current['resetFinish'] 		= { assertion: asserts.not, type: 'not' };
+	current['restartBegin'] 	= current['restartFinish'] 		= { assertion: asserts.not, type: 'not' };
+	current['pauseBegin'] 		= current['pauseFinish'] 		= { assertion: asserts.not, type: 'not' };
+	current['stopBegin'] 		= current['stopFinish'] 		= { assertion: asserts.not, type: 'not' };
+	current['closeBegin'] 		= current['closeFinish'] 		= { assertion: asserts.not, type: 'not' };
+	current['onceBegin'] 		= current['onceFinish'] 		= { assertion: asserts.triggered, type: 'triggered' };
+	current['revertBegin'] 		= current['revertFinish'] 		= { assertion: asserts.not, type: 'not' };
+	current['rewindBegin'] 		= current['rewindFinish'] 		= { assertion: asserts.not, type: 'not' };
+	current['fastForwardBegin'] = current['fastForwardFinish'] 	= { assertion: asserts.not, type: 'not' };
+	current['loopBegin'] 		= current['loopFinish'] 		= { assertion: asserts.triggered, type: 'triggered' };
+	current['newWordFragment'] 	= { assertion: asserts.frags, type: 'frags' };
+	current['progress'] 		= { assertion: asserts.progress, type: 'progress' };
+	current['done'] 			= { assertion: asserts.not, type: 'not' };
+	current['loopSkip'] 		= { assertion: asserts.not, type: 'not' };
 
 
 

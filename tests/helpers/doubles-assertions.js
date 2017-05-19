@@ -513,7 +513,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	var playTogglePauseYes = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > (?:toggle)(?:.*\(.*\)) \+ (?:pause)/;
 	// NOT TRIGGERED. If event added to queue anytime before 'resetFinish'
 	// it gets removed from queue. It isn't called and its events don't get triggerd.
-	var resetKillsQueue = /doubles: reset(?:.*\(.*\)) \+ (?:resetBegin|once|revert|loopBegin|loopFinish|new|progress)(.* >)/;
+	var resetKillsQueue = /doubles: reset(?:.*\(.*\)) \+ (?:resetBegin|once|current|revert|loopBegin|loopFinish|new|progress)(.* >)/;
 
 
 	// Test bug
@@ -525,11 +525,11 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 	// Was #E5-ish (doesn't run expectFailure, but does sort of mean it)
 	// Now here - it just makes sure these were triggered
-	var changesPositionAtStart = /doubles: (?:play|restart|toggle|once|fast|rewind|next|prev|jump)/;
-	var getsValuesAtEnd = /> (?:play|toggle|once|fast|rewind|next|prev|jump)(?:.*\(.*\)) \+ (?:new|progress)/;
+	var changesPositionAtStart = /doubles: (?:play|restart|toggle|once|current|fast|rewind|next|prev|jump)/;
+	var getsValuesAtEnd = /> (?:play|toggle|once|current|fast|rewind|next|prev|jump)(?:.*\(.*\)) \+ (?:new|progress)/;
 
 	// test bug - play-like (!stop) + stop|done? > moveForward with not play-like (jump etc. that's >=0) + stop|done = triggered
-	var doneThenForwardYes = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:next|once|jump)(?:.*\([^)-]*\)) \+ (?:stop|done)/;
+	var doneThenForwardYes = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:next|once|current|jump)(?:.*\([^)-]*\)) \+ (?:stop|done)/;
 	var doneThenBackNo = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:next|once|jump)(?:.*\(.*(?:-).*\)) \+ (?:stop|done)/
 
 
@@ -539,7 +539,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// play-like:
 	// 	play|toggle|restart|fast
 	// forward not to end:
-	// 	next|once([0,0,0])|once([0,0,2])|jumpTo(0/6)|jumpWords(0|3|4)|jumpS(0||1|3)
+	// 	next|current(null)|once([0,0,2])|jumpTo(0/6)|jumpWords(0|3|4)|jumpS(0||1|3)
 	// backward:
 	// 	prev|once([0,0,-2])|jumpW|S(-1)
 	// forward to end:
@@ -594,7 +594,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// continue that till all the jump things are in here
 	// str += ')(?:.*\\(.*\\)) \\+ (?:play|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
 	// str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
-	str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
+	str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once|current';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
 	str += ')(?:.*\\([^)-]*\\)) \\+ (?:new|progress)'; // Nothing with a negative in it
@@ -626,7 +626,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	str = 'doubles: (?:play|toggle|restart|fast|next';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
-	str += ')(?:.*\\(.*\\)) \\+ (?:stop|done)(?:.* > )(?:fast|next|prev|once';
+	str += ')(?:.*\\(.*\\)) \\+ (?:stop|done)(?:.* > )(?:fast|next|prev|once|current';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
 	str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
@@ -639,10 +639,11 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 	// Things like next and prev use `once()` and the stuff that comes with it,
 	// so the change in position is going to show during those events
-	str = 'doubles: (?:fast|next';
+	str = 'doubles: (?:fast|next|current';  // not sure about `current()`
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
-	str += ')(?:.*\\(.*\\)) \\+ (?:once|revert)(?:.* > )(?:play|toggle|next|prev';
+	// str += ')(?:.*\\(.*\\)) \\+ (?:once|revert)(?:.* > )(?:play|toggle|next|prev';  // once doesn't revert anymore
+	str += ')(?:.*\\(.*\\)) \\+ (?:once)(?:.* > )(?:play|toggle|next|prev';
 	str += ''; // Something with jump turned into regex
 	// continue that till all the jump things are in here
 	str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
@@ -662,7 +663,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// This only works for one specific input unfortunately. Not flexible at all, but
 	// I guess that's what you get
 	str = 'doubles: (?:once'
-	str += ')(?:.*\\(\\[0,0,2\\]\\)) \\+ (?:once|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
+	str += ')(?:.*\\(\\[0,0,2\\]\\)) \\+ (?:once|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once|current';
 	str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
 	// #E4
 	var onceArrayChangesPosition = new RegExp( str );

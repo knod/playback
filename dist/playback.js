@@ -499,21 +499,21 @@ var idNum = 1;
 
 		// ========== NAVIGATE (arrow keys and other) ========== \\
 
-		// plab._currentProxy = function () {
-		// 	plab._onceProxy( [0, 0, 0] );
-		// 	return plab;
-		// };
-		// plab._current = function () {
-		// 	plab._queueAdd( '_currentProxy', arguments );
-		// 	return plab;
-		// };
+		plab._currentProxy = function () {
+			plab._onceProxy( [0, 0, 0] );
+			return plab;
+		};
+		plab.current = function () {
+			plab._queueAdd( '_currentProxy', arguments );
+			return plab;
+		};
 
 		plab._jumpWordsProxy = function ( numToJump ) {
 		// Moves forward or back relative to the current position
 			// TODO: Should probably give beginning of current word on 0
 
-			if ( numToJump < 0 ) { plab._direction = 'back'; }
-			else { plab._direction = 'forward'; }
+			// if ( numToJump < 0 ) { plab._direction = 'back'; }
+			// else { plab._direction = 'forward'; }
 
 			plab._onceProxy( [0, numToJump, 0] );
 			return plab;
@@ -527,8 +527,8 @@ var idNum = 1;
 		// Moves forward or back relative to the current position
 			// TODO: Should probably give beginning of current sentence on 0
 			
-			if ( numToJump < 0 ) { plab._direction = 'back'; }
-			else { plab._direction = 'forward'; }
+			// if ( numToJump < 0 ) { plab._direction = 'back'; }
+			// else { plab._direction = 'forward'; }
 
 			plab._onceProxy( [numToJump, 0, 0] );
 			return plab;
@@ -562,8 +562,8 @@ var idNum = 1;
 			// var oldIndex = plab.getIndex(),
 			// 	newIndex = indx;
 
-			if ( indx >= 0 ) { plab._direction = 'forward' }
-			else { plab._direction = 'back' }
+			// if ( indx >= 0 ) { plab._direction = 'forward' }
+			// else { plab._direction = 'back' }
 
 			// plab._onceProxy( [0, newIndex - oldIndex, 0] );
 			plab._onceProxy( indx );

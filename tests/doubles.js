@@ -55,7 +55,8 @@ var functsWithArgs = [
 	// jump, next, and prev, so don't /really/ need to tests singles or
 	// word or sentence incrementations. If that changes, these tests need
 	// to change
-	{ func: 'once', args: [ [0,0,-2], [0,0,0], [0,0,2] ]},
+	{ func: 'once', args: [ [0,0,-2], [0,0,2] ]},
+	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
 	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
 	{ func: 'jumpTo', args: [ -1 ]},
 	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
