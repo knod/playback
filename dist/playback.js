@@ -111,7 +111,9 @@
 
 		// ----- Synchronous queue -----
 		// This is the only place that should be calling `._queueNext()`
-var idNum = 1;
+		plab._queueCurrent = null;
+
+		var idNum = 1;
 		plab._queueAdd = function ( funcName, args ) {
 			var item = { name: funcName, arguments: args, id: idNum }
 			idNum++;
@@ -119,39 +121,58 @@ var idNum = 1;
 			plab._queue.push( item );
 
 			plab._trigger( 'queued', [plab, item, plab._queue] );
+			// console.log( 'queued:', item ); //plab._queue.slice(0) );
 
-// console.log( 'queued:', plab._queue.slice(0) );
-
-			if ( !plab._queueRunning ) { plab._queueNext(); }
+			// if ( !plab._queueRunning && !plab._queueSuspended ) { plab._queueNext(); }
+			if ( !plab._queueCurrent && !plab._queueSuspended ) { plab._queueNext(); }
 
 			return item;
 		};  // End plab._queueAdd()
 
 		plab._queueNext = function () {
 
-			plab._queueRunning = true;
+			// plab._queueRunning = true;
 
-			if ( plab._queue.length === 0 ) {
+			// // if ( plab._queue.length === 0 ) {
+			// if ( plab._queueCurrent === null ) {
 
-				// THIS SHOULD BE THE ONLY PLACE WHERE `._queueRunning` GETS RESET TO FALSE.
-				// IT IS THE ONLY PLACE THAT WAITS UNTIL THE PREVIOUS FUNCTION HAS FINISHED
-				// RUNNING.
-				plab._queueRunning = false;
+			// 	// THIS SHOULD BE THE ONLY PLACE WHERE `._queueRunning` GETS RESET TO FALSE.
+			// 	// IT IS THE ONLY PLACE THAT WAITS UNTIL THE PREVIOUS FUNCTION HAS FINISHED
+			// 	// RUNNING.
+			// 	plab._queueRunning = false;
 
-			} else {
+			// } else {
 
-				var item = plab._queue.shift();
+			// THIS SHOULD BE THE ONLY PLACE WHERE `._queueCurrent` GETS GIVEN A VALUE
+			// OTHER THAN `null`. IT IS THE ONLY PLACE THAT WAITS UNTIL THE PREVIOUS
+			// FUNCTION HAS FINISHED RUNNING.
+			if ( plab._queueCurrent === null && plab._queue.length > 0 ) {
+
+				var item = plab._queueCurrent = plab._queue.shift();
 				// Before func runs so it can be listened for
 				plab._trigger( 'dequeued', [plab, item, plab._queue] );
+				// console.log( 'dequeueing', item );
 
 				var func = plab[ item.name ];
-				func.apply( this, item.arguments );
+				var returned = func.apply( this, item.arguments );
+
+				plab._queueCurrent = null;
 
 				plab._queueNext();
 			}
 
 			return plab;
 		};  // End plab._queueNext()
+
+		plab._queueSuspend = function () {
+			plab._queueSuspended = true;
+		};
+
+		plab._queueResume = function () {
+			plab._queueCurrent = null;
+			plab._queueSuspended = false;
+			plab._queueNext();
+		};
 
 		// plab._queueFinish = function () {
 		// 	plab._queueRunning = false;
@@ -205,6 +226,8 @@ var idNum = 1;
 		* 
 		* Returns to initial values and pauses
 		*/
+			plab._queueSuspend();
+
 			plab._trigger( 'resetBegin', [plab] );
 
 			// Nothing gets put onto queue
@@ -221,10 +244,12 @@ var idNum = 1;
 			// // change current and revertable state back (??: seems out of place?)
 			// reset state to allow `toggle` to go to play next from `_currentAction`
 			// This seems squirrely
-			plab._pause();  // to stop reversion to play. Not needed anymore?
+			plab._freeze();  // to stop reversion to play. Not needed anymore?
 
 			plab._trigger( 'resetFinish', [plab] );
 			// console.log( 'reset finished' );
+
+			plab._queueResume();
 
 			return plab;
 		};
@@ -290,9 +315,9 @@ var idNum = 1;
 		* For all 'play'-like activities
 		* TODO: ??: Reset delay on `._play()` instead?
 		*/
-			if ( debug ) {
-				console.log('count:', count, eventName);
-			}  // DEBUGGING
+			// // if ( debug ) {
+			// 	console.log('playing count:', count, eventName);
+			// // }  // DEBUGGING
 			count++;  // DEBUGGING
 
 			// "play" will always be forward
@@ -302,7 +327,7 @@ var idNum = 1;
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
 			// console.log( 'began playing eventName:', eventName );  // DEBUGGING
 
-			// plab._delayer.resetSlowStart();  // ??: In here instead of in `._pause()`?
+			// plab._delayer.resetSlowStart();  // ??: In here instead of in `._freeze()`?
 
 			plab._revertableState = 'play';  // In `._play()` instead?
 			plab._direction = 'forward';
@@ -321,7 +346,6 @@ var idNum = 1;
 
 		var debug;  // DEBUGGING
 		plab._playProxy = function ( frag, d ) {
-
 			debug = d;  // DEBUGGING
 			if ( debug ) { console.log( 'playing. done?:', plab.done ); }  // DEBUGGING
 
@@ -346,17 +370,19 @@ var idNum = 1;
 		* Kills the loop and resets some variables
 		* Does not change any state variables (currentAction, revertableState)
 		*/
+			// console.trace( 'killing loop' );
 			clearTimeout( plab._timeoutID );
 			// Start slow when next go through loop (restore countdown)
 			plab._delayer.resetSlowStart();
 			return plab;
 		};  // End plab._killLoop()
 
-		plab._pause = function ( eventName ) {
+		plab._freeze = function ( eventName ) {
 		/* ( Str ) -> PlaybackManager
 		* 
 		* For all 'pause'-like activities
 		*/
+			// console.log( 'pausing' );
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
 
 			// Switch order?
@@ -367,12 +393,12 @@ var idNum = 1;
 			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
 
 			return plab;
-		};  // End plab._pause()
+		};  // End plab._freeze()
 
 
 		// Names for "pause":
 		plab._pauseProxy = function () {
-			plab._pause( 'pause' );
+			plab._freeze( 'pause' );
 			return plab;
 		};
 		plab.pause = function () {
@@ -381,7 +407,7 @@ var idNum = 1;
 		};
 
 		plab._stopProxy = function () {  // ??: plab._revertableState = 'pause';
-			plab._pause( 'stop' );
+			plab._freeze( 'stop' );
 			return plab;
 		};
 		plab.stop = function () {
@@ -390,7 +416,7 @@ var idNum = 1;
 		};
 
 		plab._closeProxy = function () {  // ??: plab._revertableState = 'pause';
-			plab._pause( 'close' );
+			plab._freeze( 'close' );
 			return plab;
 		};
 		plab.close = function () {
@@ -709,7 +735,7 @@ var idNum = 1;
 		* prepare for a possible restart. Otherwise save not
 		* done.
         */
-        	// console.log( 'checking for stop. progress:', plab.getProgress() );
+        	// console.log( 'checking for stop. progress:', plab.getProgress(), '; queue:', plab._queue );
         	var isDone = false;
 
         	// Stop if we've reached the end (if `fastForward`ing, no revert)
@@ -723,16 +749,21 @@ var idNum = 1;
         		isDone = true;
 	    	}
 
+	    	// console.log( 'isDone:', isDone );
+
 	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'? 'doneBegin', 'doneFinish'?
 	        if ( isDone ) {
 	        	// console.log( 'stopping' );
 				plab.done = true;
+				// plab.stop();  // has to be on queue. Otherwise stuff can interject here.
 				plab._stopProxy();
 
 				plab._trigger( 'done', [plab] );
 	        } else {
 	        	plab.done = false;
 	        }
+
+	        // console.log( 'finish check finished' );
 
         	return plab.done;
 		};  // End plab._finishIfDone()
@@ -844,9 +875,10 @@ var idNum = 1;
 		* returns false, pausing between each fragment for an amount of time returned
 		* by `calcDelayOverride`, `state.clacDelay()`, or its own default.
 		*/
-
 			plab._trigger( 'loopBegin', [plab] );
-			if ( debug ) { console.log('loop begins', incrementors) }
+			// // if ( debug ) { 
+			// 	console.log('loop begins', incrementors)
+			// 	 // }
 
 			// Allows for stuff like `._play()` to show current word, then keep going
 			// If incrementors is an index number
@@ -880,12 +912,16 @@ var idNum = 1;
 
     	    	// ??: Could do `if ( delay !== 0 )`, but does that conflate?
     	    	var checkRepeat = checkRepeatOverride || state.playback.checkRepeat || function () { return true; };
+
+    	    	// console.log( 'repeat?', checkRepeat( plab, frag ), delay );
 				// Don't loop again if 0 repeats desired
 				if ( checkRepeat && checkRepeat( plab, frag ) ) {
 
 					plab._timeoutID = setTimeout( function () {
 						plab._loopProxy( null, checkRepeat, calcDelay );
 					}, delay );
+
+					// console.log( 'timeoutID:', plab._timeoutID );
 
 				}
 

@@ -41,6 +41,8 @@ for ( let senti = 0; senti < parsedText.length; senti++ ) {
 
 	wordIndicies.push( wordIndex );
 }
+// To represent the end of the text
+wordIndicies.push( 12 );
 
 
 // ------------ helpers ------------
@@ -489,6 +491,8 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	// var jumpSentencesAtStartNot = /doubles: (?:jumpSentences\(0\)|jumpSentences\(1\)|jumpSentences\(3\)) \+ (?:play|stop|done)/;  // [ -1, 0, 1, 3, 100 ]
 
 
+	var forward = '(?:play|restart|toggle|fast|next|jump)(?:.*\([^)-]*\))'
+
 	// ==========================================
 	// COMPLEX COMBOS
 	// ==========================================
@@ -513,7 +517,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	var playTogglePauseYes = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > (?:toggle)(?:.*\(.*\)) \+ (?:pause)/;
 	// NOT TRIGGERED. If event added to queue anytime before 'resetFinish'
 	// it gets removed from queue. It isn't called and its events don't get triggerd.
-	var resetKillsQueue = /doubles: reset(?:.*\(.*\)) \+ (?:resetBegin|once|current|revert|loopBegin|loopFinish|new|progress)(.* >)/;
+	var resetKillsQueue = /doubles: (?:reset|force)(?:.*\(.*\)) \+ (?:resetBegin|once|current|revert|loopBegin|loopFinish|new|progress)(.* >)/;
 
 
 	// Test bug
@@ -524,13 +528,15 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 	var revertsToPlayNoTriggersPause = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > revert(?:.*\(.*\)) \+ pause/
 
 	// Was #E5-ish (doesn't run expectFailure, but does sort of mean it)
-	// Now here - it just makes sure these were triggered
+	// In here - it just makes sure these were triggered or not
+	// Calculates what position should be in text
 	var changesPositionAtStart = /doubles: (?:play|restart|toggle|once|current|fast|rewind|next|prev|jump)/;
 	var getsValuesAtEnd = /> (?:play|toggle|once|current|fast|rewind|next|prev|jump)(?:.*\(.*\)) \+ (?:new|progress)/;
 
 	// test bug - play-like (!stop) + stop|done? > moveForward with not play-like (jump etc. that's >=0) + stop|done = triggered
-	var doneThenForwardYes = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:next|once|current|jump)(?:.*\([^)-]*\)) \+ (?:stop|done)/;
-	var doneThenBackNo = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:next|once|jump)(?:.*\(.*(?:-).*\)) \+ (?:stop|done)/
+	// jumpTo(-1) doesn't trigger done, so we're fine there since we're only looking for a first event of stop|done
+	var doneAtEndThenForwardDoneYes = /doubles: (?:(?!stop).*\([^)-]*\)) \+ (?:stop|done).* > (?:next|once|current|jump)(?:.*\([^)-]*\)) \+ (?:stop|done)/;
+	var doneAtEndThenBackDoneNo = /doubles: (?:(?!stop).*\([^)-]*\)) \+ (?:stop|done).* > (?:next|once|jump)(?:.*\(.*(?:-).*\)) \+ (?:stop|done)/;
 
 
 	// ========== 10
@@ -671,7 +677,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 	// #E6-sh (doesn't run expectFailure, but does sort of mean it)
 	// I think this only works because it comes after everything else
-	var doneAtEnd = /> jump(?:.*\(.*\)) \+ (?:done|stop)/;
+	var doneAtEnd = /> jump(?:.*\([^)-]*\)) \+ (?:done|stop)/;
 
 
 
@@ -1058,12 +1064,12 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		}
 
 		testNum = 'CC9';
-		if ( debug && doneThenForwardYes.test(label) ) { console.log( testNum ); }
-		if ( doneThenForwardYes.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
+		if ( debug && doneAtEndThenForwardDoneYes.test(label) ) { console.log( testNum ); }
+		if ( doneAtEndThenForwardDoneYes.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
 
 		testNum = 'CC10-last';
-		if ( debug && doneThenBackNo.test(label) ) { console.log( testNum ); }
-		if ( doneThenBackNo.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
+		if ( debug && doneAtEndThenBackDoneNo.test(label) ) { console.log( testNum ); }
+		if ( doneAtEndThenBackDoneNo.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
 
 
 
@@ -1089,105 +1095,170 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		if ( debug && diffPosOnOnceAsFirst.test(label) ) { console.log( testNum ); }
 		if ( diffPosOnOnceAsFirst.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
 
-		testNum = 'E4-last';
+		testNum = 'E4';
 		if ( debug && onceArrayChangesPosition.test(label) ) { console.log( testNum ); }
 		if ( onceArrayChangesPosition.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
 
 
 
-		// // Are we checking for done at end after jump (TODO: Maybe add once with positives)
-		// if ( doneAtEnd.test( label ) ) {
-		// 	testNum = 'E6';
-		// 	if ( debug ) { console.log( testNum ); }
-		// 	// If the numbers add up to past the end, we should trigger done and stop
-		// 	// TODO: Change this into plain old list of regex later
-		// 	var matches = /doubles: (?:(.*)\((.*)\) \+ )(?:.* > )(?:(.*)\((.*)\) \+ )/.exec( label );
+		// Are we checking for done at end after jump (TODO: Maybe add once with positives)
+		if ( doneAtEnd.test( label ) ) {
+			testNum = 'E5-last';
+			if ( debug ) { console.log( testNum ); }
+			// If the numbers add up to past the end, we should trigger done and stop
+			// TODO: Change this into plain old list of regex later
+			var matches = /doubles: (?:(.*)\((.*)\) \+ )(?:.* > )(?:(.*)\((.*)\) \+ )/.exec( label );
 
-		// 	var func1 	= matches[1],
-		// 		arg1 	= JSON.parse(matches[2]),
-		// 		func2 	= matches[3],
-		// 		arg2 	= JSON.parse(matches[4]);
+			var func1 	= matches[1],
+				arg1 	= JSON.parse(matches[2]),
+				func2 	= matches[3],
+				arg2 	= JSON.parse(matches[4]);
 
-		// 	var wordPos = 0;
-		// 	var sentencePos = 0;
+			if ( /prev/.test( func2 ) ) { arg2 = -1; }
+			if ( /next/.test( func2 ) ) { arg2 = 1; }
 
-		// 	if ( /(?:play|restart|toggle)/.test( func1 ) ) {
-		// 		wordPos = 11;
-		// 	} else if ( /(?:nextWord)/.test( func1 ) ) {
-		// 		wordPos += 1;
-		// 	} else if ( /(?:nextSentence)/.test( func1 ) ) {
-		// 		wordPos += wordIndicies[0] + 1;
-		// 		sentencePos += 1;
-		// 	} else if ( /jumpTo/.test( func1 ) ) {
+			var wordPos = 0;
+			var sentencePos = 0;
 
-		// 		if ( arg1 < 0 ) { wordPos = 11 + arg1 }
-		// 		else { wordPos += Math.min( 11, arg1 ) }
+			// Doesn't matter if the first one goes backwards or not
+			if ( /(?:play|restart|toggle)/.test( func1 ) ) {
+				wordPos = 11;
+			} else if ( /(?:nextWord)/.test( func1 ) ) {
+				wordPos += 1;
+			} else if ( /(?:nextSentence)/.test( func1 ) ) {
+				sentencePos += 1;
+				wordPos = wordIndicies[ sentencePos ];
+			} else if ( /jumpTo/.test( func1 ) ) {
+
+				if ( arg1 < 0 ) { wordPos = 12 + arg1 }
+				else { wordPos += Math.min( 12, arg1 ) }
 			
-		// 	} else if ( /jumpWord/.test( func1 ) ) {
+			} else if ( /jumpWord/.test( func1 ) ) {
 			
-		// 		if ( arg1 > 0 )	{ wordPos += Math.min( 11, arg1 ) }
+				if ( arg1 > 0 )	{ wordPos += Math.min( 12, arg1 ) }
 			
-		// 	} else if ( /jumpSentence/.test( func1 ) ) {
+			} else if ( /jumpSentence/.test( func1 ) ) {
 			
-		// 		if ( arg1 > 0 ) {
-		// 			var num = Math.min( 4, arg1 );
-		// 			sentencePos = num;
-		// 			// If it was 4, it got to the last word
-		// 			wordPos = wordIndicies[ num ] || 11;
-		// 		}
+				if ( arg1 > 0 ) {
+					var num = Math.min( 4, arg1 );
+					sentencePos = num;
+					// If it was 4, it got to the last word
+					wordPos = wordIndicies[ num ];
+				}
 			
-		// 	}  // ??: If `once()`?
+			}  // ??: If `once()`?
 
+			// console.log( 'at end of 1st:', wordPos, sentencePos );
 
-		// 	// if ( /(?:play|restart|toggle)/.test( func2 ) ) {
-		// 	// 	wordPos = 11;
-		// 	// } else
+			// if ( /(?:play|restart|toggle)/.test( func2 ) ) {
+			// 	wordPos = 12;
+			// } else
 
-		// 	// Add up to find out finishing position
-		// 	if ( /jumpTo/.test( func2 ) ) {
+			// Add up to find out finishing position
+			if ( /jumpTo/.test( func2 ) ) {
 
-		// 		wordPos += arg2
+				wordPos += arg2
+				// jump(-1) from 0 will mean going to the end, but not stopping
+				if ( wordPos < 0 ) { wordPos = 12 + wordPos; }
 			
-		// 	} else if ( /jumpWord/.test( func2 ) ) {
-			
-		// 		wordPos += arg2
-			
-		// 	} else if ( /jumpSentence/.test( func2 ) ) {
+			} else if ( /jumpWord/.test( func2 ) ) {
+				
+				wordPos += arg2;
+				// // Got to the start by travenling backwards, triggereing an end
+				// if ( arg2 < 0 && wordPos <= 0 ) {
+				// 	wordPos = -1;
+				// } else if 
 
-		// 		sentencePos += arg2;
+				// if ( wordPos > 2) {
+					
+				// 	if ( arg2 < 0 ) { wordPos += arg2 }
 
-		// 		// If near the end and pushed over the edge (0 counts as forward)
-		// 		if ( wordPos >= wordIndicies[3] &&  arg2 >= 0 ) {
-		// 			wordPos = 11;
-		// 		// if at the start and go backward
-		// 		} else if ( wordPos <= 0 && arg2 < 0 ) {
-		// 			wordPos = -1;
-		// 		}
 
-		// 	// Is this needed or is it taken care of elsewhere?
-		// 	}  else if ( /(?:prevWord)/.test( func1 ) ) {
+				// } else if ( ) {
 
-		// 		wordPos -= 1;
-		// 		// If was traveling backward and hit start,
-		// 		// that will trigger stop and done
-		// 		if ( wordPos === 0 ) { wordPos = -1 }
+				// }
 
-		// 	} else if ( /(?:prevSentence)/.test( func1 ) ) {
+			} else if ( /jumpSentence/.test( func2 ) ) {
 
-		// 		sentencePos -= 1;
-		// 		wordPos = wordIndicies[ sentencePos ]
-		// 		// If was traveling backward and hit start,
-		// 		// that will trigger stop and done
-		// 		if ( wordPos === 0 ) { wordPos = -1 }
+				// console.log( 'jumping sentence' );
+				sentencePos += arg2;
+				// console.log( 'new sPos', sentencePos );
+				var sentencePos = Math.min( 4, sentencePos );
+				sentencePos = Math.max( 0, sentencePos );
+				// console.log( 'new sPos', sentencePos );
 
-		// 	} // ??: If `once()`?
+				wordPos = wordIndicies[ sentencePos ];
 
-		// 	// If final word position would be before the start or at the end
-		// 	if ( wordPos >= 11 || wordPos < 0 ) {
-		// 		 if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); }
-		// 		return defaultAsserts.triggered( result, testNum );
-		// 	}
-		// }  // End if 'done' or 'stop' event
+				// // If it's 0 now, we have to figure out if
+				// // we were moving backwards or forwards
+				// if ( sentencePos === 0 ) {
+				// 	if ( arg2 < 0 ) {
+				// 		wordPos = -1;
+				// 	} else {
+				// 		wordPos = 0;
+				// 	}
+				// // Otherwise it was moving forwards
+				// } else if ( sentencePos > 0 ) {
+				// 	wordPos = wordIndicies[ sentencePos ];
+				// }
+
+				// if ( sentencePos > wordIndicies.length ){
+				// 	wordPos = 11;
+				// // If near the end and pushed over the edge (0 counts as forward)
+				// } else if ( wordPos >= wordIndicies[3] && arg2 >= 0 ) {
+				// 	wordPos = 11;
+				// // if at the start and go backward
+				// } else if ( wordPos <= 0 && arg2 < 0 ) {
+				// 	wordPos = -1;
+				// }
+
+			// Is this needed or is it taken care of elsewhere?
+			}  else if ( /(?:prevWord|nextWord)/.test( func2 ) ) {
+
+				// arg2 was assigned appropriate values if this was the case
+				wordPos += arg2;
+				// // If was traveling backward and hit start,
+				// // that will trigger stop and done
+				// if ( wordPos === 0 ) { wordPos = -1 }
+
+			} else if ( /(?:prevSentence|nextSentence)/.test( func2 ) ) {
+
+				sentencePos += arg2;
+				num = Math.max( 0, num );
+				wordPos = wordIndicies[ sentencePos ]
+				// // If was traveling backward and hit start,
+				// // that will trigger stop and done
+				// if ( wordPos === 0 ) { wordPos = -1 }
+
+			} // ??: If `once()`?
+
+			console.log( 'at end of 2nd:', wordPos, sentencePos );
+
+			var assertName = 'not';
+
+			// If final word position would be before the start or after the end
+			if ( wordPos > 11 || wordPos < 0 ) {
+				assertName = 'triggered';
+			// If final word was at end, but got there while moving forward
+			} else if ( wordPos === 11 && typeof arg2 === 'number' && arg2 >= 0 ) {
+				assertName = 'triggered';
+			// If final word was at start, but got there while moving backwards
+			} else if ( wordPos === 0 && typeof arg2 === 'number' && arg2 < 0 ) {
+				assertName = 'triggered';
+			}
+
+			if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); }
+			return defaultAsserts[ assertName ]( result, testNum );
+
+
+			// if ( wordPos >= 11 || wordPos < 0 ) {
+			// 	 if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); }
+			// 	return defaultAsserts.triggered( result, testNum );
+			// } else {
+			// 	 if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); }
+			// 	return defaultAsserts.not( result, testNum );	
+			// }
+		}  // End if 'done' or 'stop' event
 
 
 		// old

@@ -48,7 +48,6 @@ var lastEvent = module.exports = function ( result, bigs, opWith, reset ) {
 
 	var ourFuncID;
 
-	// console.log(op);
 	// `forceReset()` skips the queue
 	if ( op !== 'forceReset' ) {
 		emitter.on( 'queued', getFuncID );

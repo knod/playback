@@ -62,7 +62,7 @@ var firstEvent = module.exports = function ( result, bigs, opWith, doOnEvent, re
 	var ourFuncID;
 
 	// `forceReset()` skips the queue
-	if ( op !== 'forceRest' ) {
+	if ( op !== 'forceReset' ) {
 		emitter.on( 'queued', getFuncID );
 		// Start listening after func actually runs
 		emitter.on( 'dequeued', startListening );

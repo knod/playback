@@ -19,109 +19,109 @@
 var debugTests = false;
 // One function with itself calling all combos of events: #tests: 676
 // 676 * 4 = 2704? Yup. `doingOnlyRepeatSameFunction` works!
-var doingOnlyRepeatSameFunction = true;
+var doingOnlyRepeatSameFunction = false;
 
 // Why does this take so long? It's really just for one test
 // (the first test runs independently)
 var waitTime = 50;  // Basically double of single tests (25 was just enough with singles)
-
 
 var SetUp 		= require('./setup-default.js'),
 	bigObjects 	= SetUp(),
 	plab 		= bigObjects.playback,
 	emitter 	= bigObjects.emitter;
 
-
 var tester = require('./testing-core.js');
 var runLastEvent  = require( './helpers/last-event.js' );
 var runFirstEvent = require( './helpers/first-event.js' );
 
+
+// A note on `once()`
+// The tests could go on forever... but they do get tested somewhat with
+// jump, next, and prev, so don't /really/ need to tests singles or
+// word or sentence incrementations. If that changes, these tests need
+// to change
 
 
 // 16 funcs
 // + args = 29
 var functsWithArgs1 = [
 	// These two at the top for now for ease of debugging
-	{ func: 'forceReset', args: [ null ]},
+	// { func: 'forceReset', args: [ null ]},
 	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
-	{ func: 'play', args: [ null ] },  // * 26 for 1 event
-	{ func: 'togglePlayPause', args: [ null ]},
-	{ func: 'restart', args: [ null ]},
-	{ func: 'reset', args: [ null ]},
-	{ func: 'pause', args: [ null ]},
-	{ func: 'stop', args: [ null ]},
-	{ func: 'close', args: [ null ]},
-	{ func: 'revert', args: [ null ]},
-	{ func: 'rewind', args: [ null ]},
-	{ func: 'fastForward', args: [ null ]},
-	// These could go on forever... but they do get tested somewhat with
-	// jump, next, and prev, so don't /really/ need to tests singles or
-	// word or sentence incrementations. If that changes, these tests need
-	// to change
-	{ func: 'once', args: [ [0,0,-2], [0,0,2] ]},
-	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
-	{ func: 'jumpTo', args: [ -1 ]},
-	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
-	{ func: 'nextWord', args: [ null ]},
-	{ func: 'nextSentence', args: [ null ]},
-	{ func: 'prevWord', args: [ null ]},
-	{ func: 'prevSentence', args: [ null ]}
+	// { func: 'play', args: [ null ] },  // * 26 for 1 event
+	// { func: 'togglePlayPause', args: [ null ]},
+	// { func: 'restart', args: [ null ]},
+	// { func: 'reset', args: [ null ]},
+	// { func: 'pause', args: [ null ]},
+	// { func: 'stop', args: [ null ]},
+	// { func: 'close', args: [ null ]},
+	// { func: 'revert', args: [ null ]},
+	// { func: 'rewind', args: [ null ]},
+	// { func: 'fastForward', args: [ null ]},
+	// { func: 'once', args: [ [0,0,-2], [0,0,2] ]},
+	// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
+	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+	// { func: 'jumpSentences', args: [ 3 ]},
+	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
+	// { func: 'nextWord', args: [ null ]},
+	// { func: 'nextSentence', args: [ null ]},
+	// { func: 'prevWord', args: [ null ]},
+	// { func: 'prevSentence', args: [ null ]}
+];
+
+// 26 events * 21115 tests = 548990 tests
+var events1 = [
+	// 'playBegin',
+	// 'playFinish',
+	// 'resetBegin',
+	// 'resetFinish',
+	// 'restartBegin',
+	// 'restartFinish',
+	// 'pauseBegin',
+	// 'pauseFinish',
+	// 'stopBegin',
+	// 'stopFinish',
+	// 'closeBegin',
+	// 'closeFinish',
+	'onceBegin',
+	'onceFinish',
+	// 'revertBegin',
+	// 'revertFinish',
+	// 'rewindBegin',
+	// 'rewindFinish',
+	// 'fastForwardBegin',
+	// 'fastForwardFinish',
+	// 'loopBegin',
+	// 'loopFinish',
+	// 'newWordFragment',
+	// 'progress',
+	// 'done',
+	// 'loopSkip'
 ];
 
 var functsWithArgs2 = [
 	// These two at the top for now for ease of debugging
 	{ func: 'forceReset', args: [ null ]},
-	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
-	{ func: 'play', args: [ null ] },  // * 26 for 1 event
-	{ func: 'togglePlayPause', args: [ null ]},
-	{ func: 'restart', args: [ null ]},
-	{ func: 'reset', args: [ null ]},
-	{ func: 'pause', args: [ null ]},
-	{ func: 'stop', args: [ null ]},
-	{ func: 'close', args: [ null ]},
-	{ func: 'revert', args: [ null ]},
-	{ func: 'rewind', args: [ null ]},
-	{ func: 'fastForward', args: [ null ]},
-	{ func: 'once', args: [ [0,0,-2], [0,0,2] ]},
-	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
-	{ func: 'jumpTo', args: [ -1 ]},
-	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
-	{ func: 'nextWord', args: [ null ]},
-	{ func: 'nextSentence', args: [ null ]},
-	{ func: 'prevWord', args: [ null ]},
-	{ func: 'prevSentence', args: [ null ]}
-];
-
-// 26 events * 21115 tests = 548990 tests
-var events1 = [
-	'playBegin',
-	'playFinish',
-	'resetBegin',
-	'resetFinish',
-	'restartBegin',
-	'restartFinish',
-	'pauseBegin',
-	'pauseFinish',
-	'stopBegin',
-	'stopFinish',
-	'closeBegin',
-	'closeFinish',
-	'onceBegin',
-	'onceFinish',
-	'revertBegin',
-	'revertFinish',
-	'rewindBegin',
-	'rewindFinish',
-	'fastForwardBegin',
-	'fastForwardFinish',
-	'loopBegin',
-	'loopFinish',
-	'newWordFragment',
-	'loopSkip',
-	'progress',
-	'done'
+	// { func: 'current', args: [ null ]},  // once( [0,0,0] )
+	// { func: 'play', args: [ null ] },  // * 26 for 1 event
+	// { func: 'togglePlayPause', args: [ null ]},
+	// { func: 'restart', args: [ null ]},
+	// { func: 'reset', args: [ null ]},
+	// { func: 'pause', args: [ null ]},
+	// { func: 'stop', args: [ null ]},
+	// { func: 'close', args: [ null ]},
+	// { func: 'revert', args: [ null ]},
+	// { func: 'rewind', args: [ null ]},
+	// { func: 'fastForward', args: [ null ]},
+	// { func: 'once', args: [ [0,0,-2], [0,0,2] ]},
+	// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
+	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
+	// { func: 'jumpSentences', args: [ 3 ]},
+	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
+	// { func: 'nextWord', args: [ null ]},
+	// { func: 'nextSentence', args: [ null ]},
+	// { func: 'prevWord', args: [ null ]},
+	// { func: 'prevSentence', args: [ null ]}
 ];
 var events2 = [
 	'playBegin', 'playFinish',
@@ -136,9 +136,9 @@ var events2 = [
 	'fastForwardBegin', 'fastForwardFinish',
 	'loopBegin', 'loopFinish',
 	'newWordFragment',
-	'loopSkip',
 	'progress',
-	'done'
+	'done',
+	// 'loopSkip'
 ];
 
 // Just doubles = 26 * 26 * 29 =  19,604 tests (about 1777325ms = 1777.325s = 29.6220833min )
