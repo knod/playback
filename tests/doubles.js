@@ -20,6 +20,7 @@ var debugTests = false;
 // One function with itself calling all combos of events: #tests: 676
 // 676 * 4 = 2704? Yup. `doingOnlyRepeatSameFunction` works!
 var doingOnlyRepeatSameFunction = false;
+var firstFunction = null;
 
 // Why does this take so long? It's really just for one test
 // (the first test runs independently)
@@ -41,94 +42,51 @@ var runFirstEvent = require( './helpers/first-event.js' );
 // word or sentence incrementations. If that changes, these tests need
 // to change
 
-
-// 16 funcs
-// + args = 29
-var functsWithArgs1 = [
-	// These two at the top for now for ease of debugging
-	// { func: 'forceReset', args: [ null ]},
+var funcsWithArgs1 = [
+	{ func: 'forceReset', args: [ null ]},  // 0
+	{ func: 'reset', args: [ null ]},
+	{ func: 'restart', args: [ null ]},  // 2
+	{ func: 'play', args: [ null ] },
+	{ func: 'togglePlayPause', args: [ null ]},  // 4
+	{ func: 'pause', args: [ null ]},
+	{ func: 'stop', args: [ null ]},  // 6
+	{ func: 'close', args: [ null ]},
+	{ func: 'revert', args: [ null ]},  // 8
+	{ func: 'rewind', args: [ null ]},
+	{ func: 'fastForward', args: [ null ]},  // 10
+	{ func: 'once', args: [ [0,0,-2] ]},
+	{ func: 'once', args: [ [0,0,2] ]},  // 12
 	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
-	// { func: 'play', args: [ null ] },  // * 26 for 1 event
-	// { func: 'togglePlayPause', args: [ null ]},
-	// { func: 'restart', args: [ null ]},
-	// { func: 'reset', args: [ null ]},
-	// { func: 'pause', args: [ null ]},
-	// { func: 'stop', args: [ null ]},
-	// { func: 'close', args: [ null ]},
-	// { func: 'revert', args: [ null ]},
-	// { func: 'rewind', args: [ null ]},
-	// { func: 'fastForward', args: [ null ]},
-	// { func: 'once', args: [ [0,0,-2], [0,0,2] ]},
-	// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
-	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-	// { func: 'jumpSentences', args: [ 3 ]},
-	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
-	// { func: 'nextWord', args: [ null ]},
-	// { func: 'nextSentence', args: [ null ]},
-	// { func: 'prevWord', args: [ null ]},
-	// { func: 'prevSentence', args: [ null ]}
+	{ func: 'jumpTo', args: [ -3 ]},  // 14
+	{ func: 'jumpTo', args: [ -1 ]},
+	{ func: 'jumpTo', args: [ 0 ]},  // 16
+	{ func: 'jumpTo', args: [ 6 ]},
+	{ func: 'jumpTo', args: [ 11 ]},  // 18
+	{ func: 'jumpTo', args: [ 100 ]},
+	{ func: 'jumpWords', args: [ -3 ]},  // 20
+	{ func: 'jumpWords', args: [ -1 ]},
+	{ func: 'jumpWords', args: [ 0 ]},  // 22
+	{ func: 'jumpWords', args: [ 4 ]},
+	{ func: 'jumpWords', args: [ 11 ]},  // 24
+	{ func: 'jumpWords', args: [ 100 ]},
+	{ func: 'jumpSentences', args: [ -3 ]},  // 26
+	{ func: 'jumpSentences', args: [ -1 ]},
+	{ func: 'jumpSentences', args: [ 0 ]},  // 28
+	{ func: 'jumpSentences', args: [ 1 ]},
+	{ func: 'jumpSentences', args: [ 3 ]},  // 30
+	{ func: 'jumpSentences', args: [ 100 ]},
+	{ func: 'nextWord', args: [ null ]},  // 32
+	{ func: 'nextSentence', args: [ null ]},
+	{ func: 'prevWord', args: [ null ]},  // 34
+	{ func: 'prevSentence', args: [ null ]}  // 35
 ];
 
 // 26 events * 21115 tests = 548990 tests
 var events1 = [
-	// 'playBegin',
-	// 'playFinish',
-	// 'resetBegin',
-	// 'resetFinish',
-	// 'restartBegin',
-	// 'restartFinish',
-	// 'pauseBegin',
-	// 'pauseFinish',
-	// 'stopBegin',
-	// 'stopFinish',
-	// 'closeBegin',
-	// 'closeFinish',
-	'onceBegin',
-	'onceFinish',
-	// 'revertBegin',
-	// 'revertFinish',
-	// 'rewindBegin',
-	// 'rewindFinish',
-	// 'fastForwardBegin',
-	// 'fastForwardFinish',
-	// 'loopBegin',
-	// 'loopFinish',
-	// 'newWordFragment',
-	// 'progress',
-	// 'done',
-	// 'loopSkip'
-];
-
-var functsWithArgs2 = [
-	// These two at the top for now for ease of debugging
-	{ func: 'forceReset', args: [ null ]},
-	// { func: 'current', args: [ null ]},  // once( [0,0,0] )
-	// { func: 'play', args: [ null ] },  // * 26 for 1 event
-	// { func: 'togglePlayPause', args: [ null ]},
-	// { func: 'restart', args: [ null ]},
-	// { func: 'reset', args: [ null ]},
-	// { func: 'pause', args: [ null ]},
-	// { func: 'stop', args: [ null ]},
-	// { func: 'close', args: [ null ]},
-	// { func: 'revert', args: [ null ]},
-	// { func: 'rewind', args: [ null ]},
-	// { func: 'fastForward', args: [ null ]},
-	// { func: 'once', args: [ [0,0,-2], [0,0,2] ]},
-	// { func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
-	// { func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-	// { func: 'jumpSentences', args: [ 3 ]},
-	// { func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
-	// { func: 'nextWord', args: [ null ]},
-	// { func: 'nextSentence', args: [ null ]},
-	// { func: 'prevWord', args: [ null ]},
-	// { func: 'prevSentence', args: [ null ]}
-];
-var events2 = [
-	'playBegin', 'playFinish',
 	'resetBegin', 'resetFinish',
 	'restartBegin', 'restartFinish',
+	'playBegin', 'playFinish',
 	'pauseBegin', 'pauseFinish',
-	'stopBegin', 'stopFinish',
 	'closeBegin', 'closeFinish',
 	'onceBegin', 'onceFinish',
 	'revertBegin', 'revertFinish',
@@ -137,13 +95,67 @@ var events2 = [
 	'loopBegin', 'loopFinish',
 	'newWordFragment',
 	'progress',
-	'done',
-	// 'loopSkip'
+	'stopBegin', 'stopFinish',
+	'done',  // 24
+	// 'loopSkip'  // Not relevant till `state` experiments
 ];
 
-// Just doubles = 26 * 26 * 29 =  19,604 tests (about 1777325ms = 1777.325s = 29.6220833min )
+var functsWithArgs2 = [
+	{ func: 'forceReset', args: [ null ]},
+	{ func: 'reset', args: [ null ]},
+	{ func: 'restart', args: [ null ]},
+	{ func: 'play', args: [ null ] },
+	{ func: 'togglePlayPause', args: [ null ]},
+	{ func: 'pause', args: [ null ]},
+	{ func: 'stop', args: [ null ]},
+	{ func: 'close', args: [ null ]},
+	{ func: 'revert', args: [ null ]},
+	{ func: 'rewind', args: [ null ]},
+	{ func: 'fastForward', args: [ null ]},
+	{ func: 'once', args: [ [0,0,-2] ]},
+	{ func: 'once', args: [ [0,0,2] ]},
+	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
+	{ func: 'jumpTo', args: [ -3 ]},
+	{ func: 'jumpTo', args: [ -1 ]},
+	{ func: 'jumpTo', args: [ 0 ]},
+	{ func: 'jumpTo', args: [ 6 ]},
+	{ func: 'jumpTo', args: [ 11 ]},
+	{ func: 'jumpTo', args: [ 100 ]},
+	{ func: 'jumpWords', args: [ -3 ]},
+	{ func: 'jumpWords', args: [ -1 ]},
+	{ func: 'jumpWords', args: [ 0 ]},
+	{ func: 'jumpWords', args: [ 4 ]},
+	{ func: 'jumpWords', args: [ 11 ]},
+	{ func: 'jumpWords', args: [ 100 ]},
+	{ func: 'jumpSentences', args: [ -3 ]},
+	{ func: 'jumpSentences', args: [ -1 ]},
+	{ func: 'jumpSentences', args: [ 0 ]},
+	{ func: 'jumpSentences', args: [ 1 ]},
+	{ func: 'jumpSentences', args: [ 3 ]},
+	{ func: 'jumpSentences', args: [ 100 ]},
+	{ func: 'nextWord', args: [ null ]},
+	{ func: 'nextSentence', args: [ null ]},
+	{ func: 'prevWord', args: [ null ]},
+	{ func: 'prevSentence', args: [ null ]}  // 35?
+];
 
-var alreadyTestedCombos = [];
+var events2 = [
+	'playBegin', 'playFinish',
+	'resetBegin', 'resetFinish',
+	'restartBegin', 'restartFinish',
+	'pauseBegin', 'pauseFinish',
+	'closeBegin', 'closeFinish',
+	'onceBegin', 'onceFinish',
+	'revertBegin', 'revertFinish',
+	'rewindBegin', 'rewindFinish',
+	'fastForwardBegin', 'fastForwardFinish',
+	'loopBegin', 'loopFinish',
+	'newWordFragment',
+	'progress',
+	'stopBegin', 'stopFinish',
+	'done',
+	// 'loopSkip'  // Not relevant till `state` experiments
+];
 
 
 
@@ -201,7 +213,7 @@ var increment = function ( indices ) {
 
 	} else {
 
-		iterate( 'doubles:', func1i, arg1i, event1i, func2i, arg2i, event2i );  // iterate
+		iterate( 'combos:', func1i, arg1i, event1i, func2i, arg2i, event2i );  // iterate
 
 	}  // end maybe repeat
 
@@ -218,7 +230,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 	var assert1Obj, assert2Obj;
 
 	// Loop 1
-	const funcWArg1 = functsWithArgs1[ func1Indx ];
+	const funcWArg1 = funcsWithArgs1[ func1Indx ];
 
 	const func1Name = funcWArg1.func;
 	const arg1		= funcWArg1.args[ arg1Indx ];
@@ -242,14 +254,15 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 	label = label + ' > ' + func2Name + '(' + JSON.stringify( arg2 ) + ')' + ' + ' + evnt2 ;
 	// console.log( label );
 
+	// not skipping anymore at this point
 	var shouldSkip = false;
-	if ( doingOnlyRepeatSameFunction ) {
-		// If the second func and arg aren't the same, it's not a double. Skip
-		if ( func1Name !== func2Name || arg1 !== arg2 ) { shouldSkip = true; }
-	} else {
-		// If the second func and arg /are/ the same, it's a double. Skip
-		if ( func1Name === func2Name && arg1 === arg2 ) { shouldSkip = true; }
-	}
+	// if ( doingOnlyRepeatSameFunction ) {
+	// 	// If the second func and arg aren't the same, it's not a double. Skip
+	// 	if ( func1Name !== func2Name || arg1 !== arg2 ) { shouldSkip = true; }
+	// } else {
+	// 	// If the second func and arg /are/ the same, it's a double. Skip
+	// 	if ( func1Name === func2Name && arg1 === arg2 ) { shouldSkip = true; }
+	// }
 
 
 	var runAssert = function ( result, assertNum, skip ) {
@@ -297,7 +310,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 				var finished = increment({
 					one: {
 						func: func1Indx, arg: arg1Indx, event: event1Indx,
-						funcs: functsWithArgs1, args: funcWArg1.args, events: events1
+						funcs: funcsWithArgs1, args: funcWArg1.args, events: events1
 					},
 					two: {
 						func: func2Indx, arg: arg2Indx, event: event2Indx,
@@ -344,7 +357,7 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 
 
 	if ( shouldSkip ) {
-		if ( debugTests ) { console.log( 'skipping:', label ); }
+		// if ( debugTests ) { console.log( 'skipping:', label ); }
 		runAssert( null, null, shouldSkip )
 	} else {
 		// console.log( label );
@@ -369,18 +382,40 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 
 var startTime = 0;
 // Get the variables we need
-var start = function () {
+var start = function ( funcObj ) {
 	
 	startTime = Date.now();
 	var time = (new Date()).toString().split(' ')[4];
 	console.log( 'Start:', time )
 
-	singleAssertions 	= require('./helpers/single-assertions.js')( plab );
-	altAssertionater 	= require('./helpers/doubles-assertions.js')( plab );
-	iterate('doubles:');
+	// If a valid object of the functions list is passed in, use that instead
+	// of the rest of the arguments inside there
+	if ( typeof process.argv[2] === 'string' ) {
+		var indx = parseInt( process.argv[2] );
+
+		// for ( var funci = 0; funci < funcsWithArgs1.length; funci++ ) {
+		// 	var obj = funcsWithArgs1[ funci ];
+		// 	if ( obj.func === process.argv[2] ) {
+		// 		console.log( 'Testing with:', obj.func );
+		// 		funcsWithArgs1 = [ obj ];
+		// 	}
+		// }
+
+		var obj = funcsWithArgs1[ indx ]
+		if ( obj ) {
+			console.log( 'Testing with:', obj.func );
+			funcsWithArgs1 = [ obj ];
+		}
+
+		singleAssertions 	= require('./helpers/single-assertions.js')( plab );
+		altAssertionater 	= require('./helpers/doubles-assertions.js')( plab );
+		iterate('combos:');
+	}
 
 	// Too long to run on every single code change, but should
 	// be run sometimes, just to check
 }
 
 start();
+
+// module.exports = start;

@@ -181,11 +181,11 @@
 		// 	}
 		// };  // End plab._queueFinish()
 
-		plab._queueReset = function () {
+		plab._queueClear = function () {
 			plab._queue.splice(0, plab._queue.length)
 			// CANNOT SET `._queueRunning` TO `false`. A PREVIOUSLY QUEUED FUNCTION
 			// MAY STILL BE RUNNING AND ONE COULD BE PLACED ON TOP OF THAT
-		};  // End plab._queueReset()
+		};  // End plab._queueClear()
 
 		// ??: _queuePause?
 
@@ -212,7 +212,7 @@
 
 			// // TODO: ??: Should this clear the queue?
 			// // Would happen on `restart()`, too
-			// plab._queueReset();
+			// plab._queueClear();
 
 			// Just put the index at the right place
 			plab._stepper.restart();
@@ -238,7 +238,7 @@
 			// Has to be before `_onceProxy()` so it lets `_loop()` get on the queue and play once
 			// Otherwise `_onceProxy()` has to use `_loopProxy`, which would give inconsistent
 			// behavior for functions that use `_onceProxy()`
-			plab._queueReset();
+			plab._queueClear();
 
 			// plab._onceProxy( 0 );  // Send first fragment (now that revertable state is 'pause')
 			// // change current and revertable state back (??: seems out of place?)
@@ -386,7 +386,7 @@
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
 
 			// Switch order?
-			plab._killLoop()
+			plab._killLoop();
 			plab._revertableState = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
 			plab._currentAction = eventName || 'pause';
 
@@ -546,10 +546,6 @@
 		plab._jumpWordsProxy = function ( numToJump ) {
 		// Moves forward or back relative to the current position
 			// TODO: Should probably give beginning of current word on 0
-
-			// if ( numToJump < 0 ) { plab._direction = 'back'; }
-			// else { plab._direction = 'forward'; }
-
 			plab._onceProxy( [0, numToJump, 0] );
 			return plab;
 		};
@@ -561,10 +557,6 @@
 		plab._jumpSentencesProxy = function ( numToJump ) {
 		// Moves forward or back relative to the current position
 			// TODO: Should probably give beginning of current sentence on 0
-			
-			// if ( numToJump < 0 ) { plab._direction = 'back'; }
-			// else { plab._direction = 'forward'; }
-
 			plab._onceProxy( [numToJump, 0, 0] );
 			return plab;
 		};
@@ -579,6 +571,8 @@
 		plab.prevWord 	  = function () { return plab.jumpWords( -1 ); };
 		plab.prevSentence = function() { return plab.jumpSentences( -1 ); };
 
+		// Can't see a reason for `nextFragment()`
+
 
 
 		// =================== SCRUBBER BAR (probably, and maybe scrolling) =================== \\
@@ -587,20 +581,11 @@
 		/* ( int ) -> Playback
 		* 
 		* Moves to an absolute word position (not relative)
+		* Does not allow any values below 0
 		*/
-			// if ( plab._currentAction !== 'jump' ) {
-			// 	// Have to pause first so index doesn't change
-			// 	plab._currentAction = 'jump';
-			// 	plab._killLoop( null );
-			// }
-
-			// var oldIndex = plab.getIndex(),
-			// 	newIndex = indx;
-
-			// if ( indx >= 0 ) { plab._direction = 'forward' }
-			// else { plab._direction = 'back' }
-
-			// plab._onceProxy( [0, newIndex - oldIndex, 0] );
+			// Theoretically it can loop around to the end, but here
+			// I don't see a reason to complicate things
+			if ( indx < 0 ) { indx = [ 0, indx, 0 ]; }
 			plab._onceProxy( indx );
 
 			return plab;
@@ -749,7 +734,7 @@
         		isDone = true;
 	    	}
 
-	    	// console.log( 'isDone:', isDone );
+	    	// console.log( 'isDone:', isDone, '; direction:', plab._direction, '; index:', plab.getIndex() );
 
 	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'? 'doneBegin', 'doneFinish'?
 	        if ( isDone ) {
@@ -918,7 +903,7 @@
 				if ( checkRepeat && checkRepeat( plab, frag ) ) {
 
 					plab._timeoutID = setTimeout( function () {
-						plab._loopProxy( null, checkRepeat, calcDelay );
+						plab._loop( null, checkRepeat, calcDelay );
 					}, delay );
 
 					// console.log( 'timeoutID:', plab._timeoutID );

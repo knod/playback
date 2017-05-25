@@ -557,24 +557,46 @@ module.exports = gets = function ( plyb ) {
 
 	// ----------- jumpTo -----------
 	asts.jumpTo = {};
-	// Needed? Basically the same as `jumpWords()`, though -1 seems to behave differently for some reason
-	// TODO: look into why -1 behaves differently here than at `jumpWords()`
+	// Needed? Basically the same as `jumpWords()`
+	// Changed -1 behavior to match `jumpWords(-1)`. See no need for looping bak around
+
+
+	// ----------- jumpTo( -3 ) -----------
+	// Loops around to the end
+	var jumpToNeg3 	 = asts.jumpTo["-3"] = {};
+
+	asserts.frags 	 = getAssertFragsFirst( plyb );
+	asserts.progress = getAssertProgFirst( plyb );
+
+	jumpToNeg3['playBegin'] 	   = jumpToNeg3['playFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jumpToNeg3['resetBegin'] 	   = jumpToNeg3['resetFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jumpToNeg3['restartBegin'] 	   = jumpToNeg3['restartFinish'] 	 = { assertion: asserts.not, type: 'not' };
+	jumpToNeg3['pauseBegin'] 	   = jumpToNeg3['pauseFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jumpToNeg3['stopBegin'] 	   = jumpToNeg3['stopFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
+	jumpToNeg3['closeBegin'] 	   = jumpToNeg3['closeFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jumpToNeg3['onceBegin'] 	   = jumpToNeg3['onceFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
+	jumpToNeg3['revertBegin'] 	   = jumpToNeg3['revertFinish'] 	 = { assertion: asserts.not, type: 'not' };
+	jumpToNeg3['rewindBegin'] 	   = jumpToNeg3['rewindFinish'] 	 = { assertion: asserts.not, type: 'not' };
+	jumpToNeg3['fastForwardBegin'] = jumpToNeg3['fastForwardFinish'] = { assertion: asserts.not, type: 'not' };
+	jumpToNeg3['loopBegin'] 	   = jumpToNeg3['loopFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
+	jumpToNeg3['newWordFragment']  = { assertion: asserts.frags, type: 'frags' };
+	jumpToNeg3['progress'] 		   = { assertion: asserts.progress, type: 'progress' };
+	jumpToNeg3['done'] 			   = { assertion: asserts.triggered, type: 'triggered' };
+	jumpToNeg3['loopSkip'] 		   = { assertion: asserts.not, type: 'not' };
 
 
 	// ----------- jumpTo( -1 ) -----------
 	// Loops around to the end
-	// ??: Should this really trigger 'done', etc.?
-	// ??: Is `.jumpToWord()` needed? They do the same thing
 	var jumpToNeg 	 = asts.jumpTo["-1"] = {};
 
-	asserts.frags 	 = getAssertFragsLast( plyb );
-	asserts.progress = getAssertProgLast( plyb );
+	asserts.frags 	 = getAssertFragsFirst( plyb );
+	asserts.progress = getAssertProgFirst( plyb );
 
 	jumpToNeg['playBegin'] 		  = jumpToNeg['playFinish'] 		= { assertion: asserts.not, type: 'not' };
 	jumpToNeg['resetBegin'] 	  = jumpToNeg['resetFinish'] 		= { assertion: asserts.not, type: 'not' };
 	jumpToNeg['restartBegin'] 	  = jumpToNeg['restartFinish'] 		= { assertion: asserts.not, type: 'not' };
 	jumpToNeg['pauseBegin'] 	  = jumpToNeg['pauseFinish'] 		= { assertion: asserts.not, type: 'not' };
-	jumpToNeg['stopBegin'] 		  = jumpToNeg['stopFinish'] 		= { assertion: asserts.not, type: 'not' };
+	jumpToNeg['stopBegin'] 		  = jumpToNeg['stopFinish'] 		= { assertion: asserts.triggered, type: 'triggered' };
 	jumpToNeg['closeBegin'] 	  = jumpToNeg['closeFinish'] 		= { assertion: asserts.not, type: 'not' };
 	jumpToNeg['onceBegin'] 		  = jumpToNeg['onceFinish'] 		= { assertion: asserts.triggered, type: 'triggered' };
 	jumpToNeg['revertBegin'] 	  = jumpToNeg['revertFinish'] 		= { assertion: asserts.not, type: 'not' };
@@ -583,7 +605,7 @@ module.exports = gets = function ( plyb ) {
 	jumpToNeg['loopBegin'] 		  = jumpToNeg['loopFinish'] 		= { assertion: asserts.triggered, type: 'triggered' };
 	jumpToNeg['newWordFragment']  = { assertion: asserts.frags, type: 'frags' };
 	jumpToNeg['progress'] 		  = { assertion: asserts.progress, type: 'progress' };
-	jumpToNeg['done'] 			  = { assertion: asserts.not, type: 'not' };  // different - loops backwards to end of text
+	jumpToNeg['done'] 			  = { assertion: asserts.triggered, type: 'triggered' };
 	jumpToNeg['loopSkip'] 		  = { assertion: asserts.not, type: 'not' };
 
 
@@ -680,6 +702,27 @@ module.exports = gets = function ( plyb ) {
 	asts.jumpWords = {};
 
 	// ----------- jumpWords( -1 ) -----------
+	var jwNeg3 		 = asts.jumpWords["-3"] = {};
+	asserts.frags 	 = getAssertFragsFirst( plyb );
+	asserts.progress = getAssertProgFirst( plyb );
+
+	jwNeg3['playBegin'] 	   = jwNeg3['playFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jwNeg3['resetBegin'] 	   = jwNeg3['resetFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jwNeg3['restartBegin'] 	   = jwNeg3['restartFinish'] 	 = { assertion: asserts.not, type: 'not' };
+	jwNeg3['pauseBegin'] 	   = jwNeg3['pauseFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jwNeg3['stopBegin'] 	   = jwNeg3['stopFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
+	jwNeg3['closeBegin'] 	   = jwNeg3['closeFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jwNeg3['onceBegin'] 	   = jwNeg3['onceFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
+	jwNeg3['revertBegin'] 	   = jwNeg3['revertFinish'] 	 = { assertion: asserts.not, type: 'not' };
+	jwNeg3['rewindBegin'] 	   = jwNeg3['rewindFinish'] 	 = { assertion: asserts.not, type: 'not' };
+	jwNeg3['fastForwardBegin'] = jwNeg3['fastForwardFinish'] = { assertion: asserts.not, type: 'not' };
+	jwNeg3['loopBegin'] 	   = jwNeg3['loopFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
+	jwNeg3['newWordFragment']  = { assertion: asserts.frags, type: 'frags' };
+	jwNeg3['progress'] 		   = { assertion: asserts.progress, type: 'progress' };
+	jwNeg3['done'] 			   = { assertion: asserts.triggered, type: 'triggered' };
+	jwNeg3['loopSkip'] 		   = { assertion: asserts.not, type: 'not' };
+
+	// ----------- jumpWords( -1 ) -----------
 	var jwNeg 		 = asts.jumpWords["-1"] = {};
 	asserts.frags 	 = getAssertFragsFirst( plyb );
 	asserts.progress = getAssertProgFirst( plyb );
@@ -688,7 +731,6 @@ module.exports = gets = function ( plyb ) {
 	jwNeg['resetBegin'] 	  = jwNeg['resetFinish'] 		= { assertion: asserts.not, type: 'not' };
 	jwNeg['restartBegin'] 	  = jwNeg['restartFinish'] 		= { assertion: asserts.not, type: 'not' };
 	jwNeg['pauseBegin'] 	  = jwNeg['pauseFinish'] 		= { assertion: asserts.not, type: 'not' };
-	// Expected behavior? Not moving forwards, so maybe not
 	jwNeg['stopBegin'] 		  = jwNeg['stopFinish'] 		= { assertion: asserts.triggered, type: 'triggered' };
 	jwNeg['closeBegin'] 	  = jwNeg['closeFinish'] 		= { assertion: asserts.not, type: 'not' };
 	jwNeg['onceBegin'] 		  = jwNeg['onceFinish'] 		= { assertion: asserts.triggered, type: 'triggered' };
@@ -820,6 +862,27 @@ module.exports = gets = function ( plyb ) {
 	asts.jumpSentences = {};
 
 	// ----------- jumpSentences( -1 ) -----------
+	var jsNeg3 		 = asts.jumpSentences["-3"] = {};
+	asserts.frags 	 = getAssertFragsFirst( plyb );
+	asserts.progress = getAssertProgFirst( plyb );
+
+	jsNeg3['playBegin'] 	   = jsNeg3['playFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jsNeg3['resetBegin'] 	   = jsNeg3['resetFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jsNeg3['restartBegin'] 	   = jsNeg3['restartFinish'] 	 = { assertion: asserts.not, type: 'not' };
+	jsNeg3['pauseBegin'] 	   = jsNeg3['pauseFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jsNeg3['stopBegin'] 	   = jsNeg3['stopFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
+	jsNeg3['closeBegin'] 	   = jsNeg3['closeFinish'] 		 = { assertion: asserts.not, type: 'not' };
+	jsNeg3['onceBegin'] 	   = jsNeg3['onceFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
+	jsNeg3['revertBegin'] 	   = jsNeg3['revertFinish'] 	 = { assertion: asserts.not, type: 'not' };
+	jsNeg3['rewindBegin'] 	   = jsNeg3['rewindFinish'] 	 = { assertion: asserts.not, type: 'not' };
+	jsNeg3['fastForwardBegin'] = jsNeg3['fastForwardFinish'] = { assertion: asserts.not, type: 'not' };
+	jsNeg3['loopBegin'] 	   = jsNeg3['loopFinish'] 		 = { assertion: asserts.triggered, type: 'triggered' };
+	jsNeg3['newWordFragment']  = { assertion: asserts.frags, type: 'frags' };
+	jsNeg3['progress'] 		   = { assertion: asserts.progress, type: 'progress' };
+	jsNeg3['done'] 			   = { assertion: asserts.triggered, type: 'triggered' };
+	jsNeg3['loopSkip'] 		   = { assertion: asserts.not, type: 'not' };
+
+	// ----------- jumpSentences( -1 ) -----------
 	var jsNeg 		 = asts.jumpSentences["-1"] = {};
 	asserts.frags 	 = getAssertFragsFirst( plyb );
 	asserts.progress = getAssertProgFirst( plyb );
@@ -828,7 +891,6 @@ module.exports = gets = function ( plyb ) {
 	jsNeg['resetBegin'] 	  = jsNeg['resetFinish'] 		= { assertion: asserts.not, type: 'not' };
 	jsNeg['restartBegin'] 	  = jsNeg['restartFinish'] 		= { assertion: asserts.not, type: 'not' };
 	jsNeg['pauseBegin'] 	  = jsNeg['pauseFinish'] 		= { assertion: asserts.not, type: 'not' };
-	// Expected behavior? Not moving forward, so maybe not
 	jsNeg['stopBegin'] 		  = jsNeg['stopFinish'] 		= { assertion: asserts.triggered, type: 'triggered' };
 	jsNeg['closeBegin'] 	  = jsNeg['closeFinish'] 		= { assertion: asserts.not, type: 'not' };
 	jsNeg['onceBegin'] 		  = jsNeg['onceFinish'] 		= { assertion: asserts.triggered, type: 'triggered' };
