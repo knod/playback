@@ -1,103 +1,21 @@
-// doubles-assertions.js
+/* doubles-assertions.js
+* 
+* Combos don't always get the same results as singles.
+* Certain combos MUST fail, though, and others must NOT fail.
+* This makes sure that's happening.
+* 
+* TODO:
+* - Generate file with expected results
+*/
 
-// Alternative assertions for combo tests that don't get
-// the same results as their resepctive single tests.
-// All these tests should pass as well, though, so nothing
-// should be failing in the 'doubles'? tests.
-
-// Note: double values not caused by actual second function, just by listener that's added to the test
-
-// TODO: This isn't great - it matters which thing comes before
-// what. It should be more robust than that
-
-
-// ------------ setup ------------
 
 var colors = {
   green: '\x1B[32m', red: '\x1B[31m',
   yellow: '\x1B[33m', none: '\x1B[0m'
 };
 
-// var	parsedText = [
-// 	[ 'Victorious,', 'you','brave', 'flag.' ],
-// 	[ 'Delirious,', 'I', 'come', 'back.' ],
-// 	[ '\n' ],
-// 	[ 'Why,', 'oh', 'wattlebird?' ]
-// ];
 
-// var	forward = parsedText[0].concat(parsedText[1]).concat(parsedText[2]).concat(parsedText[3]);
-
-// var plab = null;
-
-// var wordIndicies = [],
-// 	wordIndex = 0;
-
-// for ( let senti = 0; senti < parsedText.length; senti++ ) {
-// 	// Need the position number of the first word in each sentence
-// 	if ( parsedText[ senti - 1 ] ) {
-// 		let sent = parsedText[ senti - 1 ];
-// 		wordIndex += sent.length;
-// 	}
-
-// 	wordIndicies.push( wordIndex );
-// }
-// // To represent the end of the text
-// wordIndicies.push( 12 );
-
-// // The sentence position that corresponds to each word
-// whichSentenceForAWordIndex = [ 0, 0, 0, 0, 1, 1, 1, 1, 2, 3, 3, 4, 4 ];
-
-
-// // ------------ helpers ------------
-
-// // // Originally meant for Array.prototype
-// // var arraysEqual = function ( array1, array2 ) {
-// //     // if the other array is a falsy value, return
-// //     if (!array1 || !array2)
-// //         return false;
-
-// //     // compare lengths - can save a lot of time 
-// //     if (array1.length != array2.length)
-// //         return false;
-
-// //     for (var i = 0, l = array1.length; i < l; i++) {
-// //         // Check if we have nested arrays
-// //         if ( array1[i] instanceof Array && array2[i] instanceof Array) {
-// //             // recurse into the nested arrays
-// //             if ( !arraysEqual( array1[i], array2[i] ) )
-// //                 return false;       
-// //         }           
-// //         else if ( array1[i] != array2[i]) { 
-// //             // Warning - two different object instances will never be equal: {x:20} != {x:20}
-// //             return false;   
-// //         }           
-// //     }       
-// //     return true;
-// // };
-
-// // Simple and suited to our purposes
-// // https://github.com/micro-js/equal-array/blob/master/lib/index.js
-// var arraysEqual = function ( arr1, arr2 ) {
-//   var a1Len = arr1.length;
-//   var a2Len = arr2.length;
-
-//   if ( a1Len === a2Len ) {
-//     for (var i = 0; i < a1Len; ++i) {
-//       if (arr1[i] !== arr2[i]) {
-//         return false;
-//       }
-//     }
-
-//     return true;
-//   }
-
-//   return false;
-// };  // End arraysEqual()
-
-
-
-// // ------------ default assertions ------------
-
+// ------------ default assertions ------------
 var defaultAsserts = {
 	triggered: null,
 	not: null,
@@ -105,11 +23,10 @@ var defaultAsserts = {
 	progress: null
 }
 
-defaultAsserts.not = function ( result, testID, evnt ) {
+defaultAsserts.not = function ( result ) {
 
 	var passes 	= true;
-	// var msg 	= 'no arguments accumulated';
-	var msg 	= 'Combos-' + testID +': Event NOT triggered';
+	var msg 	= 'Combos: Event ' + colors.green + 'NOT' + colors.none + ' triggered';
 
 	// var shouldFail = checkExpectedToFail( testID );
 	// if ( shouldFail ) {
@@ -126,799 +43,23 @@ defaultAsserts.not = function ( result, testID, evnt ) {
 
 };
 
-// defaultAsserts.triggered = function ( result, testID, evnt ) {
 
-// 	var passes 	= true,
-// 		msg 	= 'Combos-' + testID +': Event was triggered';
-
-// 	// var shouldFail = checkExpectedToFail( testID );
-// 	// if ( shouldFail ) {
-// 	// 	// Nothing is expected, it's failing for good reasons
-// 	// } else {
-// 		if ( result.arg2s.length === 0 ) {
-// 			passes 	= false;
-// 			msg 	= 'Combos-' + testID +': Event should have been triggered but was ' + colors.red + 'NOT' + colors.none;
-// 		} else if ( result.playback !== plab ) {
-// 			passes 	= false;
-// 			msg 	= 'Combos-' + testID +': Object recieved was ' + colors.red + 'NOT' + colors.none + ' the expected Playback instance';
-// 		}
-// 	// }
-
-// 	return { message: msg, passed: passes };
-// };
-
-
-
-// // ------------ assertion builders ------------
-
-
-// var makeFragAsserter = function ( plyb, frags ) {
-// /* ( Playback, [ strs ] ) -> func
-// * 
-// * Basically here to abstract away the expected failures check.
-// * 
-// * Returns a fragment assertion function with the given values
-// * which asserts that the given fragments are the ones that
-// * were collected.
-// */
-// 	return function assertFrags( result, testID, evnt ) {
-
-// 		var passes 	= true,
-// 			msg 	= 'Combos-' + testID +': Correct fragments were accumulated'
-
-// 		// console.log( result.arg2s );
-
-// 		// var shouldFail = checkExpectedToFail( testID );
-// 		// if ( supressExpectedFailures && shouldFail ) {
-// 		// 	// Nothing is expected, it's failing for good reasons
-// 		// } else {
-// 			var triggeredVals = defaultAsserts.triggered( result, testID, evnt );
-// 			if ( !triggeredVals.passed ) { return triggeredVals; }
-// 			else {
-// 				passes = arraysEqual( result.arg2s, frags );
-// 				if ( !passes ) { msg = 'Combos-' + testID +': Frags expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
-// 			}
-// 		// }
-// 		return { message: msg, passed: passes };
-// 	};
-// };  // End makeFragAsserter()
-
-
-// var makeProgressAsserter = function ( plyb, numItems, vals ) {
-// /* ( Playback, int, [ floats ] ) -> func
-// * 
-// * `vals` should include all the progress vals that will come up
-// * 
-// * Basically here to abstract away the expected failures check.
-// * 
-// * Returns a progress assertion function with the given values
-// * which asserts that the correct progress was made at
-// * the 0, 2, 5, 8, and 11th triggereing of the 'progress' event.
-// * 
-// * TODO: Remove `numItems` from calls
-// */
-// 	return function assertProgress ( result, testID, evnt ) {
-
-// 		var passes 	= true,
-// 			msg 	= 'Combos-' + testID +': Correct progress values were accumulated'
-
-// 		// var shouldFail = checkExpectedToFail( testID );
-// 		// if ( supressExpectedFailures && shouldFail ) {
-// 		// 	// Nothing is expected, it's failing for good reasons
-// 		// } else {
-
-// 			var triggeredVals = defaultAsserts.triggered( result, testID, evnt );
-// 			if ( !triggeredVals.passed ) { return triggeredVals; }
-// 			else {
-// 				passes = arraysEqual( result.arg2s, vals );
-// 				if ( !passes ) { msg = 'Combos-' + testID +': \'progress\' expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + JSON.stringify( result.arg2s ) + colors.none }
-// 			}
-
-// 		// }
-// 		return { message: msg, passed: passes };
-// 	};
-// };  // End makeProgressAsserter()
-
-
-
-
-// // ------------ common assertions ------------
-// // ('Delerious,' is also a popular one, but less so)
-
-// // - All 12 words -
-// var getAssertFragsAll = function ( plyb ) {
-// 	return makeFragAsserter( plyb, forward );
-// };
-// var getAssertProgAll = function ( plyb ) {
-// 	return makeProgressAsserter( plyb, 12, [ 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1 ] );
-// };
-
-// // - missing first word -
-// var getAssertFragsNoFirst = function ( plyb ) {
-// 	var less = forward.slice(0);
-// 	less.shift();
-// 	return makeFragAsserter( plyb, less );
-// };
-// var getAssertProgNoFirst = function ( plyb ) {
-// 	return makeProgressAsserter( plyb, 11, [ 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1 ] );
-// };
-
-// // - just first -
-// var getAssertFragsFirst = function ( plyb ) {
-// 	return makeFragAsserter( plyb, [ 'Victorious,' ] );
-// };
-// var getAssertProgFirst = function ( plyb ) {
-// 	return makeProgressAsserter( plyb, 1, [ 1/12 ] );
-// };
-
-// // - just last -
-// var getAssertFragsLast = function ( plyb ) {
-// 	return makeFragAsserter( plyb, [ 'wattlebird?' ] );
-// };
-// var getAssertProgLast = function ( plyb ) {
-// 	return makeProgressAsserter( plyb, 1, [ 12/12 ] );
-// };
-
-// // - double first word -
-// var getAssertFragsDoubleFirst = function ( plyb ) {
-// 	return makeFragAsserter( plyb, ["Victorious,","Victorious,"] );
-// };
-// var getAssertProgDoubleFirst = function ( plyb ) {
-// 	return makeProgressAsserter( plyb, 2, [1/12, 1/12] );
-// };
-
-// // - double first word and then keep going -
-// var getAssertFragsDoubleFirstAndOn = function ( plyb ) {
-// 	return makeFragAsserter( plyb, ["Victorious,","Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"] );
-// };
-// var getAssertProgDoubleFirstAndOn = function ( plyb ) {
-// 	return makeProgressAsserter( plyb, 13, [1/12, 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 12/12] );
-// };
-
-// triggered = function ( assertsOverride ) {
-// 		return defaultAsserts.triggered;
-// };  // Already happens to `pause(null)`
-// not = function ( assertsOverride ) {
-// 		return defaultAsserts.not;
-// };  // Already happens to `pause(null)`
-
-// var cloneAsserts = function ( defaults, override ) {
-// /* (  {} ) -> other {}
-// */
-// 	var asserts = {};
-
-// 	for ( let astKey in defaults ) {
-// 		if ( override[ astKey ] ) {
-// 			asserts[ astKey ] = override[ astKey ];
-// 		} else {
-// 			asserts[ astKey ] = defaults[ astKey ];
-// 		}
-// 	}
-
-// 	return asserts;
-// };  // End cloneAsserts()
-
-// var allExpectedFailures = require('./expected-failures.js');
-// var expectFailure = null;  // Func defined later with oritinalAssertion
-// // expectFailure will be changing all the time
-// // We will need to get the current version of it
-// var getExpectFailure = function () {
-// 	return expectFailure;
-// }
-
-
-
-
-
-// // ------------ correct assertions for special combos ------------
-
+// ------------ export ------------
 module.exports = MakeAltAsserts = function ( plyb ) {
-// // Could make this into a function that parses the label handed in and gets
-// // the right assert ( e.g. /doubles: play(null) + reset/.test(label) ),
-// // but I think that would be less clear, less easy to look up
-// // May be necessary, though. Ex:
-// // /^doubles: play(null) + resetBegin/.test(  )
+/* ( {} ) -> {}
+* 
+* TODO:
+* Could make this into a function that parses the label handed in and gets
+* the right assert ( e.g. /doubles: play(null) + reset/.test(label) ),
+* but I think that would be less clear, less easy to look up
+* May be necessary, though. Ex:
+* /^doubles: play(null) + resetBegin/.test(  )
+*/
+
+	let plab = plyb;
+
+	var asts = {};  // asserts
 
-// // Note: Nothing should trigger 'loopSkip' in here (the doubles tests)
-
-
-// // asts[ 'doubles: play(null) + done > play(null) + playBegin' ] = function ( assertsOverride ) {
-// // 	// Example of ways to do make asserts
-// // 	var asserts = cloneAsserts( defaultAsserts, assertsOverride );
-// // 	// asserts.frags 	 = getAssertFragsAll( plyb );
-// // 	// asserts.progress = getAssertProgAll( plyb );
-// // 	// asserts.frags 	 = makeFragAsserter( plyb, ['Victorious,'] );
-// // 	// asserts.progress = makeProgressAsserter( plyb, 1, [ 1/12 ] );
-// // 	return asserts.not;
-// // };
-
-// 	plab = plyb;
-
-	var asts = {};
-
-// 	// Always happen together/always together:
-// 	// 1:
-// 		// once
-// 		// loop
-// 		// Skip (maybe)
-// 		// progress
-// 		// Fragment
-// 		// revert
-
-
-// 	// https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex/6969486#6969486
-// 	// https://stackoverflow.com/questions/3561493/is-there-a-regexp-escape-function-in-javascript/3561711#3561711
-// 	// Construct this before so it doesn't have to be constructed every single time
-// 	var escapeRegex = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
-
-// 	var regEscape = function ( str ) {
-// 	/* ( str ) -> other str
-// 	* 
-// 	* Return a regex-escaped version of `str`. This is so the strings
-// 	* can be as searchable as possible since they're not actually the full strings
-// 	*/
-// 		return str.replace(escapeRegex, '\\$&');
-// 	};  // End escape()
-
-
-// 	var str;
-
-
-// 	// ==========================================
-// 	// BASICS
-// 	// ==========================================
-// 	// play, [ null ]  // * 26 for 1 even
-// 	// togglePlayPause, [ null ]
-// 	// restart, [ null ]
-// 	// reset, [ null ]
-// 	// forceReset
-// 	// pause, [ null ]
-// 	// stop, [ null ]
-// 	// close, [ null ]
-// 	// rewind, [ null ]
-// 	// fastForward, [ null ]
-// 	// // // These could go on forever... but they do get tested somewhat with
-// 	// // // jump, next, and prev, so don't /really/ need to tests singles or
-// 	// // // word or sentence incrementations. If that changes, these tests need
-// 	// // // to change
-// 	// once, [ [0,0,-2], [0,0,0], [0,0,2] ]
-// 	// current
-// 	// jumpTo, [ -1, 0, 6, 11, 100 ]
-// 	// jumpWords, [ -1, 0, 3, 4, 11, 100 ]
-// 	// jumpSentences, [ -1, 0, 1, 3, 100 ]
-// 	// nextWord, [ null ]
-// 	// nextSentence, [ null ]
-// 	// prevWord, [ null ]
-// 	// prevSentence, [ null ]
-// 	// revert, [ null ]
-	
-// 	// === NEVER TRIGGERS (play + event combos) ===
-
-// 	// Should be in different area
-// 	// TODO: Needed?
-// 	var jumpPastEndAlwaysNot = /(?:jumpTo\(11\)|jumpTo\(100\)|jumpWords\(11\)|jumpWords\(100\)|jumpSentences\(100\)) \+ (?:play)/;
-// 	var forward = '(?:play|restart|toggle|fast|next|jump)(?:.*\([^)-]*\))'
-
-// 	// ==========================================
-// 	// COMPLEX COMBOS
-// 	// ==========================================
-// 	// var playOnceNoRestart = /doubles: play(?:\(.*\)) \+ (?:restart.* > )(?!play)/;  // ??: What? Does this make sense?
-// 	// var playNotAfterRestart = /doubles: .*(?:\(.*\)) \+ (?:restart.* > )(?!play)/;  // ??: What? Does this make sense?
-	
-// 	// // If play-like gets to done, no play, yes restart
-// 	// // var doneThenNotPlay = /doubles: (?:play|restart|toggle|rewind|fastForward|prev)(?:\(.*\)) \+ (?:stop|done)(?:.* > play)/;
-// 	// var doneThenYesRestart = /doubles: (?:play|restart|toggle|rewind|fastForward|prev)(?:\(.*\)) \+ (?:stop|done)(?:.* > play)/;
-// 	// var jumpPreStartNotPlay = /doubles: (?:jump.*)(?:\(-\w+\)) \+ (?:stop|done)(?:.* > play)/;
-// 	// var jumpPreStartYesRestart = /doubles: (?:jump.*)(?:\(-\w+\)) \+ (?:stop|done)(?:.* > restart)/;
-// 	// var jumpPastEndNotPlay = /doubles: (?:jump)(?:\(.*\)) \+ (?:stop|done)(?:.* > play)/;
-// 	// var jumpPastEndYesRestart = /doubles: (?:jump)(?:\(.*\)) \+ (?:stop|done)(?:.* > restart)/;
-
-// 	// stop/done then play = not play, yes restart (but only if the previous one was triggered)
-// 	// Needs extensive testing
-// 	var doneThenPlayThenPlayNot = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:play|toggle)(?:.*\(.*\)) \+ play/;
-// 	// stop/done > play + restart = triggered
-// 	var doneThenPlayThenRestartYes = /doubles: (?:(?!stop).*\(.*\)) \+ (?:stop|done).* > (?:play|toggle)(?:.*\(.*\)) \+ restart/;
-
-// 	var playToggleNotPauseNo = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > (?:toggle)(?:.*\(.*\)) \+ (?!pause)/;
-// 	var playTogglePauseYes = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > (?:toggle)(?:.*\(.*\)) \+ (?:pause)/;
-
-// 	// RESET reset()
-// 	// NOT TRIGGERED. If event added to queue anytime before 'resetFinish'
-// 	// it gets removed from queue. It isn't called and its events don't get triggerd.
-// 	var resetKillsQueue = /doubles: (?:reset)(?:.*\(.*\)) \+ (?:resetBegin|once|current|revert|loopBegin|loopFinish|new|progress)(.* >)/;
-	
-
-// 	// FORCE RESET forceReset()
-// 	// forceReset runs in middle of function meaning that the function
-// 	// completes if it's already started, meaning its end completes.
-// 	// That is, we can assume the first thing has been triggered, so anything that
-// 	// can end will set off its end.
-// 	var forceResetInMiddle = /doubles: (?:.+\(.*\)) \+ (.+)(?:Begin)(?:.* > force.*\(.*\)) \+ \1Finish/;
-// 	// And anything that comes packaged with that thing could end
-// 	var stopPlusForceFinishes = /doubles: (?:.+\(.*\)) \+ stopBegin(?:.* > force.*\(.*\)) \+ done/;
-	
-// 	// forceReset still allows one loop to go through (and also 'once' if once is at the start)
-// 	// That's too complicated for here? Will have to do it internally?
-// 	// if ( /> force/.test( label ) ) {}
-// 	var forceResetInLoop = /doubles: (?:.+\(.*\)) \+ (.+)(?:Begin)(?:.* > force.*\(.*\)) \+ \1Finish/;
-
-// 	// Loop order:
-// 	// once
-// 	// loop
-// 	// Skip (maybe)
-// 	// progress
-// 	// new
-// 	// then maybe:
-// 	// stop
-// 	// done
-
-// 	// Gets to done on first go
-// 	// play|toggle|restart|fast
-// 	// once|jumpWords|jumpSentences\((?:-)\)
-// 	// jumpTo(100)
-// 	// jumpWor
-
-
-// 	// // triggers ending as first function 
-// 	// var endsWithOnceAsFirst = /doubles: (?:once\((?:-)\)|jumpTo\((?:11|100)\)|jumpWords\((?:-|11|100)\)|jumpSentences\((?:-|100)\))/;
-// 	// var possibleEnds = [];
-// 	// var a = / \+ onceBegin(?:.* > force.*\(.*\)) \+ (?:onceFinish|loopBegin|loopFinis|progress|new)/;
-
-// 	// var forceResetX = /doubles: (?:once\(.*\)) \+ onceBegin(?:.* > force.*\(.*\)) \+ (?:onceFinish|loopBegin|loopFinis|progress|new)/;
-
-
-// 	// Test bug
-// 	// ============ play|toggle|restart + any? except done & stop?
-// 	// > revert + play = triggered
-// 	// > revert + pause = not triggered
-// 	var revertsToPlayTriggersPlay = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > revert(?:.*\(.*\)) \+ play/;
-// 	var revertsToPlayNoTriggersPause = /doubles: (?:play|restart|toggle)(?:.*\(.*\)) \+ (?!stop|done).* > revert(?:.*\(.*\)) \+ pause/
-
-// 	// Was #E5-ish (doesn't run expectFailure, but does sort of mean it)
-// 	// In here - it just makes sure these were triggered or not
-// 	// TODO: Calculate what position should be in text?
-// 	var changesPositionAtStart = /doubles: (?:play|restart|toggle|once|current|fast|rewind|next|prev|jump)/;
-// 	var getsValuesAtEnd = /> (?:play|toggle|once|current|fast|rewind|next|prev|jump)(?:.*\(.*\)) \+ (?:new|progress)/;
-
-// 	// test bug - play-like (!stop) + stop|done? > moveForward with not play-like (jump etc. that's >=0) + stop|done = triggered
-// 	// jumpTo(-1) doesn't trigger done, so we're fine there since we're only looking for a first event of stop|done
-// 	// and that's too complicated, so we're not looking for it here
-// 	var doneAtEndThenForwardDoneYes = /doubles: (?:(?!stop).*\([^)-]*\)) \+ (?:stop|done).* > (?:next|once|current|jump)(?:.*\([^)-]*\)) \+ (?:stop|done)/;
-// 	// not-stop() + stop > uses once (negative) + stop = not done
-// 	var doneAtEndThenBackDoneNo = /doubles: (?:(?!stop|rewind|prev).*\([^)-]*\)) \+ (?:stop|done).* > (?:next|once|jump)(?:.*\(.*(?:-).*\)) \+ (?:stop|done)/;
-
-// 	// Events pre-done + toggle + restart = triggered
-// 	// Events pre-done + toggle + play = not
-// 	// In those cases, toggle is triggering `play()` after 'done' is true
-// 	var backWithNullThenToggleRestartYes = /doubles: (?:rewind|prev)(?:.*\(.*\)) \+ (?:once|rewind|loopBegin|loopFinish|new|progress)(.* > )(?:play|toggle)(?:.*\(.*\)) \+ restart/;
-// 	var backWithNullThenTogglePlayNo = /doubles: (?:rewind|prev)(?:.*\(.*\)) \+ (?:once|rewind|loopBegin|loopFinish|new|progress)(.* > )(?:play|toggle)(?:.*\(.*\)) \+ play/;
-// 	// This one with numbered stuff
-
-// 	// Things that use `once()` and trigger 'stop' as a first function
-// 	var onceThenStop = '(?:';
-// 	onceThenStop += regEscape( 'once([0,0,-2])' ) + '|';
-// 	onceThenStop += regEscape( 'jumpTo(11)' ) + '|'
-// 	onceThenStop += regEscape( 'jumpTo(100)' ) + '|';
-// 	onceThenStop += regEscape( 'jumpWords(-1)' ) + '|';
-// 	onceThenStop += regEscape( 'jumpWords(11)' ) + '|';
-// 	onceThenStop += regEscape( 'jumpWords(100)' ) + '|';
-// 	onceThenStop += regEscape( 'jumpSentences(-1)' ) + '|';
-// 	onceThenStop += regEscape( 'jumpSentences(100)' ) + ')';
-
-// 	str = 'doubles: ' + onceThenStop + ' \\+ (?:once|rewind|loopBegin|loopFinish|new|progress)(.* > )(?:play|toggle)(?:.*\\(.*\\)) \\+ ';
-// 	var backWithNumsThenToggleRestartYes = new RegExp( str + 'restart' );
-// 	var backWithNumsThenTogglePlayNo = new RegExp( str + 'play' );
-// 	// console.log( 'line 567, doubles alternates, right regexp?', backWithNumsThenToggleRestartYes );  // just checking
-
-
-// 	// ========== 10
-// 	// state to play:
-// 	//	play|toggle|restart
-// 	// play-like:
-// 	// 	play|toggle|restart|fast
-// 	// forward not to end:
-// 	// 	next|current(null)|once([0,0,2])|jumpTo(0/6)|jumpWords(0|3|4)|jumpS(0||1|3)
-// 	// backward:
-// 	// 	prev|once([0,0,-2])|jumpW|S(-1)
-// 	// forward to end:
-// 	// 	jumpTo(11|100)|jumpW(11|100)|jumpS(100)
-// 	// backward to "end":
-// 	// 	jumpTo(-1)
-
-
-
-// 	// ==========================================
-// 	// EXPECT FAILURE
-// 	// ==========================================
-// 	// play-like + play doesn't get normal play output
-
-// 	// play|toggle|restart|fastForward|next() + ... > play() + new|progress
-// 	// jumpW > 0 | (<11?) + ... > play() + new|progress
-// 	// jumpS > 0 | (<4?) + ... > play() + new|progress
-// 	// jumpTo (<0?) | >0 | (<11?) + ... > play() + new|progress
-// 	// ... might = (!loopSkip)play|loop|new|progress
-
-// 	// not at start of text + play or toggle gets non-single function output
-// 	// doubles: 
-// 	// 	next
-// 	// 	jumpTo(!0 <11?)
-// 	// 	jumpW(>0 <11?)
-// 	// 	jumpS(>0 <4?)
-
-// 	// + ... > toggle + new|progress
-// 	// ... might = (!loopSkip)play|loop|new|progress
-// 	// = expect error
-
-
-
-
-
-
-// 	// in tests/brainstorming/trigger.md
-// 	// ========== 5 ==========
-// 	// from
-// 	// _1st Func Change Pos_ (starting at start, function 1) change the position in the text
-// 	// to
-// 	// _Middle_ as second function would change output if was in middle
-// 	// TODO
-// 	// 'play-like' first does [0, 0, 0] and then moves on
-// 	// CODE BUG? Why does the same not happen for `once([0,0,-2])`?
-	
-// 	// BUT
-// 	// Play only does 'current word' before ffwd|next cancels loop and goes to next
-// 	// word|sentence as usual, so don't include that
-// 	str = 'doubles: (?:play|toggle|restart|fast|next';
-// 	str += ''; // Something with jump turned into regex
-// 	// continue that till all the jump things are in here
-// 	// str += ')(?:.*\\(.*\\)) \\+ (?:play|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
-// 	// str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
-// 	str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once|current';
-// 	str += ''; // Something with jump turned into regex
-// 	// continue that till all the jump things are in here
-// 	str += ')(?:.*\\([^)-]*\\)) \\+ (?:new|progress)'; // Nothing with a negative in it
-// 	// #E2
-// 	var changePosInMiddleWithoutReachingEnd = new RegExp( str );
-// 	// console.log(changePosInMiddleWithoutReachingEnd)
-	
-	
-// 	// // TODO
-// 	// // 'play-like' first does [0, 0, 0] and then moves on
-// 	// // CODE BUG? Why does the same not happen for `once([0,0,-2])`?
-
-// 	// str = 'doubles: (?:play|toggle|restart|fast|next';
-// 	// str += ''; // Something with jump turned into regex
-// 	// // continue that till all the jump things are in here
-// 	// // str += ')(?:.*\\(.*\\)) \\+ (?:play|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
-// 	// // str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
-// 	// str += ')(?:.*\\(.*\\)) \\+ (?:play|restart|fast|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|prev|once';
-// 	// str += ''; // Something with jump turned into regex
-// 	// // continue that till all the jump things are in here
-// 	// str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
-// 	// // #E2
-// 	// var changePosInMiddleWithoutReachingEnd = new RegExp( str );
-// 	// console.log(changePosInMiddleWithoutReachingEnd)
-
-
-// 	// But play or toggle on stop|done `restart()`s, so it gets the same new|progress values as before
-// 	// so don't include them here
-// 	str = 'doubles: (?:play|toggle|restart|fast|next';
-// 	str += ''; // Something with jump turned into regex
-// 	// continue that till all the jump things are in here
-// 	str += ')(?:.*\\(.*\\)) \\+ (?:stop|done)(?:.* > )(?:fast|next|prev|once|current';
-// 	str += ''; // Something with jump turned into regex
-// 	// continue that till all the jump things are in here
-// 	str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
-// 	// Maybe separate ones for jumps
-// 	// #E1 (why does this come first?)
-// 	var noRestartersChangePosInMiddle = new RegExp( str );
-// 	// console.log(noRestartersChangePosInMiddle)
-// 	// doubles: (?:play|toggle|restart|fast|next)(?:.*\(.*\)) \+ (?:play|loopBegin|loopEnd|new|progress)(?:.* > )(?:play|toggle|fast|next|prev)(?:.*\(.*\)) \+ (?:new|progress)
-
-
-
-
-
-// 	// Things like next and prev use `once()` and the stuff that comes with it,
-// 	// so the change in position is going to show during those events
-// 	// ==== Don't fail, though:
-// 	// current + once > play|next(+)|prev(-) + new|prog = success (E3)
-// 	// nextW(+) + once > nextS(+)|prev(-) + new|prog = success (E3)
-// 	// nextS(+) + once > prevS(-) + new|prog = success (E3)
-// 	// str = 'doubles: (?:fast|next|current';  // not sure about `current()`
-// 	str = 'doubles: (?:fast|next';
-// 	// str += ')(?:.*\\(.*\\)) \\+ (?:once|revert)(?:.* > )(?:play|toggle|next|prev';  // once doesn't revert anymore
-// 	str += ')(?:.*\\(.*\\)) \\+ (?:once)(?:.* > )(?:play|toggle|next|prev';
-// 	str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
-// 	// #E3
-// 	var diffPosOnOnceAsFirst = new RegExp( str );
-
-// 	// fast|next > play|toggle|nextW = fail
-// 	// fast > prevW|prevS|nextS|nextW = fail
-
-// 	// or
-// 	// play|toggle|restart|fast|next > play|toggle|current|rewind|nextW|once(+) = fail
-// 	// play|toggle|restart|fast > prevW|prevS|nextS|once = fail
-
-// 	// or
-// 	// play|toggle|restart|fast > current|rewind|next|prev|once = fail  // Needed?
-// 	var playLikeThenSingleSampleFails = /(?:play|toggle|restart|fast)(?:.*\(.*\)) \+ (?:stop|done)(?:.* > )(?:current|rewind|next|prev|once)(?:.*\(.*\)) \+ (?:new|progress)(?:.*)/;
-// 	// nextS > prevW|nextS|once = fail
-// 	var nextSentThenSingleSampleFails = /nextSentence(?:.*\(.*\)) \+ once(?:.* > )(?:prevWord|nextSentence|once)(?:.*\(.*\)) \+ (?:new|progress)(?:.*)/;
-// 	// nextW > play|toggle|current|once(+)|nextW = fail
-// 	var nextWordThenSingleSampleFails = /nextWord(?:.*\(.*\)) \+ once(?:.* > )(?:play|toggle|current|once|nextWord)(?:.*\([^)-]+\)) \+ (?:new|progress)(?:.*)/;
-
-
-
-
-
-
-// 	// // /Positive/ /ARRAY/ incrementors with `once()` change position as well and
-// 	// // position change = change of output for `once()` as well
-// 	// str = 'doubles: (?:once'
-// 	// str += ')(?:.*\\(\\[[^)-]+\\]\\)) \\+ (?:once|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once';
-// 	// str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
-// 	// var onceArrayChangesPosition = new RegExp( str );
-// 	// console.log(onceArrayChangesPosition)
-
-// 	// /Positive/ /ARRAY/ incrementors with `once()` change position as well and
-// 	// position change = change of output for `once()` as well
-// 	// This only works for one specific input unfortunately. Not flexible at all, but
-// 	// I guess that's what you get
-// 	str = 'doubles: (?:once'
-// 	str += ')(?:.*\\(\\[0,0,2\\]\\)) \\+ (?:once|loopBegin|loopFinish|new|progress)(?:.* > )(?:play|toggle|fast|next|prev|once|current';
-// 	str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
-// 	// #E4
-// 	var onceArrayChangesPosition = new RegExp( str );
-// 	// console.log(onceArrayChangesPosition)
-
-// 	// #E6-sh (doesn't run expectFailure, but does sort of mean it)
-// 	// I think this only works because it comes after everything else
-// 	var doneAtEnd = /> (?:jump|next|prev|once)(?:.*\(.*\)) \+ (?:done|stop)/;
-
-
-
-// 	// TODO:
-// 	var jumpAndDoneThenLoopShouldRestart = '?';
-// 	// TODO: Just add list of combos that would hit done/stop (at start or end)
-
-
-
-
-// 	// jumpTo( -1 ) + play|toggle = restart?
-// 	// jumpTo( 11 ) + play|toggle = restart?
-// 	// jumpTo( 100 ) + play|toggle = restart?
-// 	// jumpW( 11 ) + play|toggle = restart?
-// 	// jumpW( 100 ) + play|toggle = restart?
-// 	// jumpS( 100 ) + play|toggle = restart?
-
-
-
-
-
-// 	// // ??: This one too?
-// 	// // Things like next and prev use `once()` and the stuff that comes with it,
-// 	// // so the change in position is going to show during those events
-// 	// // Does this include when play and such start?
-// 	// str = 'doubles: (?:fast|next';
-// 	// str += ''; // Something with jump turned into regex
-// 	// // continue that till all the jump things are in here
-// 	// str += ')(?:.*\\(.*\\)) \\+ (?:once|revert)(?:.* > )(?:play|toggle|next|prev';
-// 	// str += ''; // Something with jump turned into regex
-// 	// // continue that till all the jump things are in here
-// 	// str += ')(?:.*\\(.*\\)) \\+ (?:new|progress)';
-// 	// var diffPosOnOnceAsSecond = new RegExp( str );
-
-
-// 	// ==========================================
-// 	// SAME FUNCTION, REPEATED
-// 	// ==========================================
-// 	// TODO: Test removing |close from stuff (now that we have a onlyClose test)
-
-// 	// // These don't ever trigger events after `play(null)`
-// 	// str = regEscape('play(null) + ');  // Initial function
-// 	// str += '(?:reset|pause|close|once|revert|loopSkip)';  // Events
-// 	// var playNot = new RegExp( str );
-// 	// // // Only if there's no play afterwards!
-// 	// // str = regEscape('doubles: play(null) + restart');
-// 	// // var playNotRestart = new RegExp( str );
-
-// 	// // These don't ever trigger events after `reset(null)`
-// 	// str = regEscape('reset(null) + ');  // Initial function
-// 	// str += '(?:play|restart|pause|stop|close|loopSkip|done)';  // Events
-// 	// var resetNot = new RegExp( str );
-
-// 	// // These don't ever trigger events after `restart(null)`
-// 	// str = regEscape('restart(null) + ');  // Initial function
-// 	// str += '(?:play|reset|pause|close|once|revert|loopSkip)';  // Events
-// 	// var restartNot = new RegExp( str );
-
-
-// 	// // These don't ever trigger events after `pause(null)`, `stop(null)`, or `close(null)`
-// 	// var regNoLoop = /\b(?:pause|stop|close)(?:\(.*\)) \+ (?:play|reset|restart|once|revert|rewind|fastForward|loop|newWordFragment|progress|done)/;
-// 	// // These don't ever trigger events after `pause(null)`
-// 	// str = regEscape('pause(null) + ');  // Initial function
-// 	// str += '(?:close|stop)';  // Events
-// 	// var pauseNot = new RegExp( str );
-// 	// // These don't ever trigger events after `pause(null)`
-// 	// str = regEscape('stop(null) + ');  // Initial function
-// 	// str += '(?:pause|close)';  // Events
-// 	// var stopNot = new RegExp( str );
-// 	// // These don't ever trigger events after `pause(null)`
-// 	// str = regEscape('close(null) + ');  // Initial function
-// 	// str += '(?:pause|stop)';  // Events
-// 	// var closeNot = new RegExp( str );
-
-
-// 	// // These don't ever trigger events after `togglePlayPause(null)`
-// 	// str = regEscape('togglePlayPause(null) + ');  // Initial function
-// 	// str += '(?:reset|close|once|revert|loopSkip)';  // Events
-// 	// var toggleNot = new RegExp( str );
-
-// 	// // These don't ever trigger events after `rewind(null)` anytime
-// 	// str = regEscape('rewind(null) + ');  // Initial function
-// 	// str += '(?:play|reset|pause|close|once|loopSkip)';  // Events
-// 	// var rewindNot = new RegExp( str );
-// 	// ------------ not sure of this one. something special?
-// 	// // These don't ever trigger events after `rewind(null)` (from paused at start)
-// 	// str = regEscape('doubles: rewind(null) + ');  // Initial function
-// 	// str += '(?:restart)';  // Events
-// 	// var rewindStarts = new RegExp( str );
-// 	// // Does 'revert' when gets to beginning, etc.
-// 	// // will do 'restartFinish' with other stuff
-// 	// // TODO: Check if can add 'restartBegin' to 'rewindNot', 'fastForwardNot', etc.
-
-// 	// // These don't ever trigger events after `fastForward(null)` anytime
-// 	// str = regEscape('fastForward(null) + ');  // Initial function
-// 	// str += '(?:play|reset|pause|close|once|revert|loopSkip)';  // Events
-// 	// var fastForwardNot = new RegExp( str );
-// 	// // These don't ever trigger events after `fastForward(null)` (from paused at start)
-// 	// str = regEscape('doubles: fastForward(null) + ');  // Initial function
-// 	// str += '(?:restart)';  // Events
-// 	// var fastForwardStarts = new RegExp( str );
-
-// 	// var loopSkip = /loopSkip/;
-
-
-
-
-// 	// ==========================================
-// 	// TWO DIFFERENT OR SAME FUNCTIONS
-// 	// ==========================================
-// 	// Like 'doubles: stop(null) + stopBegin > close(null) + stopFinish'
-// 	// Basically 'doubles: word1(null) + word1Begin > word2(null) + word1Finish'
-// 	// Once everything that shouldn't have been triggered wasn't triggered... that may not work
-// 	// Maybe change 1st one calls own events, second one calls own events
-// 	var selfComplete = /doubles: (?:.*)(?:\(.*\)) \+ (?: > )(.*)(?:\(.*\)) \+ \1Finish/;
-// 	// Probably will need or stuff like 'newWordFragment' too
-
-// 	// // // Only `reset()` things should fire after 'resetBegin' since it destroys the queue
-// 	// // str = regEscape('doubles: reset(null) + resetBegin >') + '.*new';  // Events
-// 	// // var resetBeginFrag = new RegExp( str );
-// 	// // str = regEscape('doubles: reset(null) + resetBegin >') + '.*progress';  // Events
-// 	// // var resetBeginProg = new RegExp( str );
-// 	// // str = regEscape('doubles: reset(null) + resetBegin > ') + '.*?' + regEscape(' + ') + '(?!new|progress|once|loop|revert)';
-// 	// // var resetBeginOther = new RegExp( str );
-
-// 	// // Queue gets destroyed in reset, so anythind added before that should not be called
-// 	// str = regEscape('doubles: reset(null) + resetBegin >');
-// 	// var resetBeginNot = new RegExp( str );
-
-// 	// // TODO: Wish I could do: When playing and finish then toggle, run restart assertions
-
-// 	// // When set to playing then toggled, only pause should be triggered
-// 	// var doneThenToggle = /doubles: (?:play|restart|toggle).*\(.*\) \+ (?:stop|done).* > toggle.*\(.*\) \+ (?:new|restart|loopBegin|loopFinish|progress|stop|done).*/;
-// 	// var playThenToggle = /doubles: (?:play|restart|toggle).*\(.*\) \+ .* > toggle.*\(.*\) \+ (?!pause).*/;
-// 	// var playTogglePause = /doubles: ((?:play|restart|toggle)).*\(.*\) \+ (?:new|progress|\1)(?:.*) > toggle.*\(.*\) \+ pause.*/;
-
-// 	// // toggle never restarts if it is the first function
-// 	// var toggleStartsThenNot = /doubles: (?:toggle).*\(.*\) \+ .*(?:restart|pause).* >/i
-
-// 	// ////////////////////// Not sure this will work
-// 	// // These events don't trigger after `rewind(null)` (from `pause(null)` same as if started paused)
-// 	// // ??: Why would rewind ever trigger 'restart'? I guess it'd be triggered at stopBegin or something
-// 	// str = 'doubles: pause.*';  // Functions
-// 	// str += regEscape('rewind(null) + ');  // Events
-// 	// str += '(?:restart)';  // Events
-// 	// var rewindFromPause = new RegExp( str );
-
-// 	// // Does it have a non-`close(null)` function followed by 'close' event?
-// 	// // If so, not triggered
-// 	// var onlyClose = /\b(?!close)\w+(?:\(.*\)) \+ (?:close)/;
-
-// 	// // Does it have a non-`rewind(null)`/`fastForward(null)` function followed by 'rewind'/'fastForward' event?
-// 	// // If so, not triggered
-// 	// var onlyRewind = /\b(?!rewind)\w+(?:\(.*\)) \+ (?:rewind)/;
-// 	// var onlyFfwd = /\b(?!fastForward)\w+(?:\(.*\)) \+ (?:fastForward)/;
-// 	// // same for 'close'? Already taken care of before?
-
-// 	// // If it comes second, it could hear the remnants of a different function being triggered
-// 	// var jumpNot = /doubles: jump(?:.*\(.*\)) \+ (?:play|reset|restart|pause|close)/;
-
-// 	// // nextWord (as the first function) also never triggers play, reset, restart, pause, stop, close, done
-// 	// str = regEscape( 'doubles: nextWord(null) + ' ) + '(?:play|reset|restart|pause|stop|close|done)';
-// 	// var nextWordNot = new RegExp( str );
-
-// 	// // nextSentence (as the first function) also never triggers play, reset, restart, pause, stop, close, done
-// 	// str = regEscape( 'doubles: nextSentence(null) + ' ) + '(?:play|reset|restart|pause|stop|close|done)';
-// 	// var nextSentenceNot = new RegExp( str );
-
-// 	// // prevWord (as the first function) also never triggers play, reset, restart, pause, close (stop/done when hits beginning)
-// 	// str = regEscape( 'doubles: prevWord(null) + ' ) + '(?:play|reset|restart|pause|close)';
-// 	// var prevWordNot = new RegExp( str );
-
-// 	// // nextSentence (as the first function) also never triggers play, reset, restart, pause, stop, close, done
-// 	// str = regEscape( 'doubles: prevSentence(null) + ' ) + '(?:play|reset|restart|pause|close)';
-// 	// var prevSentenceNot = new RegExp( str );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 	// 3
-
-// // 	var funcsWithArgs1 = [
-// // 	// These two at the top for now for ease of debugging
-// // 	forceReset(null)
-// // 	play(null)
-// // 	togglePlayPause(null)
-// // 	restart(null)
-// // 	reset(null)
-// // 	pause(null)
-// // 	stop(null)
-// // 	close(null)
-// // 	revert(null)
-// // 	rewind(null)
-// // 	fastForward(null)
-// // 	once (0,0,-2), once(0,0,2)
-// // 	current(null)
-// // 	jumpTo ( -1, 0, 6, 11, 100 )
-// // 	jumpWords ( -1, 0, 3, 4, 11, 100 )
-// // 	jumpSentences ( -1, 0, 1, 3, 100 )
-// // 	nextWord(null)
-// // 	nextSentence(null)
-// // 	prevWord(null)
-// // 	prevSentence(null)
-// // ];
-
-// // // 26 events * 21115 tests = 548990 tests
-// // var events1 = [
-// // 	'playBegin', 'playFinish',
-// // 	'resetBegin', 'resetFinish',
-// // 	'restartBegin', 'restartFinish',
-// // 	'pauseBegin', 'pauseFinish',
-// // 	'stopBegin', 'stopFinish',
-// // 	'closeBegin', 'closeFinish',
-// // 	'onceBegin', 'onceFinish',
-// // 	'revertBegin', 'revertFinish',
-// // 	'rewindBegin', 'rewindFinish',
-// // 	'fastForwardBegin', 'fastForwardFinish',
-// // 	'loopBegin', 'loopFinish',
-// // 	'newWordFragment',
-// // 	'progress',
-// // 	'done',
-// // 	// 'loopSkip'  // Not relevant till `state` experiments
-// // ];
-
-
-
-
-// 	var onesRun = [];
-// 	asts.getWhichOnesWereRun = function () {
-// 		return onesRun;
-// 	}
 
 	asts.assert = function ( label, originalAssertion, result, debug ) {
 	// By this point, the first test/assertion was passed and gotten some
@@ -928,57 +69,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// page doc of each individual label
 
 		if ( debug ) { console.log( label ); }
-
 		var assert = originalAssertion.assertion;
 
-
-	// 	// First take care of `forceReset()` because even though when it's single
-	// 	// it doesn't trigger some stuff, it doesn't get put on the queue, so it does
-	// 	// trigger some stuff now.
-
-	// 	// forceReset still allows one loop to go through (and also 'once' if once is at the start)
-	// 	// and, if at the end, allows stopping too
-	// 	if ( /> force/.test( label ) ) {
-
-	// 		var matches = /doubles: (?:(.*)\((.*)\) \+ )(?:(.*) > )(?:(.*)\((.*)\) \+ )(.*)/.exec( label );
-
-	// 		var func1 	= matches[1],
-	// 			arg1 	= JSON.parse(matches[2]),
-	// 			evnt1 	= matches[3],
-	// 			func2 	= matches[4],
-	// 			arg2 	= JSON.parse(matches[5]),
-	// 			evnt2 	= matches[6];
-
-	// 		var endsAndOnce = endsWithOnceAsFirst.test( func1 );
-
-	// 		if ( endsAndOnce ) {
-
-	// 		} else if ( /play|toggle|restart|/.test( func1 ) ) {
-
-	// 		}
-
-
-	// 	}
-
-	// var forceResetInLoop = /doubles: (?:.+\(.*\)) \+ (.+)(?:Begin)(?:.* > force.*\(.*\)) \+ \1Finish/;
 
 		var testNum = '';
 		// If the second function asserts as not, try that first
 		if ( result.arg2s.length <= 0 && originalAssertion.type === 'not' ) {
 			testNum = '2ndNot-1';
-			// if ( debug ) { console.log( 'Combos-', testNum, 'entered, not tested' ); }
 
-			// defaultAsserts.not( result, label, evnt2 );
 			var testResult = defaultAsserts.not( result, testNum );
-			if ( testResult.passed ) {
-				// if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); }
-				if ( debug ) { console.log( testNum ); }
-				return testResult;
-			}
-			// otherwise, continue onward
+			if ( testResult.passed ) { return testResult; }
+			// otherwise, if the test failed, continue onward
 		}
 
-		// TODO: Expect opposite?
+
 		expectFailure = function ( result, evnt ) {
 			var testResult = assert( result, 'combos', evnt  )
 
@@ -995,346 +99,12 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		};
 
 
-
-// // // ==============================================================================================================================
-// // 		// ==========================================
-// // 		// TWO DIFFERENT FUNCTIONS
-// // 		// ==========================================
-
-// // 		// new
-// // 		// if ( debug ) { console.log( 'Basics' ); }
-// // 		var pre = 'Basics ';
-
-// // 		// Must come before pause(null), stop(null), and close(null) are kept
-// // 		// from interacting
-// // 		testNum = 'B1'; 
-// // 		if ( debug && selfComplete.test(label) ) { console.log( testNum ); }
-// // 		if ( selfComplete.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
-
-// // 		testNum = 'B2-last';
-// // 		if ( debug && jumpPastEndAlwaysNot.test(label) ) { console.log( testNum ); }
-// // 		if ( jumpPastEndAlwaysNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
-
-
-
-// // 		// ==========================================
-// // 		// COMPLEX COMBOS
-// // 		// ==========================================
-// // 		// if ( debug ) { console.log( '24', playNotAfterRestart.test(label) ); }
-// // 		// if ( playNotAfterRestart.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, label ); }
-// // 		// if ( debug ) { console.log( 'Complex Combos' ); }
-// // 		pre = 'Complex Combos ';
-
-// // 		testNum = 'CC1';
-// // 		if ( debug && doneThenPlayThenPlayNot.test(label) ) { console.log( testNum ); }
-// // 		if ( doneThenPlayThenPlayNot.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
-
-// // 		testNum = 'CC2';
-// // 		if ( debug && doneThenPlayThenRestartYes.test(label) ) { console.log( testNum ); }
-// // 		if ( doneThenPlayThenRestartYes.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
-
-// // 		testNum = 'CC3';
-// // 		if ( debug && playToggleNotPauseNo.test(label) ) { console.log( testNum ); }
-// // 		if ( playToggleNotPauseNo.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
-
-// // 		testNum = 'CC4';
-// // 		if ( debug && playTogglePauseYes.test(label) ) { console.log( testNum ); }
-// // 		if ( playTogglePauseYes.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
-
-// // 		testNum = 'CC5';
-// // 		if ( debug && resetKillsQueue.test(label) ) { console.log( testNum ); }
-// // 		if ( resetKillsQueue.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
-
-// // 		testNum = 'CC6';
-// // 		if ( debug && revertsToPlayTriggersPlay.test(label) ) { console.log( testNum ); }
-// // 		if ( revertsToPlayTriggersPlay.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
-
-// // 		testNum = 'CC7';
-// // 		if ( debug && revertsToPlayNoTriggersPause.test(label) ) { console.log( testNum ); }
-// // 		if ( revertsToPlayNoTriggersPause.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
-
-// // 		// If it could have changed position at the start function and the end function can
-// // 		// trigger loops
-// // 		var couldMessUpValues = changesPositionAtStart.test( label ) && getsValuesAtEnd.test( label );
-
-// // 		if ( couldMessUpValues ) {
-// // 			testNum = 'CC8';
-// // 			if ( debug ) { console.log( testNum ); }
-// // 			// Then we'll assume that's what messed up values if those values were messed up
-// // 			// so we'll just test for triggering (since ones that were supposed to not trigger
-// // 			// were weeded out earlier)
-// // 			if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); }
-// // 			if ( debug ) { console.log( 'Would have been checked for "triggered" in', testNum); }
-// // 		 	// return defaultAsserts.triggered( result, testNum );
-// // 		}
-
-// // 		testNum = 'CC9';
-// // 		if ( debug && doneAtEndThenForwardDoneYes.test(label) ) { console.log( testNum ); }
-// // 		if ( doneAtEndThenForwardDoneYes.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
-
-// // 		testNum = 'CC10';
-// // 		if ( debug && doneAtEndThenBackDoneNo.test(label) ) { console.log( testNum ); }
-// // 		if ( doneAtEndThenBackDoneNo.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
-
-// // 		// uses `once()` and will trigger 'done' restarts instead of playing
-// // 		testNum = 'CC11';
-// // 		if ( debug && backWithNullThenToggleRestartYes.test(label) ) { console.log( testNum ); }
-// // 		if ( backWithNullThenToggleRestartYes.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
-
-// // 		testNum = 'CC12';
-// // 		if ( debug && backWithNullThenTogglePlayNo.test(label) ) { console.log( testNum ); }
-// // 		if ( backWithNullThenTogglePlayNo.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
-
-// // 		testNum = 'CC13';
-// // 		if ( debug && backWithNumsThenToggleRestartYes.test(label) ) { console.log( testNum ); }
-// // 		if ( backWithNumsThenToggleRestartYes.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.triggered( result, testNum ); }
-
-// // 		testNum = 'CC14';
-// // 		if ( debug && backWithNumsThenTogglePlayNo.test(label) ) { console.log( testNum ); }
-// // 		if ( backWithNumsThenTogglePlayNo.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return defaultAsserts.not( result, testNum ); }
-
-
-
-
-// // 		// After everything that can't be triggered has been filtered out,
-// // 		// some triggered stuff will get different output than with a single
-// // 		// function call
-// // 		// ==========================================
-// // 		// EXPECT FAILURE
-// // 		// ==========================================
-// // 		// if ( debug ) { console.log( 'Expect Failure' ); }
-// // 		pre = 'Expect Failure ';
-
-// // 		testNum = 'E1';
-// // 		if ( debug && noRestartersChangePosInMiddle.test(label) ) { console.log( testNum ); }
-// // 		if ( noRestartersChangePosInMiddle.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
-
-// // 		testNum = 'E2';
-// // 		if ( debug && changePosInMiddleWithoutReachingEnd.test(label) ) { console.log( testNum ); }
-// // 		if ( changePosInMiddleWithoutReachingEnd.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
-
-// // 		// testNum = 'E3';
-// // 		// if ( debug && diffPosOnOnceAsFirst.test(label) ) { console.log( testNum ); }
-// // 		// if ( diffPosOnOnceAsFirst.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
-
-// // 		testNum = 'E3.1';
-// // 		if ( debug && playLikeThenSingleSampleFails.test(label) ) { console.log( testNum ); }
-// // 		if ( playLikeThenSingleSampleFails.test(label) ) {
-// // 			if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); }
-// // 			if ( expectFailure( result, testNum ).passed ) { console.log( 'WOULD HAVE PASSED' ) }
-// // 		}
-
-// // 		testNum = 'E3.2';
-// // 		if ( debug && nextSentThenSingleSampleFails.test(label) ) { console.log( testNum ); }
-// // 		if ( nextSentThenSingleSampleFails.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
-
-// // 		testNum = 'E3.3';
-// // 		if ( debug && nextWordThenSingleSampleFails.test(label) ) { console.log( testNum ); }
-// // 		if ( nextWordThenSingleSampleFails.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
-
-// // 		testNum = 'E4';
-// // 		if ( debug && onceArrayChangesPosition.test(label) ) { console.log( testNum ); }
-// // 		if ( onceArrayChangesPosition.test(label) ) { if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); } return expectFailure( result, testNum ); }
-// // // ==============================================================================================================================
-
-
-// 		// Are we checking for done at end after jump
-// 		if ( doneAtEnd.test( label ) ) {
-
-// 			testNum = 'E5-last';
-// 			if ( debug ) { console.log( testNum ); }
-// 			// If the numbers add up to past the end, we should trigger done and stop
-// 			// TODO: Change this into plain old list of regex later
-// 			var matches = /doubles: (?:(.*)\((.*)\) \+ )(?:.* > )(?:(.*)\((.*)\) \+ )/.exec( label );
-
-// 			var func1 	= matches[1],
-// 				arg1 	= JSON.parse(matches[2]),
-// 				func2 	= matches[3],
-// 				arg2 	= JSON.parse(matches[4]);
-
-// 			// only moves one word forward or back (no word fragments in this set of tests)
-// 			if ( /once/.test( func1 ) ) { arg1 = arg1[2]/Math.abs(arg1[2]); if ( isNaN(arg1) ) { arg1 = 0 } }
-// 			if ( /once/.test( func2 ) ) { arg2 = arg2[2]/Math.abs(arg2[2]); if ( isNaN(arg2) ) { arg2 = 0 } }
-// 			// just smooths things over for the second set of tests
-// 			if ( /prev/.test( func2 ) ) { arg2 = -1; }
-// 			if ( /next/.test( func2 ) ) { arg2 = 1; }
-
-// 			// if ( debug ) { console.log( 'parts:', func1, arg1, func2, arg2 ); }
-
-// 			var wordPos = 0;
-// 			var sentencePos = 0;
-
-// 			// Doesn't matter if the first one goes backwards or not
-// 			if ( /doubles: (?:play|restart|toggle|fast)(?:.*\((.*)\) \+ )(?:stop|done)(?:.* >)/.test( label ) ) {
-
-// 				wordPos = 11;
-// 				sentencePos = whichSentenceForAWordIndex[ wordPos ];
-// 				// if ( debug ) { console.log( '1 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-
-// 			} else if ( /(?:nextWord)/.test( func1 ) ) {
-
-// 				wordPos += 1;
-// 				// Note: sentencePos = 0
-// 				// if ( debug ) { console.log( '2 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-
-// 			} else if ( /(?:nextSentence)/.test( func1 ) ) {
-
-// 				sentencePos += 1;
-// 				wordPos = wordIndicies[ sentencePos ];
-// 				// if ( debug ) { console.log( '3 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-
-// 			} else if ( /jumpTo/.test( func1 ) ) {
-
-// 				if ( arg1 < 0 ) { wordPos = 12 + arg1 }
-// 				else { wordPos += Math.min( 11, arg1 ) }
-// 				sentencePos = whichSentenceForAWordIndex[ wordPos ];
-
-// 				// if ( debug ) { console.log( '4 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-			
-// 			} else if ( /jumpWord|once/.test( func1 ) ) {
-			
-// 				if ( arg1 > 0 )	{ wordPos += Math.min( 12, arg1 ) }
-// 				sentencePos = whichSentenceForAWordIndex[ wordPos ];
-
-// 				// if ( debug ) { console.log( '5 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-			
-// 			} else if ( /jumpSentence/.test( func1 ) ) {
-
-// 				if ( arg1 > 0 ) {
-// 					var num = Math.min( 4, arg1 );
-// 					sentencePos = num;
-// 					// If it was 4, it got to the last word
-// 					wordPos = wordIndicies[ num ];
-// 					// if ( debug ) { console.log( '6 in if new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-// 				}
-
-// 				// if ( debug ) { console.log( '7 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-			
-// 			}  // ??: If `once()`?
-
-// 			var moveSentence = function ( val ) {
-
-// 				var wordPosOfSentence = null;
-
-// 				// First, if in middle of sentence, just move to start of sentence
-// 				if ( val < 0 ) {
-// 					wordPosOfSentence = wordIndicies[ sentencePos ]
-// 					// If in middle of sentence, goes to start of current sentence
-// 					if ( wordPos > wordPosOfSentence ) {
-// 						wordPos = wordPosOfSentence;
-// 						val += 1;  // make sure not to move for this sentence again
-// 					}
-// 				}
-
-// 				// If we still need to move to sentences further back, keep going
-// 				if ( val !== 0 ) {
-// 					sentencePos += val;
-// 					sentencePos = Math.min( 4, sentencePos );
-// 					sentencePos = Math.max( 0, sentencePos );
-// 					wordPos = wordIndicies[ sentencePos ]
-// 				}
-
-// 				// Don't reallyl need to return anything - they get changed in here anyway.
-// 				return { word: wordPos, sentence: sentencePos };
-// 			};  // end moveSentence()
-
-
-// 			// Add up to find out finishing position
-// 			if ( /doubles: (?:play|restart|toggle|fast)(?:.*\((.*)\) \+ )(?:stop|done)(?:.* >)/.test( label ) ) {
-// 				wordPos = 11;
-// 				arg2 = 1
-// 			} else if ( /jumpTo/.test( func2 ) ) {
-
-// 				wordPos += arg2
-// 				// jump(-1) from 0 will mean going to the end, but not stopping
-// 				if ( wordPos < 0 ) { wordPos = 12 + wordPos; }
-// 				sentencePos = whichSentenceForAWordIndex[ wordPos ];
-
-// 				// if ( debug ) { console.log( '8 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-			
-// 			} else if ( /jumpWord/.test( func2 ) ) {
-				
-// 				wordPos += arg2;
-// 				sentencePos = whichSentenceForAWordIndex[ wordPos ];
-
-// 				// if ( debug ) { console.log( '9 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-
-// 			} else if ( /jumpSentence/.test( func2 ) ) {
-				
-// 				moveSentence( arg2 );
-
-// 				// if ( debug ) { console.log( '10 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-
-// 			// Is this needed or is it taken care of elsewhere?
-// 			}  else if ( /(?:prevWord|nextWord|once)/.test( func2 ) ) {
-
-// 				// arg2 was assigned appropriate values if this was the case
-// 				wordPos += arg2;
-// 				sentencePos = whichSentenceForAWordIndex[ wordPos ];
-// 				// if ( debug ) { console.log( '11 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-
-// 			} else if ( /(?:prevSentence|nextSentence)/.test( func2 ) ) {
-
-// 				moveSentence( arg2 );
-// 				// if ( debug ) { console.log( '12 new wordPos:', wordPos, '; new sentencePos:', sentencePos ); }
-
-// 			} // ??: If `once()`?
-
-// 			// console.log( 'at end of 2nd:', wordPos, sentencePos );
-
-// 			var assertName = 'not';
-
-// 			// If final word position would be before the start or after the end
-// 			if ( wordPos > 11 || wordPos < 0 ) {
-// 				// if ( debug ) { console.log( 'wordPos > 11 || wordPos < 0' ); }
-// 				assertName = 'triggered';
-// 			// If final word was at end, but got there while moving forward
-// 			} else if ( wordPos === 11 && typeof arg2 === 'number' && arg2 >= 0 ) {
-// 				// if ( debug ) { console.log( 'wordPos === 11 && typeof arg2 === "number" && arg2 >= 0' ); }
-// 				assertName = 'triggered';
-// 			// If final word was at start, but got there while moving backwards
-// 			} else if ( wordPos === 0 && typeof arg2 === 'number' && arg2 < 0 ) {
-// 				// if ( debug ) { console.log( 'wordPos === 0 && typeof arg2 === "number" && arg2 < 0' ); }
-// 				assertName = 'triggered';
-// 			}
-
-// 			if ( !onesRun.includes(testNum) ) { onesRun.push( testNum ); }
-// 			return defaultAsserts[ assertName ]( result, testNum );
-
-// 			// if ( debug ) { console.log( 'wordPos:', wordPos, '; function:', assertName ); }
-// 			// console.log( 'passed?', assertName === desired );
-
-// 		}  // End if 'done' or 'stop' event
-
-
-
-// 		// // More unique cases below
-// 		// if ( debug ) { console.log( 'unimported' ); }
-// 		// if ( asts[label] ) {
-// 		// 	return asts[label]( {} );
-// 		// }
-
-// 		// if ( debug ) { console.log( 'imported' ); }
-// 		// if ( allExpectedFailures[label] !== undefined ) {
-// 		// 	return expectFailure;
-// 		// }
-
-
-
 		if ( asts.expectedFailures[ label ] !== undefined ) {
-			// console.log( 'IN COMBOS ETC!!!' );
 			return expectFailure( result );
 		} else {
 			return assert( result );
 		}
 
-
-		// // If all else fails, run the original assertion
-		// testNum = 'Combos-end'
-		// var result = assert( result, testNum )
-		// if ( debug || !result.passed ) { console.log( testNum ); }
-
-		// return result;
 	};  // End getAssertion() ( func from label)
 
 	asts.expectedFailures = {
@@ -2510,102 +1280,102 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// #? just like play?
 		'combos: restart(null) + restartBegin > play(null) + newWordFragment': false,  // 1896: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: restart(null) + restartBegin > play(null) + progress': false,  // 1897: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + playBegin': false,  // 1901: event should have been triggerd but was NOT
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + playFinish': false,  // 1902: event should have been triggerd but was NOT
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + pauseBegin': false,  // 1907: event should not have been triggerd but WAS
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + pauseFinish': false,  // 1908: event should not have been triggerd but WAS
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + loopBegin': false,  // 1919: event should have been triggerd but was NOT
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + loopFinish': false,  // 1920: event should have been triggerd but was NOT
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + newWordFragment': false,  // 1921: event should have been triggerd but was NOT
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + progress': false,  // 1922: event should have been triggerd but was NOT
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + stopBegin': false,  // 1923: event should have been triggerd but was NOT
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + stopFinish': false,  // 1924: event should have been triggerd but was NOT
-		'combos: restart(null) + restartBegin > togglePlayPause(null) + done': false,  // 1925: event should have been triggerd but was NOT
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + playBegin': true,  // 1901: event should have been triggerd but was NOT
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + playFinish': true,  // 1902: event should have been triggerd but was NOT
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + pauseBegin': true,  // 1907: event should not have been triggerd but WAS
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + pauseFinish': true,  // 1908: event should not have been triggerd but WAS
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + loopBegin': true,  // 1919: event should have been triggerd but was NOT
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + loopFinish': true,  // 1920: event should have been triggerd but was NOT
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + newWordFragment': true,  // 1921: event should have been triggerd but was NOT
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + progress': true,  // 1922: event should have been triggerd but was NOT
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + stopBegin': true,  // 1923: event should have been triggerd but was NOT
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + stopFinish': true,  // 1924: event should have been triggerd but was NOT
+		'combos: restart(null) + restartBegin > togglePlayPause(null) + done': true,  // 1925: event should have been triggerd but was NOT
 		'combos: restart(null) + restartBegin > revert(null) + playBegin': false,  // 2001: event should not have been triggerd but WAS
 		'combos: restart(null) + restartBegin > revert(null) + playFinish': false,  // 2002: event should not have been triggerd but WAS
 		'combos: restart(null) + restartBegin > revert(null) + pauseBegin': false,  // 2007: event should have been triggerd but was NOT
 		'combos: restart(null) + restartBegin > revert(null) + pauseFinish': false,  // 2008: event should have been triggerd but was NOT
 		'combos: restart(null) + restartFinish > play(null) + newWordFragment': false,  // 2796: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: restart(null) + restartFinish > play(null) + progress': false,  // 2797: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + playBegin': false,  // 2801: event should have been triggerd but was NOT
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + playFinish': false,  // 2802: event should have been triggerd but was NOT
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + pauseBegin': false,  // 2807: event should not have been triggerd but WAS
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + pauseFinish': false,  // 2808: event should not have been triggerd but WAS
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + loopBegin': false,  // 2819: event should have been triggerd but was NOT
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + loopFinish': false,  // 2820: event should have been triggerd but was NOT
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + newWordFragment': false,  // 2821: event should have been triggerd but was NOT
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + progress': false,  // 2822: event should have been triggerd but was NOT
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + stopBegin': false,  // 2823: event should have been triggerd but was NOT
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + stopFinish': false,  // 2824: event should have been triggerd but was NOT
-		'combos: restart(null) + restartFinish > togglePlayPause(null) + done': false,  // 2825: event should have been triggerd but was NOT
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + playBegin': true,  // 2801: event should have been triggerd but was NOT
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + playFinish': true,  // 2802: event should have been triggerd but was NOT
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + pauseBegin': true,  // 2807: event should not have been triggerd but WAS
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + pauseFinish': true,  // 2808: event should not have been triggerd but WAS
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + loopBegin': true,  // 2819: event should have been triggerd but was NOT
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + loopFinish': true,  // 2820: event should have been triggerd but was NOT
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + newWordFragment': true,  // 2821: event should have been triggerd but was NOT
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + progress': true,  // 2822: event should have been triggerd but was NOT
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + stopBegin': true,  // 2823: event should have been triggerd but was NOT
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + stopFinish': true,  // 2824: event should have been triggerd but was NOT
+		'combos: restart(null) + restartFinish > togglePlayPause(null) + done': true,  // 2825: event should have been triggerd but was NOT
 		'combos: restart(null) + restartFinish > revert(null) + playBegin': false,  // 2901: event should not have been triggerd but WAS
 		'combos: restart(null) + restartFinish > revert(null) + playFinish': false,  // 2902: event should not have been triggerd but WAS
 		'combos: restart(null) + restartFinish > revert(null) + pauseBegin': false,  // 2907: event should have been triggerd but was NOT
 		'combos: restart(null) + restartFinish > revert(null) + pauseFinish': false,  // 2908: event should have been triggerd but was NOT
 		'combos: restart(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: restart(null) + loopBegin > play(null) + progress': false,  // 16297: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: event should not have been triggerd but WAS
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: event should not have been triggerd but WAS
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: event should have been triggerd but was NOT
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: event should have been triggerd but was NOT
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: event should have been triggerd but was NOT
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: event should have been triggerd but was NOT
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: event should have been triggerd but was NOT
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: event should have been triggerd but was NOT
-		'combos: restart(null) + loopBegin > togglePlayPause(null) + done': false,  // 16325: event should have been triggerd but was NOT
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: event should not have been triggerd but WAS
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: event should not have been triggerd but WAS
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: event should have been triggerd but was NOT
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: event should have been triggerd but was NOT
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: event should have been triggerd but was NOT
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: event should have been triggerd but was NOT
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: event should have been triggerd but was NOT
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: event should have been triggerd but was NOT
+		'combos: restart(null) + loopBegin > togglePlayPause(null) + done': true,  // 16325: event should have been triggerd but was NOT
 		'combos: restart(null) + loopBegin > revert(null) + playBegin': false,  // 16401: event should not have been triggerd but WAS
 		'combos: restart(null) + loopBegin > revert(null) + playFinish': false,  // 16402: event should not have been triggerd but WAS
 		'combos: restart(null) + loopBegin > revert(null) + pauseBegin': false,  // 16407: event should have been triggerd but was NOT
 		'combos: restart(null) + loopBegin > revert(null) + pauseFinish': false,  // 16408: event should have been triggerd but was NOT
 		'combos: restart(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: restart(null) + loopFinish > play(null) + progress': false,  // 17197: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: event should not have been triggerd but WAS
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: event should not have been triggerd but WAS
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: event should have been triggerd but was NOT
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: event should have been triggerd but was NOT
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: event should have been triggerd but was NOT
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: event should have been triggerd but was NOT
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: event should have been triggerd but was NOT
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: event should have been triggerd but was NOT
-		'combos: restart(null) + loopFinish > togglePlayPause(null) + done': false,  // 17225: event should have been triggerd but was NOT
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: event should not have been triggerd but WAS
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: event should not have been triggerd but WAS
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: event should have been triggerd but was NOT
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: event should have been triggerd but was NOT
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: event should have been triggerd but was NOT
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: event should have been triggerd but was NOT
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: event should have been triggerd but was NOT
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: event should have been triggerd but was NOT
+		'combos: restart(null) + loopFinish > togglePlayPause(null) + done': true,  // 17225: event should have been triggerd but was NOT
 		'combos: restart(null) + loopFinish > revert(null) + playBegin': false,  // 17301: event should not have been triggerd but WAS
 		'combos: restart(null) + loopFinish > revert(null) + playFinish': false,  // 17302: event should not have been triggerd but WAS
 		'combos: restart(null) + loopFinish > revert(null) + pauseBegin': false,  // 17307: event should have been triggerd but was NOT
 		'combos: restart(null) + loopFinish > revert(null) + pauseFinish': false,  // 17308: event should have been triggerd but was NOT
 		'combos: restart(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: restart(null) + newWordFragment > play(null) + progress': false,  // 18097: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: event should not have been triggerd but WAS
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: event should not have been triggerd but WAS
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: event should have been triggerd but was NOT
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: event should have been triggerd but was NOT
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: event should have been triggerd but was NOT
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: event should have been triggerd but was NOT
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: event should have been triggerd but was NOT
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: event should have been triggerd but was NOT
-		'combos: restart(null) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: event should have been triggerd but was NOT
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: event should not have been triggerd but WAS
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: event should not have been triggerd but WAS
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: event should have been triggerd but was NOT
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: event should have been triggerd but was NOT
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: event should have been triggerd but was NOT
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: event should have been triggerd but was NOT
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: event should have been triggerd but was NOT
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: event should have been triggerd but was NOT
+		'combos: restart(null) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: event should have been triggerd but was NOT
 		'combos: restart(null) + newWordFragment > revert(null) + playBegin': false,  // 18201: event should not have been triggerd but WAS
 		'combos: restart(null) + newWordFragment > revert(null) + playFinish': false,  // 18202: event should not have been triggerd but WAS
 		'combos: restart(null) + newWordFragment > revert(null) + pauseBegin': false,  // 18207: event should have been triggerd but was NOT
 		'combos: restart(null) + newWordFragment > revert(null) + pauseFinish': false,  // 18208: event should have been triggerd but was NOT
 		'combos: restart(null) + progress > play(null) + newWordFragment': false,  // 18996: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: restart(null) + progress > play(null) + progress': false,  // 18997: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: restart(null) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: restart(null) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: restart(null) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: event should not have been triggerd but WAS
-		'combos: restart(null) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: event should not have been triggerd but WAS
-		'combos: restart(null) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: event should have been triggerd but was NOT
-		'combos: restart(null) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: event should have been triggerd but was NOT
-		'combos: restart(null) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: event should have been triggerd but was NOT
-		'combos: restart(null) + progress > togglePlayPause(null) + progress': false,  // 19022: event should have been triggerd but was NOT
-		'combos: restart(null) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: event should have been triggerd but was NOT
-		'combos: restart(null) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: event should have been triggerd but was NOT
-		'combos: restart(null) + progress > togglePlayPause(null) + done': false,  // 19025: event should have been triggerd but was NOT
+		'combos: restart(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: restart(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: restart(null) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: event should not have been triggerd but WAS
+		'combos: restart(null) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: event should not have been triggerd but WAS
+		'combos: restart(null) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: event should have been triggerd but was NOT
+		'combos: restart(null) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: event should have been triggerd but was NOT
+		'combos: restart(null) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: event should have been triggerd but was NOT
+		'combos: restart(null) + progress > togglePlayPause(null) + progress': true,  // 19022: event should have been triggerd but was NOT
+		'combos: restart(null) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: event should have been triggerd but was NOT
+		'combos: restart(null) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: event should have been triggerd but was NOT
+		'combos: restart(null) + progress > togglePlayPause(null) + done': true,  // 19025: event should have been triggerd but was NOT
 		'combos: restart(null) + progress > revert(null) + playBegin': false,  // 19101: event should not have been triggerd but WAS
 		'combos: restart(null) + progress > revert(null) + playFinish': false,  // 19102: event should not have been triggerd but WAS
 		'combos: restart(null) + progress > revert(null) + pauseBegin': false,  // 19107: event should have been triggerd but was NOT
@@ -2914,102 +1684,102 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// #9 play-like + stop*|done > play|toggle() = triggers `restart` instead of `play`
 		'combos: play(null) + playBegin > play(null) + newWordFragment': false,  // 3696: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: play(null) + playBegin > play(null) + progress': false,  // 3697: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: play(null) + playBegin > togglePlayPause(null) + playBegin': false,  // 3701: event should have been triggerd but was NOT
-		'combos: play(null) + playBegin > togglePlayPause(null) + playFinish': false,  // 3702: event should have been triggerd but was NOT
-		'combos: play(null) + playBegin > togglePlayPause(null) + pauseBegin': false,  // 3707: event should not have been triggerd but WAS
-		'combos: play(null) + playBegin > togglePlayPause(null) + pauseFinish': false,  // 3708: event should not have been triggerd but WAS
-		'combos: play(null) + playBegin > togglePlayPause(null) + loopBegin': false,  // 3719: event should have been triggerd but was NOT
-		'combos: play(null) + playBegin > togglePlayPause(null) + loopFinish': false,  // 3720: event should have been triggerd but was NOT
-		'combos: play(null) + playBegin > togglePlayPause(null) + newWordFragment': false,  // 3721: event should have been triggerd but was NOT
-		'combos: play(null) + playBegin > togglePlayPause(null) + progress': false,  // 3722: event should have been triggerd but was NOT
-		'combos: play(null) + playBegin > togglePlayPause(null) + stopBegin': false,  // 3723: event should have been triggerd but was NOT
-		'combos: play(null) + playBegin > togglePlayPause(null) + stopFinish': false,  // 3724: event should have been triggerd but was NOT
-		'combos: play(null) + playBegin > togglePlayPause(null) + done': false,  // 3725: event should have been triggerd but was NOT
+		'combos: play(null) + playBegin > togglePlayPause(null) + playBegin': true,  // 3701: event should have been triggerd but was NOT
+		'combos: play(null) + playBegin > togglePlayPause(null) + playFinish': true,  // 3702: event should have been triggerd but was NOT
+		'combos: play(null) + playBegin > togglePlayPause(null) + pauseBegin': true,  // 3707: event should not have been triggerd but WAS
+		'combos: play(null) + playBegin > togglePlayPause(null) + pauseFinish': true,  // 3708: event should not have been triggerd but WAS
+		'combos: play(null) + playBegin > togglePlayPause(null) + loopBegin': true,  // 3719: event should have been triggerd but was NOT
+		'combos: play(null) + playBegin > togglePlayPause(null) + loopFinish': true,  // 3720: event should have been triggerd but was NOT
+		'combos: play(null) + playBegin > togglePlayPause(null) + newWordFragment': true,  // 3721: event should have been triggerd but was NOT
+		'combos: play(null) + playBegin > togglePlayPause(null) + progress': true,  // 3722: event should have been triggerd but was NOT
+		'combos: play(null) + playBegin > togglePlayPause(null) + stopBegin': true,  // 3723: event should have been triggerd but was NOT
+		'combos: play(null) + playBegin > togglePlayPause(null) + stopFinish': true,  // 3724: event should have been triggerd but was NOT
+		'combos: play(null) + playBegin > togglePlayPause(null) + done': true,  // 3725: event should have been triggerd but was NOT
 		'combos: play(null) + playBegin > revert(null) + playBegin': false,  // 3801: event should not have been triggerd but WAS
 		'combos: play(null) + playBegin > revert(null) + playFinish': false,  // 3802: event should not have been triggerd but WAS
 		'combos: play(null) + playBegin > revert(null) + pauseBegin': false,  // 3807: event should have been triggerd but was NOT
 		'combos: play(null) + playBegin > revert(null) + pauseFinish': false,  // 3808: event should have been triggerd but was NOT
 		'combos: play(null) + playFinish > play(null) + newWordFragment': false,  // 4596: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: play(null) + playFinish > play(null) + progress': false,  // 4597: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: play(null) + playFinish > togglePlayPause(null) + playBegin': false,  // 4601: event should have been triggerd but was NOT
-		'combos: play(null) + playFinish > togglePlayPause(null) + playFinish': false,  // 4602: event should have been triggerd but was NOT
-		'combos: play(null) + playFinish > togglePlayPause(null) + pauseBegin': false,  // 4607: event should not have been triggerd but WAS
-		'combos: play(null) + playFinish > togglePlayPause(null) + pauseFinish': false,  // 4608: event should not have been triggerd but WAS
-		'combos: play(null) + playFinish > togglePlayPause(null) + loopBegin': false,  // 4619: event should have been triggerd but was NOT
-		'combos: play(null) + playFinish > togglePlayPause(null) + loopFinish': false,  // 4620: event should have been triggerd but was NOT
-		'combos: play(null) + playFinish > togglePlayPause(null) + newWordFragment': false,  // 4621: event should have been triggerd but was NOT
-		'combos: play(null) + playFinish > togglePlayPause(null) + progress': false,  // 4622: event should have been triggerd but was NOT
-		'combos: play(null) + playFinish > togglePlayPause(null) + stopBegin': false,  // 4623: event should have been triggerd but was NOT
-		'combos: play(null) + playFinish > togglePlayPause(null) + stopFinish': false,  // 4624: event should have been triggerd but was NOT
-		'combos: play(null) + playFinish > togglePlayPause(null) + done': false,  // 4625: event should have been triggerd but was NOT
+		'combos: play(null) + playFinish > togglePlayPause(null) + playBegin': true,  // 4601: event should have been triggerd but was NOT
+		'combos: play(null) + playFinish > togglePlayPause(null) + playFinish': true,  // 4602: event should have been triggerd but was NOT
+		'combos: play(null) + playFinish > togglePlayPause(null) + pauseBegin': true,  // 4607: event should not have been triggerd but WAS
+		'combos: play(null) + playFinish > togglePlayPause(null) + pauseFinish': true,  // 4608: event should not have been triggerd but WAS
+		'combos: play(null) + playFinish > togglePlayPause(null) + loopBegin': true,  // 4619: event should have been triggerd but was NOT
+		'combos: play(null) + playFinish > togglePlayPause(null) + loopFinish': true,  // 4620: event should have been triggerd but was NOT
+		'combos: play(null) + playFinish > togglePlayPause(null) + newWordFragment': true,  // 4621: event should have been triggerd but was NOT
+		'combos: play(null) + playFinish > togglePlayPause(null) + progress': true,  // 4622: event should have been triggerd but was NOT
+		'combos: play(null) + playFinish > togglePlayPause(null) + stopBegin': true,  // 4623: event should have been triggerd but was NOT
+		'combos: play(null) + playFinish > togglePlayPause(null) + stopFinish': true,  // 4624: event should have been triggerd but was NOT
+		'combos: play(null) + playFinish > togglePlayPause(null) + done': true,  // 4625: event should have been triggerd but was NOT
 		'combos: play(null) + playFinish > revert(null) + playBegin': false,  // 4701: event should not have been triggerd but WAS
 		'combos: play(null) + playFinish > revert(null) + playFinish': false,  // 4702: event should not have been triggerd but WAS
 		'combos: play(null) + playFinish > revert(null) + pauseBegin': false,  // 4707: event should have been triggerd but was NOT
 		'combos: play(null) + playFinish > revert(null) + pauseFinish': false,  // 4708: event should have been triggerd but was NOT
 		'combos: play(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: play(null) + loopBegin > play(null) + progress': false,  // 16297: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: play(null) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: play(null) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: play(null) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: event should not have been triggerd but WAS
-		'combos: play(null) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: event should not have been triggerd but WAS
-		'combos: play(null) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: event should have been triggerd but was NOT
-		'combos: play(null) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: event should have been triggerd but was NOT
-		'combos: play(null) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: event should have been triggerd but was NOT
-		'combos: play(null) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: event should have been triggerd but was NOT
-		'combos: play(null) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: event should have been triggerd but was NOT
-		'combos: play(null) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: event should have been triggerd but was NOT
-		'combos: play(null) + loopBegin > togglePlayPause(null) + done': false,  // 16325: event should have been triggerd but was NOT
+		'combos: play(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: play(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: play(null) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: event should not have been triggerd but WAS
+		'combos: play(null) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: event should not have been triggerd but WAS
+		'combos: play(null) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: event should have been triggerd but was NOT
+		'combos: play(null) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: event should have been triggerd but was NOT
+		'combos: play(null) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: event should have been triggerd but was NOT
+		'combos: play(null) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: event should have been triggerd but was NOT
+		'combos: play(null) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: event should have been triggerd but was NOT
+		'combos: play(null) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: event should have been triggerd but was NOT
+		'combos: play(null) + loopBegin > togglePlayPause(null) + done': true,  // 16325: event should have been triggerd but was NOT
 		'combos: play(null) + loopBegin > revert(null) + playBegin': false,  // 16401: event should not have been triggerd but WAS
 		'combos: play(null) + loopBegin > revert(null) + playFinish': false,  // 16402: event should not have been triggerd but WAS
 		'combos: play(null) + loopBegin > revert(null) + pauseBegin': false,  // 16407: event should have been triggerd but was NOT
 		'combos: play(null) + loopBegin > revert(null) + pauseFinish': false,  // 16408: event should have been triggerd but was NOT
 		'combos: play(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: play(null) + loopFinish > play(null) + progress': false,  // 17197: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: play(null) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: play(null) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: play(null) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: event should not have been triggerd but WAS
-		'combos: play(null) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: event should not have been triggerd but WAS
-		'combos: play(null) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: event should have been triggerd but was NOT
-		'combos: play(null) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: event should have been triggerd but was NOT
-		'combos: play(null) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: event should have been triggerd but was NOT
-		'combos: play(null) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: event should have been triggerd but was NOT
-		'combos: play(null) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: event should have been triggerd but was NOT
-		'combos: play(null) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: event should have been triggerd but was NOT
-		'combos: play(null) + loopFinish > togglePlayPause(null) + done': false,  // 17225: event should have been triggerd but was NOT
+		'combos: play(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: play(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: play(null) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: event should not have been triggerd but WAS
+		'combos: play(null) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: event should not have been triggerd but WAS
+		'combos: play(null) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: event should have been triggerd but was NOT
+		'combos: play(null) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: event should have been triggerd but was NOT
+		'combos: play(null) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: event should have been triggerd but was NOT
+		'combos: play(null) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: event should have been triggerd but was NOT
+		'combos: play(null) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: event should have been triggerd but was NOT
+		'combos: play(null) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: event should have been triggerd but was NOT
+		'combos: play(null) + loopFinish > togglePlayPause(null) + done': true,  // 17225: event should have been triggerd but was NOT
 		'combos: play(null) + loopFinish > revert(null) + playBegin': false,  // 17301: event should not have been triggerd but WAS
 		'combos: play(null) + loopFinish > revert(null) + playFinish': false,  // 17302: event should not have been triggerd but WAS
 		'combos: play(null) + loopFinish > revert(null) + pauseBegin': false,  // 17307: event should have been triggerd but was NOT
 		'combos: play(null) + loopFinish > revert(null) + pauseFinish': false,  // 17308: event should have been triggerd but was NOT
 		'combos: play(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: play(null) + newWordFragment > play(null) + progress': false,  // 18097: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: event should not have been triggerd but WAS
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: event should not have been triggerd but WAS
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: event should have been triggerd but was NOT
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: event should have been triggerd but was NOT
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: event should have been triggerd but was NOT
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: event should have been triggerd but was NOT
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: event should have been triggerd but was NOT
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: event should have been triggerd but was NOT
-		'combos: play(null) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: event should have been triggerd but was NOT
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: event should not have been triggerd but WAS
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: event should not have been triggerd but WAS
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: event should have been triggerd but was NOT
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: event should have been triggerd but was NOT
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: event should have been triggerd but was NOT
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: event should have been triggerd but was NOT
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: event should have been triggerd but was NOT
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: event should have been triggerd but was NOT
+		'combos: play(null) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: event should have been triggerd but was NOT
 		'combos: play(null) + newWordFragment > revert(null) + playBegin': false,  // 18201: event should not have been triggerd but WAS
 		'combos: play(null) + newWordFragment > revert(null) + playFinish': false,  // 18202: event should not have been triggerd but WAS
 		'combos: play(null) + newWordFragment > revert(null) + pauseBegin': false,  // 18207: event should have been triggerd but was NOT
 		'combos: play(null) + newWordFragment > revert(null) + pauseFinish': false,  // 18208: event should have been triggerd but was NOT
 		'combos: play(null) + progress > play(null) + newWordFragment': false,  // 18996: frags expected ["Victorious,","you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"], but got ["you","brave","flag.","Delirious,","I","come","back.","\n","Why,","oh","wattlebird?"]
 		'combos: play(null) + progress > play(null) + progress': false,  // 18997: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'combos: play(null) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: play(null) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: play(null) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: event should not have been triggerd but WAS
-		'combos: play(null) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: event should not have been triggerd but WAS
-		'combos: play(null) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: event should have been triggerd but was NOT
-		'combos: play(null) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: event should have been triggerd but was NOT
-		'combos: play(null) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: event should have been triggerd but was NOT
-		'combos: play(null) + progress > togglePlayPause(null) + progress': false,  // 19022: event should have been triggerd but was NOT
-		'combos: play(null) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: event should have been triggerd but was NOT
-		'combos: play(null) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: event should have been triggerd but was NOT
-		'combos: play(null) + progress > togglePlayPause(null) + done': false,  // 19025: event should have been triggerd but was NOT
+		'combos: play(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: play(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: play(null) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: event should not have been triggerd but WAS
+		'combos: play(null) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: event should not have been triggerd but WAS
+		'combos: play(null) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: event should have been triggerd but was NOT
+		'combos: play(null) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: event should have been triggerd but was NOT
+		'combos: play(null) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: event should have been triggerd but was NOT
+		'combos: play(null) + progress > togglePlayPause(null) + progress': true,  // 19022: event should have been triggerd but was NOT
+		'combos: play(null) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: event should have been triggerd but was NOT
+		'combos: play(null) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: event should have been triggerd but was NOT
+		'combos: play(null) + progress > togglePlayPause(null) + done': true,  // 19025: event should have been triggerd but was NOT
 		'combos: play(null) + progress > revert(null) + playBegin': false,  // 19101: event should not have been triggerd but WAS
 		'combos: play(null) + progress > revert(null) + playFinish': false,  // 19102: event should not have been triggerd but WAS
 		'combos: play(null) + progress > revert(null) + pauseBegin': false,  // 19107: event should have been triggerd but was NOT
@@ -3721,78 +2491,78 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// #? 'stop*|done' > play|toggle() = 'restart*', not 'play*'
 		// #? Similarly for things that will immediately trigger 'stop*|done'
 		// Here one loop of rewind at the start will lead to 'stop*|done', so 'rewind*|loop*|new|prog' all do too
-		'combos: rewind(null) + rewindBegin > play(null) + playBegin': false,  // 12676: event should have been triggerd but was NOT
-		'combos: rewind(null) + rewindBegin > play(null) + playFinish': false,  // 12677: event should have been triggerd but was NOT
-		'combos: rewind(null) + rewindBegin > play(null) + restartBegin': false,  // 12680: event should not have been triggerd but WAS
-		'combos: rewind(null) + rewindBegin > play(null) + restartFinish': false,  // 12681: event should not have been triggerd but WAS
-		'combos: rewind(null) + rewindBegin > togglePlayPause(null) + playBegin': false,  // 12701: event should have been triggerd but was NOT
-		'combos: rewind(null) + rewindBegin > togglePlayPause(null) + playFinish': false,  // 12702: event should have been triggerd but was NOT
-		'combos: rewind(null) + rewindBegin > togglePlayPause(null) + restartBegin': false,  // 12705: event should not have been triggerd but WAS
-		'combos: rewind(null) + rewindBegin > togglePlayPause(null) + restartFinish': false,  // 12706: event should not have been triggerd but WAS
-		'combos: rewind(null) + rewindFinish > play(null) + playBegin': false,  // 13576: event should have been triggerd but was NOT
-		'combos: rewind(null) + rewindFinish > play(null) + playFinish': false,  // 13577: event should have been triggerd but was NOT
-		'combos: rewind(null) + rewindFinish > play(null) + restartBegin': false,  // 13580: event should not have been triggerd but WAS
-		'combos: rewind(null) + rewindFinish > play(null) + restartFinish': false,  // 13581: event should not have been triggerd but WAS
-		'combos: rewind(null) + rewindFinish > togglePlayPause(null) + playBegin': false,  // 13601: event should have been triggerd but was NOT
-		'combos: rewind(null) + rewindFinish > togglePlayPause(null) + playFinish': false,  // 13602: event should have been triggerd but was NOT
-		'combos: rewind(null) + rewindFinish > togglePlayPause(null) + restartBegin': false,  // 13605: event should not have been triggerd but WAS
-		'combos: rewind(null) + rewindFinish > togglePlayPause(null) + restartFinish': false,  // 13606: event should not have been triggerd but WAS
-		'combos: rewind(null) + loopBegin > play(null) + playBegin': false,  // 16276: event should have been triggerd but was NOT
-		'combos: rewind(null) + loopBegin > play(null) + playFinish': false,  // 16277: event should have been triggerd but was NOT
-		'combos: rewind(null) + loopBegin > play(null) + restartBegin': false,  // 16280: event should not have been triggerd but WAS
-		'combos: rewind(null) + loopBegin > play(null) + restartFinish': false,  // 16281: event should not have been triggerd but WAS
-		'combos: rewind(null) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: rewind(null) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: rewind(null) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: event should not have been triggerd but WAS
-		'combos: rewind(null) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: event should not have been triggerd but WAS
-		'combos: rewind(null) + loopFinish > play(null) + playBegin': false,  // 17176: event should have been triggerd but was NOT
-		'combos: rewind(null) + loopFinish > play(null) + playFinish': false,  // 17177: event should have been triggerd but was NOT
-		'combos: rewind(null) + loopFinish > play(null) + restartBegin': false,  // 17180: event should not have been triggerd but WAS
-		'combos: rewind(null) + loopFinish > play(null) + restartFinish': false,  // 17181: event should not have been triggerd but WAS
-		'combos: rewind(null) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: rewind(null) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: rewind(null) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: event should not have been triggerd but WAS
-		'combos: rewind(null) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: event should not have been triggerd but WAS
-		'combos: rewind(null) + newWordFragment > play(null) + playBegin': false,  // 18076: event should have been triggerd but was NOT
-		'combos: rewind(null) + newWordFragment > play(null) + playFinish': false,  // 18077: event should have been triggerd but was NOT
-		'combos: rewind(null) + newWordFragment > play(null) + restartBegin': false,  // 18080: event should not have been triggerd but WAS
-		'combos: rewind(null) + newWordFragment > play(null) + restartFinish': false,  // 18081: event should not have been triggerd but WAS
-		'combos: rewind(null) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: rewind(null) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: rewind(null) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: event should not have been triggerd but WAS
-		'combos: rewind(null) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: event should not have been triggerd but WAS
-		'combos: rewind(null) + progress > play(null) + playBegin': false,  // 18976: event should have been triggerd but was NOT
-		'combos: rewind(null) + progress > play(null) + playFinish': false,  // 18977: event should have been triggerd but was NOT
-		'combos: rewind(null) + progress > play(null) + restartBegin': false,  // 18980: event should not have been triggerd but WAS
-		'combos: rewind(null) + progress > play(null) + restartFinish': false,  // 18981: event should not have been triggerd but WAS
-		'combos: rewind(null) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: rewind(null) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: rewind(null) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: event should not have been triggerd but WAS
-		'combos: rewind(null) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: event should not have been triggerd but WAS
-		'combos: rewind(null) + stopBegin > play(null) + playBegin': false,  // 19876: event should have been triggerd but was NOT
-		'combos: rewind(null) + stopBegin > play(null) + playFinish': false,  // 19877: event should have been triggerd but was NOT
-		'combos: rewind(null) + stopBegin > play(null) + restartBegin': false,  // 19880: event should not have been triggerd but WAS
-		'combos: rewind(null) + stopBegin > play(null) + restartFinish': false,  // 19881: event should not have been triggerd but WAS
-		'combos: rewind(null) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: event should have been triggerd but was NOT
-		'combos: rewind(null) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: event should have been triggerd but was NOT
-		'combos: rewind(null) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: event should not have been triggerd but WAS
-		'combos: rewind(null) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: event should not have been triggerd but WAS
-		'combos: rewind(null) + stopFinish > play(null) + playBegin': false,  // 20776: event should have been triggerd but was NOT
-		'combos: rewind(null) + stopFinish > play(null) + playFinish': false,  // 20777: event should have been triggerd but was NOT
-		'combos: rewind(null) + stopFinish > play(null) + restartBegin': false,  // 20780: event should not have been triggerd but WAS
-		'combos: rewind(null) + stopFinish > play(null) + restartFinish': false,  // 20781: event should not have been triggerd but WAS
-		'combos: rewind(null) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: event should have been triggerd but was NOT
-		'combos: rewind(null) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: event should have been triggerd but was NOT
-		'combos: rewind(null) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: event should not have been triggerd but WAS
-		'combos: rewind(null) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: event should not have been triggerd but WAS
-		'combos: rewind(null) + done > play(null) + playBegin': false,  // 21676: event should have been triggerd but was NOT
-		'combos: rewind(null) + done > play(null) + playFinish': false,  // 21677: event should have been triggerd but was NOT
-		'combos: rewind(null) + done > play(null) + restartBegin': false,  // 21680: event should not have been triggerd but WAS
-		'combos: rewind(null) + done > play(null) + restartFinish': false,  // 21681: event should not have been triggerd but WAS
-		'combos: rewind(null) + done > togglePlayPause(null) + playBegin': false,  // 21701: event should have been triggerd but was NOT
-		'combos: rewind(null) + done > togglePlayPause(null) + playFinish': false,  // 21702: event should have been triggerd but was NOT
-		'combos: rewind(null) + done > togglePlayPause(null) + restartBegin': false,  // 21705: event should not have been triggerd but WAS
-		'combos: rewind(null) + done > togglePlayPause(null) + restartFinish': false,  // 21706: event should not have been triggerd but WAS
+		'combos: rewind(null) + rewindBegin > play(null) + playBegin': true,  // 12676: event should have been triggerd but was NOT
+		'combos: rewind(null) + rewindBegin > play(null) + playFinish': true,  // 12677: event should have been triggerd but was NOT
+		'combos: rewind(null) + rewindBegin > play(null) + restartBegin': true,  // 12680: event should not have been triggerd but WAS
+		'combos: rewind(null) + rewindBegin > play(null) + restartFinish': true,  // 12681: event should not have been triggerd but WAS
+		'combos: rewind(null) + rewindBegin > togglePlayPause(null) + playBegin': true,  // 12701: event should have been triggerd but was NOT
+		'combos: rewind(null) + rewindBegin > togglePlayPause(null) + playFinish': true,  // 12702: event should have been triggerd but was NOT
+		'combos: rewind(null) + rewindBegin > togglePlayPause(null) + restartBegin': true,  // 12705: event should not have been triggerd but WAS
+		'combos: rewind(null) + rewindBegin > togglePlayPause(null) + restartFinish': true,  // 12706: event should not have been triggerd but WAS
+		'combos: rewind(null) + rewindFinish > play(null) + playBegin': true,  // 13576: event should have been triggerd but was NOT
+		'combos: rewind(null) + rewindFinish > play(null) + playFinish': true,  // 13577: event should have been triggerd but was NOT
+		'combos: rewind(null) + rewindFinish > play(null) + restartBegin': true,  // 13580: event should not have been triggerd but WAS
+		'combos: rewind(null) + rewindFinish > play(null) + restartFinish': true,  // 13581: event should not have been triggerd but WAS
+		'combos: rewind(null) + rewindFinish > togglePlayPause(null) + playBegin': true,  // 13601: event should have been triggerd but was NOT
+		'combos: rewind(null) + rewindFinish > togglePlayPause(null) + playFinish': true,  // 13602: event should have been triggerd but was NOT
+		'combos: rewind(null) + rewindFinish > togglePlayPause(null) + restartBegin': true,  // 13605: event should not have been triggerd but WAS
+		'combos: rewind(null) + rewindFinish > togglePlayPause(null) + restartFinish': true,  // 13606: event should not have been triggerd but WAS
+		'combos: rewind(null) + loopBegin > play(null) + playBegin': true,  // 16276: event should have been triggerd but was NOT
+		'combos: rewind(null) + loopBegin > play(null) + playFinish': true,  // 16277: event should have been triggerd but was NOT
+		'combos: rewind(null) + loopBegin > play(null) + restartBegin': true,  // 16280: event should not have been triggerd but WAS
+		'combos: rewind(null) + loopBegin > play(null) + restartFinish': true,  // 16281: event should not have been triggerd but WAS
+		'combos: rewind(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: rewind(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: rewind(null) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: event should not have been triggerd but WAS
+		'combos: rewind(null) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: event should not have been triggerd but WAS
+		'combos: rewind(null) + loopFinish > play(null) + playBegin': true,  // 17176: event should have been triggerd but was NOT
+		'combos: rewind(null) + loopFinish > play(null) + playFinish': true,  // 17177: event should have been triggerd but was NOT
+		'combos: rewind(null) + loopFinish > play(null) + restartBegin': true,  // 17180: event should not have been triggerd but WAS
+		'combos: rewind(null) + loopFinish > play(null) + restartFinish': true,  // 17181: event should not have been triggerd but WAS
+		'combos: rewind(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: rewind(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: rewind(null) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: event should not have been triggerd but WAS
+		'combos: rewind(null) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: event should not have been triggerd but WAS
+		'combos: rewind(null) + newWordFragment > play(null) + playBegin': true,  // 18076: event should have been triggerd but was NOT
+		'combos: rewind(null) + newWordFragment > play(null) + playFinish': true,  // 18077: event should have been triggerd but was NOT
+		'combos: rewind(null) + newWordFragment > play(null) + restartBegin': true,  // 18080: event should not have been triggerd but WAS
+		'combos: rewind(null) + newWordFragment > play(null) + restartFinish': true,  // 18081: event should not have been triggerd but WAS
+		'combos: rewind(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: rewind(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: rewind(null) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: event should not have been triggerd but WAS
+		'combos: rewind(null) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: event should not have been triggerd but WAS
+		'combos: rewind(null) + progress > play(null) + playBegin': true,  // 18976: event should have been triggerd but was NOT
+		'combos: rewind(null) + progress > play(null) + playFinish': true,  // 18977: event should have been triggerd but was NOT
+		'combos: rewind(null) + progress > play(null) + restartBegin': true,  // 18980: event should not have been triggerd but WAS
+		'combos: rewind(null) + progress > play(null) + restartFinish': true,  // 18981: event should not have been triggerd but WAS
+		'combos: rewind(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: rewind(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: rewind(null) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: event should not have been triggerd but WAS
+		'combos: rewind(null) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: event should not have been triggerd but WAS
+		'combos: rewind(null) + stopBegin > play(null) + playBegin': true,  // 19876: event should have been triggerd but was NOT
+		'combos: rewind(null) + stopBegin > play(null) + playFinish': true,  // 19877: event should have been triggerd but was NOT
+		'combos: rewind(null) + stopBegin > play(null) + restartBegin': true,  // 19880: event should not have been triggerd but WAS
+		'combos: rewind(null) + stopBegin > play(null) + restartFinish': true,  // 19881: event should not have been triggerd but WAS
+		'combos: rewind(null) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: event should have been triggerd but was NOT
+		'combos: rewind(null) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: event should have been triggerd but was NOT
+		'combos: rewind(null) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: event should not have been triggerd but WAS
+		'combos: rewind(null) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: event should not have been triggerd but WAS
+		'combos: rewind(null) + stopFinish > play(null) + playBegin': true,  // 20776: event should have been triggerd but was NOT
+		'combos: rewind(null) + stopFinish > play(null) + playFinish': true,  // 20777: event should have been triggerd but was NOT
+		'combos: rewind(null) + stopFinish > play(null) + restartBegin': true,  // 20780: event should not have been triggerd but WAS
+		'combos: rewind(null) + stopFinish > play(null) + restartFinish': true,  // 20781: event should not have been triggerd but WAS
+		'combos: rewind(null) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: event should have been triggerd but was NOT
+		'combos: rewind(null) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: event should have been triggerd but was NOT
+		'combos: rewind(null) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: event should not have been triggerd but WAS
+		'combos: rewind(null) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: event should not have been triggerd but WAS
+		'combos: rewind(null) + done > play(null) + playBegin': true,  // 21676: event should have been triggerd but was NOT
+		'combos: rewind(null) + done > play(null) + playFinish': true,  // 21677: event should have been triggerd but was NOT
+		'combos: rewind(null) + done > play(null) + restartBegin': true,  // 21680: event should not have been triggerd but WAS
+		'combos: rewind(null) + done > play(null) + restartFinish': true,  // 21681: event should not have been triggerd but WAS
+		'combos: rewind(null) + done > togglePlayPause(null) + playBegin': true,  // 21701: event should have been triggerd but was NOT
+		'combos: rewind(null) + done > togglePlayPause(null) + playFinish': true,  // 21702: event should have been triggerd but was NOT
+		'combos: rewind(null) + done > togglePlayPause(null) + restartBegin': true,  // 21705: event should not have been triggerd but WAS
+		'combos: rewind(null) + done > togglePlayPause(null) + restartFinish': true,  // 21706: event should not have been triggerd but WAS
 
 
 
@@ -4269,78 +3039,78 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// ============== once([0,0,-2]) ==============
 		// #? anything(-) + 'once*|loop*|new|prog|stop*|done' (that immediately leads to done) > play|toggle() = restart instead of play
-		'combos: once([0,0,-2]) + onceBegin > play(null) + playBegin': false,  // 9076: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + onceBegin > play(null) + playFinish': false,  // 9077: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + onceBegin > play(null) + restartBegin': false,  // 9080: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + onceBegin > play(null) + restartFinish': false,  // 9081: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + onceFinish > play(null) + playBegin': false,  // 9976: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + onceFinish > play(null) + playFinish': false,  // 9977: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + onceFinish > play(null) + restartBegin': false,  // 9980: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + onceFinish > play(null) + restartFinish': false,  // 9981: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + loopBegin > play(null) + playBegin': false,  // 16276: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + loopBegin > play(null) + playFinish': false,  // 16277: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + loopBegin > play(null) + restartBegin': false,  // 16280: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + loopBegin > play(null) + restartFinish': false,  // 16281: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + loopFinish > play(null) + playBegin': false,  // 17176: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + loopFinish > play(null) + playFinish': false,  // 17177: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + loopFinish > play(null) + restartBegin': false,  // 17180: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + loopFinish > play(null) + restartFinish': false,  // 17181: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + newWordFragment > play(null) + playBegin': false,  // 18076: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + newWordFragment > play(null) + playFinish': false,  // 18077: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + newWordFragment > play(null) + restartBegin': false,  // 18080: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + newWordFragment > play(null) + restartFinish': false,  // 18081: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + progress > play(null) + playBegin': false,  // 18976: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + progress > play(null) + playFinish': false,  // 18977: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + progress > play(null) + restartBegin': false,  // 18980: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + progress > play(null) + restartFinish': false,  // 18981: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + stopBegin > play(null) + playBegin': false,  // 19876: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + stopBegin > play(null) + playFinish': false,  // 19877: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + stopBegin > play(null) + restartBegin': false,  // 19880: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + stopBegin > play(null) + restartFinish': false,  // 19881: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + stopFinish > play(null) + playBegin': false,  // 20776: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + stopFinish > play(null) + playFinish': false,  // 20777: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + stopFinish > play(null) + restartBegin': false,  // 20780: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + stopFinish > play(null) + restartFinish': false,  // 20781: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + done > play(null) + playBegin': false,  // 21676: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + done > play(null) + playFinish': false,  // 21677: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + done > play(null) + restartBegin': false,  // 21680: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + done > play(null) + restartFinish': false,  // 21681: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + done > togglePlayPause(null) + playBegin': false,  // 21701: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + done > togglePlayPause(null) + playFinish': false,  // 21702: event should have been triggerd but was NOT
-		'combos: once([0,0,-2]) + done > togglePlayPause(null) + restartBegin': false,  // 21705: event should not have been triggerd but WAS
-		'combos: once([0,0,-2]) + done > togglePlayPause(null) + restartFinish': false,  // 21706: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + onceBegin > play(null) + playBegin': true,  // 9076: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + onceBegin > play(null) + playFinish': true,  // 9077: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + onceBegin > play(null) + restartBegin': true,  // 9080: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + onceBegin > play(null) + restartFinish': true,  // 9081: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + onceFinish > play(null) + playBegin': true,  // 9976: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + onceFinish > play(null) + playFinish': true,  // 9977: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + onceFinish > play(null) + restartBegin': true,  // 9980: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + onceFinish > play(null) + restartFinish': true,  // 9981: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + loopBegin > play(null) + playBegin': true,  // 16276: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + loopBegin > play(null) + playFinish': true,  // 16277: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + loopBegin > play(null) + restartBegin': true,  // 16280: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + loopBegin > play(null) + restartFinish': true,  // 16281: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + loopFinish > play(null) + playBegin': true,  // 17176: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + loopFinish > play(null) + playFinish': true,  // 17177: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + loopFinish > play(null) + restartBegin': true,  // 17180: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + loopFinish > play(null) + restartFinish': true,  // 17181: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + newWordFragment > play(null) + playBegin': true,  // 18076: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + newWordFragment > play(null) + playFinish': true,  // 18077: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + newWordFragment > play(null) + restartBegin': true,  // 18080: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + newWordFragment > play(null) + restartFinish': true,  // 18081: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + progress > play(null) + playBegin': true,  // 18976: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + progress > play(null) + playFinish': true,  // 18977: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + progress > play(null) + restartBegin': true,  // 18980: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + progress > play(null) + restartFinish': true,  // 18981: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + stopBegin > play(null) + playBegin': true,  // 19876: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + stopBegin > play(null) + playFinish': true,  // 19877: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + stopBegin > play(null) + restartBegin': true,  // 19880: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + stopBegin > play(null) + restartFinish': true,  // 19881: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + stopFinish > play(null) + playBegin': true,  // 20776: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + stopFinish > play(null) + playFinish': true,  // 20777: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + stopFinish > play(null) + restartBegin': true,  // 20780: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + stopFinish > play(null) + restartFinish': true,  // 20781: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + done > play(null) + playBegin': true,  // 21676: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + done > play(null) + playFinish': true,  // 21677: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + done > play(null) + restartBegin': true,  // 21680: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + done > play(null) + restartFinish': true,  // 21681: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + done > togglePlayPause(null) + playBegin': true,  // 21701: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + done > togglePlayPause(null) + playFinish': true,  // 21702: event should have been triggerd but was NOT
+		'combos: once([0,0,-2]) + done > togglePlayPause(null) + restartBegin': true,  // 21705: event should not have been triggerd but WAS
+		'combos: once([0,0,-2]) + done > togglePlayPause(null) + restartFinish': true,  // 21706: event should not have been triggerd but WAS
 
 
 
@@ -4527,324 +3297,324 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// ============== current ==============
 		// #? current() reverts to 'pause', so toggle = 'revert*|pause*' stuff not 'play*|...' stuff
-		'combos: current(null) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: current(null) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: current(null) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: event should not have been triggerd but WAS
-		'combos: current(null) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: event should not have been triggerd but WAS
-		'combos: current(null) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: event should not have been triggerd but WAS
-		'combos: current(null) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: event should not have been triggerd but WAS
-		'combos: current(null) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: event should have been triggerd but was NOT
-		'combos: current(null) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: event should have been triggerd but was NOT
-		'combos: current(null) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: event should have been triggerd but was NOT
-		'combos: current(null) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: event should have been triggerd but was NOT
-		'combos: current(null) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: event should have been triggerd but was NOT
-		'combos: current(null) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: event should have been triggerd but was NOT
-		'combos: current(null) + onceBegin > togglePlayPause(null) + done': false,  // 9125: event should have been triggerd but was NOT
-		'combos: current(null) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: current(null) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: current(null) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: event should not have been triggerd but WAS
-		'combos: current(null) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: event should not have been triggerd but WAS
-		'combos: current(null) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: event should not have been triggerd but WAS
-		'combos: current(null) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: event should not have been triggerd but WAS
-		'combos: current(null) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: event should have been triggerd but was NOT
-		'combos: current(null) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: event should have been triggerd but was NOT
-		'combos: current(null) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: event should have been triggerd but was NOT
-		'combos: current(null) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: event should have been triggerd but was NOT
-		'combos: current(null) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: event should have been triggerd but was NOT
-		'combos: current(null) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: event should have been triggerd but was NOT
-		'combos: current(null) + onceFinish > togglePlayPause(null) + done': false,  // 10025: event should have been triggerd but was NOT
-		'combos: current(null) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: current(null) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: current(null) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: event should not have been triggerd but WAS
-		'combos: current(null) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: event should not have been triggerd but WAS
-		'combos: current(null) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: event should not have been triggerd but WAS
-		'combos: current(null) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: event should not have been triggerd but WAS
-		'combos: current(null) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: event should have been triggerd but was NOT
-		'combos: current(null) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: event should have been triggerd but was NOT
-		'combos: current(null) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: event should have been triggerd but was NOT
-		'combos: current(null) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: event should have been triggerd but was NOT
-		'combos: current(null) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: event should have been triggerd but was NOT
-		'combos: current(null) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: event should have been triggerd but was NOT
-		'combos: current(null) + loopBegin > togglePlayPause(null) + done': false,  // 16325: event should have been triggerd but was NOT
-		'combos: current(null) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: current(null) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: current(null) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: event should not have been triggerd but WAS
-		'combos: current(null) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: event should not have been triggerd but WAS
-		'combos: current(null) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: event should not have been triggerd but WAS
-		'combos: current(null) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: event should not have been triggerd but WAS
-		'combos: current(null) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: event should have been triggerd but was NOT
-		'combos: current(null) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: event should have been triggerd but was NOT
-		'combos: current(null) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: event should have been triggerd but was NOT
-		'combos: current(null) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: event should have been triggerd but was NOT
-		'combos: current(null) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: event should have been triggerd but was NOT
-		'combos: current(null) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: event should have been triggerd but was NOT
-		'combos: current(null) + loopFinish > togglePlayPause(null) + done': false,  // 17225: event should have been triggerd but was NOT
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: event should not have been triggerd but WAS
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: event should not have been triggerd but WAS
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: event should not have been triggerd but WAS
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: event should not have been triggerd but WAS
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: event should have been triggerd but was NOT
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: event should have been triggerd but was NOT
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: event should have been triggerd but was NOT
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: event should have been triggerd but was NOT
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: event should have been triggerd but was NOT
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: event should have been triggerd but was NOT
-		'combos: current(null) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: event should have been triggerd but was NOT
-		'combos: current(null) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: current(null) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: current(null) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: event should not have been triggerd but WAS
-		'combos: current(null) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: event should not have been triggerd but WAS
-		'combos: current(null) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: event should not have been triggerd but WAS
-		'combos: current(null) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: event should not have been triggerd but WAS
-		'combos: current(null) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: event should have been triggerd but was NOT
-		'combos: current(null) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: event should have been triggerd but was NOT
-		'combos: current(null) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: event should have been triggerd but was NOT
-		'combos: current(null) + progress > togglePlayPause(null) + progress': false,  // 19022: event should have been triggerd but was NOT
-		'combos: current(null) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: event should have been triggerd but was NOT
-		'combos: current(null) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: event should have been triggerd but was NOT
-		'combos: current(null) + progress > togglePlayPause(null) + done': false,  // 19025: event should have been triggerd but was NOT
+		'combos: current(null) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: current(null) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: current(null) + onceBegin > togglePlayPause(null) + pauseBegin': true,  // 9107: event should not have been triggerd but WAS
+		'combos: current(null) + onceBegin > togglePlayPause(null) + pauseFinish': true,  // 9108: event should not have been triggerd but WAS
+		'combos: current(null) + onceBegin > togglePlayPause(null) + revertBegin': true,  // 9113: event should not have been triggerd but WAS
+		'combos: current(null) + onceBegin > togglePlayPause(null) + revertFinish': true,  // 9114: event should not have been triggerd but WAS
+		'combos: current(null) + onceBegin > togglePlayPause(null) + loopBegin': true,  // 9119: event should have been triggerd but was NOT
+		'combos: current(null) + onceBegin > togglePlayPause(null) + loopFinish': true,  // 9120: event should have been triggerd but was NOT
+		'combos: current(null) + onceBegin > togglePlayPause(null) + newWordFragment': true,  // 9121: event should have been triggerd but was NOT
+		'combos: current(null) + onceBegin > togglePlayPause(null) + progress': true,  // 9122: event should have been triggerd but was NOT
+		'combos: current(null) + onceBegin > togglePlayPause(null) + stopBegin': true,  // 9123: event should have been triggerd but was NOT
+		'combos: current(null) + onceBegin > togglePlayPause(null) + stopFinish': true,  // 9124: event should have been triggerd but was NOT
+		'combos: current(null) + onceBegin > togglePlayPause(null) + done': true,  // 9125: event should have been triggerd but was NOT
+		'combos: current(null) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: current(null) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: current(null) + onceFinish > togglePlayPause(null) + pauseBegin': true,  // 10007: event should not have been triggerd but WAS
+		'combos: current(null) + onceFinish > togglePlayPause(null) + pauseFinish': true,  // 10008: event should not have been triggerd but WAS
+		'combos: current(null) + onceFinish > togglePlayPause(null) + revertBegin': true,  // 10013: event should not have been triggerd but WAS
+		'combos: current(null) + onceFinish > togglePlayPause(null) + revertFinish': true,  // 10014: event should not have been triggerd but WAS
+		'combos: current(null) + onceFinish > togglePlayPause(null) + loopBegin': true,  // 10019: event should have been triggerd but was NOT
+		'combos: current(null) + onceFinish > togglePlayPause(null) + loopFinish': true,  // 10020: event should have been triggerd but was NOT
+		'combos: current(null) + onceFinish > togglePlayPause(null) + newWordFragment': true,  // 10021: event should have been triggerd but was NOT
+		'combos: current(null) + onceFinish > togglePlayPause(null) + progress': true,  // 10022: event should have been triggerd but was NOT
+		'combos: current(null) + onceFinish > togglePlayPause(null) + stopBegin': true,  // 10023: event should have been triggerd but was NOT
+		'combos: current(null) + onceFinish > togglePlayPause(null) + stopFinish': true,  // 10024: event should have been triggerd but was NOT
+		'combos: current(null) + onceFinish > togglePlayPause(null) + done': true,  // 10025: event should have been triggerd but was NOT
+		'combos: current(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: current(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: current(null) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: event should not have been triggerd but WAS
+		'combos: current(null) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: event should not have been triggerd but WAS
+		'combos: current(null) + loopBegin > togglePlayPause(null) + revertBegin': true,  // 16313: event should not have been triggerd but WAS
+		'combos: current(null) + loopBegin > togglePlayPause(null) + revertFinish': true,  // 16314: event should not have been triggerd but WAS
+		'combos: current(null) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: event should have been triggerd but was NOT
+		'combos: current(null) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: event should have been triggerd but was NOT
+		'combos: current(null) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: event should have been triggerd but was NOT
+		'combos: current(null) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: event should have been triggerd but was NOT
+		'combos: current(null) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: event should have been triggerd but was NOT
+		'combos: current(null) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: event should have been triggerd but was NOT
+		'combos: current(null) + loopBegin > togglePlayPause(null) + done': true,  // 16325: event should have been triggerd but was NOT
+		'combos: current(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: current(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: current(null) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: event should not have been triggerd but WAS
+		'combos: current(null) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: event should not have been triggerd but WAS
+		'combos: current(null) + loopFinish > togglePlayPause(null) + revertBegin': true,  // 17213: event should not have been triggerd but WAS
+		'combos: current(null) + loopFinish > togglePlayPause(null) + revertFinish': true,  // 17214: event should not have been triggerd but WAS
+		'combos: current(null) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: event should have been triggerd but was NOT
+		'combos: current(null) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: event should have been triggerd but was NOT
+		'combos: current(null) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: event should have been triggerd but was NOT
+		'combos: current(null) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: event should have been triggerd but was NOT
+		'combos: current(null) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: event should have been triggerd but was NOT
+		'combos: current(null) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: event should have been triggerd but was NOT
+		'combos: current(null) + loopFinish > togglePlayPause(null) + done': true,  // 17225: event should have been triggerd but was NOT
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: event should not have been triggerd but WAS
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: event should not have been triggerd but WAS
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + revertBegin': true,  // 18113: event should not have been triggerd but WAS
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + revertFinish': true,  // 18114: event should not have been triggerd but WAS
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: event should have been triggerd but was NOT
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: event should have been triggerd but was NOT
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: event should have been triggerd but was NOT
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: event should have been triggerd but was NOT
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: event should have been triggerd but was NOT
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: event should have been triggerd but was NOT
+		'combos: current(null) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: event should have been triggerd but was NOT
+		'combos: current(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: current(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: current(null) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: event should not have been triggerd but WAS
+		'combos: current(null) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: event should not have been triggerd but WAS
+		'combos: current(null) + progress > togglePlayPause(null) + revertBegin': true,  // 19013: event should not have been triggerd but WAS
+		'combos: current(null) + progress > togglePlayPause(null) + revertFinish': true,  // 19014: event should not have been triggerd but WAS
+		'combos: current(null) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: event should have been triggerd but was NOT
+		'combos: current(null) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: event should have been triggerd but was NOT
+		'combos: current(null) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: event should have been triggerd but was NOT
+		'combos: current(null) + progress > togglePlayPause(null) + progress': true,  // 19022: event should have been triggerd but was NOT
+		'combos: current(null) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: event should have been triggerd but was NOT
+		'combos: current(null) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: event should have been triggerd but was NOT
+		'combos: current(null) + progress > togglePlayPause(null) + done': true,  // 19025: event should have been triggerd but was NOT
 
 
 
 
 		// ============== jumpTo(-3) ==============
 		// #? like prev
-		'combos: jumpTo(-3) + onceBegin > play(null) + playBegin': false,  // 9076: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + onceBegin > play(null) + playFinish': false,  // 9077: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + onceBegin > play(null) + restartBegin': false,  // 9080: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + onceBegin > play(null) + restartFinish': false,  // 9081: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + onceFinish > play(null) + playBegin': false,  // 9976: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + onceFinish > play(null) + playFinish': false,  // 9977: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + onceFinish > play(null) + restartBegin': false,  // 9980: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + onceFinish > play(null) + restartFinish': false,  // 9981: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + loopBegin > play(null) + playBegin': false,  // 16276: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + loopBegin > play(null) + playFinish': false,  // 16277: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + loopBegin > play(null) + restartBegin': false,  // 16280: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + loopBegin > play(null) + restartFinish': false,  // 16281: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + loopFinish > play(null) + playBegin': false,  // 17176: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + loopFinish > play(null) + playFinish': false,  // 17177: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + loopFinish > play(null) + restartBegin': false,  // 17180: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + loopFinish > play(null) + restartFinish': false,  // 17181: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + newWordFragment > play(null) + playBegin': false,  // 18076: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + newWordFragment > play(null) + playFinish': false,  // 18077: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + newWordFragment > play(null) + restartBegin': false,  // 18080: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + newWordFragment > play(null) + restartFinish': false,  // 18081: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + progress > play(null) + playBegin': false,  // 18976: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + progress > play(null) + playFinish': false,  // 18977: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + progress > play(null) + restartBegin': false,  // 18980: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + progress > play(null) + restartFinish': false,  // 18981: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + stopBegin > play(null) + playBegin': false,  // 19876: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + stopBegin > play(null) + playFinish': false,  // 19877: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + stopBegin > play(null) + restartBegin': false,  // 19880: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + stopBegin > play(null) + restartFinish': false,  // 19881: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + stopFinish > play(null) + playBegin': false,  // 20776: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + stopFinish > play(null) + playFinish': false,  // 20777: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + stopFinish > play(null) + restartBegin': false,  // 20780: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + stopFinish > play(null) + restartFinish': false,  // 20781: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + done > play(null) + playBegin': false,  // 21676: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + done > play(null) + playFinish': false,  // 21677: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + done > play(null) + restartBegin': false,  // 21680: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + done > play(null) + restartFinish': false,  // 21681: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + done > togglePlayPause(null) + playBegin': false,  // 21701: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + done > togglePlayPause(null) + playFinish': false,  // 21702: event should have been triggerd but was NOT
-		'combos: jumpTo(-3) + done > togglePlayPause(null) + restartBegin': false,  // 21705: event should not have been triggerd but WAS
-		'combos: jumpTo(-3) + done > togglePlayPause(null) + restartFinish': false,  // 21706: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + onceBegin > play(null) + playBegin': true,  // 9076: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + onceBegin > play(null) + playFinish': true,  // 9077: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + onceBegin > play(null) + restartBegin': true,  // 9080: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + onceBegin > play(null) + restartFinish': true,  // 9081: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + onceFinish > play(null) + playBegin': true,  // 9976: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + onceFinish > play(null) + playFinish': true,  // 9977: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + onceFinish > play(null) + restartBegin': true,  // 9980: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + onceFinish > play(null) + restartFinish': true,  // 9981: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + loopBegin > play(null) + playBegin': true,  // 16276: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + loopBegin > play(null) + playFinish': true,  // 16277: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + loopBegin > play(null) + restartBegin': true,  // 16280: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + loopBegin > play(null) + restartFinish': true,  // 16281: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + loopFinish > play(null) + playBegin': true,  // 17176: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + loopFinish > play(null) + playFinish': true,  // 17177: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + loopFinish > play(null) + restartBegin': true,  // 17180: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + loopFinish > play(null) + restartFinish': true,  // 17181: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + newWordFragment > play(null) + playBegin': true,  // 18076: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + newWordFragment > play(null) + playFinish': true,  // 18077: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + newWordFragment > play(null) + restartBegin': true,  // 18080: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + newWordFragment > play(null) + restartFinish': true,  // 18081: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + progress > play(null) + playBegin': true,  // 18976: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + progress > play(null) + playFinish': true,  // 18977: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + progress > play(null) + restartBegin': true,  // 18980: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + progress > play(null) + restartFinish': true,  // 18981: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + stopBegin > play(null) + playBegin': true,  // 19876: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + stopBegin > play(null) + playFinish': true,  // 19877: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + stopBegin > play(null) + restartBegin': true,  // 19880: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + stopBegin > play(null) + restartFinish': true,  // 19881: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + stopFinish > play(null) + playBegin': true,  // 20776: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + stopFinish > play(null) + playFinish': true,  // 20777: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + stopFinish > play(null) + restartBegin': true,  // 20780: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + stopFinish > play(null) + restartFinish': true,  // 20781: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + done > play(null) + playBegin': true,  // 21676: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + done > play(null) + playFinish': true,  // 21677: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + done > play(null) + restartBegin': true,  // 21680: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + done > play(null) + restartFinish': true,  // 21681: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + done > togglePlayPause(null) + playBegin': true,  // 21701: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + done > togglePlayPause(null) + playFinish': true,  // 21702: event should have been triggerd but was NOT
+		'combos: jumpTo(-3) + done > togglePlayPause(null) + restartBegin': true,  // 21705: event should not have been triggerd but WAS
+		'combos: jumpTo(-3) + done > togglePlayPause(null) + restartFinish': true,  // 21706: event should not have been triggerd but WAS
 
 
 
 
 		// ============== jumpTo(-1) ==============
 		// #? like prev
-		'combos: jumpTo(-1) + onceBegin > play(null) + playBegin': false,  // 9076: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + onceBegin > play(null) + playFinish': false,  // 9077: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + onceBegin > play(null) + restartBegin': false,  // 9080: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + onceBegin > play(null) + restartFinish': false,  // 9081: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + onceFinish > play(null) + playBegin': false,  // 9976: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + onceFinish > play(null) + playFinish': false,  // 9977: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + onceFinish > play(null) + restartBegin': false,  // 9980: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + onceFinish > play(null) + restartFinish': false,  // 9981: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + loopBegin > play(null) + playBegin': false,  // 16276: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + loopBegin > play(null) + playFinish': false,  // 16277: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + loopBegin > play(null) + restartBegin': false,  // 16280: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + loopBegin > play(null) + restartFinish': false,  // 16281: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + loopFinish > play(null) + playBegin': false,  // 17176: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + loopFinish > play(null) + playFinish': false,  // 17177: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + loopFinish > play(null) + restartBegin': false,  // 17180: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + loopFinish > play(null) + restartFinish': false,  // 17181: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + newWordFragment > play(null) + playBegin': false,  // 18076: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + newWordFragment > play(null) + playFinish': false,  // 18077: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + newWordFragment > play(null) + restartBegin': false,  // 18080: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + newWordFragment > play(null) + restartFinish': false,  // 18081: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + progress > play(null) + playBegin': false,  // 18976: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + progress > play(null) + playFinish': false,  // 18977: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + progress > play(null) + restartBegin': false,  // 18980: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + progress > play(null) + restartFinish': false,  // 18981: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + stopBegin > play(null) + playBegin': false,  // 19876: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + stopBegin > play(null) + playFinish': false,  // 19877: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + stopBegin > play(null) + restartBegin': false,  // 19880: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + stopBegin > play(null) + restartFinish': false,  // 19881: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + stopFinish > play(null) + playBegin': false,  // 20776: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + stopFinish > play(null) + playFinish': false,  // 20777: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + stopFinish > play(null) + restartBegin': false,  // 20780: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + stopFinish > play(null) + restartFinish': false,  // 20781: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + done > play(null) + playBegin': false,  // 21676: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + done > play(null) + playFinish': false,  // 21677: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + done > play(null) + restartBegin': false,  // 21680: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + done > play(null) + restartFinish': false,  // 21681: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + done > togglePlayPause(null) + playBegin': false,  // 21701: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + done > togglePlayPause(null) + playFinish': false,  // 21702: event should have been triggerd but was NOT
-		'combos: jumpTo(-1) + done > togglePlayPause(null) + restartBegin': false,  // 21705: event should not have been triggerd but WAS
-		'combos: jumpTo(-1) + done > togglePlayPause(null) + restartFinish': false,  // 21706: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + onceBegin > play(null) + playBegin': true,  // 9076: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + onceBegin > play(null) + playFinish': true,  // 9077: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + onceBegin > play(null) + restartBegin': true,  // 9080: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + onceBegin > play(null) + restartFinish': true,  // 9081: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + onceFinish > play(null) + playBegin': true,  // 9976: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + onceFinish > play(null) + playFinish': true,  // 9977: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + onceFinish > play(null) + restartBegin': true,  // 9980: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + onceFinish > play(null) + restartFinish': true,  // 9981: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + loopBegin > play(null) + playBegin': true,  // 16276: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + loopBegin > play(null) + playFinish': true,  // 16277: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + loopBegin > play(null) + restartBegin': true,  // 16280: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + loopBegin > play(null) + restartFinish': true,  // 16281: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + loopFinish > play(null) + playBegin': true,  // 17176: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + loopFinish > play(null) + playFinish': true,  // 17177: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + loopFinish > play(null) + restartBegin': true,  // 17180: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + loopFinish > play(null) + restartFinish': true,  // 17181: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + newWordFragment > play(null) + playBegin': true,  // 18076: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + newWordFragment > play(null) + playFinish': true,  // 18077: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + newWordFragment > play(null) + restartBegin': true,  // 18080: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + newWordFragment > play(null) + restartFinish': true,  // 18081: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + progress > play(null) + playBegin': true,  // 18976: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + progress > play(null) + playFinish': true,  // 18977: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + progress > play(null) + restartBegin': true,  // 18980: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + progress > play(null) + restartFinish': true,  // 18981: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + stopBegin > play(null) + playBegin': true,  // 19876: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + stopBegin > play(null) + playFinish': true,  // 19877: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + stopBegin > play(null) + restartBegin': true,  // 19880: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + stopBegin > play(null) + restartFinish': true,  // 19881: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + stopFinish > play(null) + playBegin': true,  // 20776: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + stopFinish > play(null) + playFinish': true,  // 20777: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + stopFinish > play(null) + restartBegin': true,  // 20780: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + stopFinish > play(null) + restartFinish': true,  // 20781: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + done > play(null) + playBegin': true,  // 21676: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + done > play(null) + playFinish': true,  // 21677: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + done > play(null) + restartBegin': true,  // 21680: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + done > play(null) + restartFinish': true,  // 21681: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + done > togglePlayPause(null) + playBegin': true,  // 21701: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + done > togglePlayPause(null) + playFinish': true,  // 21702: event should have been triggerd but was NOT
+		'combos: jumpTo(-1) + done > togglePlayPause(null) + restartBegin': true,  // 21705: event should not have been triggerd but WAS
+		'combos: jumpTo(-1) + done > togglePlayPause(null) + restartFinish': true,  // 21706: event should not have been triggerd but WAS
 
 
 
 		// ============== jumpTo(0) ==============
 		// #? jumpTo(0) reverts to 'pause', so toggle = 'revert*|pause*' stuff not 'play*|...' stuff
 		// Like current
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + done': false,  // 9125: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + done': false,  // 10025: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + done': false,  // 16325: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + done': false,  // 17225: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: event should not have been triggerd but WAS
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + progress': false,  // 19022: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: event should have been triggerd but was NOT
-		'combos: jumpTo(0) + progress > togglePlayPause(null) + done': false,  // 19025: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + pauseBegin': true,  // 9107: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + pauseFinish': true,  // 9108: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + revertBegin': true,  // 9113: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + revertFinish': true,  // 9114: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + loopBegin': true,  // 9119: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + loopFinish': true,  // 9120: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + newWordFragment': true,  // 9121: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + progress': true,  // 9122: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + stopBegin': true,  // 9123: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + stopFinish': true,  // 9124: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceBegin > togglePlayPause(null) + done': true,  // 9125: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + pauseBegin': true,  // 10007: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + pauseFinish': true,  // 10008: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + revertBegin': true,  // 10013: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + revertFinish': true,  // 10014: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + loopBegin': true,  // 10019: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + loopFinish': true,  // 10020: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + newWordFragment': true,  // 10021: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + progress': true,  // 10022: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + stopBegin': true,  // 10023: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + stopFinish': true,  // 10024: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + onceFinish > togglePlayPause(null) + done': true,  // 10025: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + revertBegin': true,  // 16313: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + revertFinish': true,  // 16314: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopBegin > togglePlayPause(null) + done': true,  // 16325: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + revertBegin': true,  // 17213: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + revertFinish': true,  // 17214: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + loopFinish > togglePlayPause(null) + done': true,  // 17225: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + revertBegin': true,  // 18113: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + revertFinish': true,  // 18114: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + revertBegin': true,  // 19013: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + revertFinish': true,  // 19014: event should not have been triggerd but WAS
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + progress': true,  // 19022: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: event should have been triggerd but was NOT
+		'combos: jumpTo(0) + progress > togglePlayPause(null) + done': true,  // 19025: event should have been triggerd but was NOT
 
 
 
@@ -7104,239 +5874,239 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// ============== jumpWords(-3) ==============
 		// #? like prev
-		'combos: jumpWords(-3) + onceBegin > play(null) + playBegin': false,  // 9076: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + onceBegin > play(null) + playFinish': false,  // 9077: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + onceBegin > play(null) + restartBegin': false,  // 9080: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + onceBegin > play(null) + restartFinish': false,  // 9081: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + onceFinish > play(null) + playBegin': false,  // 9976: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + onceFinish > play(null) + playFinish': false,  // 9977: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + onceFinish > play(null) + restartBegin': false,  // 9980: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + onceFinish > play(null) + restartFinish': false,  // 9981: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + loopBegin > play(null) + playBegin': false,  // 16276: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + loopBegin > play(null) + playFinish': false,  // 16277: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + loopBegin > play(null) + restartBegin': false,  // 16280: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + loopBegin > play(null) + restartFinish': false,  // 16281: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + loopFinish > play(null) + playBegin': false,  // 17176: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + loopFinish > play(null) + playFinish': false,  // 17177: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + loopFinish > play(null) + restartBegin': false,  // 17180: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + loopFinish > play(null) + restartFinish': false,  // 17181: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + newWordFragment > play(null) + playBegin': false,  // 18076: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + newWordFragment > play(null) + playFinish': false,  // 18077: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + newWordFragment > play(null) + restartBegin': false,  // 18080: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + newWordFragment > play(null) + restartFinish': false,  // 18081: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + progress > play(null) + playBegin': false,  // 18976: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + progress > play(null) + playFinish': false,  // 18977: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + progress > play(null) + restartBegin': false,  // 18980: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + progress > play(null) + restartFinish': false,  // 18981: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + stopBegin > play(null) + playBegin': false,  // 19876: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + stopBegin > play(null) + playFinish': false,  // 19877: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + stopBegin > play(null) + restartBegin': false,  // 19880: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + stopBegin > play(null) + restartFinish': false,  // 19881: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + stopFinish > play(null) + playBegin': false,  // 20776: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + stopFinish > play(null) + playFinish': false,  // 20777: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + stopFinish > play(null) + restartBegin': false,  // 20780: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + stopFinish > play(null) + restartFinish': false,  // 20781: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + done > play(null) + playBegin': false,  // 21676: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + done > play(null) + playFinish': false,  // 21677: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + done > play(null) + restartBegin': false,  // 21680: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + done > play(null) + restartFinish': false,  // 21681: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + done > togglePlayPause(null) + playBegin': false,  // 21701: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + done > togglePlayPause(null) + playFinish': false,  // 21702: event should have been triggerd but was NOT
-		'combos: jumpWords(-3) + done > togglePlayPause(null) + restartBegin': false,  // 21705: event should not have been triggerd but WAS
-		'combos: jumpWords(-3) + done > togglePlayPause(null) + restartFinish': false,  // 21706: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + onceBegin > play(null) + playBegin': true,  // 9076: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + onceBegin > play(null) + playFinish': true,  // 9077: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + onceBegin > play(null) + restartBegin': true,  // 9080: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + onceBegin > play(null) + restartFinish': true,  // 9081: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + onceFinish > play(null) + playBegin': true,  // 9976: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + onceFinish > play(null) + playFinish': true,  // 9977: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + onceFinish > play(null) + restartBegin': true,  // 9980: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + onceFinish > play(null) + restartFinish': true,  // 9981: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + loopBegin > play(null) + playBegin': true,  // 16276: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + loopBegin > play(null) + playFinish': true,  // 16277: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + loopBegin > play(null) + restartBegin': true,  // 16280: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + loopBegin > play(null) + restartFinish': true,  // 16281: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + loopFinish > play(null) + playBegin': true,  // 17176: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + loopFinish > play(null) + playFinish': true,  // 17177: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + loopFinish > play(null) + restartBegin': true,  // 17180: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + loopFinish > play(null) + restartFinish': true,  // 17181: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + newWordFragment > play(null) + playBegin': true,  // 18076: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + newWordFragment > play(null) + playFinish': true,  // 18077: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + newWordFragment > play(null) + restartBegin': true,  // 18080: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + newWordFragment > play(null) + restartFinish': true,  // 18081: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + progress > play(null) + playBegin': true,  // 18976: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + progress > play(null) + playFinish': true,  // 18977: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + progress > play(null) + restartBegin': true,  // 18980: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + progress > play(null) + restartFinish': true,  // 18981: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + stopBegin > play(null) + playBegin': true,  // 19876: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + stopBegin > play(null) + playFinish': true,  // 19877: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + stopBegin > play(null) + restartBegin': true,  // 19880: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + stopBegin > play(null) + restartFinish': true,  // 19881: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + stopFinish > play(null) + playBegin': true,  // 20776: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + stopFinish > play(null) + playFinish': true,  // 20777: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + stopFinish > play(null) + restartBegin': true,  // 20780: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + stopFinish > play(null) + restartFinish': true,  // 20781: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + done > play(null) + playBegin': true,  // 21676: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + done > play(null) + playFinish': true,  // 21677: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + done > play(null) + restartBegin': true,  // 21680: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + done > play(null) + restartFinish': true,  // 21681: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + done > togglePlayPause(null) + playBegin': true,  // 21701: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + done > togglePlayPause(null) + playFinish': true,  // 21702: event should have been triggerd but was NOT
+		'combos: jumpWords(-3) + done > togglePlayPause(null) + restartBegin': true,  // 21705: event should not have been triggerd but WAS
+		'combos: jumpWords(-3) + done > togglePlayPause(null) + restartFinish': true,  // 21706: event should not have been triggerd but WAS
 
 
 
 		// ============== jumpWords(-1) ==============
 		// #? like prev
-		'combos: jumpWords(-1) + onceBegin > play(null) + playBegin': false,  // 9076: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + onceBegin > play(null) + playFinish': false,  // 9077: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + onceBegin > play(null) + restartBegin': false,  // 9080: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + onceBegin > play(null) + restartFinish': false,  // 9081: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + onceFinish > play(null) + playBegin': false,  // 9976: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + onceFinish > play(null) + playFinish': false,  // 9977: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + onceFinish > play(null) + restartBegin': false,  // 9980: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + onceFinish > play(null) + restartFinish': false,  // 9981: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + loopBegin > play(null) + playBegin': false,  // 16276: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + loopBegin > play(null) + playFinish': false,  // 16277: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + loopBegin > play(null) + restartBegin': false,  // 16280: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + loopBegin > play(null) + restartFinish': false,  // 16281: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + loopFinish > play(null) + playBegin': false,  // 17176: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + loopFinish > play(null) + playFinish': false,  // 17177: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + loopFinish > play(null) + restartBegin': false,  // 17180: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + loopFinish > play(null) + restartFinish': false,  // 17181: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + newWordFragment > play(null) + playBegin': false,  // 18076: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + newWordFragment > play(null) + playFinish': false,  // 18077: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + newWordFragment > play(null) + restartBegin': false,  // 18080: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + newWordFragment > play(null) + restartFinish': false,  // 18081: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + progress > play(null) + playBegin': false,  // 18976: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + progress > play(null) + playFinish': false,  // 18977: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + progress > play(null) + restartBegin': false,  // 18980: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + progress > play(null) + restartFinish': false,  // 18981: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + stopBegin > play(null) + playBegin': false,  // 19876: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + stopBegin > play(null) + playFinish': false,  // 19877: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + stopBegin > play(null) + restartBegin': false,  // 19880: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + stopBegin > play(null) + restartFinish': false,  // 19881: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + stopFinish > play(null) + playBegin': false,  // 20776: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + stopFinish > play(null) + playFinish': false,  // 20777: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + stopFinish > play(null) + restartBegin': false,  // 20780: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + stopFinish > play(null) + restartFinish': false,  // 20781: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + done > play(null) + playBegin': false,  // 21676: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + done > play(null) + playFinish': false,  // 21677: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + done > play(null) + restartBegin': false,  // 21680: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + done > play(null) + restartFinish': false,  // 21681: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + done > togglePlayPause(null) + playBegin': false,  // 21701: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + done > togglePlayPause(null) + playFinish': false,  // 21702: event should have been triggerd but was NOT
-		'combos: jumpWords(-1) + done > togglePlayPause(null) + restartBegin': false,  // 21705: event should not have been triggerd but WAS
-		'combos: jumpWords(-1) + done > togglePlayPause(null) + restartFinish': false,  // 21706: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + onceBegin > play(null) + playBegin': true,  // 9076: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + onceBegin > play(null) + playFinish': true,  // 9077: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + onceBegin > play(null) + restartBegin': true,  // 9080: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + onceBegin > play(null) + restartFinish': true,  // 9081: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + onceFinish > play(null) + playBegin': true,  // 9976: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + onceFinish > play(null) + playFinish': true,  // 9977: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + onceFinish > play(null) + restartBegin': true,  // 9980: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + onceFinish > play(null) + restartFinish': true,  // 9981: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + loopBegin > play(null) + playBegin': true,  // 16276: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + loopBegin > play(null) + playFinish': true,  // 16277: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + loopBegin > play(null) + restartBegin': true,  // 16280: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + loopBegin > play(null) + restartFinish': true,  // 16281: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + loopFinish > play(null) + playBegin': true,  // 17176: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + loopFinish > play(null) + playFinish': true,  // 17177: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + loopFinish > play(null) + restartBegin': true,  // 17180: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + loopFinish > play(null) + restartFinish': true,  // 17181: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + newWordFragment > play(null) + playBegin': true,  // 18076: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + newWordFragment > play(null) + playFinish': true,  // 18077: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + newWordFragment > play(null) + restartBegin': true,  // 18080: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + newWordFragment > play(null) + restartFinish': true,  // 18081: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + progress > play(null) + playBegin': true,  // 18976: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + progress > play(null) + playFinish': true,  // 18977: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + progress > play(null) + restartBegin': true,  // 18980: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + progress > play(null) + restartFinish': true,  // 18981: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + stopBegin > play(null) + playBegin': true,  // 19876: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + stopBegin > play(null) + playFinish': true,  // 19877: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + stopBegin > play(null) + restartBegin': true,  // 19880: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + stopBegin > play(null) + restartFinish': true,  // 19881: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + stopFinish > play(null) + playBegin': true,  // 20776: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + stopFinish > play(null) + playFinish': true,  // 20777: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + stopFinish > play(null) + restartBegin': true,  // 20780: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + stopFinish > play(null) + restartFinish': true,  // 20781: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + done > play(null) + playBegin': true,  // 21676: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + done > play(null) + playFinish': true,  // 21677: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + done > play(null) + restartBegin': true,  // 21680: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + done > play(null) + restartFinish': true,  // 21681: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + done > togglePlayPause(null) + playBegin': true,  // 21701: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + done > togglePlayPause(null) + playFinish': true,  // 21702: event should have been triggerd but was NOT
+		'combos: jumpWords(-1) + done > togglePlayPause(null) + restartBegin': true,  // 21705: event should not have been triggerd but WAS
+		'combos: jumpWords(-1) + done > togglePlayPause(null) + restartFinish': true,  // 21706: event should not have been triggerd but WAS
 
 
 
 		// ============== jumpWords(0) ==============
 		// #? jumpWords(0) reverts to 'pause', so toggle = 'revert*|pause*' stuff not 'play*|...' stuff
 		// Like current
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + done': false,  // 9125: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + done': false,  // 10025: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + done': false,  // 16325: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + done': false,  // 17225: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: event should not have been triggerd but WAS
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + progress': false,  // 19022: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: event should have been triggerd but was NOT
-		'combos: jumpWords(0) + progress > togglePlayPause(null) + done': false,  // 19025: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + pauseBegin': true,  // 9107: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + pauseFinish': true,  // 9108: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + revertBegin': true,  // 9113: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + revertFinish': true,  // 9114: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + loopBegin': true,  // 9119: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + loopFinish': true,  // 9120: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + newWordFragment': true,  // 9121: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + progress': true,  // 9122: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + stopBegin': true,  // 9123: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + stopFinish': true,  // 9124: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceBegin > togglePlayPause(null) + done': true,  // 9125: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + pauseBegin': true,  // 10007: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + pauseFinish': true,  // 10008: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + revertBegin': true,  // 10013: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + revertFinish': true,  // 10014: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + loopBegin': true,  // 10019: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + loopFinish': true,  // 10020: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + newWordFragment': true,  // 10021: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + progress': true,  // 10022: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + stopBegin': true,  // 10023: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + stopFinish': true,  // 10024: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + onceFinish > togglePlayPause(null) + done': true,  // 10025: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + revertBegin': true,  // 16313: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + revertFinish': true,  // 16314: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopBegin > togglePlayPause(null) + done': true,  // 16325: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + revertBegin': true,  // 17213: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + revertFinish': true,  // 17214: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + loopFinish > togglePlayPause(null) + done': true,  // 17225: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + revertBegin': true,  // 18113: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + revertFinish': true,  // 18114: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + revertBegin': true,  // 19013: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + revertFinish': true,  // 19014: event should not have been triggerd but WAS
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + progress': true,  // 19022: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: event should have been triggerd but was NOT
+		'combos: jumpWords(0) + progress > togglePlayPause(null) + done': true,  // 19025: event should have been triggerd but was NOT
 
 
 
@@ -9532,239 +8302,239 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// ============== jumpSentences(-3) ==============
 		// #? like prev
-		'combos: jumpSentences(-3) + onceBegin > play(null) + playBegin': false,  // 9076: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + onceBegin > play(null) + playFinish': false,  // 9077: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + onceBegin > play(null) + restartBegin': false,  // 9080: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + onceBegin > play(null) + restartFinish': false,  // 9081: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + onceFinish > play(null) + playBegin': false,  // 9976: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + onceFinish > play(null) + playFinish': false,  // 9977: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + onceFinish > play(null) + restartBegin': false,  // 9980: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + onceFinish > play(null) + restartFinish': false,  // 9981: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + loopBegin > play(null) + playBegin': false,  // 16276: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + loopBegin > play(null) + playFinish': false,  // 16277: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + loopBegin > play(null) + restartBegin': false,  // 16280: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + loopBegin > play(null) + restartFinish': false,  // 16281: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + loopFinish > play(null) + playBegin': false,  // 17176: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + loopFinish > play(null) + playFinish': false,  // 17177: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + loopFinish > play(null) + restartBegin': false,  // 17180: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + loopFinish > play(null) + restartFinish': false,  // 17181: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + newWordFragment > play(null) + playBegin': false,  // 18076: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + newWordFragment > play(null) + playFinish': false,  // 18077: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + newWordFragment > play(null) + restartBegin': false,  // 18080: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + newWordFragment > play(null) + restartFinish': false,  // 18081: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + progress > play(null) + playBegin': false,  // 18976: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + progress > play(null) + playFinish': false,  // 18977: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + progress > play(null) + restartBegin': false,  // 18980: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + progress > play(null) + restartFinish': false,  // 18981: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + stopBegin > play(null) + playBegin': false,  // 19876: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + stopBegin > play(null) + playFinish': false,  // 19877: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + stopBegin > play(null) + restartBegin': false,  // 19880: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + stopBegin > play(null) + restartFinish': false,  // 19881: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + stopFinish > play(null) + playBegin': false,  // 20776: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + stopFinish > play(null) + playFinish': false,  // 20777: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + stopFinish > play(null) + restartBegin': false,  // 20780: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + stopFinish > play(null) + restartFinish': false,  // 20781: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + done > play(null) + playBegin': false,  // 21676: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + done > play(null) + playFinish': false,  // 21677: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + done > play(null) + restartBegin': false,  // 21680: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + done > play(null) + restartFinish': false,  // 21681: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + done > togglePlayPause(null) + playBegin': false,  // 21701: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + done > togglePlayPause(null) + playFinish': false,  // 21702: event should have been triggerd but was NOT
-		'combos: jumpSentences(-3) + done > togglePlayPause(null) + restartBegin': false,  // 21705: event should not have been triggerd but WAS
-		'combos: jumpSentences(-3) + done > togglePlayPause(null) + restartFinish': false,  // 21706: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + onceBegin > play(null) + playBegin': true,  // 9076: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + onceBegin > play(null) + playFinish': true,  // 9077: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + onceBegin > play(null) + restartBegin': true,  // 9080: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + onceBegin > play(null) + restartFinish': true,  // 9081: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + onceFinish > play(null) + playBegin': true,  // 9976: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + onceFinish > play(null) + playFinish': true,  // 9977: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + onceFinish > play(null) + restartBegin': true,  // 9980: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + onceFinish > play(null) + restartFinish': true,  // 9981: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + loopBegin > play(null) + playBegin': true,  // 16276: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + loopBegin > play(null) + playFinish': true,  // 16277: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + loopBegin > play(null) + restartBegin': true,  // 16280: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + loopBegin > play(null) + restartFinish': true,  // 16281: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + loopFinish > play(null) + playBegin': true,  // 17176: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + loopFinish > play(null) + playFinish': true,  // 17177: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + loopFinish > play(null) + restartBegin': true,  // 17180: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + loopFinish > play(null) + restartFinish': true,  // 17181: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + newWordFragment > play(null) + playBegin': true,  // 18076: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + newWordFragment > play(null) + playFinish': true,  // 18077: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + newWordFragment > play(null) + restartBegin': true,  // 18080: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + newWordFragment > play(null) + restartFinish': true,  // 18081: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + progress > play(null) + playBegin': true,  // 18976: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + progress > play(null) + playFinish': true,  // 18977: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + progress > play(null) + restartBegin': true,  // 18980: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + progress > play(null) + restartFinish': true,  // 18981: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + stopBegin > play(null) + playBegin': true,  // 19876: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + stopBegin > play(null) + playFinish': true,  // 19877: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + stopBegin > play(null) + restartBegin': true,  // 19880: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + stopBegin > play(null) + restartFinish': true,  // 19881: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + stopFinish > play(null) + playBegin': true,  // 20776: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + stopFinish > play(null) + playFinish': true,  // 20777: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + stopFinish > play(null) + restartBegin': true,  // 20780: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + stopFinish > play(null) + restartFinish': true,  // 20781: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + done > play(null) + playBegin': true,  // 21676: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + done > play(null) + playFinish': true,  // 21677: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + done > play(null) + restartBegin': true,  // 21680: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + done > play(null) + restartFinish': true,  // 21681: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + done > togglePlayPause(null) + playBegin': true,  // 21701: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + done > togglePlayPause(null) + playFinish': true,  // 21702: event should have been triggerd but was NOT
+		'combos: jumpSentences(-3) + done > togglePlayPause(null) + restartBegin': true,  // 21705: event should not have been triggerd but WAS
+		'combos: jumpSentences(-3) + done > togglePlayPause(null) + restartFinish': true,  // 21706: event should not have been triggerd but WAS
 
 
 
 		// ============== jumpSentences(-1) ==============
 		// #? like prev
-		'combos: jumpSentences(-1) + onceBegin > play(null) + playBegin': false,  // 9076: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + onceBegin > play(null) + playFinish': false,  // 9077: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + onceBegin > play(null) + restartBegin': false,  // 9080: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + onceBegin > play(null) + restartFinish': false,  // 9081: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + onceFinish > play(null) + playBegin': false,  // 9976: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + onceFinish > play(null) + playFinish': false,  // 9977: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + onceFinish > play(null) + restartBegin': false,  // 9980: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + onceFinish > play(null) + restartFinish': false,  // 9981: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + loopBegin > play(null) + playBegin': false,  // 16276: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + loopBegin > play(null) + playFinish': false,  // 16277: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + loopBegin > play(null) + restartBegin': false,  // 16280: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + loopBegin > play(null) + restartFinish': false,  // 16281: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + loopFinish > play(null) + playBegin': false,  // 17176: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + loopFinish > play(null) + playFinish': false,  // 17177: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + loopFinish > play(null) + restartBegin': false,  // 17180: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + loopFinish > play(null) + restartFinish': false,  // 17181: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + newWordFragment > play(null) + playBegin': false,  // 18076: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + newWordFragment > play(null) + playFinish': false,  // 18077: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + newWordFragment > play(null) + restartBegin': false,  // 18080: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + newWordFragment > play(null) + restartFinish': false,  // 18081: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + progress > play(null) + playBegin': false,  // 18976: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + progress > play(null) + playFinish': false,  // 18977: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + progress > play(null) + restartBegin': false,  // 18980: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + progress > play(null) + restartFinish': false,  // 18981: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + stopBegin > play(null) + playBegin': false,  // 19876: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + stopBegin > play(null) + playFinish': false,  // 19877: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + stopBegin > play(null) + restartBegin': false,  // 19880: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + stopBegin > play(null) + restartFinish': false,  // 19881: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + stopFinish > play(null) + playBegin': false,  // 20776: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + stopFinish > play(null) + playFinish': false,  // 20777: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + stopFinish > play(null) + restartBegin': false,  // 20780: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + stopFinish > play(null) + restartFinish': false,  // 20781: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + done > play(null) + playBegin': false,  // 21676: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + done > play(null) + playFinish': false,  // 21677: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + done > play(null) + restartBegin': false,  // 21680: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + done > play(null) + restartFinish': false,  // 21681: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + done > togglePlayPause(null) + playBegin': false,  // 21701: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + done > togglePlayPause(null) + playFinish': false,  // 21702: event should have been triggerd but was NOT
-		'combos: jumpSentences(-1) + done > togglePlayPause(null) + restartBegin': false,  // 21705: event should not have been triggerd but WAS
-		'combos: jumpSentences(-1) + done > togglePlayPause(null) + restartFinish': false,  // 21706: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + onceBegin > play(null) + playBegin': true,  // 9076: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + onceBegin > play(null) + playFinish': true,  // 9077: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + onceBegin > play(null) + restartBegin': true,  // 9080: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + onceBegin > play(null) + restartFinish': true,  // 9081: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + onceFinish > play(null) + playBegin': true,  // 9976: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + onceFinish > play(null) + playFinish': true,  // 9977: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + onceFinish > play(null) + restartBegin': true,  // 9980: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + onceFinish > play(null) + restartFinish': true,  // 9981: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + loopBegin > play(null) + playBegin': true,  // 16276: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + loopBegin > play(null) + playFinish': true,  // 16277: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + loopBegin > play(null) + restartBegin': true,  // 16280: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + loopBegin > play(null) + restartFinish': true,  // 16281: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + loopFinish > play(null) + playBegin': true,  // 17176: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + loopFinish > play(null) + playFinish': true,  // 17177: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + loopFinish > play(null) + restartBegin': true,  // 17180: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + loopFinish > play(null) + restartFinish': true,  // 17181: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + newWordFragment > play(null) + playBegin': true,  // 18076: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + newWordFragment > play(null) + playFinish': true,  // 18077: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + newWordFragment > play(null) + restartBegin': true,  // 18080: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + newWordFragment > play(null) + restartFinish': true,  // 18081: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + progress > play(null) + playBegin': true,  // 18976: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + progress > play(null) + playFinish': true,  // 18977: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + progress > play(null) + restartBegin': true,  // 18980: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + progress > play(null) + restartFinish': true,  // 18981: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + stopBegin > play(null) + playBegin': true,  // 19876: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + stopBegin > play(null) + playFinish': true,  // 19877: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + stopBegin > play(null) + restartBegin': true,  // 19880: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + stopBegin > play(null) + restartFinish': true,  // 19881: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + stopFinish > play(null) + playBegin': true,  // 20776: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + stopFinish > play(null) + playFinish': true,  // 20777: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + stopFinish > play(null) + restartBegin': true,  // 20780: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + stopFinish > play(null) + restartFinish': true,  // 20781: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + done > play(null) + playBegin': true,  // 21676: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + done > play(null) + playFinish': true,  // 21677: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + done > play(null) + restartBegin': true,  // 21680: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + done > play(null) + restartFinish': true,  // 21681: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + done > togglePlayPause(null) + playBegin': true,  // 21701: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + done > togglePlayPause(null) + playFinish': true,  // 21702: event should have been triggerd but was NOT
+		'combos: jumpSentences(-1) + done > togglePlayPause(null) + restartBegin': true,  // 21705: event should not have been triggerd but WAS
+		'combos: jumpSentences(-1) + done > togglePlayPause(null) + restartFinish': true,  // 21706: event should not have been triggerd but WAS
 
 
 
 		// ============== jumpSentences(0) ==============
 		// #? jumpSentences(0) reverts to 'pause', so toggle = 'revert*|pause*' stuff not 'play*|...' stuff
 		// Like current
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + done': false,  // 9125: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + done': false,  // 10025: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + done': false,  // 16325: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + done': false,  // 17225: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: event should not have been triggerd but WAS
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + progress': false,  // 19022: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: event should have been triggerd but was NOT
-		'combos: jumpSentences(0) + progress > togglePlayPause(null) + done': false,  // 19025: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + pauseBegin': true,  // 9107: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + pauseFinish': true,  // 9108: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + revertBegin': true,  // 9113: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + revertFinish': true,  // 9114: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + loopBegin': true,  // 9119: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + loopFinish': true,  // 9120: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + newWordFragment': true,  // 9121: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + progress': true,  // 9122: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + stopBegin': true,  // 9123: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + stopFinish': true,  // 9124: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + done': true,  // 9125: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + pauseBegin': true,  // 10007: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + pauseFinish': true,  // 10008: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + revertBegin': true,  // 10013: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + revertFinish': true,  // 10014: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + loopBegin': true,  // 10019: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + loopFinish': true,  // 10020: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + newWordFragment': true,  // 10021: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + progress': true,  // 10022: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + stopBegin': true,  // 10023: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + stopFinish': true,  // 10024: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + done': true,  // 10025: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + revertBegin': true,  // 16313: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + revertFinish': true,  // 16314: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + done': true,  // 16325: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + revertBegin': true,  // 17213: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + revertFinish': true,  // 17214: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + done': true,  // 17225: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + revertBegin': true,  // 18113: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + revertFinish': true,  // 18114: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + revertBegin': true,  // 19013: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + revertFinish': true,  // 19014: event should not have been triggerd but WAS
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + progress': true,  // 19022: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: event should have been triggerd but was NOT
+		'combos: jumpSentences(0) + progress > togglePlayPause(null) + done': true,  // 19025: event should have been triggerd but was NOT
 
 
 
@@ -12220,155 +10990,155 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// ============== prevWord ==============
 		// #? functions and events that immediately lead to stop*|done > play|toggle() = restart, not play
-		'combos: prevWord(null) + onceBegin > play(null) + playBegin': false,  // 9076: event should have been triggerd but was NOT
-		'combos: prevWord(null) + onceBegin > play(null) + playFinish': false,  // 9077: event should have been triggerd but was NOT
-		'combos: prevWord(null) + onceBegin > play(null) + restartBegin': false,  // 9080: event should not have been triggerd but WAS
-		'combos: prevWord(null) + onceBegin > play(null) + restartFinish': false,  // 9081: event should not have been triggerd but WAS
-		'combos: prevWord(null) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: prevWord(null) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: prevWord(null) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: event should not have been triggerd but WAS
-		'combos: prevWord(null) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: event should not have been triggerd but WAS
-		'combos: prevWord(null) + onceFinish > play(null) + playBegin': false,  // 9976: event should have been triggerd but was NOT
-		'combos: prevWord(null) + onceFinish > play(null) + playFinish': false,  // 9977: event should have been triggerd but was NOT
-		'combos: prevWord(null) + onceFinish > play(null) + restartBegin': false,  // 9980: event should not have been triggerd but WAS
-		'combos: prevWord(null) + onceFinish > play(null) + restartFinish': false,  // 9981: event should not have been triggerd but WAS
-		'combos: prevWord(null) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: prevWord(null) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: prevWord(null) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: event should not have been triggerd but WAS
-		'combos: prevWord(null) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: event should not have been triggerd but WAS
-		'combos: prevWord(null) + loopBegin > play(null) + playBegin': false,  // 16276: event should have been triggerd but was NOT
-		'combos: prevWord(null) + loopBegin > play(null) + playFinish': false,  // 16277: event should have been triggerd but was NOT
-		'combos: prevWord(null) + loopBegin > play(null) + restartBegin': false,  // 16280: event should not have been triggerd but WAS
-		'combos: prevWord(null) + loopBegin > play(null) + restartFinish': false,  // 16281: event should not have been triggerd but WAS
-		'combos: prevWord(null) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: prevWord(null) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: prevWord(null) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: event should not have been triggerd but WAS
-		'combos: prevWord(null) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: event should not have been triggerd but WAS
-		'combos: prevWord(null) + loopFinish > play(null) + playBegin': false,  // 17176: event should have been triggerd but was NOT
-		'combos: prevWord(null) + loopFinish > play(null) + playFinish': false,  // 17177: event should have been triggerd but was NOT
-		'combos: prevWord(null) + loopFinish > play(null) + restartBegin': false,  // 17180: event should not have been triggerd but WAS
-		'combos: prevWord(null) + loopFinish > play(null) + restartFinish': false,  // 17181: event should not have been triggerd but WAS
-		'combos: prevWord(null) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: prevWord(null) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: prevWord(null) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: event should not have been triggerd but WAS
-		'combos: prevWord(null) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: event should not have been triggerd but WAS
-		'combos: prevWord(null) + newWordFragment > play(null) + playBegin': false,  // 18076: event should have been triggerd but was NOT
-		'combos: prevWord(null) + newWordFragment > play(null) + playFinish': false,  // 18077: event should have been triggerd but was NOT
-		'combos: prevWord(null) + newWordFragment > play(null) + restartBegin': false,  // 18080: event should not have been triggerd but WAS
-		'combos: prevWord(null) + newWordFragment > play(null) + restartFinish': false,  // 18081: event should not have been triggerd but WAS
-		'combos: prevWord(null) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: prevWord(null) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: prevWord(null) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: event should not have been triggerd but WAS
-		'combos: prevWord(null) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: event should not have been triggerd but WAS
-		'combos: prevWord(null) + progress > play(null) + playBegin': false,  // 18976: event should have been triggerd but was NOT
-		'combos: prevWord(null) + progress > play(null) + playFinish': false,  // 18977: event should have been triggerd but was NOT
-		'combos: prevWord(null) + progress > play(null) + restartBegin': false,  // 18980: event should not have been triggerd but WAS
-		'combos: prevWord(null) + progress > play(null) + restartFinish': false,  // 18981: event should not have been triggerd but WAS
-		'combos: prevWord(null) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: prevWord(null) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: prevWord(null) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: event should not have been triggerd but WAS
-		'combos: prevWord(null) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: event should not have been triggerd but WAS
-		'combos: prevWord(null) + stopBegin > play(null) + playBegin': false,  // 19876: event should have been triggerd but was NOT
-		'combos: prevWord(null) + stopBegin > play(null) + playFinish': false,  // 19877: event should have been triggerd but was NOT
-		'combos: prevWord(null) + stopBegin > play(null) + restartBegin': false,  // 19880: event should not have been triggerd but WAS
-		'combos: prevWord(null) + stopBegin > play(null) + restartFinish': false,  // 19881: event should not have been triggerd but WAS
-		'combos: prevWord(null) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: event should have been triggerd but was NOT
-		'combos: prevWord(null) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: event should have been triggerd but was NOT
-		'combos: prevWord(null) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: event should not have been triggerd but WAS
-		'combos: prevWord(null) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: event should not have been triggerd but WAS
-		'combos: prevWord(null) + stopFinish > play(null) + playBegin': false,  // 20776: event should have been triggerd but was NOT
-		'combos: prevWord(null) + stopFinish > play(null) + playFinish': false,  // 20777: event should have been triggerd but was NOT
-		'combos: prevWord(null) + stopFinish > play(null) + restartBegin': false,  // 20780: event should not have been triggerd but WAS
-		'combos: prevWord(null) + stopFinish > play(null) + restartFinish': false,  // 20781: event should not have been triggerd but WAS
-		'combos: prevWord(null) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: event should have been triggerd but was NOT
-		'combos: prevWord(null) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: event should have been triggerd but was NOT
-		'combos: prevWord(null) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: event should not have been triggerd but WAS
-		'combos: prevWord(null) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: event should not have been triggerd but WAS
-		'combos: prevWord(null) + done > play(null) + playBegin': false,  // 21676: event should have been triggerd but was NOT
-		'combos: prevWord(null) + done > play(null) + playFinish': false,  // 21677: event should have been triggerd but was NOT
-		'combos: prevWord(null) + done > play(null) + restartBegin': false,  // 21680: event should not have been triggerd but WAS
-		'combos: prevWord(null) + done > play(null) + restartFinish': false,  // 21681: event should not have been triggerd but WAS
-		'combos: prevWord(null) + done > togglePlayPause(null) + playBegin': false,  // 21701: event should have been triggerd but was NOT
-		'combos: prevWord(null) + done > togglePlayPause(null) + playFinish': false,  // 21702: event should have been triggerd but was NOT
-		'combos: prevWord(null) + done > togglePlayPause(null) + restartBegin': false,  // 21705: event should not have been triggerd but WAS
-		'combos: prevWord(null) + done > togglePlayPause(null) + restartFinish': false,  // 21706: event should not have been triggerd but WAS
+		'combos: prevWord(null) + onceBegin > play(null) + playBegin': true,  // 9076: event should have been triggerd but was NOT
+		'combos: prevWord(null) + onceBegin > play(null) + playFinish': true,  // 9077: event should have been triggerd but was NOT
+		'combos: prevWord(null) + onceBegin > play(null) + restartBegin': true,  // 9080: event should not have been triggerd but WAS
+		'combos: prevWord(null) + onceBegin > play(null) + restartFinish': true,  // 9081: event should not have been triggerd but WAS
+		'combos: prevWord(null) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: prevWord(null) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: prevWord(null) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: event should not have been triggerd but WAS
+		'combos: prevWord(null) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: event should not have been triggerd but WAS
+		'combos: prevWord(null) + onceFinish > play(null) + playBegin': true,  // 9976: event should have been triggerd but was NOT
+		'combos: prevWord(null) + onceFinish > play(null) + playFinish': true,  // 9977: event should have been triggerd but was NOT
+		'combos: prevWord(null) + onceFinish > play(null) + restartBegin': true,  // 9980: event should not have been triggerd but WAS
+		'combos: prevWord(null) + onceFinish > play(null) + restartFinish': true,  // 9981: event should not have been triggerd but WAS
+		'combos: prevWord(null) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: prevWord(null) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: prevWord(null) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: event should not have been triggerd but WAS
+		'combos: prevWord(null) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: event should not have been triggerd but WAS
+		'combos: prevWord(null) + loopBegin > play(null) + playBegin': true,  // 16276: event should have been triggerd but was NOT
+		'combos: prevWord(null) + loopBegin > play(null) + playFinish': true,  // 16277: event should have been triggerd but was NOT
+		'combos: prevWord(null) + loopBegin > play(null) + restartBegin': true,  // 16280: event should not have been triggerd but WAS
+		'combos: prevWord(null) + loopBegin > play(null) + restartFinish': true,  // 16281: event should not have been triggerd but WAS
+		'combos: prevWord(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: prevWord(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: prevWord(null) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: event should not have been triggerd but WAS
+		'combos: prevWord(null) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: event should not have been triggerd but WAS
+		'combos: prevWord(null) + loopFinish > play(null) + playBegin': true,  // 17176: event should have been triggerd but was NOT
+		'combos: prevWord(null) + loopFinish > play(null) + playFinish': true,  // 17177: event should have been triggerd but was NOT
+		'combos: prevWord(null) + loopFinish > play(null) + restartBegin': true,  // 17180: event should not have been triggerd but WAS
+		'combos: prevWord(null) + loopFinish > play(null) + restartFinish': true,  // 17181: event should not have been triggerd but WAS
+		'combos: prevWord(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: prevWord(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: prevWord(null) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: event should not have been triggerd but WAS
+		'combos: prevWord(null) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: event should not have been triggerd but WAS
+		'combos: prevWord(null) + newWordFragment > play(null) + playBegin': true,  // 18076: event should have been triggerd but was NOT
+		'combos: prevWord(null) + newWordFragment > play(null) + playFinish': true,  // 18077: event should have been triggerd but was NOT
+		'combos: prevWord(null) + newWordFragment > play(null) + restartBegin': true,  // 18080: event should not have been triggerd but WAS
+		'combos: prevWord(null) + newWordFragment > play(null) + restartFinish': true,  // 18081: event should not have been triggerd but WAS
+		'combos: prevWord(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: prevWord(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: prevWord(null) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: event should not have been triggerd but WAS
+		'combos: prevWord(null) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: event should not have been triggerd but WAS
+		'combos: prevWord(null) + progress > play(null) + playBegin': true,  // 18976: event should have been triggerd but was NOT
+		'combos: prevWord(null) + progress > play(null) + playFinish': true,  // 18977: event should have been triggerd but was NOT
+		'combos: prevWord(null) + progress > play(null) + restartBegin': true,  // 18980: event should not have been triggerd but WAS
+		'combos: prevWord(null) + progress > play(null) + restartFinish': true,  // 18981: event should not have been triggerd but WAS
+		'combos: prevWord(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: prevWord(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: prevWord(null) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: event should not have been triggerd but WAS
+		'combos: prevWord(null) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: event should not have been triggerd but WAS
+		'combos: prevWord(null) + stopBegin > play(null) + playBegin': true,  // 19876: event should have been triggerd but was NOT
+		'combos: prevWord(null) + stopBegin > play(null) + playFinish': true,  // 19877: event should have been triggerd but was NOT
+		'combos: prevWord(null) + stopBegin > play(null) + restartBegin': true,  // 19880: event should not have been triggerd but WAS
+		'combos: prevWord(null) + stopBegin > play(null) + restartFinish': true,  // 19881: event should not have been triggerd but WAS
+		'combos: prevWord(null) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: event should have been triggerd but was NOT
+		'combos: prevWord(null) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: event should have been triggerd but was NOT
+		'combos: prevWord(null) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: event should not have been triggerd but WAS
+		'combos: prevWord(null) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: event should not have been triggerd but WAS
+		'combos: prevWord(null) + stopFinish > play(null) + playBegin': true,  // 20776: event should have been triggerd but was NOT
+		'combos: prevWord(null) + stopFinish > play(null) + playFinish': true,  // 20777: event should have been triggerd but was NOT
+		'combos: prevWord(null) + stopFinish > play(null) + restartBegin': true,  // 20780: event should not have been triggerd but WAS
+		'combos: prevWord(null) + stopFinish > play(null) + restartFinish': true,  // 20781: event should not have been triggerd but WAS
+		'combos: prevWord(null) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: event should have been triggerd but was NOT
+		'combos: prevWord(null) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: event should have been triggerd but was NOT
+		'combos: prevWord(null) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: event should not have been triggerd but WAS
+		'combos: prevWord(null) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: event should not have been triggerd but WAS
+		'combos: prevWord(null) + done > play(null) + playBegin': true,  // 21676: event should have been triggerd but was NOT
+		'combos: prevWord(null) + done > play(null) + playFinish': true,  // 21677: event should have been triggerd but was NOT
+		'combos: prevWord(null) + done > play(null) + restartBegin': true,  // 21680: event should not have been triggerd but WAS
+		'combos: prevWord(null) + done > play(null) + restartFinish': true,  // 21681: event should not have been triggerd but WAS
+		'combos: prevWord(null) + done > togglePlayPause(null) + playBegin': true,  // 21701: event should have been triggerd but was NOT
+		'combos: prevWord(null) + done > togglePlayPause(null) + playFinish': true,  // 21702: event should have been triggerd but was NOT
+		'combos: prevWord(null) + done > togglePlayPause(null) + restartBegin': true,  // 21705: event should not have been triggerd but WAS
+		'combos: prevWord(null) + done > togglePlayPause(null) + restartFinish': true,  // 21706: event should not have been triggerd but WAS
 
 
 
 		// ============== prevSentence ==============
 		// #? like prevWord
-		'combos: prevSentence(null) + onceBegin > play(null) + playBegin': false,  // 9076: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + onceBegin > play(null) + playFinish': false,  // 9077: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + onceBegin > play(null) + restartBegin': false,  // 9080: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + onceBegin > play(null) + restartFinish': false,  // 9081: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + onceFinish > play(null) + playBegin': false,  // 9976: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + onceFinish > play(null) + playFinish': false,  // 9977: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + onceFinish > play(null) + restartBegin': false,  // 9980: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + onceFinish > play(null) + restartFinish': false,  // 9981: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + loopBegin > play(null) + playBegin': false,  // 16276: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + loopBegin > play(null) + playFinish': false,  // 16277: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + loopBegin > play(null) + restartBegin': false,  // 16280: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + loopBegin > play(null) + restartFinish': false,  // 16281: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + loopFinish > play(null) + playBegin': false,  // 17176: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + loopFinish > play(null) + playFinish': false,  // 17177: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + loopFinish > play(null) + restartBegin': false,  // 17180: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + loopFinish > play(null) + restartFinish': false,  // 17181: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + newWordFragment > play(null) + playBegin': false,  // 18076: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + newWordFragment > play(null) + playFinish': false,  // 18077: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + newWordFragment > play(null) + restartBegin': false,  // 18080: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + newWordFragment > play(null) + restartFinish': false,  // 18081: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + progress > play(null) + playBegin': false,  // 18976: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + progress > play(null) + playFinish': false,  // 18977: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + progress > play(null) + restartBegin': false,  // 18980: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + progress > play(null) + restartFinish': false,  // 18981: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + progress > togglePlayPause(null) + playBegin': false,  // 19001: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + progress > togglePlayPause(null) + playFinish': false,  // 19002: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + stopBegin > play(null) + playBegin': false,  // 19876: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + stopBegin > play(null) + playFinish': false,  // 19877: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + stopBegin > play(null) + restartBegin': false,  // 19880: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + stopBegin > play(null) + restartFinish': false,  // 19881: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + stopFinish > play(null) + playBegin': false,  // 20776: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + stopFinish > play(null) + playFinish': false,  // 20777: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + stopFinish > play(null) + restartBegin': false,  // 20780: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + stopFinish > play(null) + restartFinish': false,  // 20781: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + done > play(null) + playBegin': false,  // 21676: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + done > play(null) + playFinish': false,  // 21677: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + done > play(null) + restartBegin': false,  // 21680: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + done > play(null) + restartFinish': false,  // 21681: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + done > togglePlayPause(null) + playBegin': false,  // 21701: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + done > togglePlayPause(null) + playFinish': false,  // 21702: event should have been triggerd but was NOT
-		'combos: prevSentence(null) + done > togglePlayPause(null) + restartBegin': false,  // 21705: event should not have been triggerd but WAS
-		'combos: prevSentence(null) + done > togglePlayPause(null) + restartFinish': false,  // 21706: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + onceBegin > play(null) + playBegin': true,  // 9076: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + onceBegin > play(null) + playFinish': true,  // 9077: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + onceBegin > play(null) + restartBegin': true,  // 9080: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + onceBegin > play(null) + restartFinish': true,  // 9081: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + onceFinish > play(null) + playBegin': true,  // 9976: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + onceFinish > play(null) + playFinish': true,  // 9977: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + onceFinish > play(null) + restartBegin': true,  // 9980: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + onceFinish > play(null) + restartFinish': true,  // 9981: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + loopBegin > play(null) + playBegin': true,  // 16276: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + loopBegin > play(null) + playFinish': true,  // 16277: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + loopBegin > play(null) + restartBegin': true,  // 16280: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + loopBegin > play(null) + restartFinish': true,  // 16281: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + loopFinish > play(null) + playBegin': true,  // 17176: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + loopFinish > play(null) + playFinish': true,  // 17177: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + loopFinish > play(null) + restartBegin': true,  // 17180: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + loopFinish > play(null) + restartFinish': true,  // 17181: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + newWordFragment > play(null) + playBegin': true,  // 18076: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + newWordFragment > play(null) + playFinish': true,  // 18077: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + newWordFragment > play(null) + restartBegin': true,  // 18080: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + newWordFragment > play(null) + restartFinish': true,  // 18081: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + progress > play(null) + playBegin': true,  // 18976: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + progress > play(null) + playFinish': true,  // 18977: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + progress > play(null) + restartBegin': true,  // 18980: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + progress > play(null) + restartFinish': true,  // 18981: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + stopBegin > play(null) + playBegin': true,  // 19876: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + stopBegin > play(null) + playFinish': true,  // 19877: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + stopBegin > play(null) + restartBegin': true,  // 19880: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + stopBegin > play(null) + restartFinish': true,  // 19881: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + stopFinish > play(null) + playBegin': true,  // 20776: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + stopFinish > play(null) + playFinish': true,  // 20777: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + stopFinish > play(null) + restartBegin': true,  // 20780: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + stopFinish > play(null) + restartFinish': true,  // 20781: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + done > play(null) + playBegin': true,  // 21676: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + done > play(null) + playFinish': true,  // 21677: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + done > play(null) + restartBegin': true,  // 21680: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + done > play(null) + restartFinish': true,  // 21681: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + done > togglePlayPause(null) + playBegin': true,  // 21701: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + done > togglePlayPause(null) + playFinish': true,  // 21702: event should have been triggerd but was NOT
+		'combos: prevSentence(null) + done > togglePlayPause(null) + restartBegin': true,  // 21705: event should not have been triggerd but WAS
+		'combos: prevSentence(null) + done > togglePlayPause(null) + restartFinish': true,  // 21706: event should not have been triggerd but WAS
 
 	}  // end asts.expectedFailures{}
 
