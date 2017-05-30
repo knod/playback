@@ -94,8 +94,8 @@ var events1 = [
 ];
 
 var functsWithArgs2 = [
-	{ func: 'forceReset', args: [ null ]},
-	// { func: 'reset', args: [ null ]},
+	// { func: 'forceReset', args: [ null ]},
+	{ func: 'reset', args: [ null ]},
 	// { func: 'restart', args: [ null ]},
 	// { func: 'play', args: [ null ] },
 	// { func: 'togglePlayPause', args: [ null ]},
@@ -293,7 +293,6 @@ function iterate ( label = '', func1Indx = 0, arg1Indx = 0, event1Indx = 0, func
 				tester.finish();
 
 				var time = (new Date()).toString().split(' ')[4];
-				console.log( 'Combo tests triggered:', altAssertionater.getWhichOnesWereRun().sort() );
 				console.log( 'End:', time );
 				console.log( (Date.now() - startTime)/1000 + 's' );
 			}
@@ -363,7 +362,7 @@ var start = function ( funcObj ) {
 		} else {
 
 			var indx = parseInt( arg );
-			var obj = funcsWithArgs1[ indx ]
+			var obj = funcsWithArgs1[ indx ];
 
 			// If we've got a valid first argument, run with that argument
 			if ( indx < funcsWithArgs1.length && obj ) {

@@ -1,7 +1,6 @@
 // last-event.js
+// Accumulates the result
 
-// var lastEvent = module.exports = function ( result, bigs, opWith, evnt, mayCollectCheck, msTillAssert, reset ) {
-/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, str, func, int, func, bool ) */
 var lastEvent = module.exports = function ( result, bigs, opWith, reset ) {
 /* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, bool ) */
 
@@ -14,11 +13,10 @@ var lastEvent = module.exports = function ( result, bigs, opWith, reset ) {
 
 
 	whenRun = function ( one, two, three, four ) {
-
 		// console.log( '2:', two );
 
 		// I happen to know this will be the fragment some of the time
-		// and, most of the time it'll be the argument I'm interested in.
+		// and, a lot of the time it'll be the argument I'm interested in.
 		result.arg2s.push( two );
 		result.playback = one;
 
@@ -29,7 +27,7 @@ var lastEvent = module.exports = function ( result, bigs, opWith, reset ) {
 
 	var getFuncID = function (plab, item, queue) {
 		// console.log( 'queued @2:', item );
-		emitter.off( 'queued', getFuncID );
+		emitter.off( '_queued', getFuncID );
 		ourFuncID = item.id;
 	};
 
@@ -37,7 +35,7 @@ var lastEvent = module.exports = function ( result, bigs, opWith, reset ) {
 		// console.log( 'dequeued @2:', item );
 		if ( item.id === ourFuncID ) {
 			// console.log( 'starting to listen' );
-			emitter.off( 'dequeued', startListening );
+			emitter.off( '_dequeued', startListening );
 			emitter.on( evnt, whenRun );
 		}
 	};
@@ -50,15 +48,14 @@ var lastEvent = module.exports = function ( result, bigs, opWith, reset ) {
 
 	// `forceReset()` skips the queue
 	if ( op !== 'forceReset' ) {
-		emitter.on( 'queued', getFuncID );
+		emitter.on( '_queued', getFuncID );
 		// Start listening after func actually runs
-		emitter.on( 'dequeued', startListening );
+		emitter.on( '_dequeued', startListening );
 	} else {
 		emitter.on( evnt, whenRun );
 	}
 
 	// console.log('2: listening')
-	// console.log( '========= debug: listening' );
 	plab[ op ]( arg );
 
 };  // End lastEvent()

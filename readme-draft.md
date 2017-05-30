@@ -165,5 +165,46 @@ Is there a way to automate this? Certainly there's a way to automate calling dif
 
 
 
+_Example of acceleration function_
+
+``` js
+var oldAccTime, notStartedAccYet = true, defaultDelay = 300;
+plab._accelerate = function ( frag ) {
+
+// Less delay as time goes on
+// When first run
+  if ( notStartedAccYet ) {
+   oldAccTime       = Date.now();
+   notStartedAccYet = false;
+  }
+
+  var elapsed = Date.now() - oldAccTime,
+      elapsedIterations = elapsed/defaultDelay;
+      elapsedIterations = Math.max( 1, elapsed );
+      elapsedIterations = Math.max( 60, elapsed );
+
+  // var delay = defaultDelay - elapsed;
+  // console.log(delay, elapsed, elapsed/20, (elapsed - elapsed/20))
+  // xxx(15 - 0)/(10 - 60) = -0.3 (slope)
+  // iteration 1: 0, iteration last: 15
+  // delay start 1: 60, delay end: 10
+
+  // TODO: Actually check if state delay is 0 or above
+  var baseDelay;
+  if ( state._baseAccelerationDelay >= 0 ) {
+   baseDelay = state._baseAccelerationDelay;
+  } else {
+   baseDelay = defaultDelay;
+  }
+
+  var delay = baseDelay + (elapsedIterations * -0.15);
+  delay = Math.max( 5, delay )
+
+  // return delay;
+
+  return 20;
+};
+```
+
 
 https://gist.github.com/knod/f0d90da58b4837c74ff83a296b07c6f7

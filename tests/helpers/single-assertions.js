@@ -21,31 +21,6 @@ var plab = null;
 
 // ------------ helpers ------------
 
-// // Originally meant for Array.prototype
-// var arraysEqual = function ( array1, array2 ) {
-//     // if the other array is a falsy value, return
-//     if (!array1 || !array2)
-//         return false;
-
-//     // compare lengths - can save a lot of time 
-//     if (array1.length != array2.length)
-//         return false;
-
-//     for (var i = 0, l = array1.length; i < l; i++) {
-//         // Check if we have nested arrays
-//         if ( array1[i] instanceof Array && array2[i] instanceof Array) {
-//             // recurse into the nested arrays
-//             if ( !arraysEqual( array1[i], array2[i] ) )
-//                 return false;       
-//         }           
-//         else if ( array1[i] != array2[i]) { 
-//             // Warning - two different object instances will never be equal: {x:20} != {x:20}
-//             return false;   
-//         }           
-//     }       
-//     return true;
-// };
-
 // Simple and suited to our purposes
 // https://github.com/micro-js/equal-array/blob/master/lib/index.js
 var arraysEqual = function ( arr1, arr2 ) {
@@ -79,18 +54,12 @@ var defaultAsserts = {
 defaultAsserts.not = function ( result, testText, evnt ) {
 
 	var passes 	= true;
-	// var msg 	= 'no arguments accumulated';
-	var msg 	= 'event NOT triggered';
-// console.log('checked not triggered:', evnt)
-	// var shouldFail = checkExpectedToFail( testText );
-	// if ( shouldFail ) {
-	// 	// Nothing is expected, it's failing for good reasons
-	// } else {
-		if ( result.arg2s.length !== 0 ) {
-			passes = false;
-			msg = 'event should not have been triggerd but ' + colors.red + 'WAS' + colors.none;
-		}
-	// }
+	var msg 	= 'event ' + colors.green + 'NOT' + colors.none + ' triggered';
+
+	if ( result.arg2s.length !== 0 ) {
+		passes = false;
+		msg = 'event should not have been triggerd but ' + colors.red + 'WAS' + colors.none;
+	}
 
 	return { message: msg, passed: passes };
 
@@ -99,22 +68,15 @@ defaultAsserts.not = function ( result, testText, evnt ) {
 defaultAsserts.triggered = function ( result, testText, evnt ) {
 
 	var passes 	= true,
-		msg 	= 'event was triggered';
+		msg 	= 'event ' + colors.green + 'WAS' + colors.none + ' triggered';
 
-// console.log('checked triggered', evnt)
-
-	// var shouldFail = checkExpectedToFail( testText );
-	// if ( shouldFail ) {
-	// 	// Nothing is expected, it's failing for good reasons
-	// } else {
-		if ( result.arg2s.length === 0 ) {
-			passes 	= false;
-			msg 	= 'event should have been triggerd but was ' + colors.red + 'NOT' + colors.none;
-		} else if ( result.playback !== plab ) {
-			passes 	= false;
-			msg 	= 'object recieved was ' + colors.red + 'NOT' + colors.none + ' the expected Playback instance';
-		}
-	// }
+	if ( result.arg2s.length === 0 ) {
+		passes 	= false;
+		msg 	= 'event should have been triggerd but was ' + colors.red + 'NOT' + colors.none;
+	} else if ( result.playback !== plab ) {
+		passes 	= false;
+		msg 	= 'object recieved was ' + colors.red + 'NOT' + colors.none + ' the expected Playback instance';
+	}
 
 	return { message: msg, passed: passes };
 };
@@ -138,21 +100,15 @@ var makeFragAsserter = function ( plyb, frags ) {
 		var arg2sStr = JSON.stringify( result.arg2s )
 
 		var passes 	= true,
-			msg 	= 'expected and got ' + arg2sStr;
-// console.log('frags triggered')
-		// console.log( result.arg2s );
+			msg 	= 'expected and ' + colors.green + 'GOT' + colors.none + ' ' + arg2sStr;
 
-		// var shouldFail = checkExpectedToFail( testText );
-		// if ( supressExpectedFailures && shouldFail ) {
-		// 	// Nothing is expected, it's failing for good reasons
-		// } else {
-			var triggeredVals = defaultAsserts.triggered( result, testText, evnt );
-			if ( !triggeredVals.passed ) { return triggeredVals; }
-			else {
-				passes = arraysEqual( result.arg2s, frags );
-				if ( !passes ) { msg = 'frags expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + arg2sStr + colors.none }
-			}
-		// }
+		var triggeredVals = defaultAsserts.triggered( result, testText, evnt );
+		if ( !triggeredVals.passed ) { return triggeredVals; }
+		else {
+			passes = arraysEqual( result.arg2s, frags );
+			if ( !passes ) { msg = 'frags expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + arg2sStr + colors.none }
+		}
+
 		return { message: msg, passed: passes };
 	};
 };  // End makeFragAsserter()
@@ -176,7 +132,7 @@ var makeProgressAsserter = function ( plyb, numItems, vals ) {
 		var arg2sStr = JSON.stringify( result.arg2s )
 
 		var passes 	= true,
-			msg 	= 'expected and got ' + arg2sStr;
+			msg 	= 'expected and ' + colors.green + 'GOT' + colors.none + ' ' + arg2sStr;
 
 		// var shouldFail = checkExpectedToFail( testText );
 		// if ( supressExpectedFailures && shouldFail ) {

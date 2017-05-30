@@ -120,10 +120,9 @@
 
 			plab._queue.push( item );
 
-			plab._trigger( 'queued', [plab, item, plab._queue] );
+			plab._trigger( '_queued', [plab, item, plab._queue] );
 			// console.log( 'queued:', item ); //plab._queue.slice(0) );
 
-			// if ( !plab._queueRunning && !plab._queueSuspended ) { plab._queueNext(); }
 			if ( !plab._queueCurrent && !plab._queueSuspended ) { plab._queueNext(); }
 
 			return item;
@@ -131,26 +130,15 @@
 
 		plab._queueNext = function () {
 
-			// plab._queueRunning = true;
-
-			// // if ( plab._queue.length === 0 ) {
-			// if ( plab._queueCurrent === null ) {
-
-			// 	// THIS SHOULD BE THE ONLY PLACE WHERE `._queueRunning` GETS RESET TO FALSE.
-			// 	// IT IS THE ONLY PLACE THAT WAITS UNTIL THE PREVIOUS FUNCTION HAS FINISHED
-			// 	// RUNNING.
-			// 	plab._queueRunning = false;
-
-			// } else {
-
 			// THIS SHOULD BE THE ONLY PLACE WHERE `._queueCurrent` GETS GIVEN A VALUE
 			// OTHER THAN `null`. IT IS THE ONLY PLACE THAT WAITS UNTIL THE PREVIOUS
 			// FUNCTION HAS FINISHED RUNNING.
+			// TODO: ??: Add `&& !plab._queueSuspended`?
 			if ( plab._queueCurrent === null && plab._queue.length > 0 ) {
 
 				var item = plab._queueCurrent = plab._queue.shift();
 				// Before func runs so it can be listened for
-				plab._trigger( 'dequeued', [plab, item, plab._queue] );
+				plab._trigger( '_dequeued', [plab, item, plab._queue] );
 				// console.log( 'dequeueing', item );
 
 				var func = plab[ item.name ];
@@ -166,6 +154,7 @@
 
 		plab._queueSuspend = function () {
 			plab._queueSuspended = true;
+			// ??: plab._queueCurrent = null; 
 		};
 
 		plab._queueResume = function () {
@@ -174,20 +163,9 @@
 			plab._queueNext();
 		};
 
-		// plab._queueFinish = function () {
-		// 	plab._queueRunning = false;
-		// 	if ( plab._queue.length !== 0 ) {
-		// 		plab._queueNext();
-		// 	}
-		// };  // End plab._queueFinish()
-
 		plab._queueClear = function () {
 			plab._queue.splice(0, plab._queue.length)
-			// CANNOT SET `._queueRunning` TO `false`. A PREVIOUSLY QUEUED FUNCTION
-			// MAY STILL BE RUNNING AND ONE COULD BE PLACED ON TOP OF THAT
 		};  // End plab._queueClear()
-
-		// ??: _queuePause?
 
 
 		// ----- Actions -----
@@ -198,8 +176,6 @@
 		* Internal reset. No events, no sending fragments
 		* Returns to initial values
 		*/
-			// if ( plab._currentAction === 'reset' ) { return plab; }  // ??: needed?
-
 			plab._currentAction  = 'reset';  // ??: needed? ^
 			plab._killLoop();  // Does not change state of `._currentAction`
 			plab._revertableState = 'pause';  // either 'play' or 'pause'
@@ -211,7 +187,7 @@
 			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
 
 			// // TODO: ??: Should this clear the queue?
-			// // Would happen on `restart()`, too
+			// // If so, it would happen on `restart()`, too
 			// plab._queueClear();
 
 			// Just put the index at the right place
@@ -230,26 +206,16 @@
 
 			plab._trigger( 'resetBegin', [plab] );
 
-			// Nothing gets put onto queue
 			plab._reset();
-
 			// TODO: ??: Should this clear the queue?
-			// Clear last so it does the most resetting possible
-			// Has to be before `_onceProxy()` so it lets `_loop()` get on the queue and play once
-			// Otherwise `_onceProxy()` has to use `_loopProxy`, which would give inconsistent
-			// behavior for functions that use `_onceProxy()`
 			plab._queueClear();
-
-			// plab._onceProxy( 0 );  // Send first fragment (now that revertable state is 'pause')
-			// // change current and revertable state back (??: seems out of place?)
-			// reset state to allow `toggle` to go to play next from `_currentAction`
-			// This seems squirrely
-			plab._freeze();  // to stop reversion to play. Not needed anymore?
+			// TODO: ??: freeze before reseting values?
+			// Set `_currentAction` to 'pause'
+			plab._freeze();
 
 			plab._trigger( 'resetFinish', [plab] );
-			// console.log( 'reset finished' );
 
-			plab._queueResume();
+			plab._queueResume();  // Does this really do anything?
 
 			return plab;
 		};
@@ -303,7 +269,6 @@
 		};
 
 
-		var count = 1;
 		// ??: 'playing' event should go off every time, but if we're
 		// restarting without pausing first (pausing would trigger visual
 		// feedback about pausing), then should the event not happen? That
@@ -313,19 +278,12 @@
 		/* ( Str ) -> PlaybackManager
 		* 
 		* For all 'play'-like activities
-		* TODO: ??: Reset delay on `._play()` instead?
+		* TODO: ??: Reset delay in here instead of in ._freeze or whatever?
 		*/
-			// // if ( debug ) {
-			// 	console.log('playing count:', count, eventName);
-			// // }  // DEBUGGING
-			count++;  // DEBUGGING
-
 			// "play" will always be forward
-			// ??: Here so can be changed no matter the event?
 			plab._incrementors = [0, 0, 1];
 
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
-			// console.log( 'began playing eventName:', eventName );  // DEBUGGING
 
 			// plab._delayer.resetSlowStart();  // ??: In here instead of in `._freeze()`?
 
@@ -344,12 +302,8 @@
 		};  // End plab._play()
 
 
-		var debug;  // DEBUGGING
-		plab._playProxy = function ( frag, d ) {
-			debug = d;  // DEBUGGING
-			if ( debug ) { console.log( 'playing. done?:', plab.done ); }  // DEBUGGING
-
-			if ( plab.done ) { plab.restart(); }  // Comes back here after restarted
+		plab._playProxy = function () {  // Why is `frag` here?
+			if ( plab.done ) { plab.restart(); }
 			else { plab._play( 'play' ); }
 			return plab;
 		};  // End plab.play()
@@ -357,7 +311,7 @@
 		// ??: Include `.open()` as a proxy for `.play()`?
 		// ??: Also `.start()`?
 
-		plab.play = function ( frag, d ) {
+		plab.play = function () {
 			plab._queueAdd( '_playProxy', arguments );
 			return plab;
 		};
@@ -370,9 +324,8 @@
 		* Kills the loop and resets some variables
 		* Does not change any state variables (currentAction, revertableState)
 		*/
-			// console.trace( 'killing loop' );
 			clearTimeout( plab._timeoutID );
-			// Start slow when next go through loop (restore countdown)
+			// Start slow when next go through loop (restore speed to pre-warmup speed)
 			plab._delayer.resetSlowStart();
 			return plab;
 		};  // End plab._killLoop()
@@ -382,7 +335,6 @@
 		* 
 		* For all 'pause'-like activities
 		*/
-			// console.log( 'pausing' );
 			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
 
 			// Switch order?
@@ -406,7 +358,7 @@
 			return plab;
 		};
 
-		plab._stopProxy = function () {  // ??: plab._revertableState = 'pause';
+		plab._stopProxy = function () {
 			plab._freeze( 'stop' );
 			return plab;
 		};
@@ -415,7 +367,7 @@
 			return plab;
 		};
 
-		plab._closeProxy = function () {  // ??: plab._revertableState = 'pause';
+		plab._closeProxy = function () {
 			plab._freeze( 'close' );
 			return plab;
 		};
@@ -426,16 +378,13 @@
 
 
 
-		// TODO: ??: Add a 'toggle' event?
 		plab._togglePlayPauseProxy = function () {
-			// Use `._revertableState` instead?
+		// TODO: ??: Add a 'toggle' event? Change this name?
+			// Test `currentAction` not `revertableState` so that, for example, if was paused
+			// then rewound, will revert to 'pause' instead of toggling to 'play', since
+			// `rewind()` doesn't change revertableState to 'play'
 
-			// if ( plab._currentAction !== 'pause' ) { plab.pause(); }
-			// else { plab.play(); }
-
-			// if === pause, play
-			// if === play, pause
-			// else revert
+			// TODO: ??: Should these be non-queued? Straight to proxies?
 			if (  /pause|stop|close/.test( plab._currentAction ) ) { plab.play(); }
 			else if ( plab._currentAction === 'play' ) { plab.pause(); }
 			else { plab.revert(); }
@@ -456,13 +405,11 @@
 		* 
 		* Returns true if revertd playing, false if stopped
 		* completely
-		* TODO: ??: Should this set of the 'play' and 'pause' events?
+		* TODO: ??: Should this set off the 'play' and 'pause' events?
 		*/
 			plab._trigger( 'revertBegin', [plab] );
 
-			// notStartedAccYet = true;  // Not accelerating currently
-
-			// plab._currentAction = 'revert';
+			// plab._currentAction = 'revert';  // TODO: Would this be useful?
 			plab._killLoop( null );
 
 			var wasPlaying = plab._revertableState === 'play';
@@ -475,7 +422,7 @@
 
 			plab._trigger( 'revertFinish', [plab] );
 
-			return wasPlaying;
+			return wasPlaying;  // I think this is here for `finishIfDone()`
 		};  // End plab._revertProxy()
 
 		// We need an external `.revert()` if `.rewind()`,
@@ -489,22 +436,20 @@
 
 		// ========== ONCE ========== \\
 
-		// plab._onceProxy = function ( incrementors, revertToRevertableState ) {
 		plab._onceProxy = function ( incrementors ) {
-		// If this is .once and can be called from the outside,
+		// If this is `.once` and can be called from the outside,
 		// it can get added to the queue, but then weird stuff
-		// can happen. Basically, mostly don't call non `._` stuff
-		// internally.
+		// can happen. Basically, mostly call `._` stuff internally.
 
-			plab._trigger( 'onceBegin', [plab] );  // ??: 'jumpBegin'?
+			plab._trigger( 'onceBegin', [plab] );  // ??: 'jumpBegin'? Other stuff? Pass `eventName`?
 
-			// if ( plab._currentAction !== 'jump' ) {
-				plab._killLoop( null );
-				plab._direction = plab._getDirection( incrementors );
-				plab._currentAction = 'jump';
-			// }
+			plab._killLoop( null );
+			plab._direction = plab._getDirection( incrementors );
+			plab._currentAction = 'jump';
 
-			// ??: Have `.jumpTo` logic in here instead?
+			// ??: Have `.jumpTo` logic in here instead so a number can be passed
+			// in? That may be more confusing as to what that number means. e.g. would `0`
+			// mean current or mean the very first fragment?
 
 			var shouldRepeat = function () { return false; },
 				calcDelay 	 = function () { return 0; };
@@ -512,19 +457,13 @@
 
 			plab._trigger( 'onceFinish', [plab] );  // ??: 'jumpFinish'?
 
-			// // ??: NOOOOOOO
-			// // ??: Should not happen here? If called externally, would this
-			// // be expected behavior?
-			// // ??: After event sent or before?
-			// // ??: Now that there's a queue, maybe at the start
+			// // TODO: ??: Should this ever have the ability to revert?
+			// // `once()` should not assume anything about reverting, right?
 			// if (revertToRevertableState) { plab._revertProxy(); }
-			// // `once()` should not assume anything about resuming, right?
 
 			return plab;
 		};  // End plab._onceProxy()
 
-		// TODO: ??: Possible alternative so we can have an external
-		// `.once()`? Implement if needed.
 		plab.once = function ( incrementors ) {
 			plab._queueAdd( '_onceProxy', arguments );
 			return plab;
@@ -571,7 +510,7 @@
 		plab.prevWord 	  = function () { return plab.jumpWords( -1 ); };
 		plab.prevSentence = function() { return plab.jumpSentences( -1 ); };
 
-		// Can't see a reason for `nextFragment()`
+		// Can't see a reason for `nextFragment()` etc.
 
 
 
@@ -582,10 +521,16 @@
 		* 
 		* Moves to an absolute word position (not relative)
 		* Does not allow any values below 0
+		* 
+		* TODO: !!!: This is very wrong. Negatives should be allowed,
+		* they just need to go to the minimum of 0. But then how do they
+		* trigger 'done'?
 		*/
-			// Theoretically it can loop around to the end, but here
-			// I don't see a reason to complicate things
+			// Theoretically it can loop around to the end when negative, but
+			// I don't see a reason to complicate things here. Not sure why it would be needed.
 			if ( indx < 0 ) { indx = [ 0, indx, 0 ]; }
+			// TODO: If negative, do some math to get a word incrementor that
+			// will go to the beginning and then one word more to trigger 'done'
 			plab._onceProxy( indx );
 
 			return plab;
@@ -602,38 +547,11 @@
 
 		// var oldAccTime, notStartedAccYet = true, defaultDelay = 300;
 		plab._accelerate = function ( frag ) {
-
-		// // Less delay as time goes on
-		// 	// When first run
-		// 	if ( notStartedAccYet ) {
-		// 		oldAccTime 		 = Date.now();
-		// 		notStartedAccYet = false;
-		// 	}
-
-		// 	var elapsed = Date.now() - oldAccTime,
-		// 		elapsedIterations = elapsed/defaultDelay;
-		// 	elapsedIterations = Math.max( 1, elapsed );
-		// 	elapsedIterations = Math.max( 60, elapsed );
-
-		// 	// var delay = defaultDelay - elapsed;
-		// 	// console.log(delay, elapsed, elapsed/20, (elapsed - elapsed/20))
-		// 	// xxx(15 - 0)/(10 - 60) = -0.3 (slope)
-		// 	// iteration 1: 0, iteration last: 15
-		// 	// delay start 1: 60, delay end: 10
-
-		// 	// TODO: Actually check if state delay is 0 or above
-		// 	var baseDelay;
-		// 	if ( state._baseAccelerationDelay >= 0 ) {
-		// 		baseDelay = state._baseAccelerationDelay;
-		// 	} else {
-		// 		baseDelay = defaultDelay;
-		// 	}
-
-		// 	var delay = baseDelay + (elapsedIterations * -0.15);
-		// 	delay = Math.max( 5, delay )
-
-		// 	// return delay;
-
+		/*
+		* A delay calculation function that returns a smaller and smaller
+		* value as time goes on. Except this default one just returns the
+		* same delay each time.
+		*/
 			return 20;
 		};
 
@@ -647,24 +565,29 @@
 		* Default currently just a steady speed.
 		* 
 		* TODO: Spec: What happens when rewind and then `.jumpWord()` in the middle?
+		* That's a good question... I still don't know that...
+		* I think it just stops, which is not really what I want...
+		* Is this actually tested with the current tests? I think not.
+		* Maybe new tests are needed - ones that jump to the middle first.
+		* Also, remember that reverting is to be handled externally now.
 		*/
 			// No need to prevent new `rewind()` calls since this kills
 			// the old loop before starting the new loop
-				plab._currentAction = 'rewind';
+			plab._currentAction = 'rewind';
 
-				plab._trigger( 'rewindBegin', [plab] );
+			plab._trigger( 'rewindBegin', [plab] );
 
-				plab._killLoop( null );
-				plab._currentAction = 'rewind';
+			plab._killLoop( null );
+			plab._currentAction = 'rewind';
 
-				plab._incrementors 	= [0, -1, 0];
-				plab._direction 	= 'back';
+			plab._incrementors 	= [0, -1, 0];
+			plab._direction 	= 'back';
 
-				var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
+			var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
+			// ??: Also here: Show the current word first, then it will move on?
+			plab._loopProxy( null, null, accelerate );
 
-				plab._loopProxy( null, null, accelerate );  // Show the current word first, then it will move on
-
-				plab._trigger( 'rewindFinish', [plab] );
+			plab._trigger( 'rewindFinish', [plab] );
 
 			return plab;
 		};  // end plab.rewind()
@@ -696,8 +619,8 @@
 			plab._direction 	= 'forward';
 
 			var accelerate = accelerateOverride || state.playback.accelerate || plab._accelerate;
-
-			plab._loopProxy( null, null, accelerate );  // Show the current word first, then it will move on
+			// TODO: ??: Also here: Show the current word first, then it will move on?
+			plab._loopProxy( null, null, accelerate );
 
 			plab._trigger( 'fastForwardFinish', [plab] );
 
@@ -720,35 +643,23 @@
 		* prepare for a possible restart. Otherwise save not
 		* done.
         */
-        	// console.log( 'checking for stop. progress:', plab.getProgress(), '; queue:', plab._queue );
         	var isDone = false;
 
         	// Stop if we've reached the end (if `fastForward`ing, no revert)
         	if ( plab._direction !== 'back' && plab.getProgress() === 1 ) {
         		isDone = true;
         	} else if ( plab._direction === 'back' && plab.getIndex() === 0 ) {
-        		// // Check if revertd playing. If not revertd, done.
-        		// // ??: Is this expected behavior?
-        		// plab._revertProxy();
-        		// if ( plab._revertableState !== 'play' ) { isDone = true; }
         		isDone = true;
 	    	}
 
-	    	// console.log( 'isDone:', isDone, '; direction:', plab._direction, '; index:', plab.getIndex() );
-
 	    	// TODO: ??: Add 'finishBegin' and 'finishFinish'? 'doneBegin', 'doneFinish'?
 	        if ( isDone ) {
-	        	// console.log( 'stopping' );
 				plab.done = true;
-				// plab.stop();  // has to be on queue. Otherwise stuff can interject here.
-				plab._stopProxy();
-
+				plab._stopProxy();  // Can't be added to queue or vulnerable to interruptions
 				plab._trigger( 'done', [plab] );
 	        } else {
 	        	plab.done = false;
 	        }
-
-	        // console.log( 'finish check finished' );
 
         	return plab.done;
 		};  // End plab._finishIfDone()
@@ -805,40 +716,12 @@
         */
 			var vector = null;
 
-			// // DEBUGGING
-			// // Bug crops up when switching word lengths. Moreso at short lengths
-			// // May be to do with reseting the word to its start when word length is changed
-			// if( !chars ) { console.log('frag:', frag, '; chars:', chars, '; position:', plab._stepper.position); }
-			// var noWhitespace = chars.replace( plab._whitespaceRegex, '' );
-
 			// Skip our special symbols ( "$@skip@$" )
 			// TODO: ??: use state property with a fallback?
 			if ( frag === '$@skip@$' ) {
-
 				var direction = plab._getDirection( incrementors );
 				if ( direction === 'forward' ) { vector = [0, 0, 1] }
 				else { vector = [0, 0, -1] }
-
-				// // ??: This model would go back or forward one sentence, one
-				// // word, or one fragment. Is that what we want?
-				// vector = [0, 0, 0];  // Need to be able to manipulate an array
-
-				// if ( incrementors[0] !== 0 ) {
-				// 	vector[0] = plab._signOf(incrementors[0]);
-
-				// } else if( incrementors[1] !== 0 ) {
-				// 	vector[1] = plab._signOf(incrementors[1]);
-
-				// } else if( incrementors[2] !== 0 ) {
-				// 	vector[2] = plab._signOf(incrementors[2]);
-
-				// // For when play passes in [0, 0, 0]. ??: Does anything else ever do this?
-				// // We're going to have to skip in some direction or we'll never get anywhere
-				// } else {
-				// 	// This is going to be a problem if we ever to [0, 0, 0] on whitespace
-				// 	// while rewinding
-				// 	vector = [0, 0, 1];  // ??: Always true?
-				// }
 			}
 
 			return vector;
@@ -861,15 +744,14 @@
 		* by `calcDelayOverride`, `state.clacDelay()`, or its own default.
 		*/
 			plab._trigger( 'loopBegin', [plab] );
-			// // if ( debug ) { 
-			// 	console.log('loop begins', incrementors)
-			// 	 // }
 
 			// Allows for stuff like `._play()` to show current word, then keep going
 			// If incrementors is an index number
 			if ( typeof incrementors === 'number' && incrementors >= 0 ) {
 				// Do nothing, `incrementors` is good as it is
 				// This allows `incrementors` to be 0
+				// TODO: wtf, why aren't negative incrementors accounted for here? Conversly
+				// why do positive incrementors have to be accounted for?
 			} else {
 				incrementors = incrementors || plab._incrementors;
 			}
@@ -886,6 +768,8 @@
     	    	// TODO: ??: Also add 'loopSkipFinish'? (with 'loopSkipBegin')
 				plab._trigger( 'loopSkip', [plab, frag] );
     	    	plab._loopProxy( skipVector, checkRepeatOverride, calcDelayOverride );  // Don't decrease repeats
+				// ??: Will this be a problem if either the start or the end is whitespace?
+				// TODO: Add a finish check in here too?
     	    
     	    } else {
 
@@ -903,10 +787,9 @@
 				if ( checkRepeat && checkRepeat( plab, frag ) ) {
 
 					plab._timeoutID = setTimeout( function () {
+						// Put on queue. Solves a bunch of problems
 						plab._loop( null, checkRepeat, calcDelay );
 					}, delay );
-
-					// console.log( 'timeoutID:', plab._timeoutID );
 
 				}
 
