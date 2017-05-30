@@ -528,9 +528,13 @@
 		*/
 			// Theoretically it can loop around to the end when negative, but
 			// I don't see a reason to complicate things here. Not sure why it would be needed.
-			if ( indx < 0 ) { indx = [ 0, indx, 0 ]; }
-			// TODO: If negative, do some math to get a word incrementor that
-			// will go to the beginning and then one word more to trigger 'done'
+			if ( indx < 0 ) {
+				// Go to beginning and then some (to trigger 'done') (1 before 0)
+				// Not sure about whether this should be expected behavior or not
+				var beforeStart = (-1 * plab.getIndex()) -1;
+				indx = [ 0, beforeStart, 0 ];
+			}
+
 			plab._onceProxy( indx );
 
 			return plab;

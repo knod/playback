@@ -1407,16 +1407,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: restart(null) + stopBegin > current(null) + stopBegin': false,  // 20148: event should not have been triggerd but WAS
 		'combos: restart(null) + stopBegin > current(null) + stopFinish': false,  // 20149: event should not have been triggerd but WAS
 		'combos: restart(null) + stopBegin > current(null) + done': false,  // 20150: event should not have been triggerd but WAS
-		'combos: restart(null) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
-		'combos: restart(null) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: restart(null) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
-		'combos: restart(null) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
-		'combos: restart(null) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
-		'combos: restart(null) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
-		'combos: restart(null) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: restart(null) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
-		'combos: restart(null) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
-		'combos: restart(null) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: restart(null) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: restart(null) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: restart(null) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: restart(null) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
 		'combos: restart(null) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: frags expected ["Victorious,"], but got ["\n"]
 		'combos: restart(null) + stopBegin > jumpWords(-3) + progress': false,  // 20322: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: restart(null) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: event should have been triggerd but was NOT
@@ -1504,16 +1504,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: restart(null) + stopFinish > current(null) + stopBegin': false,  // 21048: event should not have been triggerd but WAS
 		'combos: restart(null) + stopFinish > current(null) + stopFinish': false,  // 21049: event should not have been triggerd but WAS
 		'combos: restart(null) + stopFinish > current(null) + done': false,  // 21050: event should not have been triggerd but WAS
-		'combos: restart(null) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
-		'combos: restart(null) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: restart(null) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
-		'combos: restart(null) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
-		'combos: restart(null) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
-		'combos: restart(null) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
-		'combos: restart(null) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: restart(null) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
-		'combos: restart(null) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
-		'combos: restart(null) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: restart(null) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: restart(null) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: restart(null) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: restart(null) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
+		// 'combos: restart(null) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
 		'combos: restart(null) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: frags expected ["Victorious,"], but got ["\n"]
 		'combos: restart(null) + stopFinish > jumpWords(-3) + progress': false,  // 21222: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: restart(null) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: event should have been triggerd but was NOT
@@ -1601,16 +1601,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: restart(null) + done > current(null) + stopBegin': false,  // 21948: event should not have been triggerd but WAS
 		'combos: restart(null) + done > current(null) + stopFinish': false,  // 21949: event should not have been triggerd but WAS
 		'combos: restart(null) + done > current(null) + done': false,  // 21950: event should not have been triggerd but WAS
-		'combos: restart(null) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
-		'combos: restart(null) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: restart(null) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
-		'combos: restart(null) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
-		'combos: restart(null) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
-		'combos: restart(null) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
-		'combos: restart(null) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: restart(null) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
-		'combos: restart(null) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
-		'combos: restart(null) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
+		// 'combos: restart(null) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: restart(null) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: restart(null) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
+		// 'combos: restart(null) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
+		// 'combos: restart(null) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
+		// 'combos: restart(null) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: restart(null) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: restart(null) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
+		// 'combos: restart(null) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
+		// 'combos: restart(null) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
 		'combos: restart(null) + done > jumpWords(-3) + newWordFragment': false,  // 22121: frags expected ["Victorious,"], but got ["\n"]
 		'combos: restart(null) + done > jumpWords(-3) + progress': false,  // 22122: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: restart(null) + done > jumpWords(-3) + stopBegin': false,  // 22123: event should have been triggerd but was NOT
@@ -1811,16 +1811,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: play(null) + stopBegin > current(null) + stopBegin': false,  // 20148: event should not have been triggerd but WAS
 		'combos: play(null) + stopBegin > current(null) + stopFinish': false,  // 20149: event should not have been triggerd but WAS
 		'combos: play(null) + stopBegin > current(null) + done': false,  // 20150: event should not have been triggerd but WAS
-		'combos: play(null) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
-		'combos: play(null) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: play(null) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
-		'combos: play(null) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
-		'combos: play(null) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
-		'combos: play(null) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
-		'combos: play(null) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: play(null) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
-		'combos: play(null) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
-		'combos: play(null) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: play(null) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: play(null) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: play(null) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: play(null) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
 		'combos: play(null) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: frags expected ["Victorious,"], but got ["\n"]
 		'combos: play(null) + stopBegin > jumpWords(-3) + progress': false,  // 20322: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: play(null) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: event should have been triggerd but was NOT
@@ -1908,16 +1908,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: play(null) + stopFinish > current(null) + stopBegin': false,  // 21048: event should not have been triggerd but WAS
 		'combos: play(null) + stopFinish > current(null) + stopFinish': false,  // 21049: event should not have been triggerd but WAS
 		'combos: play(null) + stopFinish > current(null) + done': false,  // 21050: event should not have been triggerd but WAS
-		'combos: play(null) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
-		'combos: play(null) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: play(null) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
-		'combos: play(null) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
-		'combos: play(null) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
-		'combos: play(null) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
-		'combos: play(null) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: play(null) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
-		'combos: play(null) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
-		'combos: play(null) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: play(null) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: play(null) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: play(null) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: play(null) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
+		// 'combos: play(null) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
 		'combos: play(null) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: frags expected ["Victorious,"], but got ["\n"]
 		'combos: play(null) + stopFinish > jumpWords(-3) + progress': false,  // 21222: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: play(null) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: event should have been triggerd but was NOT
@@ -2006,16 +2006,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: play(null) + done > current(null) + stopBegin': false,  // 21948: event should not have been triggerd but WAS
 		'combos: play(null) + done > current(null) + stopFinish': false,  // 21949: event should not have been triggerd but WAS
 		'combos: play(null) + done > current(null) + done': false,  // 21950: event should not have been triggerd but WAS
-		'combos: play(null) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
-		'combos: play(null) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: play(null) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
-		'combos: play(null) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
-		'combos: play(null) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
-		'combos: play(null) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
-		'combos: play(null) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: play(null) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
-		'combos: play(null) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
-		'combos: play(null) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
+		// 'combos: play(null) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: play(null) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: play(null) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
+		// 'combos: play(null) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
+		// 'combos: play(null) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
+		// 'combos: play(null) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: play(null) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: play(null) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
+		// 'combos: play(null) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
+		// 'combos: play(null) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
 		'combos: play(null) + done > jumpWords(-3) + newWordFragment': false,  // 22121: frags expected ["Victorious,"], but got ["\n"]
 		'combos: play(null) + done > jumpWords(-3) + progress': false,  // 22122: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: play(null) + done > jumpWords(-3) + stopBegin': false,  // 22123: event should have been triggerd but was NOT
@@ -2217,16 +2217,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: togglePlayPause(null) + stopBegin > current(null) + stopBegin': false,  // 20148: event should not have been triggerd but WAS
 		'combos: togglePlayPause(null) + stopBegin > current(null) + stopFinish': false,  // 20149: event should not have been triggerd but WAS
 		'combos: togglePlayPause(null) + stopBegin > current(null) + done': false,  // 20150: event should not have been triggerd but WAS
-		'combos: togglePlayPause(null) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
-		'combos: togglePlayPause(null) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: togglePlayPause(null) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
-		'combos: togglePlayPause(null) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: togglePlayPause(null) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: togglePlayPause(null) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: togglePlayPause(null) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: togglePlayPause(null) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: togglePlayPause(null) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
 		'combos: togglePlayPause(null) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: frags expected ["Victorious,"], but got ["\n"]
 		'combos: togglePlayPause(null) + stopBegin > jumpWords(-3) + progress': false,  // 20322: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: togglePlayPause(null) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: event should have been triggerd but was NOT
@@ -2314,16 +2314,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: togglePlayPause(null) + stopFinish > current(null) + stopBegin': false,  // 21048: event should not have been triggerd but WAS
 		'combos: togglePlayPause(null) + stopFinish > current(null) + stopFinish': false,  // 21049: event should not have been triggerd but WAS
 		'combos: togglePlayPause(null) + stopFinish > current(null) + done': false,  // 21050: event should not have been triggerd but WAS
-		'combos: togglePlayPause(null) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
-		'combos: togglePlayPause(null) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: togglePlayPause(null) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
-		'combos: togglePlayPause(null) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: togglePlayPause(null) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: togglePlayPause(null) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: togglePlayPause(null) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: togglePlayPause(null) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: togglePlayPause(null) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
 		'combos: togglePlayPause(null) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: frags expected ["Victorious,"], but got ["\n"]
 		'combos: togglePlayPause(null) + stopFinish > jumpWords(-3) + progress': false,  // 21222: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: togglePlayPause(null) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: event should have been triggerd but was NOT
@@ -2411,16 +2411,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: togglePlayPause(null) + done > current(null) + stopBegin': false,  // 21948: event should not have been triggerd but WAS
 		'combos: togglePlayPause(null) + done > current(null) + stopFinish': false,  // 21949: event should not have been triggerd but WAS
 		'combos: togglePlayPause(null) + done > current(null) + done': false,  // 21950: event should not have been triggerd but WAS
-		'combos: togglePlayPause(null) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
-		'combos: togglePlayPause(null) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: togglePlayPause(null) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
-		'combos: togglePlayPause(null) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: togglePlayPause(null) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
-		'combos: togglePlayPause(null) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: togglePlayPause(null) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: togglePlayPause(null) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: togglePlayPause(null) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: togglePlayPause(null) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
+		// 'combos: togglePlayPause(null) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
 		'combos: togglePlayPause(null) + done > jumpWords(-3) + newWordFragment': false,  // 22121: frags expected ["Victorious,"], but got ["\n"]
 		'combos: togglePlayPause(null) + done > jumpWords(-3) + progress': false,  // 22122: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: togglePlayPause(null) + done > jumpWords(-3) + stopBegin': false,  // 22123: event should have been triggerd but was NOT
@@ -2770,16 +2770,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: fastForward(null) + stopBegin > current(null) + stopBegin': false,  // 20148: event should not have been triggerd but WAS
 		'combos: fastForward(null) + stopBegin > current(null) + stopFinish': false,  // 20149: event should not have been triggerd but WAS
 		'combos: fastForward(null) + stopBegin > current(null) + done': false,  // 20150: event should not have been triggerd but WAS
-		'combos: fastForward(null) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
-		'combos: fastForward(null) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: fastForward(null) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
-		'combos: fastForward(null) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
-		'combos: fastForward(null) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
-		'combos: fastForward(null) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
-		'combos: fastForward(null) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: fastForward(null) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
-		'combos: fastForward(null) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
-		'combos: fastForward(null) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: fastForward(null) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: fastForward(null) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: fastForward(null) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: fastForward(null) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
 		'combos: fastForward(null) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: frags expected ["Victorious,"], but got ["\n"]
 		'combos: fastForward(null) + stopBegin > jumpWords(-3) + progress': false,  // 20322: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: fastForward(null) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: event should have been triggerd but was NOT
@@ -2867,16 +2867,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: fastForward(null) + stopFinish > current(null) + stopBegin': false,  // 21048: event should not have been triggerd but WAS
 		'combos: fastForward(null) + stopFinish > current(null) + stopFinish': false,  // 21049: event should not have been triggerd but WAS
 		'combos: fastForward(null) + stopFinish > current(null) + done': false,  // 21050: event should not have been triggerd but WAS
-		'combos: fastForward(null) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
-		'combos: fastForward(null) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: fastForward(null) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
-		'combos: fastForward(null) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
-		'combos: fastForward(null) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
-		'combos: fastForward(null) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
-		'combos: fastForward(null) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: fastForward(null) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
-		'combos: fastForward(null) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
-		'combos: fastForward(null) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: fastForward(null) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: fastForward(null) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: fastForward(null) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: fastForward(null) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
 		'combos: fastForward(null) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: frags expected ["Victorious,"], but got ["\n"]
 		'combos: fastForward(null) + stopFinish > jumpWords(-3) + progress': false,  // 21222: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: fastForward(null) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: event should have been triggerd but was NOT
@@ -2964,16 +2964,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: fastForward(null) + done > current(null) + stopBegin': false,  // 21948: event should not have been triggerd but WAS
 		'combos: fastForward(null) + done > current(null) + stopFinish': false,  // 21949: event should not have been triggerd but WAS
 		'combos: fastForward(null) + done > current(null) + done': false,  // 21950: event should not have been triggerd but WAS
-		'combos: fastForward(null) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
-		'combos: fastForward(null) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: fastForward(null) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
-		'combos: fastForward(null) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
-		'combos: fastForward(null) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
-		'combos: fastForward(null) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
-		'combos: fastForward(null) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: fastForward(null) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
-		'combos: fastForward(null) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
-		'combos: fastForward(null) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: fastForward(null) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: fastForward(null) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: fastForward(null) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: fastForward(null) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
+		// 'combos: fastForward(null) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
 		'combos: fastForward(null) + done > jumpWords(-3) + newWordFragment': false,  // 22121: frags expected ["Victorious,"], but got ["\n"]
 		'combos: fastForward(null) + done > jumpWords(-3) + progress': false,  // 22122: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: fastForward(null) + done > jumpWords(-3) + stopBegin': false,  // 22123: event should have been triggerd but was NOT
@@ -3653,16 +3653,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(6) + onceBegin > once([0,0,2]) + progress': false,  // 9322: 'progress' expected [0.16666666666666666], but got [0.6666666666666666]
 		'combos: jumpTo(6) + onceBegin > current(null) + newWordFragment': false,  // 9346: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpTo(6) + onceBegin > current(null) + progress': false,  // 9347: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpTo(6) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpTo(6) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpTo(6) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["I"]
-		'combos: jumpTo(6) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.5]
-		'combos: jumpTo(6) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpTo(6) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpTo(6) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["I"]
+		// 'combos: jumpTo(6) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.5]
+		// 'combos: jumpTo(6) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
 		'combos: jumpTo(6) + onceBegin > jumpWords(-3) + newWordFragment': false,  // 9521: frags expected ["Victorious,"], but got ["flag."]
 		'combos: jumpTo(6) + onceBegin > jumpWords(-3) + progress': false,  // 9522: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
 		'combos: jumpTo(6) + onceBegin > jumpWords(-3) + stopBegin': false,  // 9523: event should have been triggerd but was NOT
@@ -3733,16 +3733,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(6) + onceFinish > once([0,0,2]) + progress': false,  // 10222: 'progress' expected [0.16666666666666666], but got [0.6666666666666666]
 		'combos: jumpTo(6) + onceFinish > current(null) + newWordFragment': false,  // 10246: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpTo(6) + onceFinish > current(null) + progress': false,  // 10247: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpTo(6) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpTo(6) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpTo(6) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["I"]
-		'combos: jumpTo(6) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.5]
-		'combos: jumpTo(6) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpTo(6) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpTo(6) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["I"]
+		// 'combos: jumpTo(6) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.5]
+		// 'combos: jumpTo(6) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
 		'combos: jumpTo(6) + onceFinish > jumpWords(-3) + newWordFragment': false,  // 10421: frags expected ["Victorious,"], but got ["flag."]
 		'combos: jumpTo(6) + onceFinish > jumpWords(-3) + progress': false,  // 10422: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
 		'combos: jumpTo(6) + onceFinish > jumpWords(-3) + stopBegin': false,  // 10423: event should have been triggerd but was NOT
@@ -3813,16 +3813,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(6) + loopBegin > once([0,0,2]) + progress': false,  // 16522: 'progress' expected [0.16666666666666666], but got [0.6666666666666666]
 		'combos: jumpTo(6) + loopBegin > current(null) + newWordFragment': false,  // 16546: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpTo(6) + loopBegin > current(null) + progress': false,  // 16547: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpTo(6) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpTo(6) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpTo(6) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["I"]
-		'combos: jumpTo(6) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.5]
-		'combos: jumpTo(6) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpTo(6) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpTo(6) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["I"]
+		// 'combos: jumpTo(6) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.5]
+		// 'combos: jumpTo(6) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
 		'combos: jumpTo(6) + loopBegin > jumpWords(-3) + newWordFragment': false,  // 16721: frags expected ["Victorious,"], but got ["flag."]
 		'combos: jumpTo(6) + loopBegin > jumpWords(-3) + progress': false,  // 16722: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
 		'combos: jumpTo(6) + loopBegin > jumpWords(-3) + stopBegin': false,  // 16723: event should have been triggerd but was NOT
@@ -3893,16 +3893,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(6) + loopFinish > once([0,0,2]) + progress': false,  // 17422: 'progress' expected [0.16666666666666666], but got [0.6666666666666666]
 		'combos: jumpTo(6) + loopFinish > current(null) + newWordFragment': false,  // 17446: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpTo(6) + loopFinish > current(null) + progress': false,  // 17447: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpTo(6) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpTo(6) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpTo(6) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["I"]
-		'combos: jumpTo(6) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.5]
-		'combos: jumpTo(6) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpTo(6) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpTo(6) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["I"]
+		// 'combos: jumpTo(6) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.5]
+		// 'combos: jumpTo(6) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
 		'combos: jumpTo(6) + loopFinish > jumpWords(-3) + newWordFragment': false,  // 17621: frags expected ["Victorious,"], but got ["flag."]
 		'combos: jumpTo(6) + loopFinish > jumpWords(-3) + progress': false,  // 17622: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
 		'combos: jumpTo(6) + loopFinish > jumpWords(-3) + stopBegin': false,  // 17623: event should have been triggerd but was NOT
@@ -3973,16 +3973,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(6) + newWordFragment > once([0,0,2]) + progress': false,  // 18322: 'progress' expected [0.16666666666666666], but got [0.6666666666666666]
 		'combos: jumpTo(6) + newWordFragment > current(null) + newWordFragment': false,  // 18346: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpTo(6) + newWordFragment > current(null) + progress': false,  // 18347: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpTo(6) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpTo(6) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpTo(6) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["I"]
-		'combos: jumpTo(6) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.5]
-		'combos: jumpTo(6) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpTo(6) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpTo(6) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["I"]
+		// 'combos: jumpTo(6) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.5]
+		// 'combos: jumpTo(6) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
 		'combos: jumpTo(6) + newWordFragment > jumpWords(-3) + newWordFragment': false,  // 18521: frags expected ["Victorious,"], but got ["flag."]
 		'combos: jumpTo(6) + newWordFragment > jumpWords(-3) + progress': false,  // 18522: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
 		'combos: jumpTo(6) + newWordFragment > jumpWords(-3) + stopBegin': false,  // 18523: event should have been triggerd but was NOT
@@ -4053,16 +4053,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(6) + progress > once([0,0,2]) + progress': false,  // 19222: 'progress' expected [0.16666666666666666], but got [0.6666666666666666]
 		'combos: jumpTo(6) + progress > current(null) + newWordFragment': false,  // 19246: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpTo(6) + progress > current(null) + progress': false,  // 19247: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpTo(6) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpTo(6) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpTo(6) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["I"]
-		'combos: jumpTo(6) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.5]
-		'combos: jumpTo(6) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
-		'combos: jumpTo(6) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpTo(6) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpTo(6) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["I"]
+		// 'combos: jumpTo(6) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.5]
+		// 'combos: jumpTo(6) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
+		// 'combos: jumpTo(6) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
 		'combos: jumpTo(6) + progress > jumpWords(-3) + newWordFragment': false,  // 19421: frags expected ["Victorious,"], but got ["flag."]
 		'combos: jumpTo(6) + progress > jumpWords(-3) + progress': false,  // 19422: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
 		'combos: jumpTo(6) + progress > jumpWords(-3) + stopBegin': false,  // 19423: event should have been triggerd but was NOT
@@ -4141,16 +4141,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(11) + onceBegin > current(null) + stopBegin': false,  // 9348: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + onceBegin > current(null) + stopFinish': false,  // 9349: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + onceBegin > current(null) + done': false,  // 9350: event should not have been triggerd but WAS
-		'combos: jumpTo(11) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(11) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(11) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(11) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(11) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(11) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(11) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(11) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(11) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
 		'combos: jumpTo(11) + onceBegin > jumpWords(-3) + newWordFragment': false,  // 9521: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(11) + onceBegin > jumpWords(-3) + progress': false,  // 9522: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(11) + onceBegin > jumpWords(-3) + stopBegin': false,  // 9523: event should have been triggerd but was NOT
@@ -4238,16 +4238,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(11) + onceFinish > current(null) + stopBegin': false,  // 10248: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + onceFinish > current(null) + stopFinish': false,  // 10249: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + onceFinish > current(null) + done': false,  // 10250: event should not have been triggerd but WAS
-		'combos: jumpTo(11) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(11) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(11) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(11) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(11) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(11) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(11) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(11) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(11) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
 		'combos: jumpTo(11) + onceFinish > jumpWords(-3) + newWordFragment': false,  // 10421: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(11) + onceFinish > jumpWords(-3) + progress': false,  // 10422: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(11) + onceFinish > jumpWords(-3) + stopBegin': false,  // 10423: event should have been triggerd but was NOT
@@ -4335,16 +4335,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(11) + loopBegin > current(null) + stopBegin': false,  // 16548: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + loopBegin > current(null) + stopFinish': false,  // 16549: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + loopBegin > current(null) + done': false,  // 16550: event should not have been triggerd but WAS
-		'combos: jumpTo(11) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(11) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(11) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(11) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(11) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(11) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(11) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(11) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(11) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
 		'combos: jumpTo(11) + loopBegin > jumpWords(-3) + newWordFragment': false,  // 16721: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(11) + loopBegin > jumpWords(-3) + progress': false,  // 16722: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(11) + loopBegin > jumpWords(-3) + stopBegin': false,  // 16723: event should have been triggerd but was NOT
@@ -4432,16 +4432,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(11) + loopFinish > current(null) + stopBegin': false,  // 17448: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + loopFinish > current(null) + stopFinish': false,  // 17449: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + loopFinish > current(null) + done': false,  // 17450: event should not have been triggerd but WAS
-		'combos: jumpTo(11) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(11) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(11) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(11) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(11) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(11) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(11) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(11) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(11) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
 		'combos: jumpTo(11) + loopFinish > jumpWords(-3) + newWordFragment': false,  // 17621: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(11) + loopFinish > jumpWords(-3) + progress': false,  // 17622: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(11) + loopFinish > jumpWords(-3) + stopBegin': false,  // 17623: event should have been triggerd but was NOT
@@ -4529,16 +4529,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(11) + newWordFragment > current(null) + stopBegin': false,  // 18348: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + newWordFragment > current(null) + stopFinish': false,  // 18349: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + newWordFragment > current(null) + done': false,  // 18350: event should not have been triggerd but WAS
-		'combos: jumpTo(11) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(11) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(11) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(11) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(11) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(11) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(11) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(11) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(11) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
 		'combos: jumpTo(11) + newWordFragment > jumpWords(-3) + newWordFragment': false,  // 18521: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(11) + newWordFragment > jumpWords(-3) + progress': false,  // 18522: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(11) + newWordFragment > jumpWords(-3) + stopBegin': false,  // 18523: event should have been triggerd but was NOT
@@ -4626,16 +4626,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(11) + progress > current(null) + stopBegin': false,  // 19248: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + progress > current(null) + stopFinish': false,  // 19249: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + progress > current(null) + done': false,  // 19250: event should not have been triggerd but WAS
-		'combos: jumpTo(11) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(11) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(11) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(11) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(11) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(11) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(11) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(11) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(11) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
 		'combos: jumpTo(11) + progress > jumpWords(-3) + newWordFragment': false,  // 19421: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(11) + progress > jumpWords(-3) + progress': false,  // 19422: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(11) + progress > jumpWords(-3) + stopBegin': false,  // 19423: event should have been triggerd but was NOT
@@ -4723,16 +4723,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(11) + stopBegin > current(null) + stopBegin': false,  // 20148: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + stopBegin > current(null) + stopFinish': false,  // 20149: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + stopBegin > current(null) + done': false,  // 20150: event should not have been triggerd but WAS
-		'combos: jumpTo(11) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(11) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(11) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(11) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(11) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(11) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(11) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(11) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(11) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
 		'combos: jumpTo(11) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(11) + stopBegin > jumpWords(-3) + progress': false,  // 20322: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(11) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: event should have been triggerd but was NOT
@@ -4820,16 +4820,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(11) + stopFinish > current(null) + stopBegin': false,  // 21048: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + stopFinish > current(null) + stopFinish': false,  // 21049: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + stopFinish > current(null) + done': false,  // 21050: event should not have been triggerd but WAS
-		'combos: jumpTo(11) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(11) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(11) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(11) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(11) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(11) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(11) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(11) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(11) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
 		'combos: jumpTo(11) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(11) + stopFinish > jumpWords(-3) + progress': false,  // 21222: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(11) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: event should have been triggerd but was NOT
@@ -4917,16 +4917,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(11) + done > current(null) + stopBegin': false,  // 21948: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + done > current(null) + stopFinish': false,  // 21949: event should not have been triggerd but WAS
 		'combos: jumpTo(11) + done > current(null) + done': false,  // 21950: event should not have been triggerd but WAS
-		'combos: jumpTo(11) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(11) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(11) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(11) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(11) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
-		'combos: jumpTo(11) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(11) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(11) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(11) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(11) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
+		// 'combos: jumpTo(11) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
 		'combos: jumpTo(11) + done > jumpWords(-3) + newWordFragment': false,  // 22121: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(11) + done > jumpWords(-3) + progress': false,  // 22122: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(11) + done > jumpWords(-3) + stopBegin': false,  // 22123: event should have been triggerd but was NOT
@@ -5023,16 +5023,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(100) + onceBegin > current(null) + stopBegin': false,  // 9348: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + onceBegin > current(null) + stopFinish': false,  // 9349: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + onceBegin > current(null) + done': false,  // 9350: event should not have been triggerd but WAS
-		'combos: jumpTo(100) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(100) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(100) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(100) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(100) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(100) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(100) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(100) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(100) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
 		'combos: jumpTo(100) + onceBegin > jumpWords(-3) + newWordFragment': false,  // 9521: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(100) + onceBegin > jumpWords(-3) + progress': false,  // 9522: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(100) + onceBegin > jumpWords(-3) + stopBegin': false,  // 9523: event should have been triggerd but was NOT
@@ -5120,16 +5120,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(100) + onceFinish > current(null) + stopBegin': false,  // 10248: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + onceFinish > current(null) + stopFinish': false,  // 10249: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + onceFinish > current(null) + done': false,  // 10250: event should not have been triggerd but WAS
-		'combos: jumpTo(100) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(100) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(100) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(100) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(100) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(100) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(100) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(100) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(100) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
 		'combos: jumpTo(100) + onceFinish > jumpWords(-3) + newWordFragment': false,  // 10421: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(100) + onceFinish > jumpWords(-3) + progress': false,  // 10422: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(100) + onceFinish > jumpWords(-3) + stopBegin': false,  // 10423: event should have been triggerd but was NOT
@@ -5217,16 +5217,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(100) + loopBegin > current(null) + stopBegin': false,  // 16548: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + loopBegin > current(null) + stopFinish': false,  // 16549: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + loopBegin > current(null) + done': false,  // 16550: event should not have been triggerd but WAS
-		'combos: jumpTo(100) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(100) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(100) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(100) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(100) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(100) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(100) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(100) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(100) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
 		'combos: jumpTo(100) + loopBegin > jumpWords(-3) + newWordFragment': false,  // 16721: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(100) + loopBegin > jumpWords(-3) + progress': false,  // 16722: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(100) + loopBegin > jumpWords(-3) + stopBegin': false,  // 16723: event should have been triggerd but was NOT
@@ -5314,16 +5314,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(100) + loopFinish > current(null) + stopBegin': false,  // 17448: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + loopFinish > current(null) + stopFinish': false,  // 17449: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + loopFinish > current(null) + done': false,  // 17450: event should not have been triggerd but WAS
-		'combos: jumpTo(100) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(100) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(100) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(100) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(100) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(100) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(100) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(100) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(100) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
 		'combos: jumpTo(100) + loopFinish > jumpWords(-3) + newWordFragment': false,  // 17621: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(100) + loopFinish > jumpWords(-3) + progress': false,  // 17622: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(100) + loopFinish > jumpWords(-3) + stopBegin': false,  // 17623: event should have been triggerd but was NOT
@@ -5411,16 +5411,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(100) + newWordFragment > current(null) + stopBegin': false,  // 18348: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + newWordFragment > current(null) + stopFinish': false,  // 18349: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + newWordFragment > current(null) + done': false,  // 18350: event should not have been triggerd but WAS
-		'combos: jumpTo(100) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(100) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(100) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(100) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(100) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(100) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(100) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(100) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(100) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
 		'combos: jumpTo(100) + newWordFragment > jumpWords(-3) + newWordFragment': false,  // 18521: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(100) + newWordFragment > jumpWords(-3) + progress': false,  // 18522: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(100) + newWordFragment > jumpWords(-3) + stopBegin': false,  // 18523: event should have been triggerd but was NOT
@@ -5508,16 +5508,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(100) + progress > current(null) + stopBegin': false,  // 19248: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + progress > current(null) + stopFinish': false,  // 19249: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + progress > current(null) + done': false,  // 19250: event should not have been triggerd but WAS
-		'combos: jumpTo(100) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(100) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(100) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(100) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(100) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(100) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(100) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(100) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(100) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
 		'combos: jumpTo(100) + progress > jumpWords(-3) + newWordFragment': false,  // 19421: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(100) + progress > jumpWords(-3) + progress': false,  // 19422: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(100) + progress > jumpWords(-3) + stopBegin': false,  // 19423: event should have been triggerd but was NOT
@@ -5605,16 +5605,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(100) + stopBegin > current(null) + stopBegin': false,  // 20148: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + stopBegin > current(null) + stopFinish': false,  // 20149: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + stopBegin > current(null) + done': false,  // 20150: event should not have been triggerd but WAS
-		'combos: jumpTo(100) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(100) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(100) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(100) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(100) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(100) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(100) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(100) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(100) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
 		'combos: jumpTo(100) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(100) + stopBegin > jumpWords(-3) + progress': false,  // 20322: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(100) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: event should have been triggerd but was NOT
@@ -5702,16 +5702,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(100) + stopFinish > current(null) + stopBegin': false,  // 21048: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + stopFinish > current(null) + stopFinish': false,  // 21049: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + stopFinish > current(null) + done': false,  // 21050: event should not have been triggerd but WAS
-		'combos: jumpTo(100) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(100) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(100) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(100) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(100) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(100) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(100) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(100) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(100) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
 		'combos: jumpTo(100) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(100) + stopFinish > jumpWords(-3) + progress': false,  // 21222: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(100) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: event should have been triggerd but was NOT
@@ -5799,16 +5799,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpTo(100) + done > current(null) + stopBegin': false,  // 21948: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + done > current(null) + stopFinish': false,  // 21949: event should not have been triggerd but WAS
 		'combos: jumpTo(100) + done > current(null) + done': false,  // 21950: event should not have been triggerd but WAS
-		'combos: jumpTo(100) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpTo(100) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpTo(100) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpTo(100) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpTo(100) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
-		'combos: jumpTo(100) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpTo(100) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpTo(100) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpTo(100) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpTo(100) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
+		// 'combos: jumpTo(100) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
 		'combos: jumpTo(100) + done > jumpWords(-3) + newWordFragment': false,  // 22121: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpTo(100) + done > jumpWords(-3) + progress': false,  // 22122: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpTo(100) + done > jumpWords(-3) + stopBegin': false,  // 22123: event should have been triggerd but was NOT
@@ -6141,16 +6141,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(4) + onceBegin > once([0,0,2]) + progress': false,  // 9322: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpWords(4) + onceBegin > current(null) + newWordFragment': false,  // 9346: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpWords(4) + onceBegin > current(null) + progress': false,  // 9347: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpWords(4) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpWords(4) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpWords(4) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpWords(4) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpWords(4) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpWords(4) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpWords(4) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpWords(4) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpWords(4) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
 		'combos: jumpWords(4) + onceBegin > jumpWords(-3) + newWordFragment': false,  // 9521: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpWords(4) + onceBegin > jumpWords(-3) + progress': false,  // 9522: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpWords(4) + onceBegin > jumpWords(-3) + stopBegin': false,  // 9523: event should have been triggerd but was NOT
@@ -6211,16 +6211,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(4) + onceFinish > once([0,0,2]) + progress': false,  // 10222: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpWords(4) + onceFinish > current(null) + newWordFragment': false,  // 10246: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpWords(4) + onceFinish > current(null) + progress': false,  // 10247: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpWords(4) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpWords(4) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpWords(4) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpWords(4) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpWords(4) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpWords(4) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpWords(4) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpWords(4) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpWords(4) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
 		'combos: jumpWords(4) + onceFinish > jumpWords(-3) + newWordFragment': false,  // 10421: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpWords(4) + onceFinish > jumpWords(-3) + progress': false,  // 10422: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpWords(4) + onceFinish > jumpWords(-3) + stopBegin': false,  // 10423: event should have been triggerd but was NOT
@@ -6281,16 +6281,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(4) + loopBegin > once([0,0,2]) + progress': false,  // 16522: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpWords(4) + loopBegin > current(null) + newWordFragment': false,  // 16546: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpWords(4) + loopBegin > current(null) + progress': false,  // 16547: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpWords(4) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpWords(4) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpWords(4) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpWords(4) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpWords(4) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpWords(4) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpWords(4) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpWords(4) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpWords(4) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
 		'combos: jumpWords(4) + loopBegin > jumpWords(-3) + newWordFragment': false,  // 16721: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpWords(4) + loopBegin > jumpWords(-3) + progress': false,  // 16722: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpWords(4) + loopBegin > jumpWords(-3) + stopBegin': false,  // 16723: event should have been triggerd but was NOT
@@ -6351,16 +6351,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(4) + loopFinish > once([0,0,2]) + progress': false,  // 17422: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpWords(4) + loopFinish > current(null) + newWordFragment': false,  // 17446: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpWords(4) + loopFinish > current(null) + progress': false,  // 17447: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpWords(4) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpWords(4) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpWords(4) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpWords(4) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpWords(4) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpWords(4) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpWords(4) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpWords(4) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpWords(4) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
 		'combos: jumpWords(4) + loopFinish > jumpWords(-3) + newWordFragment': false,  // 17621: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpWords(4) + loopFinish > jumpWords(-3) + progress': false,  // 17622: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpWords(4) + loopFinish > jumpWords(-3) + stopBegin': false,  // 17623: event should have been triggerd but was NOT
@@ -6421,16 +6421,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(4) + newWordFragment > once([0,0,2]) + progress': false,  // 18322: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpWords(4) + newWordFragment > current(null) + newWordFragment': false,  // 18346: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpWords(4) + newWordFragment > current(null) + progress': false,  // 18347: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpWords(4) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpWords(4) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpWords(4) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpWords(4) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpWords(4) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpWords(4) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpWords(4) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpWords(4) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpWords(4) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
 		'combos: jumpWords(4) + newWordFragment > jumpWords(-3) + newWordFragment': false,  // 18521: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpWords(4) + newWordFragment > jumpWords(-3) + progress': false,  // 18522: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpWords(4) + newWordFragment > jumpWords(-3) + stopBegin': false,  // 18523: event should have been triggerd but was NOT
@@ -6491,16 +6491,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(4) + progress > once([0,0,2]) + progress': false,  // 19222: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpWords(4) + progress > current(null) + newWordFragment': false,  // 19246: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpWords(4) + progress > current(null) + progress': false,  // 19247: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpWords(4) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpWords(4) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpWords(4) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpWords(4) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpWords(4) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
-		'combos: jumpWords(4) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpWords(4) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpWords(4) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpWords(4) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpWords(4) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
+		// 'combos: jumpWords(4) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
 		'combos: jumpWords(4) + progress > jumpWords(-3) + newWordFragment': false,  // 19421: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpWords(4) + progress > jumpWords(-3) + progress': false,  // 19422: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpWords(4) + progress > jumpWords(-3) + stopBegin': false,  // 19423: event should have been triggerd but was NOT
@@ -6569,16 +6569,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(11) + onceBegin > current(null) + stopBegin': false,  // 9348: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + onceBegin > current(null) + stopFinish': false,  // 9349: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + onceBegin > current(null) + done': false,  // 9350: event should not have been triggerd but WAS
-		'combos: jumpWords(11) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(11) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(11) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(11) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(11) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(11) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(11) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(11) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(11) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
 		'combos: jumpWords(11) + onceBegin > jumpWords(-3) + newWordFragment': false,  // 9521: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(11) + onceBegin > jumpWords(-3) + progress': false,  // 9522: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(11) + onceBegin > jumpWords(-3) + stopBegin': false,  // 9523: event should have been triggerd but was NOT
@@ -6666,16 +6666,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(11) + onceFinish > current(null) + stopBegin': false,  // 10248: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + onceFinish > current(null) + stopFinish': false,  // 10249: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + onceFinish > current(null) + done': false,  // 10250: event should not have been triggerd but WAS
-		'combos: jumpWords(11) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(11) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(11) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(11) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(11) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(11) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(11) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(11) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(11) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
 		'combos: jumpWords(11) + onceFinish > jumpWords(-3) + newWordFragment': false,  // 10421: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(11) + onceFinish > jumpWords(-3) + progress': false,  // 10422: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(11) + onceFinish > jumpWords(-3) + stopBegin': false,  // 10423: event should have been triggerd but was NOT
@@ -6763,16 +6763,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(11) + loopBegin > current(null) + stopBegin': false,  // 16548: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + loopBegin > current(null) + stopFinish': false,  // 16549: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + loopBegin > current(null) + done': false,  // 16550: event should not have been triggerd but WAS
-		'combos: jumpWords(11) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(11) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(11) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(11) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(11) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(11) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(11) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(11) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(11) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
 		'combos: jumpWords(11) + loopBegin > jumpWords(-3) + newWordFragment': false,  // 16721: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(11) + loopBegin > jumpWords(-3) + progress': false,  // 16722: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(11) + loopBegin > jumpWords(-3) + stopBegin': false,  // 16723: event should have been triggerd but was NOT
@@ -6860,16 +6860,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(11) + loopFinish > current(null) + stopBegin': false,  // 17448: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + loopFinish > current(null) + stopFinish': false,  // 17449: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + loopFinish > current(null) + done': false,  // 17450: event should not have been triggerd but WAS
-		'combos: jumpWords(11) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(11) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(11) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(11) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(11) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(11) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(11) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(11) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(11) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
 		'combos: jumpWords(11) + loopFinish > jumpWords(-3) + newWordFragment': false,  // 17621: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(11) + loopFinish > jumpWords(-3) + progress': false,  // 17622: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(11) + loopFinish > jumpWords(-3) + stopBegin': false,  // 17623: event should have been triggerd but was NOT
@@ -6957,16 +6957,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(11) + newWordFragment > current(null) + stopBegin': false,  // 18348: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + newWordFragment > current(null) + stopFinish': false,  // 18349: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + newWordFragment > current(null) + done': false,  // 18350: event should not have been triggerd but WAS
-		'combos: jumpWords(11) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(11) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(11) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(11) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(11) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(11) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(11) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(11) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(11) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
 		'combos: jumpWords(11) + newWordFragment > jumpWords(-3) + newWordFragment': false,  // 18521: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(11) + newWordFragment > jumpWords(-3) + progress': false,  // 18522: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(11) + newWordFragment > jumpWords(-3) + stopBegin': false,  // 18523: event should have been triggerd but was NOT
@@ -7054,16 +7054,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(11) + progress > current(null) + stopBegin': false,  // 19248: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + progress > current(null) + stopFinish': false,  // 19249: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + progress > current(null) + done': false,  // 19250: event should not have been triggerd but WAS
-		'combos: jumpWords(11) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(11) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(11) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(11) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(11) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(11) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(11) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(11) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(11) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
 		'combos: jumpWords(11) + progress > jumpWords(-3) + newWordFragment': false,  // 19421: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(11) + progress > jumpWords(-3) + progress': false,  // 19422: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(11) + progress > jumpWords(-3) + stopBegin': false,  // 19423: event should have been triggerd but was NOT
@@ -7151,16 +7151,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(11) + stopBegin > current(null) + stopBegin': false,  // 20148: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + stopBegin > current(null) + stopFinish': false,  // 20149: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + stopBegin > current(null) + done': false,  // 20150: event should not have been triggerd but WAS
-		'combos: jumpWords(11) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(11) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(11) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(11) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(11) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(11) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(11) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(11) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(11) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
 		'combos: jumpWords(11) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(11) + stopBegin > jumpWords(-3) + progress': false,  // 20322: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(11) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: event should have been triggerd but was NOT
@@ -7248,16 +7248,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(11) + stopFinish > current(null) + stopBegin': false,  // 21048: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + stopFinish > current(null) + stopFinish': false,  // 21049: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + stopFinish > current(null) + done': false,  // 21050: event should not have been triggerd but WAS
-		'combos: jumpWords(11) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(11) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(11) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(11) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(11) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(11) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(11) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(11) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(11) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
 		'combos: jumpWords(11) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(11) + stopFinish > jumpWords(-3) + progress': false,  // 21222: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(11) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: event should have been triggerd but was NOT
@@ -7345,16 +7345,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(11) + done > current(null) + stopBegin': false,  // 21948: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + done > current(null) + stopFinish': false,  // 21949: event should not have been triggerd but WAS
 		'combos: jumpWords(11) + done > current(null) + done': false,  // 21950: event should not have been triggerd but WAS
-		'combos: jumpWords(11) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(11) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(11) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(11) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(11) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
-		'combos: jumpWords(11) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(11) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(11) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(11) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(11) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
+		// 'combos: jumpWords(11) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
 		'combos: jumpWords(11) + done > jumpWords(-3) + newWordFragment': false,  // 22121: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(11) + done > jumpWords(-3) + progress': false,  // 22122: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(11) + done > jumpWords(-3) + stopBegin': false,  // 22123: event should have been triggerd but was NOT
@@ -7451,16 +7451,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(100) + onceBegin > current(null) + stopBegin': false,  // 9348: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + onceBegin > current(null) + stopFinish': false,  // 9349: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + onceBegin > current(null) + done': false,  // 9350: event should not have been triggerd but WAS
-		'combos: jumpWords(100) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(100) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(100) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(100) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(100) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(100) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(100) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(100) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(100) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
 		'combos: jumpWords(100) + onceBegin > jumpWords(-3) + newWordFragment': false,  // 9521: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(100) + onceBegin > jumpWords(-3) + progress': false,  // 9522: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(100) + onceBegin > jumpWords(-3) + stopBegin': false,  // 9523: event should have been triggerd but was NOT
@@ -7548,16 +7548,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(100) + onceFinish > current(null) + stopBegin': false,  // 10248: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + onceFinish > current(null) + stopFinish': false,  // 10249: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + onceFinish > current(null) + done': false,  // 10250: event should not have been triggerd but WAS
-		'combos: jumpWords(100) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(100) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(100) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(100) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(100) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(100) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(100) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(100) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(100) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
 		'combos: jumpWords(100) + onceFinish > jumpWords(-3) + newWordFragment': false,  // 10421: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(100) + onceFinish > jumpWords(-3) + progress': false,  // 10422: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(100) + onceFinish > jumpWords(-3) + stopBegin': false,  // 10423: event should have been triggerd but was NOT
@@ -7645,16 +7645,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(100) + loopBegin > current(null) + stopBegin': false,  // 16548: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + loopBegin > current(null) + stopFinish': false,  // 16549: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + loopBegin > current(null) + done': false,  // 16550: event should not have been triggerd but WAS
-		'combos: jumpWords(100) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(100) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(100) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(100) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(100) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(100) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(100) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(100) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(100) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
 		'combos: jumpWords(100) + loopBegin > jumpWords(-3) + newWordFragment': false,  // 16721: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(100) + loopBegin > jumpWords(-3) + progress': false,  // 16722: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(100) + loopBegin > jumpWords(-3) + stopBegin': false,  // 16723: event should have been triggerd but was NOT
@@ -7742,16 +7742,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(100) + loopFinish > current(null) + stopBegin': false,  // 17448: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + loopFinish > current(null) + stopFinish': false,  // 17449: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + loopFinish > current(null) + done': false,  // 17450: event should not have been triggerd but WAS
-		'combos: jumpWords(100) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(100) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(100) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(100) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(100) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(100) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(100) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(100) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(100) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
 		'combos: jumpWords(100) + loopFinish > jumpWords(-3) + newWordFragment': false,  // 17621: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(100) + loopFinish > jumpWords(-3) + progress': false,  // 17622: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(100) + loopFinish > jumpWords(-3) + stopBegin': false,  // 17623: event should have been triggerd but was NOT
@@ -7839,16 +7839,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(100) + newWordFragment > current(null) + stopBegin': false,  // 18348: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + newWordFragment > current(null) + stopFinish': false,  // 18349: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + newWordFragment > current(null) + done': false,  // 18350: event should not have been triggerd but WAS
-		'combos: jumpWords(100) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(100) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(100) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(100) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(100) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(100) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(100) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(100) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(100) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
 		'combos: jumpWords(100) + newWordFragment > jumpWords(-3) + newWordFragment': false,  // 18521: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(100) + newWordFragment > jumpWords(-3) + progress': false,  // 18522: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(100) + newWordFragment > jumpWords(-3) + stopBegin': false,  // 18523: event should have been triggerd but was NOT
@@ -7936,16 +7936,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(100) + progress > current(null) + stopBegin': false,  // 19248: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + progress > current(null) + stopFinish': false,  // 19249: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + progress > current(null) + done': false,  // 19250: event should not have been triggerd but WAS
-		'combos: jumpWords(100) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(100) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(100) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(100) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(100) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(100) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(100) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(100) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(100) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
 		'combos: jumpWords(100) + progress > jumpWords(-3) + newWordFragment': false,  // 19421: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(100) + progress > jumpWords(-3) + progress': false,  // 19422: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(100) + progress > jumpWords(-3) + stopBegin': false,  // 19423: event should have been triggerd but was NOT
@@ -8033,16 +8033,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(100) + stopBegin > current(null) + stopBegin': false,  // 20148: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + stopBegin > current(null) + stopFinish': false,  // 20149: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + stopBegin > current(null) + done': false,  // 20150: event should not have been triggerd but WAS
-		'combos: jumpWords(100) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(100) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(100) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(100) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(100) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(100) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(100) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(100) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(100) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
 		'combos: jumpWords(100) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(100) + stopBegin > jumpWords(-3) + progress': false,  // 20322: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(100) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: event should have been triggerd but was NOT
@@ -8130,16 +8130,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(100) + stopFinish > current(null) + stopBegin': false,  // 21048: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + stopFinish > current(null) + stopFinish': false,  // 21049: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + stopFinish > current(null) + done': false,  // 21050: event should not have been triggerd but WAS
-		'combos: jumpWords(100) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(100) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(100) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(100) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(100) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(100) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(100) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(100) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(100) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
 		'combos: jumpWords(100) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(100) + stopFinish > jumpWords(-3) + progress': false,  // 21222: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(100) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: event should have been triggerd but was NOT
@@ -8227,16 +8227,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpWords(100) + done > current(null) + stopBegin': false,  // 21948: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + done > current(null) + stopFinish': false,  // 21949: event should not have been triggerd but WAS
 		'combos: jumpWords(100) + done > current(null) + done': false,  // 21950: event should not have been triggerd but WAS
-		'combos: jumpWords(100) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpWords(100) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpWords(100) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpWords(100) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpWords(100) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
-		'combos: jumpWords(100) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpWords(100) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpWords(100) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpWords(100) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpWords(100) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
+		// 'combos: jumpWords(100) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
 		'combos: jumpWords(100) + done > jumpWords(-3) + newWordFragment': false,  // 22121: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpWords(100) + done > jumpWords(-3) + progress': false,  // 22122: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpWords(100) + done > jumpWords(-3) + stopBegin': false,  // 22123: event should have been triggerd but was NOT
@@ -8569,16 +8569,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(1) + onceBegin > once([0,0,2]) + progress': false,  // 9322: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpSentences(1) + onceBegin > current(null) + newWordFragment': false,  // 9346: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpSentences(1) + onceBegin > current(null) + progress': false,  // 9347: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpSentences(1) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpSentences(1) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpSentences(1) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpSentences(1) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpSentences(1) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpSentences(1) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpSentences(1) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpSentences(1) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpSentences(1) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
 		'combos: jumpSentences(1) + onceBegin > jumpWords(-3) + newWordFragment': false,  // 9521: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpSentences(1) + onceBegin > jumpWords(-3) + progress': false,  // 9522: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpSentences(1) + onceBegin > jumpWords(-3) + stopBegin': false,  // 9523: event should have been triggerd but was NOT
@@ -8639,16 +8639,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(1) + onceFinish > once([0,0,2]) + progress': false,  // 10222: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpSentences(1) + onceFinish > current(null) + newWordFragment': false,  // 10246: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpSentences(1) + onceFinish > current(null) + progress': false,  // 10247: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpSentences(1) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpSentences(1) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpSentences(1) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpSentences(1) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpSentences(1) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpSentences(1) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpSentences(1) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpSentences(1) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpSentences(1) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
 		'combos: jumpSentences(1) + onceFinish > jumpWords(-3) + newWordFragment': false,  // 10421: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpSentences(1) + onceFinish > jumpWords(-3) + progress': false,  // 10422: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpSentences(1) + onceFinish > jumpWords(-3) + stopBegin': false,  // 10423: event should have been triggerd but was NOT
@@ -8709,16 +8709,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(1) + loopBegin > once([0,0,2]) + progress': false,  // 16522: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpSentences(1) + loopBegin > current(null) + newWordFragment': false,  // 16546: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpSentences(1) + loopBegin > current(null) + progress': false,  // 16547: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpSentences(1) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpSentences(1) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpSentences(1) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpSentences(1) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpSentences(1) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpSentences(1) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpSentences(1) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpSentences(1) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpSentences(1) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
 		'combos: jumpSentences(1) + loopBegin > jumpWords(-3) + newWordFragment': false,  // 16721: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpSentences(1) + loopBegin > jumpWords(-3) + progress': false,  // 16722: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpSentences(1) + loopBegin > jumpWords(-3) + stopBegin': false,  // 16723: event should have been triggerd but was NOT
@@ -8779,16 +8779,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(1) + loopFinish > once([0,0,2]) + progress': false,  // 17422: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpSentences(1) + loopFinish > current(null) + newWordFragment': false,  // 17446: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpSentences(1) + loopFinish > current(null) + progress': false,  // 17447: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpSentences(1) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpSentences(1) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpSentences(1) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpSentences(1) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpSentences(1) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpSentences(1) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpSentences(1) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpSentences(1) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpSentences(1) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
 		'combos: jumpSentences(1) + loopFinish > jumpWords(-3) + newWordFragment': false,  // 17621: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpSentences(1) + loopFinish > jumpWords(-3) + progress': false,  // 17622: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpSentences(1) + loopFinish > jumpWords(-3) + stopBegin': false,  // 17623: event should have been triggerd but was NOT
@@ -8849,16 +8849,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(1) + newWordFragment > once([0,0,2]) + progress': false,  // 18322: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpSentences(1) + newWordFragment > current(null) + newWordFragment': false,  // 18346: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpSentences(1) + newWordFragment > current(null) + progress': false,  // 18347: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpSentences(1) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpSentences(1) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpSentences(1) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpSentences(1) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpSentences(1) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpSentences(1) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpSentences(1) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpSentences(1) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpSentences(1) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
 		'combos: jumpSentences(1) + newWordFragment > jumpWords(-3) + newWordFragment': false,  // 18521: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpSentences(1) + newWordFragment > jumpWords(-3) + progress': false,  // 18522: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpSentences(1) + newWordFragment > jumpWords(-3) + stopBegin': false,  // 18523: event should have been triggerd but was NOT
@@ -8919,16 +8919,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(1) + progress > once([0,0,2]) + progress': false,  // 19222: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: jumpSentences(1) + progress > current(null) + newWordFragment': false,  // 19246: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: jumpSentences(1) + progress > current(null) + progress': false,  // 19247: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: jumpSentences(1) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["you"]
-		'combos: jumpSentences(1) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: jumpSentences(1) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["flag."]
-		'combos: jumpSentences(1) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: jumpSentences(1) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
-		'combos: jumpSentences(1) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: jumpSentences(1) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: jumpSentences(1) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: jumpSentences(1) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: jumpSentences(1) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(1) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
 		'combos: jumpSentences(1) + progress > jumpWords(-3) + newWordFragment': false,  // 19421: frags expected ["Victorious,"], but got ["you"]
 		'combos: jumpSentences(1) + progress > jumpWords(-3) + progress': false,  // 19422: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: jumpSentences(1) + progress > jumpWords(-3) + stopBegin': false,  // 19423: event should have been triggerd but was NOT
@@ -8995,16 +8995,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(3) + onceBegin > once([0,0,2]) + progress': false,  // 9322: 'progress' expected [0.16666666666666666], but got [0.9166666666666666]
 		'combos: jumpSentences(3) + onceBegin > current(null) + newWordFragment': false,  // 9346: frags expected ["Victorious,"], but got ["Why,"]
 		'combos: jumpSentences(3) + onceBegin > current(null) + progress': false,  // 9347: 'progress' expected [0.08333333333333333], but got [0.8333333333333334]
-		'combos: jumpSentences(3) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["come"]
-		'combos: jumpSentences(3) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpSentences(3) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(3) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(3) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["come"]
+		// 'combos: jumpSentences(3) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
+		// 'combos: jumpSentences(3) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(3) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(3) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
 		'combos: jumpSentences(3) + onceBegin > jumpWords(-3) + newWordFragment': false,  // 9521: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpSentences(3) + onceBegin > jumpWords(-3) + progress': false,  // 9522: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
 		'combos: jumpSentences(3) + onceBegin > jumpWords(-3) + stopBegin': false,  // 9523: event should have been triggerd but was NOT
@@ -9084,16 +9084,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(3) + onceFinish > once([0,0,2]) + progress': false,  // 10222: 'progress' expected [0.16666666666666666], but got [0.9166666666666666]
 		'combos: jumpSentences(3) + onceFinish > current(null) + newWordFragment': false,  // 10246: frags expected ["Victorious,"], but got ["Why,"]
 		'combos: jumpSentences(3) + onceFinish > current(null) + progress': false,  // 10247: 'progress' expected [0.08333333333333333], but got [0.8333333333333334]
-		'combos: jumpSentences(3) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["come"]
-		'combos: jumpSentences(3) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpSentences(3) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(3) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(3) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["come"]
+		// 'combos: jumpSentences(3) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
+		// 'combos: jumpSentences(3) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(3) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(3) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
 		'combos: jumpSentences(3) + onceFinish > jumpWords(-3) + newWordFragment': false,  // 10421: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpSentences(3) + onceFinish > jumpWords(-3) + progress': false,  // 10422: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
 		'combos: jumpSentences(3) + onceFinish > jumpWords(-3) + stopBegin': false,  // 10423: event should have been triggerd but was NOT
@@ -9173,16 +9173,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(3) + loopBegin > once([0,0,2]) + progress': false,  // 16522: 'progress' expected [0.16666666666666666], but got [0.9166666666666666]
 		'combos: jumpSentences(3) + loopBegin > current(null) + newWordFragment': false,  // 16546: frags expected ["Victorious,"], but got ["Why,"]
 		'combos: jumpSentences(3) + loopBegin > current(null) + progress': false,  // 16547: 'progress' expected [0.08333333333333333], but got [0.8333333333333334]
-		'combos: jumpSentences(3) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["come"]
-		'combos: jumpSentences(3) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpSentences(3) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(3) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(3) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["come"]
+		// 'combos: jumpSentences(3) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
+		// 'combos: jumpSentences(3) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(3) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(3) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
 		'combos: jumpSentences(3) + loopBegin > jumpWords(-3) + newWordFragment': false,  // 16721: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpSentences(3) + loopBegin > jumpWords(-3) + progress': false,  // 16722: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
 		'combos: jumpSentences(3) + loopBegin > jumpWords(-3) + stopBegin': false,  // 16723: event should have been triggerd but was NOT
@@ -9262,16 +9262,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(3) + loopFinish > once([0,0,2]) + progress': false,  // 17422: 'progress' expected [0.16666666666666666], but got [0.9166666666666666]
 		'combos: jumpSentences(3) + loopFinish > current(null) + newWordFragment': false,  // 17446: frags expected ["Victorious,"], but got ["Why,"]
 		'combos: jumpSentences(3) + loopFinish > current(null) + progress': false,  // 17447: 'progress' expected [0.08333333333333333], but got [0.8333333333333334]
-		'combos: jumpSentences(3) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["come"]
-		'combos: jumpSentences(3) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpSentences(3) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(3) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(3) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["come"]
+		// 'combos: jumpSentences(3) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
+		// 'combos: jumpSentences(3) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(3) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(3) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
 		'combos: jumpSentences(3) + loopFinish > jumpWords(-3) + newWordFragment': false,  // 17621: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpSentences(3) + loopFinish > jumpWords(-3) + progress': false,  // 17622: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
 		'combos: jumpSentences(3) + loopFinish > jumpWords(-3) + stopBegin': false,  // 17623: event should have been triggerd but was NOT
@@ -9351,16 +9351,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(3) + newWordFragment > once([0,0,2]) + progress': false,  // 18322: 'progress' expected [0.16666666666666666], but got [0.9166666666666666]
 		'combos: jumpSentences(3) + newWordFragment > current(null) + newWordFragment': false,  // 18346: frags expected ["Victorious,"], but got ["Why,"]
 		'combos: jumpSentences(3) + newWordFragment > current(null) + progress': false,  // 18347: 'progress' expected [0.08333333333333333], but got [0.8333333333333334]
-		'combos: jumpSentences(3) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["come"]
-		'combos: jumpSentences(3) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpSentences(3) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(3) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(3) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["come"]
+		// 'combos: jumpSentences(3) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
+		// 'combos: jumpSentences(3) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(3) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(3) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
 		'combos: jumpSentences(3) + newWordFragment > jumpWords(-3) + newWordFragment': false,  // 18521: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpSentences(3) + newWordFragment > jumpWords(-3) + progress': false,  // 18522: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
 		'combos: jumpSentences(3) + newWordFragment > jumpWords(-3) + stopBegin': false,  // 18523: event should have been triggerd but was NOT
@@ -9440,16 +9440,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(3) + progress > once([0,0,2]) + progress': false,  // 19222: 'progress' expected [0.16666666666666666], but got [0.9166666666666666]
 		'combos: jumpSentences(3) + progress > current(null) + newWordFragment': false,  // 19246: frags expected ["Victorious,"], but got ["Why,"]
 		'combos: jumpSentences(3) + progress > current(null) + progress': false,  // 19247: 'progress' expected [0.08333333333333333], but got [0.8333333333333334]
-		'combos: jumpSentences(3) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["come"]
-		'combos: jumpSentences(3) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
-		'combos: jumpSentences(3) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(3) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(3) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
-		'combos: jumpSentences(3) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["come"]
+		// 'combos: jumpSentences(3) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
+		// 'combos: jumpSentences(3) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(3) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(3) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(3) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
 		'combos: jumpSentences(3) + progress > jumpWords(-3) + newWordFragment': false,  // 19421: frags expected ["Victorious,"], but got ["come"]
 		'combos: jumpSentences(3) + progress > jumpWords(-3) + progress': false,  // 19422: 'progress' expected [0.08333333333333333], but got [0.5833333333333334]
 		'combos: jumpSentences(3) + progress > jumpWords(-3) + stopBegin': false,  // 19423: event should have been triggerd but was NOT
@@ -9537,16 +9537,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(100) + onceBegin > current(null) + stopBegin': false,  // 9348: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + onceBegin > current(null) + stopFinish': false,  // 9349: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + onceBegin > current(null) + done': false,  // 9350: event should not have been triggerd but WAS
-		'combos: jumpSentences(100) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(100) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(100) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpSentences(100) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpSentences(100) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(100) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(100) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpSentences(100) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpSentences(100) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
 		'combos: jumpSentences(100) + onceBegin > jumpWords(-3) + newWordFragment': false,  // 9521: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpSentences(100) + onceBegin > jumpWords(-3) + progress': false,  // 9522: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpSentences(100) + onceBegin > jumpWords(-3) + stopBegin': false,  // 9523: event should have been triggerd but was NOT
@@ -9634,16 +9634,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(100) + onceFinish > current(null) + stopBegin': false,  // 10248: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + onceFinish > current(null) + stopFinish': false,  // 10249: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + onceFinish > current(null) + done': false,  // 10250: event should not have been triggerd but WAS
-		'combos: jumpSentences(100) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(100) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(100) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpSentences(100) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpSentences(100) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(100) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(100) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpSentences(100) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpSentences(100) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
 		'combos: jumpSentences(100) + onceFinish > jumpWords(-3) + newWordFragment': false,  // 10421: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpSentences(100) + onceFinish > jumpWords(-3) + progress': false,  // 10422: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpSentences(100) + onceFinish > jumpWords(-3) + stopBegin': false,  // 10423: event should have been triggerd but was NOT
@@ -9731,16 +9731,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(100) + loopBegin > current(null) + stopBegin': false,  // 16548: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + loopBegin > current(null) + stopFinish': false,  // 16549: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + loopBegin > current(null) + done': false,  // 16550: event should not have been triggerd but WAS
-		'combos: jumpSentences(100) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(100) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(100) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpSentences(100) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpSentences(100) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(100) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(100) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpSentences(100) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpSentences(100) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
 		'combos: jumpSentences(100) + loopBegin > jumpWords(-3) + newWordFragment': false,  // 16721: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpSentences(100) + loopBegin > jumpWords(-3) + progress': false,  // 16722: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpSentences(100) + loopBegin > jumpWords(-3) + stopBegin': false,  // 16723: event should have been triggerd but was NOT
@@ -9828,16 +9828,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(100) + loopFinish > current(null) + stopBegin': false,  // 17448: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + loopFinish > current(null) + stopFinish': false,  // 17449: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + loopFinish > current(null) + done': false,  // 17450: event should not have been triggerd but WAS
-		'combos: jumpSentences(100) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(100) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(100) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpSentences(100) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpSentences(100) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(100) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(100) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpSentences(100) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpSentences(100) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
 		'combos: jumpSentences(100) + loopFinish > jumpWords(-3) + newWordFragment': false,  // 17621: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpSentences(100) + loopFinish > jumpWords(-3) + progress': false,  // 17622: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpSentences(100) + loopFinish > jumpWords(-3) + stopBegin': false,  // 17623: event should have been triggerd but was NOT
@@ -9925,16 +9925,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(100) + newWordFragment > current(null) + stopBegin': false,  // 18348: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + newWordFragment > current(null) + stopFinish': false,  // 18349: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + newWordFragment > current(null) + done': false,  // 18350: event should not have been triggerd but WAS
-		'combos: jumpSentences(100) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(100) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(100) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpSentences(100) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpSentences(100) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(100) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(100) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpSentences(100) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpSentences(100) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
 		'combos: jumpSentences(100) + newWordFragment > jumpWords(-3) + newWordFragment': false,  // 18521: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpSentences(100) + newWordFragment > jumpWords(-3) + progress': false,  // 18522: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpSentences(100) + newWordFragment > jumpWords(-3) + stopBegin': false,  // 18523: event should have been triggerd but was NOT
@@ -10022,16 +10022,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(100) + progress > current(null) + stopBegin': false,  // 19248: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + progress > current(null) + stopFinish': false,  // 19249: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + progress > current(null) + done': false,  // 19250: event should not have been triggerd but WAS
-		'combos: jumpSentences(100) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(100) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(100) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpSentences(100) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpSentences(100) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(100) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(100) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpSentences(100) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpSentences(100) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
 		'combos: jumpSentences(100) + progress > jumpWords(-3) + newWordFragment': false,  // 19421: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpSentences(100) + progress > jumpWords(-3) + progress': false,  // 19422: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpSentences(100) + progress > jumpWords(-3) + stopBegin': false,  // 19423: event should have been triggerd but was NOT
@@ -10119,16 +10119,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(100) + stopBegin > current(null) + stopBegin': false,  // 20148: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + stopBegin > current(null) + stopFinish': false,  // 20149: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + stopBegin > current(null) + done': false,  // 20150: event should not have been triggerd but WAS
-		'combos: jumpSentences(100) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(100) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(100) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpSentences(100) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpSentences(100) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopBegin > jumpTo(-3) + newWordFragment': false,  // 20171: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(100) + stopBegin > jumpTo(-3) + progress': false,  // 20172: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(100) + stopBegin > jumpTo(-3) + stopBegin': false,  // 20173: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopBegin > jumpTo(-3) + stopFinish': false,  // 20174: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopBegin > jumpTo(-3) + done': false,  // 20175: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopBegin > jumpTo(-1) + newWordFragment': false,  // 20196: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpSentences(100) + stopBegin > jumpTo(-1) + progress': false,  // 20197: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpSentences(100) + stopBegin > jumpTo(-1) + stopBegin': false,  // 20198: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopBegin > jumpTo(-1) + stopFinish': false,  // 20199: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopBegin > jumpTo(-1) + done': false,  // 20200: event should have been triggerd but was NOT
 		'combos: jumpSentences(100) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpSentences(100) + stopBegin > jumpWords(-3) + progress': false,  // 20322: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpSentences(100) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: event should have been triggerd but was NOT
@@ -10216,16 +10216,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(100) + stopFinish > current(null) + stopBegin': false,  // 21048: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + stopFinish > current(null) + stopFinish': false,  // 21049: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + stopFinish > current(null) + done': false,  // 21050: event should not have been triggerd but WAS
-		'combos: jumpSentences(100) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(100) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(100) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpSentences(100) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpSentences(100) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopFinish > jumpTo(-3) + newWordFragment': false,  // 21071: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(100) + stopFinish > jumpTo(-3) + progress': false,  // 21072: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(100) + stopFinish > jumpTo(-3) + stopBegin': false,  // 21073: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopFinish > jumpTo(-3) + stopFinish': false,  // 21074: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopFinish > jumpTo(-3) + done': false,  // 21075: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopFinish > jumpTo(-1) + newWordFragment': false,  // 21096: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpSentences(100) + stopFinish > jumpTo(-1) + progress': false,  // 21097: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpSentences(100) + stopFinish > jumpTo(-1) + stopBegin': false,  // 21098: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopFinish > jumpTo(-1) + stopFinish': false,  // 21099: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + stopFinish > jumpTo(-1) + done': false,  // 21100: event should have been triggerd but was NOT
 		'combos: jumpSentences(100) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpSentences(100) + stopFinish > jumpWords(-3) + progress': false,  // 21222: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpSentences(100) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: event should have been triggerd but was NOT
@@ -10313,16 +10313,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: jumpSentences(100) + done > current(null) + stopBegin': false,  // 21948: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + done > current(null) + stopFinish': false,  // 21949: event should not have been triggerd but WAS
 		'combos: jumpSentences(100) + done > current(null) + done': false,  // 21950: event should not have been triggerd but WAS
-		'combos: jumpSentences(100) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
-		'combos: jumpSentences(100) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
-		'combos: jumpSentences(100) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
-		'combos: jumpSentences(100) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
-		'combos: jumpSentences(100) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
-		'combos: jumpSentences(100) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + done > jumpTo(-3) + newWordFragment': false,  // 21971: frags expected ["Victorious,"], but got ["\n"]
+		// 'combos: jumpSentences(100) + done > jumpTo(-3) + progress': false,  // 21972: 'progress' expected [0.08333333333333333], but got [0.75]
+		// 'combos: jumpSentences(100) + done > jumpTo(-3) + stopBegin': false,  // 21973: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + done > jumpTo(-3) + stopFinish': false,  // 21974: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + done > jumpTo(-3) + done': false,  // 21975: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + done > jumpTo(-1) + newWordFragment': false,  // 21996: frags expected ["Victorious,"], but got ["oh"]
+		// 'combos: jumpSentences(100) + done > jumpTo(-1) + progress': false,  // 21997: 'progress' expected [0.08333333333333333], but got [0.9166666666666666]
+		// 'combos: jumpSentences(100) + done > jumpTo(-1) + stopBegin': false,  // 21998: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + done > jumpTo(-1) + stopFinish': false,  // 21999: event should have been triggerd but was NOT
+		// 'combos: jumpSentences(100) + done > jumpTo(-1) + done': false,  // 22000: event should have been triggerd but was NOT
 		'combos: jumpSentences(100) + done > jumpWords(-3) + newWordFragment': false,  // 22121: frags expected ["Victorious,"], but got ["\n"]
 		'combos: jumpSentences(100) + done > jumpWords(-3) + progress': false,  // 22122: 'progress' expected [0.08333333333333333], but got [0.75]
 		'combos: jumpSentences(100) + done > jumpWords(-3) + stopBegin': false,  // 22123: event should have been triggerd but was NOT
@@ -10594,16 +10594,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: nextSentence(null) + onceBegin > once([0,0,2]) + progress': false,  // 9322: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: nextSentence(null) + onceBegin > current(null) + newWordFragment': false,  // 9346: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: nextSentence(null) + onceBegin > current(null) + progress': false,  // 9347: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: nextSentence(null) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["you"]
-		'combos: nextSentence(null) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: nextSentence(null) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["flag."]
-		'combos: nextSentence(null) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: nextSentence(null) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceBegin > jumpTo(-3) + newWordFragment': false,  // 9371: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: nextSentence(null) + onceBegin > jumpTo(-3) + progress': false,  // 9372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: nextSentence(null) + onceBegin > jumpTo(-3) + stopBegin': false,  // 9373: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceBegin > jumpTo(-3) + stopFinish': false,  // 9374: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceBegin > jumpTo(-3) + done': false,  // 9375: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceBegin > jumpTo(-1) + newWordFragment': false,  // 9396: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: nextSentence(null) + onceBegin > jumpTo(-1) + progress': false,  // 9397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: nextSentence(null) + onceBegin > jumpTo(-1) + stopBegin': false,  // 9398: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceBegin > jumpTo(-1) + stopFinish': false,  // 9399: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceBegin > jumpTo(-1) + done': false,  // 9400: event should have been triggerd but was NOT
 		'combos: nextSentence(null) + onceBegin > jumpWords(-3) + newWordFragment': false,  // 9521: frags expected ["Victorious,"], but got ["you"]
 		'combos: nextSentence(null) + onceBegin > jumpWords(-3) + progress': false,  // 9522: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: nextSentence(null) + onceBegin > jumpWords(-3) + stopBegin': false,  // 9523: event should have been triggerd but was NOT
@@ -10664,16 +10664,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: nextSentence(null) + onceFinish > once([0,0,2]) + progress': false,  // 10222: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: nextSentence(null) + onceFinish > current(null) + newWordFragment': false,  // 10246: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: nextSentence(null) + onceFinish > current(null) + progress': false,  // 10247: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: nextSentence(null) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["you"]
-		'combos: nextSentence(null) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: nextSentence(null) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["flag."]
-		'combos: nextSentence(null) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: nextSentence(null) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceFinish > jumpTo(-3) + newWordFragment': false,  // 10271: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: nextSentence(null) + onceFinish > jumpTo(-3) + progress': false,  // 10272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: nextSentence(null) + onceFinish > jumpTo(-3) + stopBegin': false,  // 10273: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceFinish > jumpTo(-3) + stopFinish': false,  // 10274: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceFinish > jumpTo(-3) + done': false,  // 10275: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceFinish > jumpTo(-1) + newWordFragment': false,  // 10296: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: nextSentence(null) + onceFinish > jumpTo(-1) + progress': false,  // 10297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: nextSentence(null) + onceFinish > jumpTo(-1) + stopBegin': false,  // 10298: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceFinish > jumpTo(-1) + stopFinish': false,  // 10299: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + onceFinish > jumpTo(-1) + done': false,  // 10300: event should have been triggerd but was NOT
 		'combos: nextSentence(null) + onceFinish > jumpWords(-3) + newWordFragment': false,  // 10421: frags expected ["Victorious,"], but got ["you"]
 		'combos: nextSentence(null) + onceFinish > jumpWords(-3) + progress': false,  // 10422: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: nextSentence(null) + onceFinish > jumpWords(-3) + stopBegin': false,  // 10423: event should have been triggerd but was NOT
@@ -10734,16 +10734,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: nextSentence(null) + loopBegin > once([0,0,2]) + progress': false,  // 16522: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: nextSentence(null) + loopBegin > current(null) + newWordFragment': false,  // 16546: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: nextSentence(null) + loopBegin > current(null) + progress': false,  // 16547: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: nextSentence(null) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["you"]
-		'combos: nextSentence(null) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: nextSentence(null) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["flag."]
-		'combos: nextSentence(null) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: nextSentence(null) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopBegin > jumpTo(-3) + newWordFragment': false,  // 16571: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: nextSentence(null) + loopBegin > jumpTo(-3) + progress': false,  // 16572: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: nextSentence(null) + loopBegin > jumpTo(-3) + stopBegin': false,  // 16573: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopBegin > jumpTo(-3) + stopFinish': false,  // 16574: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopBegin > jumpTo(-3) + done': false,  // 16575: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopBegin > jumpTo(-1) + newWordFragment': false,  // 16596: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: nextSentence(null) + loopBegin > jumpTo(-1) + progress': false,  // 16597: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: nextSentence(null) + loopBegin > jumpTo(-1) + stopBegin': false,  // 16598: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopBegin > jumpTo(-1) + stopFinish': false,  // 16599: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopBegin > jumpTo(-1) + done': false,  // 16600: event should have been triggerd but was NOT
 		'combos: nextSentence(null) + loopBegin > jumpWords(-3) + newWordFragment': false,  // 16721: frags expected ["Victorious,"], but got ["you"]
 		'combos: nextSentence(null) + loopBegin > jumpWords(-3) + progress': false,  // 16722: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: nextSentence(null) + loopBegin > jumpWords(-3) + stopBegin': false,  // 16723: event should have been triggerd but was NOT
@@ -10804,16 +10804,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: nextSentence(null) + loopFinish > once([0,0,2]) + progress': false,  // 17422: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: nextSentence(null) + loopFinish > current(null) + newWordFragment': false,  // 17446: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: nextSentence(null) + loopFinish > current(null) + progress': false,  // 17447: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: nextSentence(null) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["you"]
-		'combos: nextSentence(null) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: nextSentence(null) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["flag."]
-		'combos: nextSentence(null) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: nextSentence(null) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopFinish > jumpTo(-3) + newWordFragment': false,  // 17471: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: nextSentence(null) + loopFinish > jumpTo(-3) + progress': false,  // 17472: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: nextSentence(null) + loopFinish > jumpTo(-3) + stopBegin': false,  // 17473: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopFinish > jumpTo(-3) + stopFinish': false,  // 17474: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopFinish > jumpTo(-3) + done': false,  // 17475: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopFinish > jumpTo(-1) + newWordFragment': false,  // 17496: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: nextSentence(null) + loopFinish > jumpTo(-1) + progress': false,  // 17497: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: nextSentence(null) + loopFinish > jumpTo(-1) + stopBegin': false,  // 17498: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopFinish > jumpTo(-1) + stopFinish': false,  // 17499: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + loopFinish > jumpTo(-1) + done': false,  // 17500: event should have been triggerd but was NOT
 		'combos: nextSentence(null) + loopFinish > jumpWords(-3) + newWordFragment': false,  // 17621: frags expected ["Victorious,"], but got ["you"]
 		'combos: nextSentence(null) + loopFinish > jumpWords(-3) + progress': false,  // 17622: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: nextSentence(null) + loopFinish > jumpWords(-3) + stopBegin': false,  // 17623: event should have been triggerd but was NOT
@@ -10874,16 +10874,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: nextSentence(null) + newWordFragment > once([0,0,2]) + progress': false,  // 18322: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: nextSentence(null) + newWordFragment > current(null) + newWordFragment': false,  // 18346: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: nextSentence(null) + newWordFragment > current(null) + progress': false,  // 18347: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: nextSentence(null) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["you"]
-		'combos: nextSentence(null) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: nextSentence(null) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["flag."]
-		'combos: nextSentence(null) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: nextSentence(null) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + newWordFragment > jumpTo(-3) + newWordFragment': false,  // 18371: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: nextSentence(null) + newWordFragment > jumpTo(-3) + progress': false,  // 18372: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: nextSentence(null) + newWordFragment > jumpTo(-3) + stopBegin': false,  // 18373: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + newWordFragment > jumpTo(-3) + stopFinish': false,  // 18374: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + newWordFragment > jumpTo(-3) + done': false,  // 18375: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + newWordFragment > jumpTo(-1) + newWordFragment': false,  // 18396: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: nextSentence(null) + newWordFragment > jumpTo(-1) + progress': false,  // 18397: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: nextSentence(null) + newWordFragment > jumpTo(-1) + stopBegin': false,  // 18398: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + newWordFragment > jumpTo(-1) + stopFinish': false,  // 18399: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + newWordFragment > jumpTo(-1) + done': false,  // 18400: event should have been triggerd but was NOT
 		'combos: nextSentence(null) + newWordFragment > jumpWords(-3) + newWordFragment': false,  // 18521: frags expected ["Victorious,"], but got ["you"]
 		'combos: nextSentence(null) + newWordFragment > jumpWords(-3) + progress': false,  // 18522: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: nextSentence(null) + newWordFragment > jumpWords(-3) + stopBegin': false,  // 18523: event should have been triggerd but was NOT
@@ -10944,16 +10944,16 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: nextSentence(null) + progress > once([0,0,2]) + progress': false,  // 19222: 'progress' expected [0.16666666666666666], but got [0.5]
 		'combos: nextSentence(null) + progress > current(null) + newWordFragment': false,  // 19246: frags expected ["Victorious,"], but got ["Delirious,"]
 		'combos: nextSentence(null) + progress > current(null) + progress': false,  // 19247: 'progress' expected [0.08333333333333333], but got [0.4166666666666667]
-		'combos: nextSentence(null) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["you"]
-		'combos: nextSentence(null) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
-		'combos: nextSentence(null) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["flag."]
-		'combos: nextSentence(null) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
-		'combos: nextSentence(null) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
-		'combos: nextSentence(null) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + progress > jumpTo(-3) + newWordFragment': false,  // 19271: frags expected ["Victorious,"], but got ["you"]
+		// 'combos: nextSentence(null) + progress > jumpTo(-3) + progress': false,  // 19272: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
+		// 'combos: nextSentence(null) + progress > jumpTo(-3) + stopBegin': false,  // 19273: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + progress > jumpTo(-3) + stopFinish': false,  // 19274: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + progress > jumpTo(-3) + done': false,  // 19275: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + progress > jumpTo(-1) + newWordFragment': false,  // 19296: frags expected ["Victorious,"], but got ["flag."]
+		// 'combos: nextSentence(null) + progress > jumpTo(-1) + progress': false,  // 19297: 'progress' expected [0.08333333333333333], but got [0.3333333333333333]
+		// 'combos: nextSentence(null) + progress > jumpTo(-1) + stopBegin': false,  // 19298: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + progress > jumpTo(-1) + stopFinish': false,  // 19299: event should have been triggerd but was NOT
+		// 'combos: nextSentence(null) + progress > jumpTo(-1) + done': false,  // 19300: event should have been triggerd but was NOT
 		'combos: nextSentence(null) + progress > jumpWords(-3) + newWordFragment': false,  // 19421: frags expected ["Victorious,"], but got ["you"]
 		'combos: nextSentence(null) + progress > jumpWords(-3) + progress': false,  // 19422: 'progress' expected [0.08333333333333333], but got [0.16666666666666666]
 		'combos: nextSentence(null) + progress > jumpWords(-3) + stopBegin': false,  // 19423: event should have been triggerd but was NOT
