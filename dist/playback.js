@@ -9,6 +9,8 @@
 * https://github.com/jamestomasino/read_plugin/blob/master/Read.js
 * 
 * TODO;
+* - Still vulnurable to race conditions? Pausing function called in
+* 	middle of loop or while loop is in the queue?
 * - Speed up with long duration of ff or rewind
 * - `.rewind()` base speed as state property
 * - ??: Should `.restart()` trigger 'playBegin' and 'playFinish'
@@ -67,7 +69,8 @@
 			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
 
 			plab._queue = [];
-			plab._queueRunning = false;
+			plab._queueSuspended = false;
+			plab._queueCurrent = null;
 
 			return plab;
 		};  // End plab._init()
@@ -110,13 +113,10 @@
 		// ============== FLOW CONTROL ============== \\
 
 		// ----- Synchronous queue -----
-		// This is the only place that should be calling `._queueNext()`
-		plab._queueCurrent = null;
-
-		var idNum = 1;
+		var queueIDnum = 1;
 		plab._queueAdd = function ( funcName, args ) {
-			var item = { name: funcName, arguments: args, id: idNum }
-			idNum++;
+			var item = { name: funcName, arguments: args, id: queueIDnum }
+			queueIDnum++;
 
 			plab._queue.push( item );
 
@@ -141,8 +141,8 @@
 				plab._trigger( '_dequeued', [plab, item, plab._queue] );
 				// console.log( 'dequeueing', item );
 
-				var func = plab[ item.name ];
-				var returned = func.apply( this, item.arguments );
+				var func 	 = plab[ item.name ],
+					returned = func.apply( this, item.arguments );
 
 				plab._queueCurrent = null;
 
@@ -274,6 +274,7 @@
 		// feedback about pausing), then should the event not happen? That
 		// means the "play" image won't fire off on restarts, even though
 		// it feels like it should always fire on play.
+		// `restart()` now fires its own event. That can be listened for.
 		plab._play = function ( eventName ) {
 		/* ( Str ) -> PlaybackManager
 		* 
@@ -731,6 +732,15 @@
 			return vector;
         };  // End plab._skipDirection()
 
+        plab._finishLoop = function () {
+        	plab._emitProgress();
+        	plab._trigger( 'loopFinish', [plab] );
+        	// ??: Should this be before 'loopFinish'?
+        	plab._finishIfDone();
+
+        	return plab;
+        };  // End plab._finishLoop()
+
 
         plab._loopProxy = function( incrementors, checkRepeatOverride, calcDelayOverride ) {
 		/* ( [ [int, int, int], int, func ] )
@@ -738,9 +748,10 @@
 		* `incrementors` will only be used for the first loop. loop calls itself
 		* with `null` as the first argument. Used with `._play()` and `skipVector`.
 		* `checkRepeatOverride`: `null` or `undefined` means "until done". Given fragment and instance.
-		* `calcDelayOverride`: Argument given is the new fragment. Future maybe Playback instance.
+		* `calcDelayOverride`: Argument given is the new fragment. Future may include Playback instance.
 		* 
 		* All three arguments are optional
+		* TODO: Remove the last two? There are no functions that currently use them
 		* 
 		* Uses the `stepper` to get a new fragment based on `incrementors`, then
 		* sends out an event with the fragment. Calls itself until `checkRepeat`
@@ -768,13 +779,19 @@
 			var skipVector = plab._skipDirection( incrementors, frag );  // [int, int, int] of -1, 0, or 1
 
     	    if ( skipVector !== null ) {
+				// ??: Will this be a problem without a finish check if either
+				// the start or the end is getting skipped?
+				// TODO: Add a finish check in here too?
 
     	    	// TODO: ??: Also add 'loopSkipFinish'? (with 'loopSkipBegin')
 				plab._trigger( 'loopSkip', [plab, frag] );
-    	    	plab._loopProxy( skipVector, checkRepeatOverride, calcDelayOverride );  // Don't decrease repeats
-				// ??: Will this be a problem if either the start or the end is whitespace?
-				// TODO: Add a finish check in here too?
-    	    
+				// Best bet for not repeating. Open to other suggestions
+				plab._finishLoop();  // This may cause 'done' and 'stop' to be triggered twice.
+    	    	if ( !plab.done ) {
+    	    		// Is there a point to putting it in a `setTimeout()`?
+    	    		plab._loop( skipVector, checkRepeatOverride, calcDelayOverride );  // Put on queue
+    	    	}
+
     	    } else {
 
     	    	// How long this word fragment will remain on the screen before changing
@@ -783,12 +800,10 @@
     	    	// TODO: change string-time library - parameters for `.calcDelay()`
     	    	// so that can pass in `frag` and `plab`, or `plab` and `frag`
 
-    	    	// ??: Could do `if ( delay !== 0 )`, but does that conflate?
     	    	var checkRepeat = checkRepeatOverride || state.playback.checkRepeat || function () { return true; };
 
-    	    	// console.log( 'repeat?', checkRepeat( plab, frag ), delay );
-				// Don't loop again if 0 repeats desired
-				if ( checkRepeat && checkRepeat( plab, frag ) ) {
+				// Don't loop again if no repeats desired
+				if ( checkRepeat( plab, frag ) ) {
 
 					plab._timeoutID = setTimeout( function () {
 						// Put on queue. Solves a bunch of problems
@@ -802,15 +817,8 @@
 				// `._timeoutID`. Feels weird, though.
 				plab._trigger( 'newWordFragment', [plab, frag, incrementors] );
 
+	    	    plab._finishLoop();
     	    }  // end if skip fragment or not skip fragment
-
-			plab._emitProgress();
-
-			plab._trigger( 'loopFinish', [plab] );
-
-			// infinite repeat - to solve, put this after loopSkip too
-			// ??: Should this be before 'loopFinish' too?
-			plab._finishIfDone();
 
 			return plab;  // Return timeout id instead?
         };  // End plab._loopProxy()
