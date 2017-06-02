@@ -68,9 +68,9 @@
 			plab._direction 		= 'forward';
 			plab._incrementors 		= [0, 0, 1];  // This is a regular 1 step forward move
 
-			plab._queue = [];
+			plab._queue 		 = [];
 			plab._queueSuspended = false;
-			plab._queueCurrent = null;
+			plab._queueCurrent 	 = null;
 
 			return plab;
 		};  // End plab._init()
@@ -82,7 +82,11 @@
 		};
 
 
-		// plab.setState = function ( newState ) { stepper.setState( newState.stepper ) };
+		plab.setState = function ( newState ) {
+			// Validation needed?
+			state = newState;
+			stepper.setState( newState.stepper )
+		};
 
 
 
@@ -215,16 +219,14 @@
 
 			plab._trigger( 'resetFinish', [plab] );
 
-			plab._queueResume();  // Does this really do anything?
+			// If we implement using `_queueSuspended` as check in `._queueNext` then this
+			// would do something important. Right now it doesn't do anything.
+			plab._queueResume();
 
 			return plab;
 		};
 
 		plab.reset = function () {
-		/* () -> Playback
-		* 
-		* Returns to initial values and pauses
-		*/
 			plab._queueAdd( '_resetProxy', arguments );
 			return plab;
 		};
@@ -392,6 +394,7 @@
 
 			return plab;
 		};
+		// TODO: ??: Change name to just 'toggle'?
 		plab.togglePlayPause = function () {
 			plab._queueAdd( '_togglePlayPauseProxy', arguments );
 			return plab;
@@ -779,10 +782,6 @@
 			var skipVector = plab._skipDirection( incrementors, tester );  // [int, int, int] of -1, 0, or 1
 
     	    if ( skipVector !== null ) {
-    	    	// console.log(frag, skipVector)
-				// ??: Will this be a problem without a finish check if either
-				// the start or the end is getting skipped?
-				// TODO: Add a finish check in here too?
 
     	    	// TODO: ??: Also add 'loopSkipFinish'? (with 'loopSkipBegin')
 				plab._trigger( 'loopSkip', [plab, frag] );
