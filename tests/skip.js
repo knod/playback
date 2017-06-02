@@ -1,4 +1,5 @@
-// tests/singles.js
+// tests/skip.js
+// Skips 'Victorious,', 'flag.', 'Delerious,', 'come', '\n', 'wattlebird?'
 
 var debug = false;
 
@@ -12,33 +13,30 @@ var tester = require('./testing-core.js');
 var runEvent = require( './helpers/last-event.js' );
 
 
-// var funcsWithArgs = [
-// 	// These two at the top for now for ease of debugging
-// 	{ func: 'forceReset', args: [ null ]},
-// 	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
-// 	{ func: 'play', args: [ null ] },  // * 26 for 1 event
-// 	{ func: 'togglePlayPause', args: [ null ]},
-// 	{ func: 'restart', args: [ null ]},
-// 	{ func: 'reset', args: [ null ]},
-// 	{ func: 'pause', args: [ null ]},
-// 	{ func: 'stop', args: [ null ]},
-// 	{ func: 'close', args: [ null ]},
-// 	{ func: 'rewind', args: [ null ]},
-// 	{ func: 'fastForward', args: [ null ]},
-// 	// These could go on forever... but they do get tested somewhat with
-// 	// jump, next, and prev, so don't /really/ need to tests singles or
-// 	// word or sentence incrementations. If that changes, these tests need
-// 	// to change
-// 	{ func: 'once', args: [ [0,0,-2], [0,0,2] ]},
-// 	{ func: 'jumpTo', args: [ -1, 0, 6, 11, 100 ]},
-// 	{ func: 'jumpWords', args: [ -1, 0, 3, 4, 11, 100 ]},
-// 	{ func: 'jumpSentences', args: [ -1, 0, 1, 3, 100 ]},
-// 	{ func: 'nextWord', args: [ null ]},
-// 	{ func: 'nextSentence', args: [ null ]},
-// 	{ func: 'prevWord', args: [ null ]},
-// 	{ func: 'prevSentence', args: [ null ]},
-// 	{ func: 'revert', args: [ null ]}
-// ];
+// var	parsedText = [
+// 		[ 'Victorious,', 'you','brave', 'flag.' ],
+// 		[ 'Delirious,', 'I', 'come', 'back.' ],
+// 		[ '\n' ],
+// 		[ 'Why,', 'oh', 'wattlebird?' ]
+// 	];
+
+// var	forward = parsedText[0].concat(parsedText[1]).concat(parsedText[2]).concat(parsedText[3]);
+// // What it looks like when skipping around. Does not give good indication of progress values.
+// // Skips 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?'
+// forward = [ 'you', 'brave', 'I', 'back.', 'Why,', 'oh' ];
+// // 'v y b f. d i c b. w o w'  // (the original)
+// var skipped = [ 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?' ];
+
+
+var skippers = [ 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?' ];
+bigObjects.state.playback.transformFragment = function ( frag ) {
+	if ( skippers.indexOf(frag) > -1 ) {
+		return '$@skip@$'
+	} else {
+		return frag;
+	}
+}
+
 
 // A note on `once()`
 // Those tests could go on forever... but they do get tested somewhat with
@@ -65,7 +63,8 @@ var funcsWithArgs = [
 	{ func: 'jumpTo', args: [ -1 ]},
 
 	{ func: 'jumpTo', args: [ 0 ]},  // 16
-	{ func: 'jumpTo', args: [ 6 ]},
+	// Different than singles!
+	{ func: 'jumpTo', args: [ 4 ]},
 	{ func: 'jumpTo', args: [ 11 ]},  // 18
 	{ func: 'jumpTo', args: [ 100 ]},
 	{ func: 'jumpWords', args: [ -3 ]},  // 20
@@ -185,7 +184,7 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 
 			} else {
 
-				iterate( 'singles:', nextFuncI, nextArgI, nextEventI )  // iterate
+				iterate( 'skips:', nextFuncI, nextArgI, nextEventI )  // iterate
 
 			}  // end maybe repeat
 
@@ -197,8 +196,8 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 
 // Get the variables we need
 var start = function () {
-	assertions = require('./helpers/single-assertions.js')( plab );
-	iterate('singles:');
+	assertions = require('./helpers/state-assertions.js')( plab );
+	iterate('skips:');
 }
 
 start();

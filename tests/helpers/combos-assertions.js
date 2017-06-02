@@ -1081,21 +1081,21 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: reset(null) + resetBegin > fastForward(null) + stopBegin': true,  // 273: event should have been triggerd but was NOT
 		'combos: reset(null) + resetBegin > fastForward(null) + stopFinish': true,  // 274: event should have been triggerd but was NOT
 		'combos: reset(null) + resetBegin > fastForward(null) + done': true,  // 275: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,-2]true + onceBegin': false,  // 286: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,-2]true + onceFinish': false,  // 287: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,-2]true + loopBegin': false,  // 294: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,-2]true + loopFinish': false,  // 295: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,-2]true + newWordFragment': false,  // 296: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,-2]true + progress': false,  // 297: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,-2]true + stopBegin': false,  // 298: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,-2]true + stopFinish': false,  // 299: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,-2]true + done': false,  // 300: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,2]true + onceBegin': false,  // 311: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,2]true + onceFinish': false,  // 312: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,2]true + loopBegin': false,  // 319: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,2]true + loopFinish': false,  // 320: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,2]true + newWordFragment': false,  // 321: event should have been triggerd but was NOT
-		'combos: reset(null) + resetBegin > once([0,0,2]true + progress': false,  // 322: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,-2]) + onceBegin': false,  // 286: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,-2]) + onceFinish': false,  // 287: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,-2]) + loopBegin': false,  // 294: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,-2]) + loopFinish': false,  // 295: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,-2]) + newWordFragment': false,  // 296: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,-2]) + progress': false,  // 297: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,-2]) + stopBegin': false,  // 298: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,-2]) + stopFinish': false,  // 299: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,-2]) + done': false,  // 300: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,2]) + onceBegin': false,  // 311: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,2]) + onceFinish': false,  // 312: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,2]) + loopBegin': false,  // 319: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,2]) + loopFinish': false,  // 320: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,2]) + newWordFragment': false,  // 321: event should have been triggerd but was NOT
+		'combos: reset(null) + resetBegin > once([0,0,2]) + progress': false,  // 322: event should have been triggerd but was NOT
 		'combos: reset(null) + resetBegin > current(null) + onceBegin': true,  // 336: event should have been triggerd but was NOT
 		'combos: reset(null) + resetBegin > current(null) + onceFinish': true,  // 337: event should have been triggerd but was NOT
 		'combos: reset(null) + resetBegin > current(null) + loopBegin': true,  // 344: event should have been triggerd but was NOT

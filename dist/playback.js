@@ -771,26 +771,25 @@
 				incrementors = incrementors || plab._incrementors;
 			}
 
-			var frag = plab._stepper.getFragment( incrementors ),
+			var frag   = plab._stepper.getFragment( incrementors ),
 				// "$@skip@$" will be returned to skip the fragment
-				frag = state.playback.transformFragment( frag );  // TODO: ??: optional?
+				tester = state.playback.transformFragment( frag );  // TODO: ??: optional?
 
 			// Skip 1 word in the right direction if needed
-			var skipVector = plab._skipDirection( incrementors, frag );  // [int, int, int] of -1, 0, or 1
+			var skipVector = plab._skipDirection( incrementors, tester );  // [int, int, int] of -1, 0, or 1
 
     	    if ( skipVector !== null ) {
+    	    	// console.log(frag, skipVector)
 				// ??: Will this be a problem without a finish check if either
 				// the start or the end is getting skipped?
 				// TODO: Add a finish check in here too?
 
     	    	// TODO: ??: Also add 'loopSkipFinish'? (with 'loopSkipBegin')
 				plab._trigger( 'loopSkip', [plab, frag] );
-				// Best bet for not repeating. Open to other suggestions
-				plab._finishLoop();  // This may cause 'done' and 'stop' to be triggered twice.
-    	    	if ( !plab.done ) {
-    	    		// Is there a point to putting it in a `setTimeout()`?
+
+	    		plab._timeoutID = setTimeout( function() {
     	    		plab._loop( skipVector, checkRepeatOverride, calcDelayOverride );  // Put on queue
-    	    	}
+    	    	}, 0);
 
     	    } else {
 
@@ -817,8 +816,9 @@
 				// `._timeoutID`. Feels weird, though.
 				plab._trigger( 'newWordFragment', [plab, frag, incrementors] );
 
-	    	    plab._finishLoop();
     	    }  // end if skip fragment or not skip fragment
+
+    	    plab._finishLoop();
 
 			return plab;  // Return timeout id instead?
         };  // End plab._loopProxy()

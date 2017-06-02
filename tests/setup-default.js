@@ -31,5 +31,5 @@ var SetUp = module.exports = function () {
 	var plab = Playback( state );
 	plab.process( parsedText );
 
-	return { playback: plab, emitter: emitter };
+	return { playback: plab, state: state, emitter: emitter };
 };  // End setUp()

@@ -36,42 +36,48 @@ var runFirstEvent = require( './helpers/first-event.js' );
 // tests need to change
 
 var funcsWithArgs1 = [
-	{ func: 'forceReset', args: [ null ]},  // 0
+	{ func: 'forceReset', args: [ null ]},  // 0 (0 index)
 	{ func: 'reset', args: [ null ]},
 	{ func: 'restart', args: [ null ]},  // 2
 	{ func: 'play', args: [ null ] },
 	{ func: 'togglePlayPause', args: [ null ]},  // 4
 	{ func: 'pause', args: [ null ]},
+
 	{ func: 'stop', args: [ null ]},  // 6
 	{ func: 'close', args: [ null ]},
 	{ func: 'revert', args: [ null ]},  // 8
 	{ func: 'rewind', args: [ null ]},
 	{ func: 'fastForward', args: [ null ]},  // 10
+
 	{ func: 'once', args: [ [0,0,-2] ]},
 	{ func: 'once', args: [ [0,0,2] ]},  // 12
 	{ func: 'current', args: [ null ]},  // once( [0,0,0] )
 	{ func: 'jumpTo', args: [ -3 ]},  // 14
 	{ func: 'jumpTo', args: [ -1 ]},
+
 	{ func: 'jumpTo', args: [ 0 ]},  // 16
 	{ func: 'jumpTo', args: [ 6 ]},
 	{ func: 'jumpTo', args: [ 11 ]},  // 18
 	{ func: 'jumpTo', args: [ 100 ]},
 	{ func: 'jumpWords', args: [ -3 ]},  // 20
+
 	{ func: 'jumpWords', args: [ -1 ]},
 	{ func: 'jumpWords', args: [ 0 ]},  // 22
 	{ func: 'jumpWords', args: [ 4 ]},
 	{ func: 'jumpWords', args: [ 11 ]},  // 24
 	{ func: 'jumpWords', args: [ 100 ]},
+
 	{ func: 'jumpSentences', args: [ -3 ]},  // 26
 	{ func: 'jumpSentences', args: [ -1 ]},
 	{ func: 'jumpSentences', args: [ 0 ]},  // 28
 	{ func: 'jumpSentences', args: [ 1 ]},
 	{ func: 'jumpSentences', args: [ 3 ]},  // 30
+
 	{ func: 'jumpSentences', args: [ 100 ]},
 	{ func: 'nextWord', args: [ null ]},  // 32
 	{ func: 'nextSentence', args: [ null ]},
 	{ func: 'prevWord', args: [ null ]},  // 34
-	{ func: 'prevSentence', args: [ null ]}  // 35
+	{ func: 'prevSentence', args: [ null ]}  // 35 (#36 with index 1)
 ];
 
 // 26 events * 21115 tests = 548990 tests
