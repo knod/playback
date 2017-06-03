@@ -19,8 +19,6 @@ var runEvent = require( './helpers/last-event.js' );
 // 		[ '\n' ],
 // 		[ 'Why,', 'oh', 'wattlebird?' ]
 // 	];
-
-// var	forward = parsedText[0].concat(parsedText[1]).concat(parsedText[2]).concat(parsedText[3]);
 // // What it looks like when skipping around. Does not give good indication of progress values.
 // // Skips 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?'
 // forward = [ 'you', 'brave', 'I', 'back.', 'Why,', 'oh' ];
@@ -63,7 +61,7 @@ var funcsWithArgs = [
 	{ func: 'jumpTo', args: [ -1 ]},
 
 	{ func: 'jumpTo', args: [ 0 ]},  // 16
-	// Different than singles!
+	// Different than non-skip!
 	{ func: 'jumpTo', args: [ 4 ]},
 	{ func: 'jumpTo', args: [ 11 ]},  // 18
 	{ func: 'jumpTo', args: [ 100 ]},
@@ -196,7 +194,7 @@ function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
 
 // Get the variables we need
 var start = function () {
-	assertions = require('./helpers/state-assertions.js')( plab );
+	assertions = require('./helpers/skip-assertions.js')( plab );
 	iterate('skips:');
 }
 

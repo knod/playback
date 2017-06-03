@@ -1,4 +1,4 @@
-// state-assertions.js
+// skip-assertions.js
 // For asserting when state skips stuff
 
 // ------------ setup ------------

@@ -52,13 +52,12 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 * Could make this into a function that parses the label handed in and gets
 * the right assert ( e.g. /doubles: play(null) + reset/.test(label) ),
 * but I think that would be less clear, less easy to look up
-* May be necessary, though. Ex:
-* /^doubles: play(null) + resetBegin/.test(  )
+* May be necessary, though.
 */
 
 	let plab = plyb;
 
-	var asts = {};  // asserts
+	var asts = {};
 
 
 	asts.assert = function ( label, originalAssertion, result, debug ) {
@@ -1893,7 +1892,8 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'combos: play(null) + stopFinish > jumpSentences(-1) + stopBegin': false,  // 21398: event should have been triggerd but was NOT
 		'combos: play(null) + stopFinish > jumpSentences(-1) + stopFinish': false,  // 21399: event should have been triggerd but was NOT
 		'combos: play(null) + stopFinish > jumpSentences(-1) + done': false,  // 21400: event should have been triggerd but was NOT
-		'combos: play(null) + stopFinish > jumpSentences(0) + onceFinish': false,  // 21412: event should have been triggerd but was NOT
+		// What happens to 'onceBegin'? Passed other tests. Not sure why/how this one got here
+		// 'combos: play(null) + stopFinish > jumpSentences(0) + onceFinish': false,  // 21412: event should have been triggerd but was NOT
 		'combos: play(null) + stopFinish > jumpSentences(0) + newWordFragment': false,  // 21421: frags expected ["Victorious,"], but got ["wattlebird?"]
 		'combos: play(null) + stopFinish > jumpSentences(0) + progress': false,  // 21422: 'progress' expected [0.08333333333333333], but got [1]
 		'combos: play(null) + stopFinish > jumpSentences(0) + stopBegin': false,  // 21423: event should not have been triggerd but WAS
