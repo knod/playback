@@ -1,6 +1,8 @@
 // first-event.js
 // Accumulates the result
 
+'use strict';
+
 var firstEvent = module.exports = function ( result, bigs, opWith, doOnEvent, reset ) {
 /* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, func, bool ) */
 

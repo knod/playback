@@ -88,7 +88,7 @@ describe("When Playback calls", function() {
 	// - .pause, .stop, .close (proxies/variants for each other)
 	// - .rewind
 	// - .fastForward
-	// - .togglePlayPause
+	// - .toggle
 	// - .jumpWords
 	// - .jumpSentences
 	// - .nextWord
@@ -505,9 +505,9 @@ describe("When Playback calls", function() {
 	// jas.runCombinationTestWith( stuff, opsWith, 'progress', function () { return true; }, shortTime, assertNOTtriggered, false );
 
 
-	// // ----------- togglePlayPause() -----------
+	// // ----------- toggle() -----------
 
-	// opsWith = getSecondOpsWith( 'togglePlayPause' );
+	// opsWith = getSecondOpsWith( 'toggle' );
 
 	// assertFrags = function( plbk, result ) {
 	// 	expect( result.args[0][0] ).toEqual( plab );

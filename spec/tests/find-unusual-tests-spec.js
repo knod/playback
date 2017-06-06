@@ -185,7 +185,7 @@ var argsForAllFunctions = {
 	// close: [ null ],
 	// rewind: [ null ],
 	// fastForward: [ null ],
-	// togglePlayPause: [ null ],
+	// toggle: [ null ],
 	// jumpWords: [ -1, 0, 3, 4, 11, 100 ],
 	// jumpSentences: [ -1, 0, 1, 3, 100 ],
 	// nextWord: [ null ],

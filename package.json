@@ -32,6 +32,7 @@
   "homepage": "https://github.com/knod/playback#readme",
   "devDependencies": {
     "jasmine": "^2.5.3",
+    "lolex": "^1.6.0",
     "wolfy87-eventemitter": "^5.1.0"
   },
   "dependencies": {

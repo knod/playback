@@ -10,6 +10,8 @@
 * - Generate file with expected results
 */
 
+'use strict';
+
 
 var colors = {
   green: '\x1B[32m', red: '\x1B[31m',
@@ -17,37 +19,8 @@ var colors = {
 };
 
 
-// ------------ default assertions ------------
-var defaultAsserts = {
-	triggered: null,
-	not: null,
-	frags: null,
-	progress: null
-}
-
-defaultAsserts.not = function ( result ) {
-
-	var passes 	= true;
-	var msg 	= 'Combos: Event ' + colors.green + 'NOT' + colors.none + ' triggered';
-
-	// var shouldFail = checkExpectedToFail( testID );
-	// if ( shouldFail ) {
-	// 	// Nothing is expected, it's failing for good reasons
-	// } else {
-		if ( result.arg2s.length !== 0 ) {
-			passes = false;
-			var testID
-			msg = 'Combos-' + testID +': Event should not have been triggered but ' + colors.red + 'WAS' + colors.none;
-		}
-	// }
-
-	return { message: msg, passed: passes };
-
-};
-
-
 // ------------ export ------------
-module.exports = MakeAltAsserts = function ( plyb ) {
+const MakeAltAsserts = module.exports = function ( plyb ) {
 /* ( {} ) -> {}
 * 
 * TODO:
@@ -58,8 +31,34 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 */
 
 	let plab = plyb;
-
 	var asts = {};
+
+
+	// ------------ default assertions ------------
+	var defaultAsserts = {
+		triggered: null,
+		not: null,
+		frags: null,
+		progress: null
+	}
+
+	defaultAsserts.not = function ( result ) {
+
+		var passes 	= true;
+		var msg 	= 'Combos: Event ' + colors.green + 'NOT' + colors.none + ' triggered';
+
+		// var shouldFail = checkExpectedToFail( testID );
+		// if ( shouldFail ) {
+		// 	// Nothing is expected, it's failing for good reasons
+		// } else {
+			if ( result.arg2s.length !== 0 ) {
+				passes = false;
+				var testID
+				msg = 'Combos-' + testID +': Event should not have been triggered but ' + colors.red + 'WAS' + colors.none;
+			}
+		// }
+		return { message: msg, passed: passes };
+	};
 
 
 	asts.assert = function ( label, originalAssertion, result, debug ) {
@@ -84,7 +83,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		}
 
 
-		expectFailure = function ( result, evnt ) {
+		const expectFailure = function ( result, evnt ) {
 			var testResult = assert( result, 'combos', evnt  )
 
 			var msg, correctlyFailed = !testResult.passed;
@@ -133,15 +132,15 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: forceReset(null) + resetBegin > play(null) + stopBegin': true,  // 98: ?? (skip results are different than combos)
 		'skip-combos: forceReset(null) + resetBegin > play(null) + stopFinish': true,  // 99: ?? (skip results are different than combos)
 		'skip-combos: forceReset(null) + resetBegin > play(null) + done': true,  // 100: ?? (skip results are different than combos)
-		'skip-combos: forceReset(null) + resetBegin > togglePlayPause(null) + playBegin': true,  // 101: ?? (skip results are different than combos)
-		'skip-combos: forceReset(null) + resetBegin > togglePlayPause(null) + playFinish': true,  // 102: ?? (skip results are different than combos)
-		'skip-combos: forceReset(null) + resetBegin > togglePlayPause(null) + loopBegin': true,  // 119: ?? (skip results are different than combos)
-		'skip-combos: forceReset(null) + resetBegin > togglePlayPause(null) + loopFinish': true,  // 120: ?? (skip results are different than combos)
-		'skip-combos: forceReset(null) + resetBegin > togglePlayPause(null) + newWordFragment': true,  // 121: ?? (skip results are different than combos)
-		'skip-combos: forceReset(null) + resetBegin > togglePlayPause(null) + progress': true,  // 122: ?? (skip results are different than combos)
-		'skip-combos: forceReset(null) + resetBegin > togglePlayPause(null) + stopBegin': true,  // 123: ?? (skip results are different than combos)
-		'skip-combos: forceReset(null) + resetBegin > togglePlayPause(null) + stopFinish': true,  // 124: ?? (skip results are different than combos)
-		'skip-combos: forceReset(null) + resetBegin > togglePlayPause(null) + done': true,  // 125: ?? (skip results are different than combos)
+		'skip-combos: forceReset(null) + resetBegin > toggle(null) + playBegin': true,  // 101: ?? (skip results are different than combos)
+		'skip-combos: forceReset(null) + resetBegin > toggle(null) + playFinish': true,  // 102: ?? (skip results are different than combos)
+		'skip-combos: forceReset(null) + resetBegin > toggle(null) + loopBegin': true,  // 119: ?? (skip results are different than combos)
+		'skip-combos: forceReset(null) + resetBegin > toggle(null) + loopFinish': true,  // 120: ?? (skip results are different than combos)
+		'skip-combos: forceReset(null) + resetBegin > toggle(null) + newWordFragment': true,  // 121: ?? (skip results are different than combos)
+		'skip-combos: forceReset(null) + resetBegin > toggle(null) + progress': true,  // 122: ?? (skip results are different than combos)
+		'skip-combos: forceReset(null) + resetBegin > toggle(null) + stopBegin': true,  // 123: ?? (skip results are different than combos)
+		'skip-combos: forceReset(null) + resetBegin > toggle(null) + stopFinish': true,  // 124: ?? (skip results are different than combos)
+		'skip-combos: forceReset(null) + resetBegin > toggle(null) + done': true,  // 125: ?? (skip results are different than combos)
 		'skip-combos: forceReset(null) + resetBegin > pause(null) + pauseBegin': true,  // 132: ?? (skip results are different than combos)
 		'skip-combos: forceReset(null) + resetBegin > pause(null) + pauseFinish': true,  // 133: ?? (skip results are different than combos)
 		'skip-combos: forceReset(null) + resetBegin > stop(null) + stopBegin': true,  // 173: ?? (skip results are different than combos)
@@ -401,6 +400,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: play(null) + playBegin > forceReset(null) + stopFinish': true,  // 3624: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playBegin > forceReset(null) + done': true,  // 3625: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopBegin > forceReset(null) + playFinish': true,  // 16202: ?? (skip results are different than combos)
+		// TODO: ??: Why does 'loopBegin' get triggered twice?
 		'skip-combos: play(null) + loopBegin > forceReset(null) + loopBegin': true,  // 16219: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopBegin > forceReset(null) + loopFinish': true,  // 16220: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopBegin > forceReset(null) + newWordFragment': true,  // 16221: ?? (skip results are different than combos)
@@ -417,31 +417,31 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: play(null) + stopBegin > forceReset(null) + stopFinish': true,  // 19824: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopBegin > forceReset(null) + done': true,  // 19825: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopFinish > forceReset(null) + done': true,  // 20725: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > forceReset(null) + playFinish': true,  // 3602: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > forceReset(null) + loopBegin': true,  // 3619: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > forceReset(null) + loopFinish': true,  // 3620: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > forceReset(null) + newWordFragment': true,  // 3621: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > forceReset(null) + progress': true,  // 3622: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > forceReset(null) + stopBegin': true,  // 3623: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > forceReset(null) + stopFinish': true,  // 3624: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > forceReset(null) + done': true,  // 3625: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > forceReset(null) + playFinish': true,  // 16202: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > forceReset(null) + loopBegin': true,  // 16219: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > forceReset(null) + loopFinish': true,  // 16220: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > forceReset(null) + newWordFragment': true,  // 16221: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > forceReset(null) + progress': true,  // 16222: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > forceReset(null) + stopBegin': true,  // 16223: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > forceReset(null) + stopFinish': true,  // 16224: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > forceReset(null) + done': true,  // 16225: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > forceReset(null) + playFinish': true,  // 17102: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > forceReset(null) + playFinish': true,  // 18002: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > forceReset(null) + loopFinish': true,  // 18020: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > forceReset(null) + progress': true,  // 18022: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > forceReset(null) + playFinish': true,  // 18902: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > forceReset(null) + loopFinish': true,  // 18920: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > forceReset(null) + stopFinish': true,  // 19824: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > forceReset(null) + done': true,  // 19825: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > forceReset(null) + done': true,  // 20725: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > forceReset(null) + playFinish': true,  // 3602: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > forceReset(null) + loopBegin': true,  // 3619: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > forceReset(null) + loopFinish': true,  // 3620: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > forceReset(null) + newWordFragment': true,  // 3621: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > forceReset(null) + progress': true,  // 3622: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > forceReset(null) + stopBegin': true,  // 3623: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > forceReset(null) + stopFinish': true,  // 3624: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > forceReset(null) + done': true,  // 3625: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > forceReset(null) + playFinish': true,  // 16202: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > forceReset(null) + loopBegin': true,  // 16219: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > forceReset(null) + loopFinish': true,  // 16220: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > forceReset(null) + newWordFragment': true,  // 16221: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > forceReset(null) + progress': true,  // 16222: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > forceReset(null) + stopBegin': true,  // 16223: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > forceReset(null) + stopFinish': true,  // 16224: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > forceReset(null) + done': true,  // 16225: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > forceReset(null) + playFinish': true,  // 17102: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > forceReset(null) + playFinish': true,  // 18002: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > forceReset(null) + loopFinish': true,  // 18020: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > forceReset(null) + progress': true,  // 18022: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > forceReset(null) + playFinish': true,  // 18902: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > forceReset(null) + loopFinish': true,  // 18920: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > forceReset(null) + stopFinish': true,  // 19824: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > forceReset(null) + done': true,  // 19825: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > forceReset(null) + done': true,  // 20725: ?? (skip results are different than combos)
 		'skip-combos: pause(null) + pauseBegin > forceReset(null) + pauseFinish': true,  // 5408: ?? (skip results are different than combos)
 		'skip-combos: stop(null) + stopBegin > forceReset(null) + stopFinish': true,  // 19824: ?? (skip results are different than combos)
 		'skip-combos: close(null) + closeBegin > forceReset(null) + closeFinish': true,  // 7210: ?? (skip results are different than combos)
@@ -1045,15 +1045,15 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: reset(null) + resetBegin > play(null) + stopBegin': true,  // 98: ?? (skip results are different than combos)
 		'skip-combos: reset(null) + resetBegin > play(null) + stopFinish': true,  // 99: ?? (skip results are different than combos)
 		'skip-combos: reset(null) + resetBegin > play(null) + done': true,  // 100: ?? (skip results are different than combos)
-		'skip-combos: reset(null) + resetBegin > togglePlayPause(null) + playBegin': true,  // 101: ?? (skip results are different than combos)
-		'skip-combos: reset(null) + resetBegin > togglePlayPause(null) + playFinish': true,  // 102: ?? (skip results are different than combos)
-		'skip-combos: reset(null) + resetBegin > togglePlayPause(null) + loopBegin': true,  // 119: ?? (skip results are different than combos)
-		'skip-combos: reset(null) + resetBegin > togglePlayPause(null) + loopFinish': true,  // 120: ?? (skip results are different than combos)
-		'skip-combos: reset(null) + resetBegin > togglePlayPause(null) + newWordFragment': true,  // 121: ?? (skip results are different than combos)
-		'skip-combos: reset(null) + resetBegin > togglePlayPause(null) + progress': true,  // 122: ?? (skip results are different than combos)
-		'skip-combos: reset(null) + resetBegin > togglePlayPause(null) + stopBegin': true,  // 123: ?? (skip results are different than combos)
-		'skip-combos: reset(null) + resetBegin > togglePlayPause(null) + stopFinish': true,  // 124: ?? (skip results are different than combos)
-		'skip-combos: reset(null) + resetBegin > togglePlayPause(null) + done': true,  // 125: ?? (skip results are different than combos)
+		'skip-combos: reset(null) + resetBegin > toggle(null) + playBegin': true,  // 101: ?? (skip results are different than combos)
+		'skip-combos: reset(null) + resetBegin > toggle(null) + playFinish': true,  // 102: ?? (skip results are different than combos)
+		'skip-combos: reset(null) + resetBegin > toggle(null) + loopBegin': true,  // 119: ?? (skip results are different than combos)
+		'skip-combos: reset(null) + resetBegin > toggle(null) + loopFinish': true,  // 120: ?? (skip results are different than combos)
+		'skip-combos: reset(null) + resetBegin > toggle(null) + newWordFragment': true,  // 121: ?? (skip results are different than combos)
+		'skip-combos: reset(null) + resetBegin > toggle(null) + progress': true,  // 122: ?? (skip results are different than combos)
+		'skip-combos: reset(null) + resetBegin > toggle(null) + stopBegin': true,  // 123: ?? (skip results are different than combos)
+		'skip-combos: reset(null) + resetBegin > toggle(null) + stopFinish': true,  // 124: ?? (skip results are different than combos)
+		'skip-combos: reset(null) + resetBegin > toggle(null) + done': true,  // 125: ?? (skip results are different than combos)
 		'skip-combos: reset(null) + resetBegin > pause(null) + pauseBegin': true,  // 132: ?? (skip results are different than combos)
 		'skip-combos: reset(null) + resetBegin > pause(null) + pauseFinish': true,  // 133: ?? (skip results are different than combos)
 		'skip-combos: reset(null) + resetBegin > stop(null) + stopBegin': true,  // 173: ?? (skip results are different than combos)
@@ -1279,104 +1279,99 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// ============== restart ==============
 		// #? just like play?
-		// 'skip-combos: restart(null) + restartBegin > play(null) + newWordFragment': false,  // 1896: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + restartBegin > play(null) + progress': false,  // 1897: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + playBegin': true,  // 1901: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + playFinish': true,  // 1902: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + pauseBegin': true,  // 1907: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + pauseFinish': true,  // 1908: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + loopBegin': true,  // 1919: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + loopFinish': true,  // 1920: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + newWordFragment': true,  // 1921: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + progress': true,  // 1922: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + stopBegin': true,  // 1923: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + stopFinish': true,  // 1924: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + done': true,  // 1925: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + playBegin': true,  // 1901: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + playFinish': true,  // 1902: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + pauseBegin': true,  // 1907: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + pauseFinish': true,  // 1908: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + loopBegin': true,  // 1919: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + loopFinish': true,  // 1920: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + newWordFragment': true,  // 1921: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + progress': true,  // 1922: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + stopBegin': true,  // 1923: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + stopFinish': true,  // 1924: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartBegin > toggle(null) + done': true,  // 1925: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + restartBegin > revert(null) + playBegin': false,  // 2001: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + restartBegin > revert(null) + playFinish': false,  // 2002: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + restartBegin > revert(null) + pauseBegin': false,  // 2007: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + restartBegin > revert(null) + pauseFinish': false,  // 2008: ?? (skip results are different than combos)
-		// 'skip-combos: restart(null) + restartFinish > play(null) + newWordFragment': false,  // 2796: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + restartFinish > play(null) + progress': false,  // 2797: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + playBegin': true,  // 2801: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + playFinish': true,  // 2802: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + pauseBegin': true,  // 2807: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + pauseFinish': true,  // 2808: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + loopBegin': true,  // 2819: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + loopFinish': true,  // 2820: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + newWordFragment': true,  // 2821: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + progress': true,  // 2822: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + stopBegin': true,  // 2823: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + stopFinish': true,  // 2824: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + done': true,  // 2825: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + playBegin': true,  // 2801: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + playFinish': true,  // 2802: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + pauseBegin': true,  // 2807: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + pauseFinish': true,  // 2808: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + loopBegin': true,  // 2819: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + loopFinish': true,  // 2820: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + newWordFragment': true,  // 2821: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + progress': true,  // 2822: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + stopBegin': true,  // 2823: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + stopFinish': true,  // 2824: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + restartFinish > toggle(null) + done': true,  // 2825: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + restartFinish > revert(null) + playBegin': false,  // 2901: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + restartFinish > revert(null) + playFinish': false,  // 2902: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + restartFinish > revert(null) + pauseBegin': false,  // 2907: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + restartFinish > revert(null) + pauseFinish': false,  // 2908: ?? (skip results are different than combos)
-		// 'skip-combos: restart(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + done': true,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + progress': true,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopBegin > toggle(null) + done': true,  // 16325: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + loopBegin > revert(null) + playBegin': false,  // 16401: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + loopBegin > revert(null) + playFinish': false,  // 16402: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + loopBegin > revert(null) + pauseBegin': false,  // 16407: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + loopBegin > revert(null) + pauseFinish': false,  // 16408: ?? (skip results are different than combos)
-		// 'skip-combos: restart(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + done': true,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + progress': true,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + loopFinish > toggle(null) + done': true,  // 17225: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + loopFinish > revert(null) + playBegin': false,  // 17301: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + loopFinish > revert(null) + playFinish': false,  // 17302: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + loopFinish > revert(null) + pauseBegin': false,  // 17307: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + loopFinish > revert(null) + pauseFinish': false,  // 17308: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + progress': true,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + done': true,  // 18125: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + newWordFragment > revert(null) + playBegin': false,  // 18201: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + newWordFragment > revert(null) + playFinish': false,  // 18202: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + newWordFragment > revert(null) + pauseBegin': false,  // 18207: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + newWordFragment > revert(null) + pauseFinish': false,  // 18208: ?? (skip results are different than combos)
-		// 'skip-combos: restart(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + progress': true,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + done': true,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + progress': true,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + progress > toggle(null) + done': true,  // 19025: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + progress > revert(null) + playBegin': false,  // 19101: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + progress > revert(null) + playFinish': false,  // 19102: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + progress > revert(null) + pauseBegin': false,  // 19107: ?? (skip results are different than combos)
@@ -1385,10 +1380,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: restart(null) + stopBegin > play(null) + playFinish': false,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + stopBegin > play(null) + restartBegin': false,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + stopBegin > play(null) + restartFinish': false,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + stopBegin > toggle(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + stopBegin > toggle(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + stopBegin > toggle(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + stopBegin > toggle(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + stopBegin > rewind(null) + newWordFragment': false,  // 20046: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + stopBegin > rewind(null) + progress': false,  // 20047: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + stopBegin > fastForward(null) + newWordFragment': false,  // 20071: ?? (skip results are different than combos)
@@ -1472,10 +1467,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: restart(null) + stopFinish > play(null) + playFinish': false,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + stopFinish > play(null) + restartBegin': false,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + stopFinish > play(null) + restartFinish': false,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + stopFinish > toggle(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + stopFinish > toggle(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + stopFinish > toggle(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + stopFinish > toggle(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + stopFinish > rewind(null) + newWordFragment': false,  // 20946: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + stopFinish > rewind(null) + progress': false,  // 20947: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + stopFinish > fastForward(null) + newWordFragment': false,  // 20971: ?? (skip results are different than combos)
@@ -1559,10 +1554,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: restart(null) + done > play(null) + playFinish': false,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + done > play(null) + restartBegin': false,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + done > play(null) + restartFinish': false,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + done > togglePlayPause(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + done > togglePlayPause(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + done > togglePlayPause(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: restart(null) + done > togglePlayPause(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + done > toggle(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + done > toggle(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + done > toggle(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: restart(null) + done > toggle(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + done > rewind(null) + newWordFragment': false,  // 21846: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + done > rewind(null) + progress': false,  // 21847: ?? (skip results are different than combos)
 		'skip-combos: restart(null) + done > fastForward(null) + newWordFragment': false,  // 21871: ?? (skip results are different than combos)
@@ -1654,104 +1649,99 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// #8 play-like + stop*|done > relative loopers(+|0) do unexpectedly trigger stop*|done
 		// #9 play-like + stop*|done > play|toggle() = triggers `restart` instead of `play`
 
-		// 'skip-combos: play(null) + playBegin > play(null) + newWordFragment': false,  // 3696: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playBegin > play(null) + progress': false,  // 3697: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + playBegin': true,  // 3701: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + playFinish': true,  // 3702: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + pauseBegin': true,  // 3707: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + pauseFinish': true,  // 3708: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + loopBegin': true,  // 3719: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + loopFinish': true,  // 3720: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + newWordFragment': true,  // 3721: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + progress': true,  // 3722: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + stopBegin': true,  // 3723: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + stopFinish': true,  // 3724: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + done': true,  // 3725: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + playBegin': true,  // 3701: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + playFinish': true,  // 3702: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + pauseBegin': true,  // 3707: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + pauseFinish': true,  // 3708: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + loopBegin': true,  // 3719: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + loopFinish': true,  // 3720: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + newWordFragment': true,  // 3721: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + progress': true,  // 3722: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + stopBegin': true,  // 3723: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + stopFinish': true,  // 3724: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playBegin > toggle(null) + done': true,  // 3725: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playBegin > revert(null) + playBegin': false,  // 3801: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playBegin > revert(null) + playFinish': false,  // 3802: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playBegin > revert(null) + pauseBegin': false,  // 3807: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playBegin > revert(null) + pauseFinish': false,  // 3808: ?? (skip results are different than combos)
-		// 'skip-combos: play(null) + playFinish > play(null) + newWordFragment': false,  // 4596: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playFinish > play(null) + progress': false,  // 4597: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + playBegin': true,  // 4601: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + playFinish': true,  // 4602: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + pauseBegin': true,  // 4607: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + pauseFinish': true,  // 4608: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + loopBegin': true,  // 4619: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + loopFinish': true,  // 4620: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + newWordFragment': true,  // 4621: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + progress': true,  // 4622: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + stopBegin': true,  // 4623: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + stopFinish': true,  // 4624: ?? (skip results are different than combos)
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + done': true,  // 4625: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + playBegin': true,  // 4601: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + playFinish': true,  // 4602: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + pauseBegin': true,  // 4607: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + pauseFinish': true,  // 4608: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + loopBegin': true,  // 4619: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + loopFinish': true,  // 4620: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + newWordFragment': true,  // 4621: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + progress': true,  // 4622: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + stopBegin': true,  // 4623: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + stopFinish': true,  // 4624: ?? (skip results are different than combos)
+		'skip-combos: play(null) + playFinish > toggle(null) + done': true,  // 4625: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playFinish > revert(null) + playBegin': false,  // 4701: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playFinish > revert(null) + playFinish': false,  // 4702: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playFinish > revert(null) + pauseBegin': false,  // 4707: ?? (skip results are different than combos)
 		'skip-combos: play(null) + playFinish > revert(null) + pauseFinish': false,  // 4708: ?? (skip results are different than combos)
-		// 'skip-combos: play(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + done': true,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + progress': true,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopBegin > toggle(null) + done': true,  // 16325: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopBegin > revert(null) + playBegin': false,  // 16401: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopBegin > revert(null) + playFinish': false,  // 16402: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopBegin > revert(null) + pauseBegin': false,  // 16407: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopBegin > revert(null) + pauseFinish': false,  // 16408: ?? (skip results are different than combos)
-		// 'skip-combos: play(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + done': true,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + progress': true,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: play(null) + loopFinish > toggle(null) + done': true,  // 17225: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopFinish > revert(null) + playBegin': false,  // 17301: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopFinish > revert(null) + playFinish': false,  // 17302: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopFinish > revert(null) + pauseBegin': false,  // 17307: ?? (skip results are different than combos)
 		'skip-combos: play(null) + loopFinish > revert(null) + pauseFinish': false,  // 17308: ?? (skip results are different than combos)
 		'skip-combos: play(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
 		'skip-combos: play(null) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + progress': true,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: play(null) + newWordFragment > toggle(null) + done': true,  // 18125: ?? (skip results are different than combos)
 		'skip-combos: play(null) + newWordFragment > revert(null) + playBegin': false,  // 18201: ?? (skip results are different than combos)
 		'skip-combos: play(null) + newWordFragment > revert(null) + playFinish': false,  // 18202: ?? (skip results are different than combos)
 		'skip-combos: play(null) + newWordFragment > revert(null) + pauseBegin': false,  // 18207: ?? (skip results are different than combos)
 		'skip-combos: play(null) + newWordFragment > revert(null) + pauseFinish': false,  // 18208: ?? (skip results are different than combos)
-		// 'skip-combos: play(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
 		'skip-combos: play(null) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + progress': true,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: play(null) + progress > togglePlayPause(null) + done': true,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + progress': true,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: play(null) + progress > toggle(null) + done': true,  // 19025: ?? (skip results are different than combos)
 		'skip-combos: play(null) + progress > revert(null) + playBegin': false,  // 19101: ?? (skip results are different than combos)
 		'skip-combos: play(null) + progress > revert(null) + playFinish': false,  // 19102: ?? (skip results are different than combos)
 		'skip-combos: play(null) + progress > revert(null) + pauseBegin': false,  // 19107: ?? (skip results are different than combos)
@@ -1760,10 +1750,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: play(null) + stopBegin > play(null) + playFinish': false,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopBegin > play(null) + restartBegin': false,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopBegin > play(null) + restartFinish': false,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: play(null) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: play(null) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: play(null) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: play(null) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: play(null) + stopBegin > toggle(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: play(null) + stopBegin > toggle(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: play(null) + stopBegin > toggle(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: play(null) + stopBegin > toggle(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopBegin > rewind(null) + newWordFragment': false,  // 20046: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopBegin > rewind(null) + progress': false,  // 20047: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopBegin > fastForward(null) + newWordFragment': false,  // 20071: ?? (skip results are different than combos)
@@ -1847,10 +1837,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: play(null) + stopFinish > play(null) + playFinish': false,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopFinish > play(null) + restartBegin': false,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopFinish > play(null) + restartFinish': false,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: play(null) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: play(null) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: play(null) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: play(null) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: play(null) + stopFinish > toggle(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: play(null) + stopFinish > toggle(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: play(null) + stopFinish > toggle(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: play(null) + stopFinish > toggle(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopFinish > rewind(null) + newWordFragment': false,  // 20946: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopFinish > rewind(null) + progress': false,  // 20947: ?? (skip results are different than combos)
 		'skip-combos: play(null) + stopFinish > fastForward(null) + newWordFragment': false,  // 20971: ?? (skip results are different than combos)
@@ -1934,10 +1924,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: play(null) + done > play(null) + playFinish': false,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: play(null) + done > play(null) + restartBegin': false,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: play(null) + done > play(null) + restartFinish': false,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: play(null) + done > togglePlayPause(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: play(null) + done > togglePlayPause(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: play(null) + done > togglePlayPause(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: play(null) + done > togglePlayPause(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: play(null) + done > toggle(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: play(null) + done > toggle(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: play(null) + done > toggle(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: play(null) + done > toggle(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
 		'skip-combos: play(null) + done > rewind(null) + newWordFragment': false,  // 21846: ?? (skip results are different than combos)
 		'skip-combos: play(null) + done > rewind(null) + progress': false,  // 21847: ?? (skip results are different than combos)
 		'skip-combos: play(null) + done > fastForward(null) + newWordFragment': false,  // 21871: ?? (skip results are different than combos)
@@ -2020,7 +2010,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 
 
-		// ============== togglePlayPause ==============
+		// ============== toggle ==============
 		// Identical to `play()` (almost? what are the differences?)
 		// #3 play-like + !stop*|done > some types of relative loopers (just play?) gets different output than usual
 		// #4 from 'play' state + !stop*|done > toggle pauses, not plays
@@ -2029,369 +2019,364 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// #7 play-like + stop*|done > relative single(not rewind) loopers(-) don't trigger stop*|done
 		// #8 play-like + stop*|done > relative loopers(+|0) do unexpectedly trigger stop*|done
 		// #9 play-like + stop*|done > play = triggers `restart` instead of `play`
-		// 'skip-combos: togglePlayPause(null) + playBegin > play(null) + newWordFragment': false,  // 3696: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > play(null) + progress': false,  // 3697: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + playBegin': false,  // 3701: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + playFinish': false,  // 3702: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + pauseBegin': false,  // 3707: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + pauseFinish': false,  // 3708: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + loopBegin': false,  // 3719: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + loopFinish': false,  // 3720: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + newWordFragment': false,  // 3721: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + progress': false,  // 3722: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + stopBegin': false,  // 3723: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + stopFinish': false,  // 3724: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + done': false,  // 3725: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > revert(null) + playBegin': false,  // 3801: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > revert(null) + playFinish': false,  // 3802: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > revert(null) + pauseBegin': false,  // 3807: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playBegin > revert(null) + pauseFinish': false,  // 3808: ?? (skip results are different than combos)
-		// 'skip-combos: togglePlayPause(null) + playFinish > play(null) + newWordFragment': false,  // 4596: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > play(null) + progress': false,  // 4597: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + playBegin': false,  // 4601: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + playFinish': false,  // 4602: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + pauseBegin': false,  // 4607: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + pauseFinish': false,  // 4608: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + loopBegin': false,  // 4619: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + loopFinish': false,  // 4620: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + newWordFragment': false,  // 4621: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + progress': false,  // 4622: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + stopBegin': false,  // 4623: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + stopFinish': false,  // 4624: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + done': false,  // 4625: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > revert(null) + playBegin': false,  // 4701: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > revert(null) + playFinish': false,  // 4702: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > revert(null) + pauseBegin': false,  // 4707: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + playFinish > revert(null) + pauseFinish': false,  // 4708: ?? (skip results are different than combos)
-		// 'skip-combos: togglePlayPause(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + done': false,  // 16325: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > revert(null) + playBegin': false,  // 16401: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > revert(null) + playFinish': false,  // 16402: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > revert(null) + pauseBegin': false,  // 16407: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopBegin > revert(null) + pauseFinish': false,  // 16408: ?? (skip results are different than combos)
-		// 'skip-combos: togglePlayPause(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + done': false,  // 17225: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > revert(null) + playBegin': false,  // 17301: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > revert(null) + playFinish': false,  // 17302: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > revert(null) + pauseBegin': false,  // 17307: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + loopFinish > revert(null) + pauseFinish': false,  // 17308: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > revert(null) + playBegin': false,  // 18201: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > revert(null) + playFinish': false,  // 18202: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > revert(null) + pauseBegin': false,  // 18207: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + newWordFragment > revert(null) + pauseFinish': false,  // 18208: ?? (skip results are different than combos)
-		// 'skip-combos: togglePlayPause(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + progress': false,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + done': false,  // 19025: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > revert(null) + playBegin': false,  // 19101: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > revert(null) + playFinish': false,  // 19102: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > revert(null) + pauseBegin': false,  // 19107: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + progress > revert(null) + pauseFinish': false,  // 19108: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > play(null) + playBegin': false,  // 19876: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > play(null) + playFinish': false,  // 19877: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > play(null) + restartBegin': false,  // 19880: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > play(null) + restartFinish': false,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > rewind(null) + newWordFragment': false,  // 20046: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > rewind(null) + progress': false,  // 20047: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > fastForward(null) + newWordFragment': false,  // 20071: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > fastForward(null) + progress': false,  // 20072: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,-2]) + newWordFragment': false,  // 20096: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,-2]) + progress': false,  // 20097: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,-2]) + stopBegin': false,  // 20098: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,-2]) + stopFinish': false,  // 20099: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,-2]) + done': false,  // 20100: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,2]) + newWordFragment': false,  // 20121: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,2]) + progress': false,  // 20122: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,2]) + stopBegin': false,  // 20123: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,2]) + stopFinish': false,  // 20124: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,2]) + done': false,  // 20125: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > current(null) + newWordFragment': false,  // 20146: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > current(null) + progress': false,  // 20147: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > current(null) + stopBegin': false,  // 20148: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > current(null) + stopFinish': false,  // 20149: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > current(null) + done': false,  // 20150: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-3) + progress': false,  // 20322: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-3) + stopFinish': false,  // 20324: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-3) + done': false,  // 20325: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-1) + newWordFragment': false,  // 20346: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-1) + progress': false,  // 20347: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-1) + stopBegin': false,  // 20348: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-1) + stopFinish': false,  // 20349: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-1) + done': false,  // 20350: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(0) + newWordFragment': false,  // 20371: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(0) + progress': false,  // 20372: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(0) + stopBegin': false,  // 20373: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(0) + stopFinish': false,  // 20374: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(0) + done': false,  // 20375: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(4) + newWordFragment': false,  // 20396: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(4) + progress': false,  // 20397: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(4) + stopBegin': false,  // 20398: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(4) + stopFinish': false,  // 20399: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(4) + done': false,  // 20400: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(-1) + newWordFragment': false,  // 20496: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(-1) + progress': false,  // 20497: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(-1) + stopBegin': false,  // 20498: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(-1) + stopFinish': false,  // 20499: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(-1) + done': false,  // 20500: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(0) + newWordFragment': false,  // 20521: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(0) + progress': false,  // 20522: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(0) + stopBegin': false,  // 20523: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(0) + stopFinish': false,  // 20524: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(0) + done': false,  // 20525: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(1) + newWordFragment': false,  // 20546: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(1) + progress': false,  // 20547: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(1) + stopBegin': false,  // 20548: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(1) + stopFinish': false,  // 20549: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(1) + done': false,  // 20550: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(3) + newWordFragment': false,  // 20571: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(3) + progress': false,  // 20572: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(3) + stopBegin': false,  // 20573: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(3) + stopFinish': false,  // 20574: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(3) + done': false,  // 20575: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > nextWord(null) + newWordFragment': false,  // 20621: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > nextWord(null) + progress': false,  // 20622: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > nextWord(null) + stopBegin': false,  // 20623: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > nextWord(null) + stopFinish': false,  // 20624: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > nextWord(null) + done': false,  // 20625: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > nextSentence(null) + newWordFragment': false,  // 20646: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > nextSentence(null) + progress': false,  // 20647: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > nextSentence(null) + stopBegin': false,  // 20648: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > nextSentence(null) + stopFinish': false,  // 20649: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > nextSentence(null) + done': false,  // 20650: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > prevWord(null) + newWordFragment': false,  // 20671: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > prevWord(null) + progress': false,  // 20672: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > prevWord(null) + stopBegin': false,  // 20673: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > prevWord(null) + stopFinish': false,  // 20674: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > prevWord(null) + done': false,  // 20675: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > prevSentence(null) + newWordFragment': false,  // 20696: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > prevSentence(null) + progress': false,  // 20697: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > prevSentence(null) + stopBegin': false,  // 20698: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > prevSentence(null) + stopFinish': false,  // 20699: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopBegin > prevSentence(null) + done': false,  // 20700: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > play(null) + playBegin': false,  // 20776: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > play(null) + playFinish': false,  // 20777: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > play(null) + restartBegin': false,  // 20780: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > play(null) + restartFinish': false,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > rewind(null) + newWordFragment': false,  // 20946: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > rewind(null) + progress': false,  // 20947: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > fastForward(null) + newWordFragment': false,  // 20971: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > fastForward(null) + progress': false,  // 20972: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,-2]) + newWordFragment': false,  // 20996: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,-2]) + progress': false,  // 20997: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,-2]) + stopBegin': false,  // 20998: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,-2]) + stopFinish': false,  // 20999: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,-2]) + done': false,  // 21000: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,2]) + newWordFragment': false,  // 21021: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,2]) + progress': false,  // 21022: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,2]) + stopBegin': false,  // 21023: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,2]) + stopFinish': false,  // 21024: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,2]) + done': false,  // 21025: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > current(null) + newWordFragment': false,  // 21046: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > current(null) + progress': false,  // 21047: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > current(null) + stopBegin': false,  // 21048: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > current(null) + stopFinish': false,  // 21049: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > current(null) + done': false,  // 21050: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-3) + progress': false,  // 21222: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-3) + stopFinish': false,  // 21224: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-3) + done': false,  // 21225: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-1) + newWordFragment': false,  // 21246: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-1) + progress': false,  // 21247: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-1) + stopBegin': false,  // 21248: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-1) + stopFinish': false,  // 21249: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-1) + done': false,  // 21250: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(0) + newWordFragment': false,  // 21271: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(0) + progress': false,  // 21272: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(0) + stopBegin': false,  // 21273: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(0) + stopFinish': false,  // 21274: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(0) + done': false,  // 21275: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(4) + newWordFragment': false,  // 21296: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(4) + progress': false,  // 21297: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(4) + stopBegin': false,  // 21298: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(4) + stopFinish': false,  // 21299: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(4) + done': false,  // 21300: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(-1) + newWordFragment': false,  // 21396: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(-1) + progress': false,  // 21397: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(-1) + stopBegin': false,  // 21398: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(-1) + stopFinish': false,  // 21399: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(-1) + done': false,  // 21400: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(0) + newWordFragment': false,  // 21421: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(0) + progress': false,  // 21422: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(0) + stopBegin': false,  // 21423: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(0) + stopFinish': false,  // 21424: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(0) + done': false,  // 21425: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(1) + newWordFragment': false,  // 21446: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(1) + progress': false,  // 21447: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(1) + stopBegin': false,  // 21448: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(1) + stopFinish': false,  // 21449: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(1) + done': false,  // 21450: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(3) + newWordFragment': false,  // 21471: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(3) + progress': false,  // 21472: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(3) + stopBegin': false,  // 21473: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(3) + stopFinish': false,  // 21474: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(3) + done': false,  // 21475: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > nextWord(null) + newWordFragment': false,  // 21521: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > nextWord(null) + progress': false,  // 21522: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > nextWord(null) + stopBegin': false,  // 21523: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > nextWord(null) + stopFinish': false,  // 21524: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > nextWord(null) + done': false,  // 21525: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > nextSentence(null) + newWordFragment': false,  // 21546: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > nextSentence(null) + progress': false,  // 21547: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > nextSentence(null) + stopBegin': false,  // 21548: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > nextSentence(null) + stopFinish': false,  // 21549: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > nextSentence(null) + done': false,  // 21550: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > prevWord(null) + newWordFragment': false,  // 21571: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > prevWord(null) + progress': false,  // 21572: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > prevWord(null) + stopBegin': false,  // 21573: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > prevWord(null) + stopFinish': false,  // 21574: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > prevWord(null) + done': false,  // 21575: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > prevSentence(null) + newWordFragment': false,  // 21596: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > prevSentence(null) + progress': false,  // 21597: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > prevSentence(null) + stopBegin': false,  // 21598: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > prevSentence(null) + stopFinish': false,  // 21599: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + stopFinish > prevSentence(null) + done': false,  // 21600: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > play(null) + playBegin': false,  // 21676: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > play(null) + playFinish': false,  // 21677: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > play(null) + restartBegin': false,  // 21680: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > play(null) + restartFinish': false,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > togglePlayPause(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > togglePlayPause(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > togglePlayPause(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > togglePlayPause(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > rewind(null) + newWordFragment': false,  // 21846: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > rewind(null) + progress': false,  // 21847: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > fastForward(null) + newWordFragment': false,  // 21871: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > fastForward(null) + progress': false,  // 21872: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > once([0,0,-2]) + newWordFragment': false,  // 21896: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > once([0,0,-2]) + progress': false,  // 21897: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > once([0,0,-2]) + stopBegin': false,  // 21898: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > once([0,0,-2]) + stopFinish': false,  // 21899: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > once([0,0,-2]) + done': false,  // 21900: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > once([0,0,2]) + newWordFragment': false,  // 21921: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > once([0,0,2]) + progress': false,  // 21922: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > once([0,0,2]) + stopBegin': false,  // 21923: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > once([0,0,2]) + stopFinish': false,  // 21924: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > once([0,0,2]) + done': false,  // 21925: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > current(null) + newWordFragment': false,  // 21946: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > current(null) + progress': false,  // 21947: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > current(null) + stopBegin': false,  // 21948: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > current(null) + stopFinish': false,  // 21949: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > current(null) + done': false,  // 21950: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-3) + newWordFragment': false,  // 22121: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-3) + progress': false,  // 22122: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-3) + stopBegin': false,  // 22123: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-3) + stopFinish': false,  // 22124: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-3) + done': false,  // 22125: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-1) + newWordFragment': false,  // 22146: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-1) + progress': false,  // 22147: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-1) + stopBegin': false,  // 22148: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-1) + stopFinish': false,  // 22149: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-1) + done': false,  // 22150: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(0) + newWordFragment': false,  // 22171: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(0) + progress': false,  // 22172: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(0) + stopBegin': false,  // 22173: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(0) + stopFinish': false,  // 22174: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(0) + done': false,  // 22175: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(4) + newWordFragment': false,  // 22196: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(4) + progress': false,  // 22197: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(4) + stopBegin': false,  // 22198: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(4) + stopFinish': false,  // 22199: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpWords(4) + done': false,  // 22200: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(-1) + newWordFragment': false,  // 22296: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(-1) + progress': false,  // 22297: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(-1) + stopBegin': false,  // 22298: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(-1) + stopFinish': false,  // 22299: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(-1) + done': false,  // 22300: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(0) + newWordFragment': false,  // 22321: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(0) + progress': false,  // 22322: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(0) + stopBegin': false,  // 22323: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(0) + stopFinish': false,  // 22324: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(0) + done': false,  // 22325: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(1) + newWordFragment': false,  // 22346: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(1) + progress': false,  // 22347: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(1) + stopBegin': false,  // 22348: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(1) + stopFinish': false,  // 22349: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(1) + done': false,  // 22350: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(3) + newWordFragment': false,  // 22371: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(3) + progress': false,  // 22372: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(3) + stopBegin': false,  // 22373: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(3) + stopFinish': false,  // 22374: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(3) + done': false,  // 22375: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > nextWord(null) + newWordFragment': false,  // 22421: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > nextWord(null) + progress': false,  // 22422: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > nextWord(null) + stopBegin': false,  // 22423: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > nextWord(null) + stopFinish': false,  // 22424: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > nextWord(null) + done': false,  // 22425: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > nextSentence(null) + newWordFragment': false,  // 22446: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > nextSentence(null) + progress': false,  // 22447: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > nextSentence(null) + stopBegin': false,  // 22448: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > nextSentence(null) + stopFinish': false,  // 22449: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > nextSentence(null) + done': false,  // 22450: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > prevWord(null) + newWordFragment': false,  // 22471: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > prevWord(null) + progress': false,  // 22472: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > prevWord(null) + stopBegin': false,  // 22473: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > prevWord(null) + stopFinish': false,  // 22474: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > prevWord(null) + done': false,  // 22475: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > prevSentence(null) + newWordFragment': false,  // 22496: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > prevSentence(null) + progress': false,  // 22497: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > prevSentence(null) + stopBegin': false,  // 22498: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > prevSentence(null) + stopFinish': false,  // 22499: ?? (skip results are different than combos)
-		'skip-combos: togglePlayPause(null) + done > prevSentence(null) + done': false,  // 22500: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > play(null) + progress': false,  // 3697: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + playBegin': false,  // 3701: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + playFinish': false,  // 3702: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + pauseBegin': false,  // 3707: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + pauseFinish': false,  // 3708: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + loopBegin': false,  // 3719: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + loopFinish': false,  // 3720: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + newWordFragment': false,  // 3721: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + progress': false,  // 3722: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + stopBegin': false,  // 3723: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + stopFinish': false,  // 3724: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > toggle(null) + done': false,  // 3725: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > revert(null) + playBegin': false,  // 3801: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > revert(null) + playFinish': false,  // 3802: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > revert(null) + pauseBegin': false,  // 3807: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playBegin > revert(null) + pauseFinish': false,  // 3808: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > play(null) + progress': false,  // 4597: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + playBegin': false,  // 4601: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + playFinish': false,  // 4602: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + pauseBegin': false,  // 4607: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + pauseFinish': false,  // 4608: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + loopBegin': false,  // 4619: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + loopFinish': false,  // 4620: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + newWordFragment': false,  // 4621: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + progress': false,  // 4622: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + stopBegin': false,  // 4623: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + stopFinish': false,  // 4624: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > toggle(null) + done': false,  // 4625: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > revert(null) + playBegin': false,  // 4701: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > revert(null) + playFinish': false,  // 4702: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > revert(null) + pauseBegin': false,  // 4707: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + playFinish > revert(null) + pauseFinish': false,  // 4708: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + progress': false,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + done': false,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > revert(null) + playBegin': false,  // 16401: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > revert(null) + playFinish': false,  // 16402: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > revert(null) + pauseBegin': false,  // 16407: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopBegin > revert(null) + pauseFinish': false,  // 16408: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + progress': false,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + done': false,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > revert(null) + playBegin': false,  // 17301: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > revert(null) + playFinish': false,  // 17302: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > revert(null) + pauseBegin': false,  // 17307: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + loopFinish > revert(null) + pauseFinish': false,  // 17308: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + progress': false,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + done': false,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > revert(null) + playBegin': false,  // 18201: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > revert(null) + playFinish': false,  // 18202: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > revert(null) + pauseBegin': false,  // 18207: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + newWordFragment > revert(null) + pauseFinish': false,  // 18208: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + progress': false,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > toggle(null) + done': false,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > revert(null) + playBegin': false,  // 19101: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > revert(null) + playFinish': false,  // 19102: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > revert(null) + pauseBegin': false,  // 19107: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + progress > revert(null) + pauseFinish': false,  // 19108: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > play(null) + playBegin': false,  // 19876: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > play(null) + playFinish': false,  // 19877: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > play(null) + restartBegin': false,  // 19880: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > play(null) + restartFinish': false,  // 19881: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > toggle(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > toggle(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > toggle(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > toggle(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > rewind(null) + newWordFragment': false,  // 20046: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > rewind(null) + progress': false,  // 20047: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > fastForward(null) + newWordFragment': false,  // 20071: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > fastForward(null) + progress': false,  // 20072: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > once([0,0,-2]) + newWordFragment': false,  // 20096: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > once([0,0,-2]) + progress': false,  // 20097: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > once([0,0,-2]) + stopBegin': false,  // 20098: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > once([0,0,-2]) + stopFinish': false,  // 20099: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > once([0,0,-2]) + done': false,  // 20100: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > once([0,0,2]) + newWordFragment': false,  // 20121: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > once([0,0,2]) + progress': false,  // 20122: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > once([0,0,2]) + stopBegin': false,  // 20123: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > once([0,0,2]) + stopFinish': false,  // 20124: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > once([0,0,2]) + done': false,  // 20125: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > current(null) + newWordFragment': false,  // 20146: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > current(null) + progress': false,  // 20147: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > current(null) + stopBegin': false,  // 20148: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > current(null) + stopFinish': false,  // 20149: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > current(null) + done': false,  // 20150: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-3) + newWordFragment': false,  // 20321: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-3) + progress': false,  // 20322: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-3) + stopBegin': false,  // 20323: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-3) + stopFinish': false,  // 20324: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-3) + done': false,  // 20325: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-1) + newWordFragment': false,  // 20346: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-1) + progress': false,  // 20347: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-1) + stopBegin': false,  // 20348: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-1) + stopFinish': false,  // 20349: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-1) + done': false,  // 20350: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(0) + newWordFragment': false,  // 20371: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(0) + progress': false,  // 20372: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(0) + stopBegin': false,  // 20373: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(0) + stopFinish': false,  // 20374: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(0) + done': false,  // 20375: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(4) + newWordFragment': false,  // 20396: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(4) + progress': false,  // 20397: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(4) + stopBegin': false,  // 20398: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(4) + stopFinish': false,  // 20399: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpWords(4) + done': false,  // 20400: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(-1) + newWordFragment': false,  // 20496: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(-1) + progress': false,  // 20497: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(-1) + stopBegin': false,  // 20498: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(-1) + stopFinish': false,  // 20499: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(-1) + done': false,  // 20500: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(0) + newWordFragment': false,  // 20521: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(0) + progress': false,  // 20522: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(0) + stopBegin': false,  // 20523: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(0) + stopFinish': false,  // 20524: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(0) + done': false,  // 20525: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(1) + newWordFragment': false,  // 20546: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(1) + progress': false,  // 20547: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(1) + stopBegin': false,  // 20548: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(1) + stopFinish': false,  // 20549: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(1) + done': false,  // 20550: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(3) + newWordFragment': false,  // 20571: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(3) + progress': false,  // 20572: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(3) + stopBegin': false,  // 20573: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(3) + stopFinish': false,  // 20574: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(3) + done': false,  // 20575: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > nextWord(null) + newWordFragment': false,  // 20621: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > nextWord(null) + progress': false,  // 20622: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > nextWord(null) + stopBegin': false,  // 20623: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > nextWord(null) + stopFinish': false,  // 20624: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > nextWord(null) + done': false,  // 20625: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > nextSentence(null) + newWordFragment': false,  // 20646: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > nextSentence(null) + progress': false,  // 20647: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > nextSentence(null) + stopBegin': false,  // 20648: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > nextSentence(null) + stopFinish': false,  // 20649: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > nextSentence(null) + done': false,  // 20650: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > prevWord(null) + newWordFragment': false,  // 20671: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > prevWord(null) + progress': false,  // 20672: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > prevWord(null) + stopBegin': false,  // 20673: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > prevWord(null) + stopFinish': false,  // 20674: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > prevWord(null) + done': false,  // 20675: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > prevSentence(null) + newWordFragment': false,  // 20696: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > prevSentence(null) + progress': false,  // 20697: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > prevSentence(null) + stopBegin': false,  // 20698: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > prevSentence(null) + stopFinish': false,  // 20699: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopBegin > prevSentence(null) + done': false,  // 20700: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > play(null) + playBegin': false,  // 20776: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > play(null) + playFinish': false,  // 20777: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > play(null) + restartBegin': false,  // 20780: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > play(null) + restartFinish': false,  // 20781: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > toggle(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > toggle(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > toggle(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > toggle(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > rewind(null) + newWordFragment': false,  // 20946: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > rewind(null) + progress': false,  // 20947: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > fastForward(null) + newWordFragment': false,  // 20971: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > fastForward(null) + progress': false,  // 20972: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > once([0,0,-2]) + newWordFragment': false,  // 20996: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > once([0,0,-2]) + progress': false,  // 20997: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > once([0,0,-2]) + stopBegin': false,  // 20998: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > once([0,0,-2]) + stopFinish': false,  // 20999: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > once([0,0,-2]) + done': false,  // 21000: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > once([0,0,2]) + newWordFragment': false,  // 21021: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > once([0,0,2]) + progress': false,  // 21022: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > once([0,0,2]) + stopBegin': false,  // 21023: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > once([0,0,2]) + stopFinish': false,  // 21024: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > once([0,0,2]) + done': false,  // 21025: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > current(null) + newWordFragment': false,  // 21046: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > current(null) + progress': false,  // 21047: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > current(null) + stopBegin': false,  // 21048: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > current(null) + stopFinish': false,  // 21049: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > current(null) + done': false,  // 21050: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-3) + newWordFragment': false,  // 21221: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-3) + progress': false,  // 21222: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-3) + stopBegin': false,  // 21223: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-3) + stopFinish': false,  // 21224: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-3) + done': false,  // 21225: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-1) + newWordFragment': false,  // 21246: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-1) + progress': false,  // 21247: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-1) + stopBegin': false,  // 21248: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-1) + stopFinish': false,  // 21249: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-1) + done': false,  // 21250: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(0) + newWordFragment': false,  // 21271: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(0) + progress': false,  // 21272: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(0) + stopBegin': false,  // 21273: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(0) + stopFinish': false,  // 21274: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(0) + done': false,  // 21275: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(4) + newWordFragment': false,  // 21296: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(4) + progress': false,  // 21297: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(4) + stopBegin': false,  // 21298: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(4) + stopFinish': false,  // 21299: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpWords(4) + done': false,  // 21300: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(-1) + newWordFragment': false,  // 21396: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(-1) + progress': false,  // 21397: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(-1) + stopBegin': false,  // 21398: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(-1) + stopFinish': false,  // 21399: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(-1) + done': false,  // 21400: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(0) + newWordFragment': false,  // 21421: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(0) + progress': false,  // 21422: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(0) + stopBegin': false,  // 21423: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(0) + stopFinish': false,  // 21424: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(0) + done': false,  // 21425: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(1) + newWordFragment': false,  // 21446: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(1) + progress': false,  // 21447: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(1) + stopBegin': false,  // 21448: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(1) + stopFinish': false,  // 21449: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(1) + done': false,  // 21450: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(3) + newWordFragment': false,  // 21471: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(3) + progress': false,  // 21472: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(3) + stopBegin': false,  // 21473: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(3) + stopFinish': false,  // 21474: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(3) + done': false,  // 21475: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > nextWord(null) + newWordFragment': false,  // 21521: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > nextWord(null) + progress': false,  // 21522: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > nextWord(null) + stopBegin': false,  // 21523: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > nextWord(null) + stopFinish': false,  // 21524: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > nextWord(null) + done': false,  // 21525: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > nextSentence(null) + newWordFragment': false,  // 21546: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > nextSentence(null) + progress': false,  // 21547: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > nextSentence(null) + stopBegin': false,  // 21548: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > nextSentence(null) + stopFinish': false,  // 21549: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > nextSentence(null) + done': false,  // 21550: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > prevWord(null) + newWordFragment': false,  // 21571: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > prevWord(null) + progress': false,  // 21572: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > prevWord(null) + stopBegin': false,  // 21573: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > prevWord(null) + stopFinish': false,  // 21574: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > prevWord(null) + done': false,  // 21575: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > prevSentence(null) + newWordFragment': false,  // 21596: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > prevSentence(null) + progress': false,  // 21597: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > prevSentence(null) + stopBegin': false,  // 21598: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > prevSentence(null) + stopFinish': false,  // 21599: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + stopFinish > prevSentence(null) + done': false,  // 21600: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > play(null) + playBegin': false,  // 21676: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > play(null) + playFinish': false,  // 21677: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > play(null) + restartBegin': false,  // 21680: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > play(null) + restartFinish': false,  // 21681: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > toggle(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > toggle(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > toggle(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > toggle(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > rewind(null) + newWordFragment': false,  // 21846: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > rewind(null) + progress': false,  // 21847: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > fastForward(null) + newWordFragment': false,  // 21871: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > fastForward(null) + progress': false,  // 21872: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > once([0,0,-2]) + newWordFragment': false,  // 21896: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > once([0,0,-2]) + progress': false,  // 21897: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > once([0,0,-2]) + stopBegin': false,  // 21898: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > once([0,0,-2]) + stopFinish': false,  // 21899: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > once([0,0,-2]) + done': false,  // 21900: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > once([0,0,2]) + newWordFragment': false,  // 21921: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > once([0,0,2]) + progress': false,  // 21922: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > once([0,0,2]) + stopBegin': false,  // 21923: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > once([0,0,2]) + stopFinish': false,  // 21924: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > once([0,0,2]) + done': false,  // 21925: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > current(null) + newWordFragment': false,  // 21946: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > current(null) + progress': false,  // 21947: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > current(null) + stopBegin': false,  // 21948: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > current(null) + stopFinish': false,  // 21949: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > current(null) + done': false,  // 21950: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(-3) + newWordFragment': false,  // 22121: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(-3) + progress': false,  // 22122: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(-3) + stopBegin': false,  // 22123: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(-3) + stopFinish': false,  // 22124: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(-3) + done': false,  // 22125: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(-1) + newWordFragment': false,  // 22146: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(-1) + progress': false,  // 22147: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(-1) + stopBegin': false,  // 22148: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(-1) + stopFinish': false,  // 22149: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(-1) + done': false,  // 22150: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(0) + newWordFragment': false,  // 22171: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(0) + progress': false,  // 22172: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(0) + stopBegin': false,  // 22173: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(0) + stopFinish': false,  // 22174: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(0) + done': false,  // 22175: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(4) + newWordFragment': false,  // 22196: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(4) + progress': false,  // 22197: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(4) + stopBegin': false,  // 22198: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(4) + stopFinish': false,  // 22199: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpWords(4) + done': false,  // 22200: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(-1) + newWordFragment': false,  // 22296: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(-1) + progress': false,  // 22297: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(-1) + stopBegin': false,  // 22298: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(-1) + stopFinish': false,  // 22299: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(-1) + done': false,  // 22300: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(0) + newWordFragment': false,  // 22321: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(0) + progress': false,  // 22322: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(0) + stopBegin': false,  // 22323: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(0) + stopFinish': false,  // 22324: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(0) + done': false,  // 22325: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(1) + newWordFragment': false,  // 22346: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(1) + progress': false,  // 22347: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(1) + stopBegin': false,  // 22348: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(1) + stopFinish': false,  // 22349: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(1) + done': false,  // 22350: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(3) + newWordFragment': false,  // 22371: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(3) + progress': false,  // 22372: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(3) + stopBegin': false,  // 22373: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(3) + stopFinish': false,  // 22374: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > jumpSentences(3) + done': false,  // 22375: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > nextWord(null) + newWordFragment': false,  // 22421: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > nextWord(null) + progress': false,  // 22422: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > nextWord(null) + stopBegin': false,  // 22423: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > nextWord(null) + stopFinish': false,  // 22424: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > nextWord(null) + done': false,  // 22425: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > nextSentence(null) + newWordFragment': false,  // 22446: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > nextSentence(null) + progress': false,  // 22447: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > nextSentence(null) + stopBegin': false,  // 22448: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > nextSentence(null) + stopFinish': false,  // 22449: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > nextSentence(null) + done': false,  // 22450: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > prevWord(null) + newWordFragment': false,  // 22471: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > prevWord(null) + progress': false,  // 22472: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > prevWord(null) + stopBegin': false,  // 22473: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > prevWord(null) + stopFinish': false,  // 22474: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > prevWord(null) + done': false,  // 22475: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > prevSentence(null) + newWordFragment': false,  // 22496: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > prevSentence(null) + progress': false,  // 22497: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > prevSentence(null) + stopBegin': false,  // 22498: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > prevSentence(null) + stopFinish': false,  // 22499: ?? (skip results are different than combos)
+		'skip-combos: toggle(null) + done > prevSentence(null) + done': false,  // 22500: ?? (skip results are different than combos)
 
 		// ============== pause ==============
 		// ============== stop ==============
@@ -2406,251 +2391,221 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: rewind(null) + rewindBegin > play(null) + playFinish': true,  // 12677: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + rewindBegin > play(null) + restartBegin': true,  // 12680: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + rewindBegin > play(null) + restartFinish': true,  // 12681: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + rewindBegin > togglePlayPause(null) + playBegin': true,  // 12701: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + rewindBegin > togglePlayPause(null) + playFinish': true,  // 12702: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + rewindBegin > togglePlayPause(null) + restartBegin': true,  // 12705: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + rewindBegin > togglePlayPause(null) + restartFinish': true,  // 12706: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + rewindBegin > toggle(null) + playBegin': true,  // 12701: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + rewindBegin > toggle(null) + playFinish': true,  // 12702: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + rewindBegin > toggle(null) + restartBegin': true,  // 12705: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + rewindBegin > toggle(null) + restartFinish': true,  // 12706: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + rewindFinish > play(null) + playBegin': true,  // 13576: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + rewindFinish > play(null) + playFinish': true,  // 13577: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + rewindFinish > play(null) + restartBegin': true,  // 13580: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + rewindFinish > play(null) + restartFinish': true,  // 13581: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + rewindFinish > togglePlayPause(null) + playBegin': true,  // 13601: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + rewindFinish > togglePlayPause(null) + playFinish': true,  // 13602: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + rewindFinish > togglePlayPause(null) + restartBegin': true,  // 13605: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + rewindFinish > togglePlayPause(null) + restartFinish': true,  // 13606: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + rewindFinish > toggle(null) + playBegin': true,  // 13601: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + rewindFinish > toggle(null) + playFinish': true,  // 13602: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + rewindFinish > toggle(null) + restartBegin': true,  // 13605: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + rewindFinish > toggle(null) + restartFinish': true,  // 13606: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + loopBegin > play(null) + playBegin': true,  // 16276: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + loopBegin > play(null) + playFinish': true,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + loopBegin > play(null) + restartBegin': true,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + loopBegin > play(null) + restartFinish': true,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + loopBegin > toggle(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + loopBegin > toggle(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + loopFinish > play(null) + playBegin': true,  // 17176: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + loopFinish > play(null) + playFinish': true,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + loopFinish > play(null) + restartBegin': true,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + loopFinish > play(null) + restartFinish': true,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + loopFinish > toggle(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + loopFinish > toggle(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + newWordFragment > play(null) + playBegin': true,  // 18076: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + newWordFragment > play(null) + playFinish': true,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + newWordFragment > play(null) + restartBegin': true,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + newWordFragment > play(null) + restartFinish': true,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + newWordFragment > toggle(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + newWordFragment > toggle(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + progress > play(null) + playBegin': true,  // 18976: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + progress > play(null) + playFinish': true,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + progress > play(null) + restartBegin': true,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + progress > play(null) + restartFinish': true,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + progress > toggle(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + progress > toggle(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + stopBegin > play(null) + playBegin': true,  // 19876: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + stopBegin > play(null) + playFinish': true,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + stopBegin > play(null) + restartBegin': true,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + stopBegin > play(null) + restartFinish': true,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + stopBegin > toggle(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + stopBegin > toggle(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + stopBegin > toggle(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + stopBegin > toggle(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + stopFinish > play(null) + playBegin': true,  // 20776: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + stopFinish > play(null) + playFinish': true,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + stopFinish > play(null) + restartBegin': true,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + stopFinish > play(null) + restartFinish': true,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + stopFinish > toggle(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + stopFinish > toggle(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + stopFinish > toggle(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + stopFinish > toggle(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + done > play(null) + playBegin': true,  // 21676: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + done > play(null) + playFinish': true,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + done > play(null) + restartBegin': true,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: rewind(null) + done > play(null) + restartFinish': true,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + done > togglePlayPause(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + done > togglePlayPause(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + done > togglePlayPause(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: rewind(null) + done > togglePlayPause(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + done > toggle(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + done > toggle(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + done > toggle(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: rewind(null) + done > toggle(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
 
 
 
 		// ============== fastForward ==============
 		// A bit like `play` or `toggle`, but here `revert` doesn't lead to play, just to pause
 		// Other differences?
-		// 'skip-combos: fastForward(null) + fastForwardBegin > play(null) + newWordFragment': false,  // 14496: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > play(null) + progress': false,  // 14497: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + playBegin': false,  // 14501: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + playFinish': false,  // 14502: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + pauseBegin': false,  // 14507: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + pauseFinish': false,  // 14508: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + revertBegin': false,  // 14513: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + revertFinish': false,  // 14514: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + loopBegin': false,  // 14519: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + loopFinish': false,  // 14520: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + newWordFragment': false,  // 14521: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + progress': false,  // 14522: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + stopBegin': false,  // 14523: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + stopFinish': false,  // 14524: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + done': false,  // 14525: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + playBegin': false,  // 14501: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + playFinish': false,  // 14502: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + pauseBegin': false,  // 14507: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + pauseFinish': false,  // 14508: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + revertBegin': false,  // 14513: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + revertFinish': false,  // 14514: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + loopBegin': false,  // 14519: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + loopFinish': false,  // 14520: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + newWordFragment': false,  // 14521: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + progress': false,  // 14522: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + stopBegin': false,  // 14523: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + stopFinish': false,  // 14524: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + done': false,  // 14525: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > fastForward(null) + newWordFragment': false,  // 14671: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > fastForward(null) + progress': false,  // 14672: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > once([0,0,2]) + newWordFragment': false,  // 14721: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > once([0,0,2]) + progress': false,  // 14722: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + fastForwardBegin > current(null) + newWordFragment': false,  // 14746: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > current(null) + progress': false,  // 14747: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + fastForwardBegin > jumpWords(0) + newWordFragment': false,  // 14971: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > jumpWords(0) + progress': false,  // 14972: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + fastForwardBegin > jumpWords(4) + newWordFragment': false,  // 14996: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > jumpWords(4) + progress': false,  // 14997: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + fastForwardBegin > jumpSentences(0) + newWordFragment': false,  // 15121: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > jumpSentences(0) + progress': false,  // 15122: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > nextWord(null) + newWordFragment': false,  // 15221: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardBegin > nextWord(null) + progress': false,  // 15222: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + fastForwardFinish > play(null) + newWordFragment': false,  // 15396: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > play(null) + progress': false,  // 15397: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + playBegin': false,  // 15401: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + playFinish': false,  // 15402: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + pauseBegin': false,  // 15407: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + pauseFinish': false,  // 15408: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + revertBegin': false,  // 15413: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + revertFinish': false,  // 15414: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + loopBegin': false,  // 15419: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + loopFinish': false,  // 15420: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + newWordFragment': false,  // 15421: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + progress': false,  // 15422: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + stopBegin': false,  // 15423: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + stopFinish': false,  // 15424: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + done': false,  // 15425: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + playBegin': false,  // 15401: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + playFinish': false,  // 15402: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + pauseBegin': false,  // 15407: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + pauseFinish': false,  // 15408: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + revertBegin': false,  // 15413: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + revertFinish': false,  // 15414: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + loopBegin': false,  // 15419: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + loopFinish': false,  // 15420: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + newWordFragment': false,  // 15421: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + progress': false,  // 15422: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + stopBegin': false,  // 15423: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + stopFinish': false,  // 15424: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + done': false,  // 15425: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > fastForward(null) + newWordFragment': false,  // 15571: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > fastForward(null) + progress': false,  // 15572: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > once([0,0,2]) + newWordFragment': false,  // 15621: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > once([0,0,2]) + progress': false,  // 15622: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + fastForwardFinish > current(null) + newWordFragment': false,  // 15646: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > current(null) + progress': false,  // 15647: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + fastForwardFinish > jumpWords(0) + newWordFragment': false,  // 15871: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > jumpWords(0) + progress': false,  // 15872: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + fastForwardFinish > jumpWords(4) + newWordFragment': false,  // 15896: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > jumpWords(4) + progress': false,  // 15897: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + fastForwardFinish > jumpSentences(0) + newWordFragment': false,  // 16021: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > jumpSentences(0) + progress': false,  // 16022: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > nextWord(null) + newWordFragment': false,  // 16121: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + fastForwardFinish > nextWord(null) + progress': false,  // 16122: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + done': false,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + progress': false,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + done': false,  // 16325: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > fastForward(null) + progress': false,  // 16472: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > once([0,0,2]) + newWordFragment': false,  // 16521: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > once([0,0,2]) + progress': false,  // 16522: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + loopBegin > current(null) + newWordFragment': false,  // 16546: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > current(null) + progress': false,  // 16547: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + loopBegin > jumpWords(0) + newWordFragment': false,  // 16771: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > jumpWords(0) + progress': false,  // 16772: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + loopBegin > jumpWords(4) + newWordFragment': false,  // 16796: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > jumpWords(4) + progress': false,  // 16797: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + loopBegin > jumpSentences(0) + newWordFragment': false,  // 16921: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > jumpSentences(0) + progress': false,  // 16922: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > nextWord(null) + newWordFragment': false,  // 17021: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopBegin > nextWord(null) + progress': false,  // 17022: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + done': false,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + progress': false,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + done': false,  // 17225: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > fastForward(null) + progress': false,  // 17372: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > once([0,0,2]) + newWordFragment': false,  // 17421: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > once([0,0,2]) + progress': false,  // 17422: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + loopFinish > current(null) + newWordFragment': false,  // 17446: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > current(null) + progress': false,  // 17447: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + loopFinish > jumpWords(0) + newWordFragment': false,  // 17671: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > jumpWords(0) + progress': false,  // 17672: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + loopFinish > jumpWords(4) + newWordFragment': false,  // 17696: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > jumpWords(4) + progress': false,  // 17697: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + loopFinish > jumpSentences(0) + newWordFragment': false,  // 17821: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > jumpSentences(0) + progress': false,  // 17822: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > nextWord(null) + newWordFragment': false,  // 17921: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + loopFinish > nextWord(null) + progress': false,  // 17922: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + progress': false,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + done': false,  // 18125: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > fastForward(null) + progress': false,  // 18272: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 18321: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > once([0,0,2]) + progress': false,  // 18322: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + newWordFragment > current(null) + newWordFragment': false,  // 18346: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > current(null) + progress': false,  // 18347: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + newWordFragment > jumpWords(0) + newWordFragment': false,  // 18571: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > jumpWords(0) + progress': false,  // 18572: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + newWordFragment > jumpWords(4) + newWordFragment': false,  // 18596: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > jumpWords(4) + progress': false,  // 18597: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + newWordFragment > jumpSentences(0) + newWordFragment': false,  // 18721: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > jumpSentences(0) + progress': false,  // 18722: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > nextWord(null) + newWordFragment': false,  // 18821: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + newWordFragment > nextWord(null) + progress': false,  // 18822: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + progress': false,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + done': false,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + progress': false,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + progress > toggle(null) + done': false,  // 19025: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > fastForward(null) + progress': false,  // 19172: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > once([0,0,2]) + newWordFragment': false,  // 19221: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > once([0,0,2]) + progress': false,  // 19222: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + progress > current(null) + newWordFragment': false,  // 19246: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > current(null) + progress': false,  // 19247: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + progress > jumpWords(0) + newWordFragment': false,  // 19471: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > jumpWords(0) + progress': false,  // 19472: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + progress > jumpWords(4) + newWordFragment': false,  // 19496: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > jumpWords(4) + progress': false,  // 19497: ?? (skip results are different than combos)
-		// 'skip-combos: fastForward(null) + progress > jumpSentences(0) + newWordFragment': false,  // 19621: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > jumpSentences(0) + progress': false,  // 19622: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > nextWord(null) + newWordFragment': false,  // 19721: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + progress > nextWord(null) + progress': false,  // 19722: ?? (skip results are different than combos)
@@ -2658,10 +2613,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: fastForward(null) + stopBegin > play(null) + playFinish': false,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + stopBegin > play(null) + restartBegin': false,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + stopBegin > play(null) + restartFinish': false,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + stopBegin > toggle(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + stopBegin > toggle(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + stopBegin > toggle(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + stopBegin > toggle(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + stopBegin > rewind(null) + newWordFragment': false,  // 20046: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + stopBegin > rewind(null) + progress': false,  // 20047: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + stopBegin > fastForward(null) + newWordFragment': false,  // 20071: ?? (skip results are different than combos)
@@ -2745,10 +2700,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: fastForward(null) + stopFinish > play(null) + playFinish': false,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + stopFinish > play(null) + restartBegin': false,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + stopFinish > play(null) + restartFinish': false,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + stopFinish > toggle(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + stopFinish > toggle(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + stopFinish > toggle(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + stopFinish > toggle(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + stopFinish > rewind(null) + newWordFragment': false,  // 20946: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + stopFinish > rewind(null) + progress': false,  // 20947: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + stopFinish > fastForward(null) + newWordFragment': false,  // 20971: ?? (skip results are different than combos)
@@ -2832,10 +2787,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: fastForward(null) + done > play(null) + playFinish': false,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + done > play(null) + restartBegin': false,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + done > play(null) + restartFinish': false,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + done > togglePlayPause(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + done > togglePlayPause(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + done > togglePlayPause(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: fastForward(null) + done > togglePlayPause(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + done > toggle(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + done > toggle(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + done > toggle(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: fastForward(null) + done > toggle(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + done > rewind(null) + newWordFragment': false,  // 21846: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + done > rewind(null) + progress': false,  // 21847: ?? (skip results are different than combos)
 		'skip-combos: fastForward(null) + done > fastForward(null) + newWordFragment': false,  // 21871: ?? (skip results are different than combos)
@@ -2924,74 +2879,74 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: once([0,0,-2]) + onceBegin > play(null) + playFinish': true,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + onceBegin > play(null) + restartBegin': true,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + onceBegin > play(null) + restartFinish': true,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + onceBegin > toggle(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + onceBegin > toggle(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + onceFinish > play(null) + playBegin': true,  // 9976: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + onceFinish > play(null) + playFinish': true,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + onceFinish > play(null) + restartBegin': true,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + onceFinish > play(null) + restartFinish': true,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + onceFinish > toggle(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + onceFinish > toggle(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + loopBegin > play(null) + playBegin': true,  // 16276: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + loopBegin > play(null) + playFinish': true,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + loopBegin > play(null) + restartBegin': true,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + loopBegin > play(null) + restartFinish': true,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + loopBegin > toggle(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + loopBegin > toggle(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + loopFinish > play(null) + playBegin': true,  // 17176: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + loopFinish > play(null) + playFinish': true,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + loopFinish > play(null) + restartBegin': true,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + loopFinish > play(null) + restartFinish': true,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + loopFinish > toggle(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + loopFinish > toggle(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + newWordFragment > play(null) + playBegin': true,  // 18076: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + newWordFragment > play(null) + playFinish': true,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + newWordFragment > play(null) + restartBegin': true,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + newWordFragment > play(null) + restartFinish': true,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + newWordFragment > toggle(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + newWordFragment > toggle(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + progress > play(null) + playBegin': true,  // 18976: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + progress > play(null) + playFinish': true,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + progress > play(null) + restartBegin': true,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + progress > play(null) + restartFinish': true,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + progress > toggle(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + progress > toggle(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + stopBegin > play(null) + playBegin': true,  // 19876: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + stopBegin > play(null) + playFinish': true,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + stopBegin > play(null) + restartBegin': true,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + stopBegin > play(null) + restartFinish': true,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + stopBegin > toggle(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + stopBegin > toggle(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + stopBegin > toggle(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + stopBegin > toggle(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + stopFinish > play(null) + playBegin': true,  // 20776: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + stopFinish > play(null) + playFinish': true,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + stopFinish > play(null) + restartBegin': true,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + stopFinish > play(null) + restartFinish': true,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + stopFinish > toggle(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + stopFinish > toggle(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + stopFinish > toggle(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + stopFinish > toggle(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + done > play(null) + playBegin': true,  // 21676: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + done > play(null) + playFinish': true,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + done > play(null) + restartBegin': true,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,-2]) + done > play(null) + restartFinish': true,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + done > togglePlayPause(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + done > togglePlayPause(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + done > togglePlayPause(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,-2]) + done > togglePlayPause(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + done > toggle(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + done > toggle(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + done > toggle(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,-2]) + done > toggle(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
 
 
 
@@ -2999,177 +2954,147 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// ============== once([0,0,2]) ==============
 		// #? once(+) + any > some relative loopers(+|0) + new|prog = different output
 		// #? once(+) + any > toggle = reverting and pause stuff, not play stuff
-		// 'skip-combos: once([0,0,2]) + onceBegin > play(null) + newWordFragment': false,  // 9096: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > play(null) + progress': false,  // 9097: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + done': false,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + progress': false,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + done': false,  // 9125: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > fastForward(null) + progress': false,  // 9272: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > once([0,0,2]) + newWordFragment': false,  // 9321: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > once([0,0,2]) + progress': false,  // 9322: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + onceBegin > current(null) + newWordFragment': false,  // 9346: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > current(null) + progress': false,  // 9347: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + onceBegin > jumpWords(0) + newWordFragment': false,  // 9571: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > jumpWords(0) + progress': false,  // 9572: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + onceBegin > jumpWords(4) + newWordFragment': false,  // 9596: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > jumpWords(4) + progress': false,  // 9597: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + onceBegin > jumpSentences(0) + newWordFragment': false,  // 9721: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > jumpSentences(0) + progress': false,  // 9722: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > nextWord(null) + newWordFragment': false,  // 9821: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceBegin > nextWord(null) + progress': false,  // 9822: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + onceFinish > play(null) + newWordFragment': false,  // 9996: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > play(null) + progress': false,  // 9997: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + done': false,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + progress': false,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + done': false,  // 10025: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > fastForward(null) + progress': false,  // 10172: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > once([0,0,2]) + newWordFragment': false,  // 10221: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > once([0,0,2]) + progress': false,  // 10222: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + onceFinish > current(null) + newWordFragment': false,  // 10246: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > current(null) + progress': false,  // 10247: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + onceFinish > jumpWords(0) + newWordFragment': false,  // 10471: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > jumpWords(0) + progress': false,  // 10472: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + onceFinish > jumpWords(4) + newWordFragment': false,  // 10496: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > jumpWords(4) + progress': false,  // 10497: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + onceFinish > jumpSentences(0) + newWordFragment': false,  // 10621: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > jumpSentences(0) + progress': false,  // 10622: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > nextWord(null) + newWordFragment': false,  // 10721: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + onceFinish > nextWord(null) + progress': false,  // 10722: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + done': false,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + progress': false,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + done': false,  // 16325: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > fastForward(null) + progress': false,  // 16472: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > once([0,0,2]) + newWordFragment': false,  // 16521: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > once([0,0,2]) + progress': false,  // 16522: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + loopBegin > current(null) + newWordFragment': false,  // 16546: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > current(null) + progress': false,  // 16547: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + loopBegin > jumpWords(0) + newWordFragment': false,  // 16771: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > jumpWords(0) + progress': false,  // 16772: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + loopBegin > jumpWords(4) + newWordFragment': false,  // 16796: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > jumpWords(4) + progress': false,  // 16797: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + loopBegin > jumpSentences(0) + newWordFragment': false,  // 16921: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > jumpSentences(0) + progress': false,  // 16922: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > nextWord(null) + newWordFragment': false,  // 17021: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopBegin > nextWord(null) + progress': false,  // 17022: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + done': false,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + progress': false,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + done': false,  // 17225: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > fastForward(null) + progress': false,  // 17372: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > once([0,0,2]) + newWordFragment': false,  // 17421: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > once([0,0,2]) + progress': false,  // 17422: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + loopFinish > current(null) + newWordFragment': false,  // 17446: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > current(null) + progress': false,  // 17447: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + loopFinish > jumpWords(0) + newWordFragment': false,  // 17671: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > jumpWords(0) + progress': false,  // 17672: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + loopFinish > jumpWords(4) + newWordFragment': false,  // 17696: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > jumpWords(4) + progress': false,  // 17697: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + loopFinish > jumpSentences(0) + newWordFragment': false,  // 17821: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > jumpSentences(0) + progress': false,  // 17822: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > nextWord(null) + newWordFragment': false,  // 17921: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + loopFinish > nextWord(null) + progress': false,  // 17922: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + progress': false,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + done': false,  // 18125: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > fastForward(null) + progress': false,  // 18272: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 18321: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > once([0,0,2]) + progress': false,  // 18322: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + newWordFragment > current(null) + newWordFragment': false,  // 18346: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > current(null) + progress': false,  // 18347: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + newWordFragment > jumpWords(0) + newWordFragment': false,  // 18571: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > jumpWords(0) + progress': false,  // 18572: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + newWordFragment > jumpWords(4) + newWordFragment': false,  // 18596: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > jumpWords(4) + progress': false,  // 18597: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + newWordFragment > jumpSentences(0) + newWordFragment': false,  // 18721: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > jumpSentences(0) + progress': false,  // 18722: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > nextWord(null) + newWordFragment': false,  // 18821: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + newWordFragment > nextWord(null) + progress': false,  // 18822: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + progress': false,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + done': false,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + progress': false,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + done': false,  // 19025: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > fastForward(null) + progress': false,  // 19172: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > once([0,0,2]) + newWordFragment': false,  // 19221: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > once([0,0,2]) + progress': false,  // 19222: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + progress > current(null) + newWordFragment': false,  // 19246: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > current(null) + progress': false,  // 19247: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + progress > jumpWords(0) + newWordFragment': false,  // 19471: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > jumpWords(0) + progress': false,  // 19472: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + progress > jumpWords(4) + newWordFragment': false,  // 19496: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > jumpWords(4) + progress': false,  // 19497: ?? (skip results are different than combos)
-		// 'skip-combos: once([0,0,2]) + progress > jumpSentences(0) + newWordFragment': false,  // 19621: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > jumpSentences(0) + progress': false,  // 19622: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > nextWord(null) + newWordFragment': false,  // 19721: ?? (skip results are different than combos)
 		'skip-combos: once([0,0,2]) + progress > nextWord(null) + progress': false,  // 19722: ?? (skip results are different than combos)
@@ -3178,84 +3103,84 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// ============== current ==============
 		// #? current() reverts to 'pause', so toggle = 'revert*|pause*' stuff not 'play*|...' stuff
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + pauseBegin': true,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + pauseFinish': true,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + revertBegin': true,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + revertFinish': true,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + loopBegin': true,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + loopFinish': true,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + newWordFragment': true,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + progress': true,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + stopBegin': true,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + stopFinish': true,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + done': true,  // 9125: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + pauseBegin': true,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + pauseFinish': true,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + revertBegin': true,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + revertFinish': true,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + loopBegin': true,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + loopFinish': true,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + newWordFragment': true,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + progress': true,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + stopBegin': true,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + stopFinish': true,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + done': true,  // 10025: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + revertBegin': true,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + revertFinish': true,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + done': true,  // 16325: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + revertBegin': true,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + revertFinish': true,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + done': true,  // 17225: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + revertBegin': true,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + revertFinish': true,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + revertBegin': true,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + revertFinish': true,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + progress': true,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: current(null) + progress > togglePlayPause(null) + done': true,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + pauseBegin': true,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + pauseFinish': true,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + revertBegin': true,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + revertFinish': true,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + loopBegin': true,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + loopFinish': true,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + newWordFragment': true,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + progress': true,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + stopBegin': true,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + stopFinish': true,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceBegin > toggle(null) + done': true,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + pauseBegin': true,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + pauseFinish': true,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + revertBegin': true,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + revertFinish': true,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + loopBegin': true,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + loopFinish': true,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + newWordFragment': true,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + progress': true,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + stopBegin': true,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + stopFinish': true,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: current(null) + onceFinish > toggle(null) + done': true,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + revertBegin': true,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + revertFinish': true,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + progress': true,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopBegin > toggle(null) + done': true,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + revertBegin': true,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + revertFinish': true,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + progress': true,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: current(null) + loopFinish > toggle(null) + done': true,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + revertBegin': true,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + revertFinish': true,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + progress': true,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: current(null) + newWordFragment > toggle(null) + done': true,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + revertBegin': true,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + revertFinish': true,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + progress': true,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: current(null) + progress > toggle(null) + done': true,  // 19025: ?? (skip results are different than combos)
 
 
 
@@ -3266,74 +3191,74 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(-3) + onceBegin > play(null) + playFinish': true,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + onceBegin > play(null) + restartBegin': true,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + onceBegin > play(null) + restartFinish': true,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + onceBegin > toggle(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + onceBegin > toggle(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + onceFinish > play(null) + playBegin': true,  // 9976: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + onceFinish > play(null) + playFinish': true,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + onceFinish > play(null) + restartBegin': true,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + onceFinish > play(null) + restartFinish': true,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + onceFinish > toggle(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + onceFinish > toggle(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + loopBegin > play(null) + playBegin': true,  // 16276: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + loopBegin > play(null) + playFinish': true,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + loopBegin > play(null) + restartBegin': true,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + loopBegin > play(null) + restartFinish': true,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + loopBegin > toggle(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + loopBegin > toggle(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + loopFinish > play(null) + playBegin': true,  // 17176: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + loopFinish > play(null) + playFinish': true,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + loopFinish > play(null) + restartBegin': true,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + loopFinish > play(null) + restartFinish': true,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + loopFinish > toggle(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + loopFinish > toggle(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + newWordFragment > play(null) + playBegin': true,  // 18076: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + newWordFragment > play(null) + playFinish': true,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + newWordFragment > play(null) + restartBegin': true,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + newWordFragment > play(null) + restartFinish': true,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + newWordFragment > toggle(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + newWordFragment > toggle(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + progress > play(null) + playBegin': true,  // 18976: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + progress > play(null) + playFinish': true,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + progress > play(null) + restartBegin': true,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + progress > play(null) + restartFinish': true,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + progress > toggle(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + progress > toggle(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + stopBegin > play(null) + playBegin': true,  // 19876: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + stopBegin > play(null) + playFinish': true,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + stopBegin > play(null) + restartBegin': true,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + stopBegin > play(null) + restartFinish': true,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + stopBegin > toggle(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + stopBegin > toggle(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + stopBegin > toggle(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + stopBegin > toggle(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + stopFinish > play(null) + playBegin': true,  // 20776: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + stopFinish > play(null) + playFinish': true,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + stopFinish > play(null) + restartBegin': true,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + stopFinish > play(null) + restartFinish': true,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + stopFinish > toggle(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + stopFinish > toggle(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + stopFinish > toggle(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + stopFinish > toggle(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + done > play(null) + playBegin': true,  // 21676: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + done > play(null) + playFinish': true,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + done > play(null) + restartBegin': true,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-3) + done > play(null) + restartFinish': true,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + done > togglePlayPause(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + done > togglePlayPause(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + done > togglePlayPause(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-3) + done > togglePlayPause(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + done > toggle(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + done > toggle(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + done > toggle(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-3) + done > toggle(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
 
 
 
@@ -3344,158 +3269,158 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(-1) + onceBegin > play(null) + playFinish': true,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + onceBegin > play(null) + restartBegin': true,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + onceBegin > play(null) + restartFinish': true,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + onceBegin > toggle(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + onceBegin > toggle(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + onceFinish > play(null) + playBegin': true,  // 9976: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + onceFinish > play(null) + playFinish': true,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + onceFinish > play(null) + restartBegin': true,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + onceFinish > play(null) + restartFinish': true,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + onceFinish > toggle(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + onceFinish > toggle(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + loopBegin > play(null) + playBegin': true,  // 16276: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + loopBegin > play(null) + playFinish': true,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + loopBegin > play(null) + restartBegin': true,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + loopBegin > play(null) + restartFinish': true,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + loopBegin > toggle(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + loopBegin > toggle(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + loopFinish > play(null) + playBegin': true,  // 17176: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + loopFinish > play(null) + playFinish': true,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + loopFinish > play(null) + restartBegin': true,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + loopFinish > play(null) + restartFinish': true,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + loopFinish > toggle(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + loopFinish > toggle(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + newWordFragment > play(null) + playBegin': true,  // 18076: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + newWordFragment > play(null) + playFinish': true,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + newWordFragment > play(null) + restartBegin': true,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + newWordFragment > play(null) + restartFinish': true,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + newWordFragment > toggle(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + newWordFragment > toggle(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + progress > play(null) + playBegin': true,  // 18976: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + progress > play(null) + playFinish': true,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + progress > play(null) + restartBegin': true,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + progress > play(null) + restartFinish': true,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + progress > toggle(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + progress > toggle(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + stopBegin > play(null) + playBegin': true,  // 19876: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + stopBegin > play(null) + playFinish': true,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + stopBegin > play(null) + restartBegin': true,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + stopBegin > play(null) + restartFinish': true,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + stopBegin > toggle(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + stopBegin > toggle(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + stopBegin > toggle(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + stopBegin > toggle(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + stopFinish > play(null) + playBegin': true,  // 20776: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + stopFinish > play(null) + playFinish': true,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + stopFinish > play(null) + restartBegin': true,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + stopFinish > play(null) + restartFinish': true,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + stopFinish > toggle(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + stopFinish > toggle(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + stopFinish > toggle(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + stopFinish > toggle(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + done > play(null) + playBegin': true,  // 21676: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + done > play(null) + playFinish': true,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + done > play(null) + restartBegin': true,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(-1) + done > play(null) + restartFinish': true,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + done > togglePlayPause(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + done > togglePlayPause(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + done > togglePlayPause(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(-1) + done > togglePlayPause(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + done > toggle(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + done > toggle(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + done > toggle(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(-1) + done > toggle(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
 
 
 
 		// ============== jumpTo(0) ==============
 		// #? jumpTo(0) reverts to 'pause', so toggle = 'revert*|pause*' stuff not 'play*|...' stuff
 		// Like current
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + pauseBegin': true,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + pauseFinish': true,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + revertBegin': true,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + revertFinish': true,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + loopBegin': true,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + loopFinish': true,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + newWordFragment': true,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + progress': true,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + stopBegin': true,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + stopFinish': true,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + done': true,  // 9125: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + pauseBegin': true,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + pauseFinish': true,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + revertBegin': true,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + revertFinish': true,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + loopBegin': true,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + loopFinish': true,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + newWordFragment': true,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + progress': true,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + stopBegin': true,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + stopFinish': true,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + done': true,  // 10025: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + revertBegin': true,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + revertFinish': true,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + done': true,  // 16325: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + revertBegin': true,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + revertFinish': true,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + done': true,  // 17225: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + revertBegin': true,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + revertFinish': true,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + revertBegin': true,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + revertFinish': true,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + progress': true,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + done': true,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + pauseBegin': true,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + pauseFinish': true,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + revertBegin': true,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + revertFinish': true,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + loopBegin': true,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + loopFinish': true,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + newWordFragment': true,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + progress': true,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + stopBegin': true,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + stopFinish': true,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + done': true,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + pauseBegin': true,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + pauseFinish': true,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + revertBegin': true,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + revertFinish': true,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + loopBegin': true,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + loopFinish': true,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + newWordFragment': true,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + progress': true,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + stopBegin': true,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + stopFinish': true,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + done': true,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + revertBegin': true,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + revertFinish': true,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + progress': true,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + done': true,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + revertBegin': true,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + revertFinish': true,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + progress': true,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + done': true,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + revertBegin': true,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + revertFinish': true,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + progress': true,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + done': true,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + revertBegin': true,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + revertFinish': true,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + progress': true,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(0) + progress > toggle(null) + done': true,  // 19025: ?? (skip results are different than combos)
 
 
 
@@ -3508,19 +3433,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// #? jumpTo(6) + any > some relative loopers(+) + stop*|done = triggered
 		'skip-combos: jumpTo(6) + onceBegin > play(null) + newWordFragment': false,  // 9096: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + onceBegin > play(null) + progress': false,  // 9097: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceBegin > togglePlayPause(null) + done': false,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + progress': false,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceBegin > toggle(null) + done': false,  // 9125: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + onceBegin > rewind(null) + newWordFragment': false,  // 9246: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + onceBegin > rewind(null) + progress': false,  // 9247: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
@@ -3578,19 +3503,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(6) + onceBegin > prevSentence(null) + done': false,  // 9900: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + onceFinish > play(null) + newWordFragment': false,  // 9996: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + onceFinish > play(null) + progress': false,  // 9997: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + onceFinish > togglePlayPause(null) + done': false,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + progress': false,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + onceFinish > toggle(null) + done': false,  // 10025: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + onceFinish > rewind(null) + newWordFragment': false,  // 10146: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + onceFinish > rewind(null) + progress': false,  // 10147: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
@@ -3648,19 +3573,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(6) + onceFinish > prevSentence(null) + done': false,  // 10800: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopBegin > togglePlayPause(null) + done': false,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + progress': false,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopBegin > toggle(null) + done': false,  // 16325: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + loopBegin > rewind(null) + newWordFragment': false,  // 16446: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + loopBegin > rewind(null) + progress': false,  // 16447: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
@@ -3718,19 +3643,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(6) + loopBegin > prevSentence(null) + done': false,  // 17100: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + loopFinish > togglePlayPause(null) + done': false,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + progress': false,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + loopFinish > toggle(null) + done': false,  // 17225: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + loopFinish > rewind(null) + newWordFragment': false,  // 17346: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + loopFinish > rewind(null) + progress': false,  // 17347: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
@@ -3788,19 +3713,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(6) + loopFinish > prevSentence(null) + done': false,  // 18000: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + progress': false,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + newWordFragment > toggle(null) + done': false,  // 18125: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + newWordFragment > rewind(null) + newWordFragment': false,  // 18246: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + newWordFragment > rewind(null) + progress': false,  // 18247: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
@@ -3858,19 +3783,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(6) + newWordFragment > prevSentence(null) + done': false,  // 18900: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + progress': false,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(6) + progress > togglePlayPause(null) + done': false,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + progress': false,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(6) + progress > toggle(null) + done': false,  // 19025: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + progress > rewind(null) + newWordFragment': false,  // 19146: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + progress > rewind(null) + progress': false,  // 19147: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(6) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
@@ -3939,10 +3864,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(11) + onceBegin > play(null) + playFinish': false,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + onceBegin > play(null) + restartBegin': false,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + onceBegin > play(null) + restartFinish': false,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + onceBegin > toggle(null) + restartBegin': false,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + onceBegin > toggle(null) + restartFinish': false,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + onceBegin > rewind(null) + newWordFragment': false,  // 9246: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + onceBegin > rewind(null) + progress': false,  // 9247: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
@@ -4026,10 +3951,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(11) + onceFinish > play(null) + playFinish': false,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + onceFinish > play(null) + restartBegin': false,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + onceFinish > play(null) + restartFinish': false,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + onceFinish > toggle(null) + restartBegin': false,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + onceFinish > toggle(null) + restartFinish': false,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + onceFinish > rewind(null) + newWordFragment': false,  // 10146: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + onceFinish > rewind(null) + progress': false,  // 10147: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
@@ -4113,10 +4038,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(11) + loopBegin > play(null) + playFinish': false,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + loopBegin > play(null) + restartBegin': false,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + loopBegin > play(null) + restartFinish': false,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + loopBegin > toggle(null) + restartBegin': false,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + loopBegin > toggle(null) + restartFinish': false,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + loopBegin > rewind(null) + newWordFragment': false,  // 16446: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + loopBegin > rewind(null) + progress': false,  // 16447: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
@@ -4200,10 +4125,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(11) + loopFinish > play(null) + playFinish': false,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + loopFinish > play(null) + restartBegin': false,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + loopFinish > play(null) + restartFinish': false,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + loopFinish > toggle(null) + restartBegin': false,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + loopFinish > toggle(null) + restartFinish': false,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + loopFinish > rewind(null) + newWordFragment': false,  // 17346: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + loopFinish > rewind(null) + progress': false,  // 17347: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
@@ -4287,10 +4212,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(11) + newWordFragment > play(null) + playFinish': false,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + newWordFragment > play(null) + restartBegin': false,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + newWordFragment > play(null) + restartFinish': false,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + newWordFragment > toggle(null) + restartBegin': false,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + newWordFragment > toggle(null) + restartFinish': false,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + newWordFragment > rewind(null) + newWordFragment': false,  // 18246: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + newWordFragment > rewind(null) + progress': false,  // 18247: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
@@ -4374,10 +4299,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(11) + progress > play(null) + playFinish': false,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + progress > play(null) + restartBegin': false,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + progress > play(null) + restartFinish': false,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + progress > toggle(null) + restartBegin': false,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + progress > toggle(null) + restartFinish': false,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + progress > rewind(null) + newWordFragment': false,  // 19146: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + progress > rewind(null) + progress': false,  // 19147: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
@@ -4461,10 +4386,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(11) + stopBegin > play(null) + playFinish': false,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + stopBegin > play(null) + restartBegin': false,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + stopBegin > play(null) + restartFinish': false,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + stopBegin > toggle(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + stopBegin > toggle(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + stopBegin > toggle(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + stopBegin > toggle(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + stopBegin > rewind(null) + newWordFragment': false,  // 20046: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + stopBegin > rewind(null) + progress': false,  // 20047: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + stopBegin > fastForward(null) + newWordFragment': false,  // 20071: ?? (skip results are different than combos)
@@ -4548,10 +4473,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(11) + stopFinish > play(null) + playFinish': false,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + stopFinish > play(null) + restartBegin': false,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + stopFinish > play(null) + restartFinish': false,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + stopFinish > toggle(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + stopFinish > toggle(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + stopFinish > toggle(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + stopFinish > toggle(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + stopFinish > rewind(null) + newWordFragment': false,  // 20946: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + stopFinish > rewind(null) + progress': false,  // 20947: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + stopFinish > fastForward(null) + newWordFragment': false,  // 20971: ?? (skip results are different than combos)
@@ -4635,10 +4560,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(11) + done > play(null) + playFinish': false,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + done > play(null) + restartBegin': false,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + done > play(null) + restartFinish': false,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + done > togglePlayPause(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + done > togglePlayPause(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + done > togglePlayPause(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(11) + done > togglePlayPause(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + done > toggle(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + done > toggle(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + done > toggle(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(11) + done > toggle(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + done > rewind(null) + newWordFragment': false,  // 21846: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + done > rewind(null) + progress': false,  // 21847: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(11) + done > fastForward(null) + newWordFragment': false,  // 21871: ?? (skip results are different than combos)
@@ -4731,10 +4656,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(100) + onceBegin > play(null) + playFinish': false,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + onceBegin > play(null) + restartBegin': false,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + onceBegin > play(null) + restartFinish': false,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + onceBegin > toggle(null) + restartBegin': false,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + onceBegin > toggle(null) + restartFinish': false,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + onceBegin > rewind(null) + newWordFragment': false,  // 9246: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + onceBegin > rewind(null) + progress': false,  // 9247: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
@@ -4818,10 +4743,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(100) + onceFinish > play(null) + playFinish': false,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + onceFinish > play(null) + restartBegin': false,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + onceFinish > play(null) + restartFinish': false,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + onceFinish > toggle(null) + restartBegin': false,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + onceFinish > toggle(null) + restartFinish': false,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + onceFinish > rewind(null) + newWordFragment': false,  // 10146: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + onceFinish > rewind(null) + progress': false,  // 10147: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
@@ -4905,10 +4830,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(100) + loopBegin > play(null) + playFinish': false,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + loopBegin > play(null) + restartBegin': false,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + loopBegin > play(null) + restartFinish': false,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + loopBegin > toggle(null) + restartBegin': false,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + loopBegin > toggle(null) + restartFinish': false,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + loopBegin > rewind(null) + newWordFragment': false,  // 16446: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + loopBegin > rewind(null) + progress': false,  // 16447: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
@@ -4992,10 +4917,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(100) + loopFinish > play(null) + playFinish': false,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + loopFinish > play(null) + restartBegin': false,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + loopFinish > play(null) + restartFinish': false,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + loopFinish > toggle(null) + restartBegin': false,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + loopFinish > toggle(null) + restartFinish': false,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + loopFinish > rewind(null) + newWordFragment': false,  // 17346: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + loopFinish > rewind(null) + progress': false,  // 17347: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
@@ -5079,10 +5004,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(100) + newWordFragment > play(null) + playFinish': false,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + newWordFragment > play(null) + restartBegin': false,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + newWordFragment > play(null) + restartFinish': false,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + newWordFragment > toggle(null) + restartBegin': false,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + newWordFragment > toggle(null) + restartFinish': false,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + newWordFragment > rewind(null) + newWordFragment': false,  // 18246: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + newWordFragment > rewind(null) + progress': false,  // 18247: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
@@ -5166,10 +5091,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(100) + progress > play(null) + playFinish': false,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + progress > play(null) + restartBegin': false,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + progress > play(null) + restartFinish': false,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + progress > toggle(null) + restartBegin': false,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + progress > toggle(null) + restartFinish': false,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + progress > rewind(null) + newWordFragment': false,  // 19146: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + progress > rewind(null) + progress': false,  // 19147: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
@@ -5253,10 +5178,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(100) + stopBegin > play(null) + playFinish': false,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + stopBegin > play(null) + restartBegin': false,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + stopBegin > play(null) + restartFinish': false,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + stopBegin > toggle(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + stopBegin > toggle(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + stopBegin > toggle(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + stopBegin > toggle(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + stopBegin > rewind(null) + newWordFragment': false,  // 20046: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + stopBegin > rewind(null) + progress': false,  // 20047: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + stopBegin > fastForward(null) + newWordFragment': false,  // 20071: ?? (skip results are different than combos)
@@ -5340,10 +5265,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(100) + stopFinish > play(null) + playFinish': false,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + stopFinish > play(null) + restartBegin': false,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + stopFinish > play(null) + restartFinish': false,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + stopFinish > toggle(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + stopFinish > toggle(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + stopFinish > toggle(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + stopFinish > toggle(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + stopFinish > rewind(null) + newWordFragment': false,  // 20946: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + stopFinish > rewind(null) + progress': false,  // 20947: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + stopFinish > fastForward(null) + newWordFragment': false,  // 20971: ?? (skip results are different than combos)
@@ -5427,10 +5352,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(100) + done > play(null) + playFinish': false,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + done > play(null) + restartBegin': false,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + done > play(null) + restartFinish': false,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + done > togglePlayPause(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + done > togglePlayPause(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + done > togglePlayPause(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpTo(100) + done > togglePlayPause(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + done > toggle(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + done > toggle(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + done > toggle(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpTo(100) + done > toggle(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + done > rewind(null) + newWordFragment': false,  // 21846: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + done > rewind(null) + progress': false,  // 21847: ?? (skip results are different than combos)
 		'skip-combos: jumpTo(100) + done > fastForward(null) + newWordFragment': false,  // 21871: ?? (skip results are different than combos)
@@ -5519,74 +5444,74 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(-3) + onceBegin > play(null) + playFinish': true,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + onceBegin > play(null) + restartBegin': true,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + onceBegin > play(null) + restartFinish': true,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + onceBegin > toggle(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + onceBegin > toggle(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + onceFinish > play(null) + playBegin': true,  // 9976: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + onceFinish > play(null) + playFinish': true,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + onceFinish > play(null) + restartBegin': true,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + onceFinish > play(null) + restartFinish': true,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + onceFinish > toggle(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + onceFinish > toggle(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + loopBegin > play(null) + playBegin': true,  // 16276: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + loopBegin > play(null) + playFinish': true,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + loopBegin > play(null) + restartBegin': true,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + loopBegin > play(null) + restartFinish': true,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + loopBegin > toggle(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + loopBegin > toggle(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + loopFinish > play(null) + playBegin': true,  // 17176: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + loopFinish > play(null) + playFinish': true,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + loopFinish > play(null) + restartBegin': true,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + loopFinish > play(null) + restartFinish': true,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + loopFinish > toggle(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + loopFinish > toggle(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + newWordFragment > play(null) + playBegin': true,  // 18076: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + newWordFragment > play(null) + playFinish': true,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + newWordFragment > play(null) + restartBegin': true,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + newWordFragment > play(null) + restartFinish': true,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + newWordFragment > toggle(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + newWordFragment > toggle(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + progress > play(null) + playBegin': true,  // 18976: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + progress > play(null) + playFinish': true,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + progress > play(null) + restartBegin': true,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + progress > play(null) + restartFinish': true,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + progress > toggle(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + progress > toggle(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + stopBegin > play(null) + playBegin': true,  // 19876: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + stopBegin > play(null) + playFinish': true,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + stopBegin > play(null) + restartBegin': true,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + stopBegin > play(null) + restartFinish': true,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + stopBegin > toggle(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + stopBegin > toggle(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + stopBegin > toggle(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + stopBegin > toggle(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + stopFinish > play(null) + playBegin': true,  // 20776: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + stopFinish > play(null) + playFinish': true,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + stopFinish > play(null) + restartBegin': true,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + stopFinish > play(null) + restartFinish': true,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + stopFinish > toggle(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + stopFinish > toggle(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + stopFinish > toggle(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + stopFinish > toggle(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + done > play(null) + playBegin': true,  // 21676: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + done > play(null) + playFinish': true,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + done > play(null) + restartBegin': true,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-3) + done > play(null) + restartFinish': true,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + done > togglePlayPause(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + done > togglePlayPause(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + done > togglePlayPause(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-3) + done > togglePlayPause(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + done > toggle(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + done > toggle(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + done > toggle(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-3) + done > toggle(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
 
 
 
@@ -5596,158 +5521,157 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(-1) + onceBegin > play(null) + playFinish': true,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + onceBegin > play(null) + restartBegin': true,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + onceBegin > play(null) + restartFinish': true,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + onceBegin > toggle(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + onceBegin > toggle(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + onceFinish > play(null) + playBegin': true,  // 9976: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + onceFinish > play(null) + playFinish': true,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + onceFinish > play(null) + restartBegin': true,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + onceFinish > play(null) + restartFinish': true,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + onceFinish > toggle(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + onceFinish > toggle(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + loopBegin > play(null) + playBegin': true,  // 16276: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + loopBegin > play(null) + playFinish': true,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + loopBegin > play(null) + restartBegin': true,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + loopBegin > play(null) + restartFinish': true,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + loopBegin > toggle(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + loopBegin > toggle(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + loopFinish > play(null) + playBegin': true,  // 17176: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + loopFinish > play(null) + playFinish': true,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + loopFinish > play(null) + restartBegin': true,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + loopFinish > play(null) + restartFinish': true,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + loopFinish > toggle(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + loopFinish > toggle(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + newWordFragment > play(null) + playBegin': true,  // 18076: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + newWordFragment > play(null) + playFinish': true,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + newWordFragment > play(null) + restartBegin': true,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + newWordFragment > play(null) + restartFinish': true,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + newWordFragment > toggle(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + newWordFragment > toggle(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + progress > play(null) + playBegin': true,  // 18976: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + progress > play(null) + playFinish': true,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + progress > play(null) + restartBegin': true,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + progress > play(null) + restartFinish': true,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + progress > toggle(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + progress > toggle(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + stopBegin > play(null) + playBegin': true,  // 19876: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + stopBegin > play(null) + playFinish': true,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + stopBegin > play(null) + restartBegin': true,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + stopBegin > play(null) + restartFinish': true,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + stopBegin > toggle(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + stopBegin > toggle(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + stopBegin > toggle(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + stopBegin > toggle(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + stopFinish > play(null) + playBegin': true,  // 20776: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + stopFinish > play(null) + playFinish': true,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + stopFinish > play(null) + restartBegin': true,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + stopFinish > play(null) + restartFinish': true,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + stopFinish > toggle(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + stopFinish > toggle(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + stopFinish > toggle(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + stopFinish > toggle(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + done > play(null) + playBegin': true,  // 21676: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + done > play(null) + playFinish': true,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + done > play(null) + restartBegin': true,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(-1) + done > play(null) + restartFinish': true,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + done > togglePlayPause(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + done > togglePlayPause(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + done > togglePlayPause(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(-1) + done > togglePlayPause(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
-
+		'skip-combos: jumpWords(-1) + done > toggle(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + done > toggle(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + done > toggle(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(-1) + done > toggle(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
 
 
 		// ============== jumpWords(0) ==============
 		// #? jumpWords(0) reverts to 'pause', so toggle = 'revert*|pause*' stuff not 'play*|...' stuff
 		// Like current
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + pauseBegin': true,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + pauseFinish': true,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + revertBegin': true,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + revertFinish': true,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + loopBegin': true,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + loopFinish': true,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + newWordFragment': true,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + progress': true,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + stopBegin': true,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + stopFinish': true,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + done': true,  // 9125: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + pauseBegin': true,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + pauseFinish': true,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + revertBegin': true,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + revertFinish': true,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + loopBegin': true,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + loopFinish': true,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + newWordFragment': true,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + progress': true,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + stopBegin': true,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + stopFinish': true,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + done': true,  // 10025: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + revertBegin': true,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + revertFinish': true,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + done': true,  // 16325: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + revertBegin': true,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + revertFinish': true,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + done': true,  // 17225: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + revertBegin': true,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + revertFinish': true,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + revertBegin': true,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + revertFinish': true,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + progress': true,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + done': true,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + pauseBegin': true,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + pauseFinish': true,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + revertBegin': true,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + revertFinish': true,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + loopBegin': true,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + loopFinish': true,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + newWordFragment': true,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + progress': true,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + stopBegin': true,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + stopFinish': true,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + done': true,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + pauseBegin': true,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + pauseFinish': true,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + revertBegin': true,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + revertFinish': true,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + loopBegin': true,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + loopFinish': true,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + newWordFragment': true,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + progress': true,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + stopBegin': true,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + stopFinish': true,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + done': true,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + revertBegin': true,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + revertFinish': true,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + progress': true,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + done': true,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + revertBegin': true,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + revertFinish': true,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + progress': true,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + done': true,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + revertBegin': true,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + revertFinish': true,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + progress': true,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + done': true,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + revertBegin': true,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + revertFinish': true,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + progress': true,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(0) + progress > toggle(null) + done': true,  // 19025: ?? (skip results are different than combos)
 
 
 
@@ -5756,19 +5680,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// #? This one (both?) don't change jumpSentence(-) or prevSentence(), since still goes to first sentence
 		'skip-combos: jumpWords(4) + onceBegin > play(null) + newWordFragment': false,  // 9096: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + onceBegin > play(null) + progress': false,  // 9097: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + done': false,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + progress': false,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + done': false,  // 9125: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + onceBegin > rewind(null) + newWordFragment': false,  // 9246: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + onceBegin > rewind(null) + progress': false,  // 9247: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
@@ -5816,19 +5740,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + onceBegin > prevWord(null) + done': false,  // 9875: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + onceFinish > play(null) + newWordFragment': false,  // 9996: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + onceFinish > play(null) + progress': false,  // 9997: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + done': false,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + progress': false,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + done': false,  // 10025: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + onceFinish > rewind(null) + newWordFragment': false,  // 10146: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + onceFinish > rewind(null) + progress': false,  // 10147: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
@@ -5876,19 +5800,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + onceFinish > prevWord(null) + done': false,  // 10775: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + done': false,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + progress': false,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + done': false,  // 16325: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + loopBegin > rewind(null) + newWordFragment': false,  // 16446: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + loopBegin > rewind(null) + progress': false,  // 16447: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
@@ -5936,19 +5860,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + loopBegin > prevWord(null) + done': false,  // 17075: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + done': false,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + progress': false,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + done': false,  // 17225: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + loopFinish > rewind(null) + newWordFragment': false,  // 17346: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + loopFinish > rewind(null) + progress': false,  // 17347: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
@@ -5996,19 +5920,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + loopFinish > prevWord(null) + done': false,  // 17975: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + progress': false,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + done': false,  // 18125: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + newWordFragment > rewind(null) + newWordFragment': false,  // 18246: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + newWordFragment > rewind(null) + progress': false,  // 18247: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
@@ -6056,19 +5980,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + newWordFragment > prevWord(null) + done': false,  // 18875: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + progress': false,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + done': false,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + progress': false,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(4) + progress > toggle(null) + done': false,  // 19025: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + progress > rewind(null) + newWordFragment': false,  // 19146: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + progress > rewind(null) + progress': false,  // 19147: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(4) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
@@ -6127,10 +6051,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(11) + onceBegin > play(null) + playFinish': false,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + onceBegin > play(null) + restartBegin': false,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + onceBegin > play(null) + restartFinish': false,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + onceBegin > toggle(null) + restartBegin': false,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + onceBegin > toggle(null) + restartFinish': false,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + onceBegin > rewind(null) + newWordFragment': false,  // 9246: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + onceBegin > rewind(null) + progress': false,  // 9247: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
@@ -6214,10 +6138,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(11) + onceFinish > play(null) + playFinish': false,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + onceFinish > play(null) + restartBegin': false,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + onceFinish > play(null) + restartFinish': false,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + onceFinish > toggle(null) + restartBegin': false,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + onceFinish > toggle(null) + restartFinish': false,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + onceFinish > rewind(null) + newWordFragment': false,  // 10146: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + onceFinish > rewind(null) + progress': false,  // 10147: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
@@ -6301,10 +6225,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(11) + loopBegin > play(null) + playFinish': false,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + loopBegin > play(null) + restartBegin': false,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + loopBegin > play(null) + restartFinish': false,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + loopBegin > toggle(null) + restartBegin': false,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + loopBegin > toggle(null) + restartFinish': false,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + loopBegin > rewind(null) + newWordFragment': false,  // 16446: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + loopBegin > rewind(null) + progress': false,  // 16447: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
@@ -6388,10 +6312,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(11) + loopFinish > play(null) + playFinish': false,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + loopFinish > play(null) + restartBegin': false,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + loopFinish > play(null) + restartFinish': false,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + loopFinish > toggle(null) + restartBegin': false,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + loopFinish > toggle(null) + restartFinish': false,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + loopFinish > rewind(null) + newWordFragment': false,  // 17346: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + loopFinish > rewind(null) + progress': false,  // 17347: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
@@ -6475,10 +6399,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(11) + newWordFragment > play(null) + playFinish': false,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + newWordFragment > play(null) + restartBegin': false,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + newWordFragment > play(null) + restartFinish': false,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + newWordFragment > toggle(null) + restartBegin': false,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + newWordFragment > toggle(null) + restartFinish': false,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + newWordFragment > rewind(null) + newWordFragment': false,  // 18246: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + newWordFragment > rewind(null) + progress': false,  // 18247: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
@@ -6562,10 +6486,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(11) + progress > play(null) + playFinish': false,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + progress > play(null) + restartBegin': false,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + progress > play(null) + restartFinish': false,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + progress > toggle(null) + restartBegin': false,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + progress > toggle(null) + restartFinish': false,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + progress > rewind(null) + newWordFragment': false,  // 19146: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + progress > rewind(null) + progress': false,  // 19147: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
@@ -6649,10 +6573,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(11) + stopBegin > play(null) + playFinish': false,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + stopBegin > play(null) + restartBegin': false,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + stopBegin > play(null) + restartFinish': false,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + stopBegin > toggle(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + stopBegin > toggle(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + stopBegin > toggle(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + stopBegin > toggle(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + stopBegin > rewind(null) + newWordFragment': false,  // 20046: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + stopBegin > rewind(null) + progress': false,  // 20047: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + stopBegin > fastForward(null) + newWordFragment': false,  // 20071: ?? (skip results are different than combos)
@@ -6736,10 +6660,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(11) + stopFinish > play(null) + playFinish': false,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + stopFinish > play(null) + restartBegin': false,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + stopFinish > play(null) + restartFinish': false,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + stopFinish > toggle(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + stopFinish > toggle(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + stopFinish > toggle(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + stopFinish > toggle(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + stopFinish > rewind(null) + newWordFragment': false,  // 20946: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + stopFinish > rewind(null) + progress': false,  // 20947: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + stopFinish > fastForward(null) + newWordFragment': false,  // 20971: ?? (skip results are different than combos)
@@ -6823,10 +6747,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(11) + done > play(null) + playFinish': false,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + done > play(null) + restartBegin': false,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + done > play(null) + restartFinish': false,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + done > togglePlayPause(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + done > togglePlayPause(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + done > togglePlayPause(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(11) + done > togglePlayPause(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + done > toggle(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + done > toggle(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + done > toggle(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(11) + done > toggle(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + done > rewind(null) + newWordFragment': false,  // 21846: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + done > rewind(null) + progress': false,  // 21847: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(11) + done > fastForward(null) + newWordFragment': false,  // 21871: ?? (skip results are different than combos)
@@ -6919,10 +6843,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(100) + onceBegin > play(null) + playFinish': false,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + onceBegin > play(null) + restartBegin': false,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + onceBegin > play(null) + restartFinish': false,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + onceBegin > toggle(null) + restartBegin': false,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + onceBegin > toggle(null) + restartFinish': false,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + onceBegin > rewind(null) + newWordFragment': false,  // 9246: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + onceBegin > rewind(null) + progress': false,  // 9247: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
@@ -7006,10 +6930,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(100) + onceFinish > play(null) + playFinish': false,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + onceFinish > play(null) + restartBegin': false,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + onceFinish > play(null) + restartFinish': false,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + onceFinish > toggle(null) + restartBegin': false,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + onceFinish > toggle(null) + restartFinish': false,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + onceFinish > rewind(null) + newWordFragment': false,  // 10146: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + onceFinish > rewind(null) + progress': false,  // 10147: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
@@ -7093,10 +7017,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(100) + loopBegin > play(null) + playFinish': false,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + loopBegin > play(null) + restartBegin': false,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + loopBegin > play(null) + restartFinish': false,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + loopBegin > toggle(null) + restartBegin': false,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + loopBegin > toggle(null) + restartFinish': false,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + loopBegin > rewind(null) + newWordFragment': false,  // 16446: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + loopBegin > rewind(null) + progress': false,  // 16447: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
@@ -7180,10 +7104,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(100) + loopFinish > play(null) + playFinish': false,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + loopFinish > play(null) + restartBegin': false,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + loopFinish > play(null) + restartFinish': false,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + loopFinish > toggle(null) + restartBegin': false,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + loopFinish > toggle(null) + restartFinish': false,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + loopFinish > rewind(null) + newWordFragment': false,  // 17346: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + loopFinish > rewind(null) + progress': false,  // 17347: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
@@ -7267,10 +7191,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(100) + newWordFragment > play(null) + playFinish': false,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + newWordFragment > play(null) + restartBegin': false,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + newWordFragment > play(null) + restartFinish': false,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + newWordFragment > toggle(null) + restartBegin': false,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + newWordFragment > toggle(null) + restartFinish': false,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + newWordFragment > rewind(null) + newWordFragment': false,  // 18246: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + newWordFragment > rewind(null) + progress': false,  // 18247: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
@@ -7354,10 +7278,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(100) + progress > play(null) + playFinish': false,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + progress > play(null) + restartBegin': false,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + progress > play(null) + restartFinish': false,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + progress > toggle(null) + restartBegin': false,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + progress > toggle(null) + restartFinish': false,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + progress > rewind(null) + newWordFragment': false,  // 19146: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + progress > rewind(null) + progress': false,  // 19147: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
@@ -7441,10 +7365,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(100) + stopBegin > play(null) + playFinish': false,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + stopBegin > play(null) + restartBegin': false,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + stopBegin > play(null) + restartFinish': false,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + stopBegin > toggle(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + stopBegin > toggle(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + stopBegin > toggle(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + stopBegin > toggle(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + stopBegin > rewind(null) + newWordFragment': false,  // 20046: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + stopBegin > rewind(null) + progress': false,  // 20047: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + stopBegin > fastForward(null) + newWordFragment': false,  // 20071: ?? (skip results are different than combos)
@@ -7528,10 +7452,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(100) + stopFinish > play(null) + playFinish': false,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + stopFinish > play(null) + restartBegin': false,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + stopFinish > play(null) + restartFinish': false,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + stopFinish > toggle(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + stopFinish > toggle(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + stopFinish > toggle(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + stopFinish > toggle(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + stopFinish > rewind(null) + newWordFragment': false,  // 20946: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + stopFinish > rewind(null) + progress': false,  // 20947: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + stopFinish > fastForward(null) + newWordFragment': false,  // 20971: ?? (skip results are different than combos)
@@ -7615,10 +7539,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(100) + done > play(null) + playFinish': false,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + done > play(null) + restartBegin': false,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + done > play(null) + restartFinish': false,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + done > togglePlayPause(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + done > togglePlayPause(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + done > togglePlayPause(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpWords(100) + done > togglePlayPause(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + done > toggle(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + done > toggle(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + done > toggle(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpWords(100) + done > toggle(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + done > rewind(null) + newWordFragment': false,  // 21846: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + done > rewind(null) + progress': false,  // 21847: ?? (skip results are different than combos)
 		'skip-combos: jumpWords(100) + done > fastForward(null) + newWordFragment': false,  // 21871: ?? (skip results are different than combos)
@@ -7707,74 +7631,74 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(-3) + onceBegin > play(null) + playFinish': true,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + onceBegin > play(null) + restartBegin': true,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + onceBegin > play(null) + restartFinish': true,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + onceBegin > toggle(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + onceBegin > toggle(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + onceFinish > play(null) + playBegin': true,  // 9976: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + onceFinish > play(null) + playFinish': true,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + onceFinish > play(null) + restartBegin': true,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + onceFinish > play(null) + restartFinish': true,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + onceFinish > toggle(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + onceFinish > toggle(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + loopBegin > play(null) + playBegin': true,  // 16276: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + loopBegin > play(null) + playFinish': true,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + loopBegin > play(null) + restartBegin': true,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + loopBegin > play(null) + restartFinish': true,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + loopBegin > toggle(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + loopBegin > toggle(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + loopFinish > play(null) + playBegin': true,  // 17176: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + loopFinish > play(null) + playFinish': true,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + loopFinish > play(null) + restartBegin': true,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + loopFinish > play(null) + restartFinish': true,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + loopFinish > toggle(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + loopFinish > toggle(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + newWordFragment > play(null) + playBegin': true,  // 18076: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + newWordFragment > play(null) + playFinish': true,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + newWordFragment > play(null) + restartBegin': true,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + newWordFragment > play(null) + restartFinish': true,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + newWordFragment > toggle(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + newWordFragment > toggle(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + progress > play(null) + playBegin': true,  // 18976: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + progress > play(null) + playFinish': true,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + progress > play(null) + restartBegin': true,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + progress > play(null) + restartFinish': true,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + progress > toggle(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + progress > toggle(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + stopBegin > play(null) + playBegin': true,  // 19876: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + stopBegin > play(null) + playFinish': true,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + stopBegin > play(null) + restartBegin': true,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + stopBegin > play(null) + restartFinish': true,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + stopBegin > toggle(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + stopBegin > toggle(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + stopBegin > toggle(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + stopBegin > toggle(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + stopFinish > play(null) + playBegin': true,  // 20776: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + stopFinish > play(null) + playFinish': true,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + stopFinish > play(null) + restartBegin': true,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + stopFinish > play(null) + restartFinish': true,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + stopFinish > toggle(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + stopFinish > toggle(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + stopFinish > toggle(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + stopFinish > toggle(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + done > play(null) + playBegin': true,  // 21676: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + done > play(null) + playFinish': true,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + done > play(null) + restartBegin': true,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-3) + done > play(null) + restartFinish': true,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + done > togglePlayPause(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + done > togglePlayPause(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + done > togglePlayPause(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-3) + done > togglePlayPause(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + done > toggle(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + done > toggle(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + done > toggle(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-3) + done > toggle(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
 
 
 
@@ -7784,158 +7708,158 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(-1) + onceBegin > play(null) + playFinish': true,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + onceBegin > play(null) + restartBegin': true,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + onceBegin > play(null) + restartFinish': true,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + onceBegin > toggle(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + onceBegin > toggle(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + onceFinish > play(null) + playBegin': true,  // 9976: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + onceFinish > play(null) + playFinish': true,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + onceFinish > play(null) + restartBegin': true,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + onceFinish > play(null) + restartFinish': true,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + onceFinish > toggle(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + onceFinish > toggle(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + loopBegin > play(null) + playBegin': true,  // 16276: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + loopBegin > play(null) + playFinish': true,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + loopBegin > play(null) + restartBegin': true,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + loopBegin > play(null) + restartFinish': true,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + loopBegin > toggle(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + loopBegin > toggle(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + loopFinish > play(null) + playBegin': true,  // 17176: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + loopFinish > play(null) + playFinish': true,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + loopFinish > play(null) + restartBegin': true,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + loopFinish > play(null) + restartFinish': true,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + loopFinish > toggle(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + loopFinish > toggle(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + newWordFragment > play(null) + playBegin': true,  // 18076: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + newWordFragment > play(null) + playFinish': true,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + newWordFragment > play(null) + restartBegin': true,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + newWordFragment > play(null) + restartFinish': true,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + newWordFragment > toggle(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + newWordFragment > toggle(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + progress > play(null) + playBegin': true,  // 18976: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + progress > play(null) + playFinish': true,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + progress > play(null) + restartBegin': true,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + progress > play(null) + restartFinish': true,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + progress > toggle(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + progress > toggle(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + stopBegin > play(null) + playBegin': true,  // 19876: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + stopBegin > play(null) + playFinish': true,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + stopBegin > play(null) + restartBegin': true,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + stopBegin > play(null) + restartFinish': true,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + stopBegin > toggle(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + stopBegin > toggle(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + stopBegin > toggle(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + stopBegin > toggle(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + stopFinish > play(null) + playBegin': true,  // 20776: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + stopFinish > play(null) + playFinish': true,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + stopFinish > play(null) + restartBegin': true,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + stopFinish > play(null) + restartFinish': true,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + stopFinish > toggle(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + stopFinish > toggle(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + stopFinish > toggle(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + stopFinish > toggle(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + done > play(null) + playBegin': true,  // 21676: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + done > play(null) + playFinish': true,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + done > play(null) + restartBegin': true,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(-1) + done > play(null) + restartFinish': true,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + done > togglePlayPause(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + done > togglePlayPause(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + done > togglePlayPause(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(-1) + done > togglePlayPause(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + done > toggle(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + done > toggle(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + done > toggle(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(-1) + done > toggle(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
 
 
 
 		// ============== jumpSentences(0) ==============
 		// #? jumpSentences(0) reverts to 'pause', so toggle = 'revert*|pause*' stuff not 'play*|...' stuff
 		// Like current
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + pauseBegin': true,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + pauseFinish': true,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + revertBegin': true,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + revertFinish': true,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + loopBegin': true,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + loopFinish': true,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + newWordFragment': true,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + progress': true,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + stopBegin': true,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + stopFinish': true,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + done': true,  // 9125: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + pauseBegin': true,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + pauseFinish': true,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + revertBegin': true,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + revertFinish': true,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + loopBegin': true,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + loopFinish': true,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + newWordFragment': true,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + progress': true,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + stopBegin': true,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + stopFinish': true,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + done': true,  // 10025: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + revertBegin': true,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + revertFinish': true,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + progress': true,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + done': true,  // 16325: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + revertBegin': true,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + revertFinish': true,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + progress': true,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + done': true,  // 17225: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + revertBegin': true,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + revertFinish': true,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + progress': true,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + done': true,  // 18125: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + revertBegin': true,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + revertFinish': true,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + progress': true,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + done': true,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + pauseBegin': true,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + pauseFinish': true,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + revertBegin': true,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + revertFinish': true,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + loopBegin': true,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + loopFinish': true,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + newWordFragment': true,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + progress': true,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + stopBegin': true,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + stopFinish': true,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + done': true,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + pauseBegin': true,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + pauseFinish': true,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + revertBegin': true,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + revertFinish': true,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + loopBegin': true,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + loopFinish': true,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + newWordFragment': true,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + progress': true,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + stopBegin': true,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + stopFinish': true,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + done': true,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + pauseBegin': true,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + pauseFinish': true,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + revertBegin': true,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + revertFinish': true,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + loopBegin': true,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + loopFinish': true,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + newWordFragment': true,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + progress': true,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + stopBegin': true,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + stopFinish': true,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + done': true,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + pauseBegin': true,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + pauseFinish': true,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + revertBegin': true,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + revertFinish': true,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + loopBegin': true,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + loopFinish': true,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + newWordFragment': true,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + progress': true,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + stopBegin': true,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + stopFinish': true,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + done': true,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + pauseBegin': true,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + pauseFinish': true,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + revertBegin': true,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + revertFinish': true,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + loopBegin': true,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + loopFinish': true,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + newWordFragment': true,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + progress': true,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + stopBegin': true,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + stopFinish': true,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + done': true,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + pauseBegin': true,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + pauseFinish': true,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + revertBegin': true,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + revertFinish': true,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + loopBegin': true,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + loopFinish': true,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + newWordFragment': true,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + progress': true,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + stopBegin': true,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + stopFinish': true,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + done': true,  // 19025: ?? (skip results are different than combos)
 
 
 
@@ -7944,19 +7868,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// #? Also will be (exactly?) like nextSentence()
 		'skip-combos: jumpSentences(1) + onceBegin > play(null) + newWordFragment': false,  // 9096: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + onceBegin > play(null) + progress': false,  // 9097: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + done': false,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + progress': false,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + done': false,  // 9125: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + onceBegin > rewind(null) + newWordFragment': false,  // 9246: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + onceBegin > rewind(null) + progress': false,  // 9247: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
@@ -8004,19 +7928,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + onceBegin > prevWord(null) + done': false,  // 9875: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + onceFinish > play(null) + newWordFragment': false,  // 9996: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + onceFinish > play(null) + progress': false,  // 9997: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + done': false,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + progress': false,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + done': false,  // 10025: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + onceFinish > rewind(null) + newWordFragment': false,  // 10146: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + onceFinish > rewind(null) + progress': false,  // 10147: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
@@ -8064,19 +7988,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + onceFinish > prevWord(null) + done': false,  // 10775: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + done': false,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + progress': false,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + done': false,  // 16325: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + loopBegin > rewind(null) + newWordFragment': false,  // 16446: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + loopBegin > rewind(null) + progress': false,  // 16447: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
@@ -8124,19 +8048,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + loopBegin > prevWord(null) + done': false,  // 17075: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + done': false,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + progress': false,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + done': false,  // 17225: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + loopFinish > rewind(null) + newWordFragment': false,  // 17346: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + loopFinish > rewind(null) + progress': false,  // 17347: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
@@ -8184,19 +8108,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + loopFinish > prevWord(null) + done': false,  // 17975: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + progress': false,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + done': false,  // 18125: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + newWordFragment > rewind(null) + newWordFragment': false,  // 18246: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + newWordFragment > rewind(null) + progress': false,  // 18247: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
@@ -8244,19 +8168,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + newWordFragment > prevWord(null) + done': false,  // 18875: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + progress': false,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + done': false,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + progress': false,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + done': false,  // 19025: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + progress > rewind(null) + newWordFragment': false,  // 19146: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + progress > rewind(null) + progress': false,  // 19147: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(1) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
@@ -8310,19 +8234,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// #? This one DOES change jumpSentence(-1) (not -3 still) or prevSentence(), since DON'T go to first sentence (which is like jumpTo(6))
 		'skip-combos: jumpSentences(3) + onceBegin > play(null) + newWordFragment': false,  // 9096: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + onceBegin > play(null) + progress': false,  // 9097: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + done': false,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + progress': false,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + done': false,  // 9125: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + onceBegin > rewind(null) + newWordFragment': false,  // 9246: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + onceBegin > rewind(null) + progress': false,  // 9247: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
@@ -8389,19 +8313,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(3) + onceBegin > prevSentence(null) + done': false,  // 9900: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + onceFinish > play(null) + newWordFragment': false,  // 9996: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + onceFinish > play(null) + progress': false,  // 9997: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + done': false,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + progress': false,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + done': false,  // 10025: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + onceFinish > rewind(null) + newWordFragment': false,  // 10146: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + onceFinish > rewind(null) + progress': false,  // 10147: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
@@ -8468,19 +8392,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(3) + onceFinish > prevSentence(null) + done': false,  // 10800: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + done': false,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + progress': false,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + done': false,  // 16325: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + loopBegin > rewind(null) + newWordFragment': false,  // 16446: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + loopBegin > rewind(null) + progress': false,  // 16447: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
@@ -8547,19 +8471,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(3) + loopBegin > prevSentence(null) + done': false,  // 17100: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + done': false,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + progress': false,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + done': false,  // 17225: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + loopFinish > rewind(null) + newWordFragment': false,  // 17346: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + loopFinish > rewind(null) + progress': false,  // 17347: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
@@ -8626,19 +8550,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(3) + loopFinish > prevSentence(null) + done': false,  // 18000: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + progress': false,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + done': false,  // 18125: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + newWordFragment > rewind(null) + newWordFragment': false,  // 18246: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + newWordFragment > rewind(null) + progress': false,  // 18247: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
@@ -8705,19 +8629,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(3) + newWordFragment > prevSentence(null) + done': false,  // 18900: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + progress': false,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + done': false,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + progress': false,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + done': false,  // 19025: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + progress > rewind(null) + newWordFragment': false,  // 19146: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + progress > rewind(null) + progress': false,  // 19147: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(3) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
@@ -8795,10 +8719,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(100) + onceBegin > play(null) + playFinish': false,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + onceBegin > play(null) + restartBegin': false,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + onceBegin > play(null) + restartFinish': false,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + onceBegin > togglePlayPause(null) + restartBegin': false,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + onceBegin > togglePlayPause(null) + restartFinish': false,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + onceBegin > toggle(null) + restartBegin': false,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + onceBegin > toggle(null) + restartFinish': false,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + onceBegin > rewind(null) + newWordFragment': false,  // 9246: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + onceBegin > rewind(null) + progress': false,  // 9247: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
@@ -8882,10 +8806,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(100) + onceFinish > play(null) + playFinish': false,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + onceFinish > play(null) + restartBegin': false,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + onceFinish > play(null) + restartFinish': false,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + onceFinish > togglePlayPause(null) + restartBegin': false,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + onceFinish > togglePlayPause(null) + restartFinish': false,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + onceFinish > toggle(null) + restartBegin': false,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + onceFinish > toggle(null) + restartFinish': false,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + onceFinish > rewind(null) + newWordFragment': false,  // 10146: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + onceFinish > rewind(null) + progress': false,  // 10147: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
@@ -8969,10 +8893,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(100) + loopBegin > play(null) + playFinish': false,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + loopBegin > play(null) + restartBegin': false,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + loopBegin > play(null) + restartFinish': false,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + loopBegin > togglePlayPause(null) + restartBegin': false,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + loopBegin > togglePlayPause(null) + restartFinish': false,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + loopBegin > toggle(null) + restartBegin': false,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + loopBegin > toggle(null) + restartFinish': false,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + loopBegin > rewind(null) + newWordFragment': false,  // 16446: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + loopBegin > rewind(null) + progress': false,  // 16447: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
@@ -9056,10 +8980,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(100) + loopFinish > play(null) + playFinish': false,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + loopFinish > play(null) + restartBegin': false,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + loopFinish > play(null) + restartFinish': false,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + loopFinish > togglePlayPause(null) + restartBegin': false,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + loopFinish > togglePlayPause(null) + restartFinish': false,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + loopFinish > toggle(null) + restartBegin': false,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + loopFinish > toggle(null) + restartFinish': false,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + loopFinish > rewind(null) + newWordFragment': false,  // 17346: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + loopFinish > rewind(null) + progress': false,  // 17347: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
@@ -9143,10 +9067,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(100) + newWordFragment > play(null) + playFinish': false,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + newWordFragment > play(null) + restartBegin': false,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + newWordFragment > play(null) + restartFinish': false,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + newWordFragment > togglePlayPause(null) + restartBegin': false,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + newWordFragment > togglePlayPause(null) + restartFinish': false,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + newWordFragment > toggle(null) + restartBegin': false,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + newWordFragment > toggle(null) + restartFinish': false,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + newWordFragment > rewind(null) + newWordFragment': false,  // 18246: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + newWordFragment > rewind(null) + progress': false,  // 18247: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
@@ -9230,10 +9154,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(100) + progress > play(null) + playFinish': false,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + progress > play(null) + restartBegin': false,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + progress > play(null) + restartFinish': false,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + progress > togglePlayPause(null) + restartBegin': false,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + progress > togglePlayPause(null) + restartFinish': false,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + progress > toggle(null) + restartBegin': false,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + progress > toggle(null) + restartFinish': false,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + progress > rewind(null) + newWordFragment': false,  // 19146: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + progress > rewind(null) + progress': false,  // 19147: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
@@ -9317,10 +9241,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(100) + stopBegin > play(null) + playFinish': false,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + stopBegin > play(null) + restartBegin': false,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + stopBegin > play(null) + restartFinish': false,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + stopBegin > togglePlayPause(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + stopBegin > togglePlayPause(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + stopBegin > togglePlayPause(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + stopBegin > togglePlayPause(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + stopBegin > toggle(null) + playBegin': false,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + stopBegin > toggle(null) + playFinish': false,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + stopBegin > toggle(null) + restartBegin': false,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + stopBegin > toggle(null) + restartFinish': false,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + stopBegin > rewind(null) + newWordFragment': false,  // 20046: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + stopBegin > rewind(null) + progress': false,  // 20047: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + stopBegin > fastForward(null) + newWordFragment': false,  // 20071: ?? (skip results are different than combos)
@@ -9404,10 +9328,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(100) + stopFinish > play(null) + playFinish': false,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + stopFinish > play(null) + restartBegin': false,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + stopFinish > play(null) + restartFinish': false,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + stopFinish > togglePlayPause(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + stopFinish > togglePlayPause(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + stopFinish > togglePlayPause(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + stopFinish > togglePlayPause(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + stopFinish > toggle(null) + playBegin': false,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + stopFinish > toggle(null) + playFinish': false,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + stopFinish > toggle(null) + restartBegin': false,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + stopFinish > toggle(null) + restartFinish': false,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + stopFinish > rewind(null) + newWordFragment': false,  // 20946: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + stopFinish > rewind(null) + progress': false,  // 20947: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + stopFinish > fastForward(null) + newWordFragment': false,  // 20971: ?? (skip results are different than combos)
@@ -9491,10 +9415,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(100) + done > play(null) + playFinish': false,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + done > play(null) + restartBegin': false,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + done > play(null) + restartFinish': false,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + done > togglePlayPause(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + done > togglePlayPause(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + done > togglePlayPause(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: jumpSentences(100) + done > togglePlayPause(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + done > toggle(null) + playBegin': false,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + done > toggle(null) + playFinish': false,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + done > toggle(null) + restartBegin': false,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: jumpSentences(100) + done > toggle(null) + restartFinish': false,  // 21706: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + done > rewind(null) + newWordFragment': false,  // 21846: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + done > rewind(null) + progress': false,  // 21847: ?? (skip results are different than combos)
 		'skip-combos: jumpSentences(100) + done > fastForward(null) + newWordFragment': false,  // 21871: ?? (skip results are different than combos)
@@ -9579,177 +9503,147 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// ============== nextWord ==============
 		// #?: Almost like jumpWord(3), but prevWord, jump*(-), rewind(), etc. (what others?) won't be different
-		// 'skip-combos: nextWord(null) + onceBegin > play(null) + newWordFragment': false,  // 9096: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > play(null) + progress': false,  // 9097: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + done': false,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + progress': false,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + done': false,  // 9125: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > fastForward(null) + progress': false,  // 9272: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > once([0,0,2]) + newWordFragment': false,  // 9321: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > once([0,0,2]) + progress': false,  // 9322: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + onceBegin > current(null) + newWordFragment': false,  // 9346: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > current(null) + progress': false,  // 9347: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + onceBegin > jumpWords(0) + newWordFragment': false,  // 9571: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > jumpWords(0) + progress': false,  // 9572: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + onceBegin > jumpWords(4) + newWordFragment': false,  // 9596: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > jumpWords(4) + progress': false,  // 9597: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + onceBegin > jumpSentences(0) + newWordFragment': false,  // 9721: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > jumpSentences(0) + progress': false,  // 9722: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > nextWord(null) + newWordFragment': false,  // 9821: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceBegin > nextWord(null) + progress': false,  // 9822: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + onceFinish > play(null) + newWordFragment': false,  // 9996: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > play(null) + progress': false,  // 9997: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + done': false,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + progress': false,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + done': false,  // 10025: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > fastForward(null) + progress': false,  // 10172: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > once([0,0,2]) + newWordFragment': false,  // 10221: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > once([0,0,2]) + progress': false,  // 10222: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + onceFinish > current(null) + newWordFragment': false,  // 10246: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > current(null) + progress': false,  // 10247: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + onceFinish > jumpWords(0) + newWordFragment': false,  // 10471: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > jumpWords(0) + progress': false,  // 10472: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + onceFinish > jumpWords(4) + newWordFragment': false,  // 10496: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > jumpWords(4) + progress': false,  // 10497: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + onceFinish > jumpSentences(0) + newWordFragment': false,  // 10621: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > jumpSentences(0) + progress': false,  // 10622: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > nextWord(null) + newWordFragment': false,  // 10721: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + onceFinish > nextWord(null) + progress': false,  // 10722: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + done': false,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + progress': false,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + done': false,  // 16325: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > fastForward(null) + progress': false,  // 16472: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > once([0,0,2]) + newWordFragment': false,  // 16521: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > once([0,0,2]) + progress': false,  // 16522: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + loopBegin > current(null) + newWordFragment': false,  // 16546: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > current(null) + progress': false,  // 16547: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + loopBegin > jumpWords(0) + newWordFragment': false,  // 16771: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > jumpWords(0) + progress': false,  // 16772: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + loopBegin > jumpWords(4) + newWordFragment': false,  // 16796: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > jumpWords(4) + progress': false,  // 16797: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + loopBegin > jumpSentences(0) + newWordFragment': false,  // 16921: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > jumpSentences(0) + progress': false,  // 16922: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > nextWord(null) + newWordFragment': false,  // 17021: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopBegin > nextWord(null) + progress': false,  // 17022: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + done': false,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + progress': false,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + done': false,  // 17225: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > fastForward(null) + progress': false,  // 17372: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > once([0,0,2]) + newWordFragment': false,  // 17421: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > once([0,0,2]) + progress': false,  // 17422: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + loopFinish > current(null) + newWordFragment': false,  // 17446: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > current(null) + progress': false,  // 17447: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + loopFinish > jumpWords(0) + newWordFragment': false,  // 17671: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > jumpWords(0) + progress': false,  // 17672: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + loopFinish > jumpWords(4) + newWordFragment': false,  // 17696: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > jumpWords(4) + progress': false,  // 17697: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + loopFinish > jumpSentences(0) + newWordFragment': false,  // 17821: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > jumpSentences(0) + progress': false,  // 17822: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > nextWord(null) + newWordFragment': false,  // 17921: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + loopFinish > nextWord(null) + progress': false,  // 17922: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + progress': false,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + done': false,  // 18125: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > fastForward(null) + progress': false,  // 18272: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 18321: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > once([0,0,2]) + progress': false,  // 18322: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + newWordFragment > current(null) + newWordFragment': false,  // 18346: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > current(null) + progress': false,  // 18347: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + newWordFragment > jumpWords(0) + newWordFragment': false,  // 18571: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > jumpWords(0) + progress': false,  // 18572: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + newWordFragment > jumpWords(4) + newWordFragment': false,  // 18596: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > jumpWords(4) + progress': false,  // 18597: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + newWordFragment > jumpSentences(0) + newWordFragment': false,  // 18721: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > jumpSentences(0) + progress': false,  // 18722: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > nextWord(null) + newWordFragment': false,  // 18821: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + newWordFragment > nextWord(null) + progress': false,  // 18822: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + progress': false,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + done': false,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + progress': false,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: nextWord(null) + progress > toggle(null) + done': false,  // 19025: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > fastForward(null) + progress': false,  // 19172: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > once([0,0,2]) + newWordFragment': false,  // 19221: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > once([0,0,2]) + progress': false,  // 19222: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + progress > current(null) + newWordFragment': false,  // 19246: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > current(null) + progress': false,  // 19247: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + progress > jumpWords(0) + newWordFragment': false,  // 19471: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > jumpWords(0) + progress': false,  // 19472: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + progress > jumpWords(4) + newWordFragment': false,  // 19496: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > jumpWords(4) + progress': false,  // 19497: ?? (skip results are different than combos)
-		// 'skip-combos: nextWord(null) + progress > jumpSentences(0) + newWordFragment': false,  // 19621: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > jumpSentences(0) + progress': false,  // 19622: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > nextWord(null) + newWordFragment': false,  // 19721: ?? (skip results are different than combos)
 		'skip-combos: nextWord(null) + progress > nextWord(null) + progress': false,  // 19722: ?? (skip results are different than combos)
@@ -9759,19 +9653,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// #?: like jumpSentence(1)
 		'skip-combos: nextSentence(null) + onceBegin > play(null) + newWordFragment': false,  // 9096: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + onceBegin > play(null) + progress': false,  // 9097: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + progress': false,  // 9122: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + done': false,  // 9125: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + playBegin': false,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + playFinish': false,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + pauseBegin': false,  // 9107: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + pauseFinish': false,  // 9108: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + revertBegin': false,  // 9113: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + revertFinish': false,  // 9114: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + loopBegin': false,  // 9119: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + loopFinish': false,  // 9120: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + newWordFragment': false,  // 9121: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + progress': false,  // 9122: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + stopBegin': false,  // 9123: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + stopFinish': false,  // 9124: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + done': false,  // 9125: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + onceBegin > rewind(null) + newWordFragment': false,  // 9246: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + onceBegin > rewind(null) + progress': false,  // 9247: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + onceBegin > fastForward(null) + newWordFragment': false,  // 9271: ?? (skip results are different than combos)
@@ -9819,19 +9713,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + onceBegin > prevWord(null) + done': false,  // 9875: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + onceFinish > play(null) + newWordFragment': false,  // 9996: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + onceFinish > play(null) + progress': false,  // 9997: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + progress': false,  // 10022: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + done': false,  // 10025: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + playBegin': false,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + playFinish': false,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + pauseBegin': false,  // 10007: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + pauseFinish': false,  // 10008: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + revertBegin': false,  // 10013: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + revertFinish': false,  // 10014: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + loopBegin': false,  // 10019: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + loopFinish': false,  // 10020: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + newWordFragment': false,  // 10021: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + progress': false,  // 10022: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + stopBegin': false,  // 10023: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + stopFinish': false,  // 10024: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + done': false,  // 10025: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + onceFinish > rewind(null) + newWordFragment': false,  // 10146: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + onceFinish > rewind(null) + progress': false,  // 10147: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + onceFinish > fastForward(null) + newWordFragment': false,  // 10171: ?? (skip results are different than combos)
@@ -9879,19 +9773,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + onceFinish > prevWord(null) + done': false,  // 10775: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + loopBegin > play(null) + progress': false,  // 16297: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + progress': false,  // 16322: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + done': false,  // 16325: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + playBegin': false,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + playFinish': false,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + pauseBegin': false,  // 16307: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + pauseFinish': false,  // 16308: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + revertBegin': false,  // 16313: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + revertFinish': false,  // 16314: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + loopBegin': false,  // 16319: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + loopFinish': false,  // 16320: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + newWordFragment': false,  // 16321: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + progress': false,  // 16322: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + stopBegin': false,  // 16323: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + stopFinish': false,  // 16324: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + done': false,  // 16325: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + loopBegin > rewind(null) + newWordFragment': false,  // 16446: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + loopBegin > rewind(null) + progress': false,  // 16447: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + loopBegin > fastForward(null) + newWordFragment': false,  // 16471: ?? (skip results are different than combos)
@@ -9939,19 +9833,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + loopBegin > prevWord(null) + done': false,  // 17075: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + loopFinish > play(null) + progress': false,  // 17197: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + progress': false,  // 17222: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + done': false,  // 17225: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + playBegin': false,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + playFinish': false,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + pauseBegin': false,  // 17207: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + pauseFinish': false,  // 17208: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + revertBegin': false,  // 17213: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + revertFinish': false,  // 17214: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + loopBegin': false,  // 17219: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + loopFinish': false,  // 17220: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + newWordFragment': false,  // 17221: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + progress': false,  // 17222: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + stopBegin': false,  // 17223: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + stopFinish': false,  // 17224: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + done': false,  // 17225: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + loopFinish > rewind(null) + newWordFragment': false,  // 17346: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + loopFinish > rewind(null) + progress': false,  // 17347: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + loopFinish > fastForward(null) + newWordFragment': false,  // 17371: ?? (skip results are different than combos)
@@ -9999,19 +9893,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + loopFinish > prevWord(null) + done': false,  // 17975: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + newWordFragment > play(null) + progress': false,  // 18097: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + progress': false,  // 18122: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + done': false,  // 18125: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + playBegin': false,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + playFinish': false,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + pauseBegin': false,  // 18107: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + pauseFinish': false,  // 18108: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + revertBegin': false,  // 18113: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + revertFinish': false,  // 18114: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + loopBegin': false,  // 18119: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + loopFinish': false,  // 18120: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + newWordFragment': false,  // 18121: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + progress': false,  // 18122: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + stopBegin': false,  // 18123: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + stopFinish': false,  // 18124: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + done': false,  // 18125: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + newWordFragment > rewind(null) + newWordFragment': false,  // 18246: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + newWordFragment > rewind(null) + progress': false,  // 18247: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + newWordFragment > fastForward(null) + newWordFragment': false,  // 18271: ?? (skip results are different than combos)
@@ -10059,19 +9953,19 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + newWordFragment > prevWord(null) + done': false,  // 18875: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + progress > play(null) + progress': false,  // 18997: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + progress': false,  // 19022: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + done': false,  // 19025: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + playBegin': false,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + playFinish': false,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + pauseBegin': false,  // 19007: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + pauseFinish': false,  // 19008: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + revertBegin': false,  // 19013: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + revertFinish': false,  // 19014: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + loopBegin': false,  // 19019: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + loopFinish': false,  // 19020: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + newWordFragment': false,  // 19021: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + progress': false,  // 19022: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + stopBegin': false,  // 19023: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + stopFinish': false,  // 19024: ?? (skip results are different than combos)
+		'skip-combos: nextSentence(null) + progress > toggle(null) + done': false,  // 19025: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + progress > rewind(null) + newWordFragment': false,  // 19146: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + progress > rewind(null) + progress': false,  // 19147: ?? (skip results are different than combos)
 		'skip-combos: nextSentence(null) + progress > fastForward(null) + newWordFragment': false,  // 19171: ?? (skip results are different than combos)
@@ -10125,74 +10019,74 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: prevWord(null) + onceBegin > play(null) + playFinish': true,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + onceBegin > play(null) + restartBegin': true,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + onceBegin > play(null) + restartFinish': true,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + onceBegin > toggle(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + onceBegin > toggle(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + onceFinish > play(null) + playBegin': true,  // 9976: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + onceFinish > play(null) + playFinish': true,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + onceFinish > play(null) + restartBegin': true,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + onceFinish > play(null) + restartFinish': true,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + onceFinish > toggle(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + onceFinish > toggle(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + loopBegin > play(null) + playBegin': true,  // 16276: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + loopBegin > play(null) + playFinish': true,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + loopBegin > play(null) + restartBegin': true,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + loopBegin > play(null) + restartFinish': true,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + loopBegin > toggle(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + loopBegin > toggle(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + loopFinish > play(null) + playBegin': true,  // 17176: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + loopFinish > play(null) + playFinish': true,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + loopFinish > play(null) + restartBegin': true,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + loopFinish > play(null) + restartFinish': true,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + loopFinish > toggle(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + loopFinish > toggle(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + newWordFragment > play(null) + playBegin': true,  // 18076: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + newWordFragment > play(null) + playFinish': true,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + newWordFragment > play(null) + restartBegin': true,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + newWordFragment > play(null) + restartFinish': true,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + newWordFragment > toggle(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + newWordFragment > toggle(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + progress > play(null) + playBegin': true,  // 18976: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + progress > play(null) + playFinish': true,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + progress > play(null) + restartBegin': true,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + progress > play(null) + restartFinish': true,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + progress > toggle(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + progress > toggle(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + stopBegin > play(null) + playBegin': true,  // 19876: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + stopBegin > play(null) + playFinish': true,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + stopBegin > play(null) + restartBegin': true,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + stopBegin > play(null) + restartFinish': true,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + stopBegin > toggle(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + stopBegin > toggle(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + stopBegin > toggle(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + stopBegin > toggle(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + stopFinish > play(null) + playBegin': true,  // 20776: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + stopFinish > play(null) + playFinish': true,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + stopFinish > play(null) + restartBegin': true,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + stopFinish > play(null) + restartFinish': true,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + stopFinish > toggle(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + stopFinish > toggle(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + stopFinish > toggle(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + stopFinish > toggle(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + done > play(null) + playBegin': true,  // 21676: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + done > play(null) + playFinish': true,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + done > play(null) + restartBegin': true,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: prevWord(null) + done > play(null) + restartFinish': true,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + done > togglePlayPause(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + done > togglePlayPause(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + done > togglePlayPause(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: prevWord(null) + done > togglePlayPause(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + done > toggle(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + done > toggle(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + done > toggle(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: prevWord(null) + done > toggle(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
 
 
 
@@ -10202,80 +10096,85 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: prevSentence(null) + onceBegin > play(null) + playFinish': true,  // 9077: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + onceBegin > play(null) + restartBegin': true,  // 9080: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + onceBegin > play(null) + restartFinish': true,  // 9081: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + onceBegin > togglePlayPause(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + onceBegin > togglePlayPause(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + onceBegin > togglePlayPause(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + onceBegin > togglePlayPause(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + onceBegin > toggle(null) + playBegin': true,  // 9101: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + onceBegin > toggle(null) + playFinish': true,  // 9102: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + onceBegin > toggle(null) + restartBegin': true,  // 9105: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + onceBegin > toggle(null) + restartFinish': true,  // 9106: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + onceFinish > play(null) + playBegin': true,  // 9976: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + onceFinish > play(null) + playFinish': true,  // 9977: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + onceFinish > play(null) + restartBegin': true,  // 9980: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + onceFinish > play(null) + restartFinish': true,  // 9981: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + onceFinish > togglePlayPause(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + onceFinish > togglePlayPause(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + onceFinish > togglePlayPause(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + onceFinish > togglePlayPause(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + onceFinish > toggle(null) + playBegin': true,  // 10001: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + onceFinish > toggle(null) + playFinish': true,  // 10002: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + onceFinish > toggle(null) + restartBegin': true,  // 10005: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + onceFinish > toggle(null) + restartFinish': true,  // 10006: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + loopBegin > play(null) + playBegin': true,  // 16276: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + loopBegin > play(null) + playFinish': true,  // 16277: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + loopBegin > play(null) + restartBegin': true,  // 16280: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + loopBegin > play(null) + restartFinish': true,  // 16281: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + loopBegin > togglePlayPause(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + loopBegin > togglePlayPause(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + loopBegin > togglePlayPause(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + loopBegin > togglePlayPause(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + loopBegin > toggle(null) + playBegin': true,  // 16301: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + loopBegin > toggle(null) + playFinish': true,  // 16302: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + loopBegin > toggle(null) + restartBegin': true,  // 16305: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + loopBegin > toggle(null) + restartFinish': true,  // 16306: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + loopFinish > play(null) + playBegin': true,  // 17176: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + loopFinish > play(null) + playFinish': true,  // 17177: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + loopFinish > play(null) + restartBegin': true,  // 17180: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + loopFinish > play(null) + restartFinish': true,  // 17181: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + loopFinish > togglePlayPause(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + loopFinish > togglePlayPause(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + loopFinish > togglePlayPause(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + loopFinish > togglePlayPause(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + loopFinish > toggle(null) + playBegin': true,  // 17201: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + loopFinish > toggle(null) + playFinish': true,  // 17202: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + loopFinish > toggle(null) + restartBegin': true,  // 17205: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + loopFinish > toggle(null) + restartFinish': true,  // 17206: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + newWordFragment > play(null) + playBegin': true,  // 18076: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + newWordFragment > play(null) + playFinish': true,  // 18077: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + newWordFragment > play(null) + restartBegin': true,  // 18080: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + newWordFragment > play(null) + restartFinish': true,  // 18081: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + newWordFragment > togglePlayPause(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + newWordFragment > toggle(null) + playBegin': true,  // 18101: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + newWordFragment > toggle(null) + playFinish': true,  // 18102: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + newWordFragment > toggle(null) + restartBegin': true,  // 18105: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + newWordFragment > toggle(null) + restartFinish': true,  // 18106: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + progress > play(null) + playBegin': true,  // 18976: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + progress > play(null) + playFinish': true,  // 18977: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + progress > play(null) + restartBegin': true,  // 18980: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + progress > play(null) + restartFinish': true,  // 18981: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + progress > togglePlayPause(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + progress > togglePlayPause(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + progress > togglePlayPause(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + progress > togglePlayPause(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + progress > toggle(null) + playBegin': true,  // 19001: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + progress > toggle(null) + playFinish': true,  // 19002: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + progress > toggle(null) + restartBegin': true,  // 19005: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + progress > toggle(null) + restartFinish': true,  // 19006: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + stopBegin > play(null) + playBegin': true,  // 19876: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + stopBegin > play(null) + playFinish': true,  // 19877: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + stopBegin > play(null) + restartBegin': true,  // 19880: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + stopBegin > play(null) + restartFinish': true,  // 19881: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + stopBegin > togglePlayPause(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + stopBegin > togglePlayPause(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + stopBegin > togglePlayPause(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + stopBegin > togglePlayPause(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + stopBegin > toggle(null) + playBegin': true,  // 19901: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + stopBegin > toggle(null) + playFinish': true,  // 19902: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + stopBegin > toggle(null) + restartBegin': true,  // 19905: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + stopBegin > toggle(null) + restartFinish': true,  // 19906: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + stopFinish > play(null) + playBegin': true,  // 20776: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + stopFinish > play(null) + playFinish': true,  // 20777: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + stopFinish > play(null) + restartBegin': true,  // 20780: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + stopFinish > play(null) + restartFinish': true,  // 20781: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + stopFinish > togglePlayPause(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + stopFinish > togglePlayPause(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + stopFinish > togglePlayPause(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + stopFinish > togglePlayPause(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + stopFinish > toggle(null) + playBegin': true,  // 20801: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + stopFinish > toggle(null) + playFinish': true,  // 20802: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + stopFinish > toggle(null) + restartBegin': true,  // 20805: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + stopFinish > toggle(null) + restartFinish': true,  // 20806: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + done > play(null) + playBegin': true,  // 21676: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + done > play(null) + playFinish': true,  // 21677: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + done > play(null) + restartBegin': true,  // 21680: ?? (skip results are different than combos)
 		'skip-combos: prevSentence(null) + done > play(null) + restartFinish': true,  // 21681: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + done > togglePlayPause(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + done > togglePlayPause(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + done > togglePlayPause(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
-		'skip-combos: prevSentence(null) + done > togglePlayPause(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + done > toggle(null) + playBegin': true,  // 21701: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + done > toggle(null) + playFinish': true,  // 21702: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + done > toggle(null) + restartBegin': true,  // 21705: ?? (skip results are different than combos)
+		'skip-combos: prevSentence(null) + done > toggle(null) + restartFinish': true,  // 21706: ?? (skip results are different than combos)
 
+
+		// ================================================================
+		// ================================================================
 		// tests/skip-combos.js (specifically skip combo expected failures)
+		// ================================================================
+		// ================================================================
 		// forceReset(null)
 		'skip-combos: forceReset(null) + resetBegin > restart(null) + loopSkip': false,  // 78: event should have been triggerd but was NOT
 		'skip-combos: forceReset(null) + resetBegin > play(null) + loopSkip': false,  // 104: event should have been triggerd but was NOT
-		'skip-combos: forceReset(null) + resetBegin > togglePlayPause(null) + loopSkip': false,  // 130: event should have been triggerd but was NOT
+		'skip-combos: forceReset(null) + resetBegin > toggle(null) + loopSkip': false,  // 130: event should have been triggerd but was NOT
 		'skip-combos: forceReset(null) + resetBegin > rewind(null) + loopSkip': false,  // 260: event should have been triggerd but was NOT
 		'skip-combos: forceReset(null) + resetBegin > fastForward(null) + loopSkip': false,  // 286: event should have been triggerd but was NOT
 		'skip-combos: forceReset(null) + resetBegin > once([0,0,-2]) + loopSkip': false,  // 312: event should have been triggerd but was NOT
@@ -10330,17 +10229,17 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: play(null) + loopSkip > forceReset(null) + stopFinish': false,  // 47760: event should not have been triggerd but WAS
 		'skip-combos: play(null) + loopSkip > forceReset(null) + done': false,  // 47761: event should not have been triggerd but WAS
 		'skip-combos: play(null) + loopSkip > forceReset(null) + loopSkip': false,  // 47762: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + playBegin > forceReset(null) + loopSkip': false,  // 3770: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopBegin > forceReset(null) + loopSkip': false,  // 16874: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > forceReset(null) + playFinish': false,  // 23402: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > forceReset(null) + loopBegin': false,  // 23419: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > forceReset(null) + loopFinish': false,  // 23420: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > forceReset(null) + newWordFragment': false,  // 23421: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > forceReset(null) + progress': false,  // 23422: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > forceReset(null) + stopBegin': false,  // 23423: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > forceReset(null) + stopFinish': false,  // 23424: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > forceReset(null) + done': false,  // 23425: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > forceReset(null) + loopSkip': false,  // 23426: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + playBegin > forceReset(null) + loopSkip': false,  // 3770: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopBegin > forceReset(null) + loopSkip': false,  // 16874: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > forceReset(null) + playFinish': false,  // 23402: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > forceReset(null) + loopBegin': false,  // 23419: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > forceReset(null) + loopFinish': false,  // 23420: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > forceReset(null) + newWordFragment': false,  // 23421: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > forceReset(null) + progress': false,  // 23422: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > forceReset(null) + stopBegin': false,  // 23423: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > forceReset(null) + stopFinish': false,  // 23424: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > forceReset(null) + done': false,  // 23425: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > forceReset(null) + loopSkip': false,  // 23426: event should not have been triggerd but WAS
 		'skip-combos: rewind(null) + rewindBegin > forceReset(null) + loopSkip': false,  // 37466: event should not have been triggerd but WAS
 		'skip-combos: rewind(null) + loopBegin > forceReset(null) + loopSkip': false,  // 41210: event should not have been triggerd but WAS
 		'skip-combos: rewind(null) + loopSkip > forceReset(null) + rewindFinish': false,  // 47752: event should not have been triggerd but WAS
@@ -10459,6 +10358,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(0) + loopSkip > forceReset(null) + newWordFragment': false,  // 23421: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(0) + loopSkip > forceReset(null) + progress': false,  // 23422: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(4) + onceBegin > forceReset(null) + loopSkip': false,  // 33722: event should not have been triggerd but WAS
+		
 		'skip-combos: jumpWords(4) + loopBegin > forceReset(null) + loopBegin': false,  // 41203: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(4) + loopBegin > forceReset(null) + loopSkip': false,  // 41210: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(4) + loopSkip > forceReset(null) + onceFinish': false,  // 47748: event should not have been triggerd but WAS
@@ -10547,7 +10447,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		// reset(null)
 		'skip-combos: reset(null) + resetBegin > restart(null) + loopSkip': false,  // 24414: event should have been triggerd but was NOT
 		'skip-combos: reset(null) + resetBegin > play(null) + loopSkip': false,  // 24440: event should have been triggerd but was NOT
-		'skip-combos: reset(null) + resetBegin > togglePlayPause(null) + loopSkip': false,  // 24466: event should have been triggerd but was NOT
+		'skip-combos: reset(null) + resetBegin > toggle(null) + loopSkip': false,  // 24466: event should have been triggerd but was NOT
 		'skip-combos: reset(null) + resetBegin > rewind(null) + loopSkip': false,  // 24596: event should have been triggerd but was NOT
 		'skip-combos: reset(null) + resetBegin > fastForward(null) + loopSkip': false,  // 24622: event should have been triggerd but was NOT
 		'skip-combos: reset(null) + resetBegin > once([0,0,-2]) + loopSkip': false,  // 24648: event should have been triggerd but was NOT
@@ -10581,15 +10481,15 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// restart(null)
 		'skip-combos: restart(null) + restartBegin > play(null) + loopSkip': false,  // 1976: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: restart(null) + restartBegin > togglePlayPause(null) + loopSkip': false,  // 2002: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + restartBegin > toggle(null) + loopSkip': false,  // 2002: event should have been triggerd but was NOT
 		'skip-combos: restart(null) + restartFinish > play(null) + loopSkip': false,  // 2912: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: restart(null) + restartFinish > togglePlayPause(null) + loopSkip': false,  // 2938: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + restartFinish > toggle(null) + loopSkip': false,  // 2938: event should have been triggerd but was NOT
 		'skip-combos: restart(null) + loopBegin > play(null) + loopSkip': false,  // 16952: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: restart(null) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopBegin > toggle(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
 		'skip-combos: restart(null) + loopFinish > play(null) + loopSkip': false,  // 17888: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: restart(null) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopFinish > toggle(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
 		'skip-combos: restart(null) + newWordFragment > play(null) + loopSkip': false,  // 18824: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: restart(null) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + newWordFragment > toggle(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
 		'skip-combos: restart(null) + newWordFragment > fastForward(null) + newWordFragment': false,  // 19001: frags expected ["you","brave","I","back.","Why,","oh"], but got ["brave","I","back.","Why,","oh"]
 		'skip-combos: restart(null) + newWordFragment > fastForward(null) + progress': false,  // 19002: 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: restart(null) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 19053: frags expected ["you"], but got ["brave"]
@@ -10605,7 +10505,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: restart(null) + newWordFragment > nextWord(null) + newWordFragment': false,  // 19573: frags expected ["you"], but got ["brave"]
 		'skip-combos: restart(null) + newWordFragment > nextWord(null) + progress': false,  // 19574: 'progress' expected [0.16666666666666666], but got [0.25]
 		'skip-combos: restart(null) + progress > play(null) + loopSkip': false,  // 19760: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: restart(null) + progress > togglePlayPause(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + progress > toggle(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
 		'skip-combos: restart(null) + stopBegin > rewind(null) + loopSkip': false,  // 20852: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
 		'skip-combos: restart(null) + stopBegin > fastForward(null) + loopSkip': false,  // 20878: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
 		'skip-combos: restart(null) + stopBegin > once([0,0,-2]) + loopSkip': false,  // 20904: event should have been triggerd but was NOT
@@ -10659,18 +10559,18 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: restart(null) + done > prevSentence(null) + loopSkip': false,  // 23400: event should have been triggerd but was NOT
 		'skip-combos: restart(null) + loopSkip > play(null) + progress': false,  // 23500: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: restart(null) + loopSkip > play(null) + loopSkip': false,  // 23504: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + progress': false,  // 23526: event should have been triggerd but was NOT
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + done': false,  // 23529: event should have been triggerd but was NOT
-		'skip-combos: restart(null) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopSkip > toggle(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
+		'skip-combos: restart(null) + loopSkip > toggle(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
+		'skip-combos: restart(null) + loopSkip > toggle(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopSkip > toggle(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopSkip > toggle(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopSkip > toggle(null) + progress': false,  // 23526: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopSkip > toggle(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopSkip > toggle(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopSkip > toggle(null) + done': false,  // 23529: event should have been triggerd but was NOT
+		'skip-combos: restart(null) + loopSkip > toggle(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
 		'skip-combos: restart(null) + loopSkip > revert(null) + playBegin': false,  // 23609: event should not have been triggerd but WAS
 		'skip-combos: restart(null) + loopSkip > revert(null) + playFinish': false,  // 23610: event should not have been triggerd but WAS
 		'skip-combos: restart(null) + loopSkip > revert(null) + pauseBegin': false,  // 23615: event should have been triggerd but was NOT
@@ -10678,15 +10578,15 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// play(null)
 		'skip-combos: play(null) + playBegin > play(null) + loopSkip': false,  // 28184: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: play(null) + playBegin > togglePlayPause(null) + loopSkip': false,  // 28210: event should have been triggerd but was NOT
+		'skip-combos: play(null) + playBegin > toggle(null) + loopSkip': false,  // 28210: event should have been triggerd but was NOT
 		'skip-combos: play(null) + playFinish > play(null) + loopSkip': false,  // 29120: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: play(null) + playFinish > togglePlayPause(null) + loopSkip': false,  // 29146: event should have been triggerd but was NOT
+		'skip-combos: play(null) + playFinish > toggle(null) + loopSkip': false,  // 29146: event should have been triggerd but was NOT
 		'skip-combos: play(null) + loopBegin > play(null) + loopSkip': false,  // 41288: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: play(null) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopBegin > toggle(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
 		'skip-combos: play(null) + loopFinish > play(null) + loopSkip': false,  // 42224: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: play(null) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopFinish > toggle(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
 		'skip-combos: play(null) + newWordFragment > play(null) + loopSkip': false,  // 43160: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: play(null) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
+		'skip-combos: play(null) + newWordFragment > toggle(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
 		'skip-combos: play(null) + newWordFragment > fastForward(null) + newWordFragment': false,  // 43337: frags expected ["you","brave","I","back.","Why,","oh"], but got ["brave","I","back.","Why,","oh"]
 		'skip-combos: play(null) + newWordFragment > fastForward(null) + progress': false,  // 43338: 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: play(null) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 43389: frags expected ["you"], but got ["brave"]
@@ -10702,7 +10602,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: play(null) + newWordFragment > nextWord(null) + newWordFragment': false,  // 43909: frags expected ["you"], but got ["brave"]
 		'skip-combos: play(null) + newWordFragment > nextWord(null) + progress': false,  // 43910: 'progress' expected [0.16666666666666666], but got [0.25]
 		'skip-combos: play(null) + progress > play(null) + loopSkip': false,  // 44096: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: play(null) + progress > togglePlayPause(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
+		'skip-combos: play(null) + progress > toggle(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
 		'skip-combos: play(null) + stopBegin > rewind(null) + loopSkip': false,  // 45188: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
 		'skip-combos: play(null) + stopBegin > fastForward(null) + loopSkip': false,  // 45214: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
 		'skip-combos: play(null) + stopBegin > once([0,0,-2]) + loopSkip': false,  // 45240: event should have been triggerd but was NOT
@@ -10756,119 +10656,119 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: play(null) + done > prevSentence(null) + loopSkip': false,  // 47736: event should have been triggerd but was NOT
 		'skip-combos: play(null) + loopSkip > play(null) + progress': false,  // 47836: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: play(null) + loopSkip > play(null) + loopSkip': false,  // 47840: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + progress': false,  // 47862: event should have been triggerd but was NOT
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + done': false,  // 47865: event should have been triggerd but was NOT
-		'skip-combos: play(null) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopSkip > toggle(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
+		'skip-combos: play(null) + loopSkip > toggle(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
+		'skip-combos: play(null) + loopSkip > toggle(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopSkip > toggle(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopSkip > toggle(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopSkip > toggle(null) + progress': false,  // 47862: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopSkip > toggle(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopSkip > toggle(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopSkip > toggle(null) + done': false,  // 47865: event should have been triggerd but was NOT
+		'skip-combos: play(null) + loopSkip > toggle(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
 		'skip-combos: play(null) + loopSkip > revert(null) + playBegin': false,  // 47945: event should not have been triggerd but WAS
 		'skip-combos: play(null) + loopSkip > revert(null) + playFinish': false,  // 47946: event should not have been triggerd but WAS
 		'skip-combos: play(null) + loopSkip > revert(null) + pauseBegin': false,  // 47951: event should have been triggerd but was NOT
 		'skip-combos: play(null) + loopSkip > revert(null) + pauseFinish': false,  // 47952: event should have been triggerd but was NOT
 
-		// togglePlayPause(null)
-		'skip-combos: togglePlayPause(null) + playBegin > play(null) + loopSkip': false,  // 3848: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: togglePlayPause(null) + playBegin > togglePlayPause(null) + loopSkip': false,  // 3874: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + playFinish > play(null) + loopSkip': false,  // 4784: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: togglePlayPause(null) + playFinish > togglePlayPause(null) + loopSkip': false,  // 4810: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopBegin > play(null) + loopSkip': false,  // 16952: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: togglePlayPause(null) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopFinish > play(null) + loopSkip': false,  // 17888: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: togglePlayPause(null) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + newWordFragment > play(null) + loopSkip': false,  // 18824: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: togglePlayPause(null) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + newWordFragment > fastForward(null) + newWordFragment': false,  // 19001: frags expected ["you","brave","I","back.","Why,","oh"], but got ["brave","I","back.","Why,","oh"]
-		'skip-combos: togglePlayPause(null) + newWordFragment > fastForward(null) + progress': false,  // 19002: 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'skip-combos: togglePlayPause(null) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 19053: frags expected ["you"], but got ["brave"]
-		'skip-combos: togglePlayPause(null) + newWordFragment > once([0,0,2]) + progress': false,  // 19054: 'progress' expected [0.16666666666666666], but got [0.25]
-		'skip-combos: togglePlayPause(null) + newWordFragment > current(null) + progress': false,  // 19080: 'progress' expected [0.08333333333333333,0.16666666666666666], but got [0.16666666666666666]
-		'skip-combos: togglePlayPause(null) + newWordFragment > current(null) + loopSkip': false,  // 19084: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + newWordFragment > jumpWords(0) + progress': false,  // 19314: 'progress' expected [0.08333333333333333,0.16666666666666666], but got [0.16666666666666666]
-		'skip-combos: togglePlayPause(null) + newWordFragment > jumpWords(0) + loopSkip': false,  // 19318: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + newWordFragment > jumpWords(4) + progress': false,  // 19340: 'progress' expected [0.4166666666666667,0.5], but got [0.5]
-		'skip-combos: togglePlayPause(null) + newWordFragment > jumpWords(4) + loopSkip': false,  // 19344: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + newWordFragment > jumpSentences(0) + progress': false,  // 19470: 'progress' expected [0.08333333333333333,0.16666666666666666], but got [0.16666666666666666]
-		'skip-combos: togglePlayPause(null) + newWordFragment > jumpSentences(0) + loopSkip': false,  // 19474: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + newWordFragment > nextWord(null) + newWordFragment': false,  // 19573: frags expected ["you"], but got ["brave"]
-		'skip-combos: togglePlayPause(null) + newWordFragment > nextWord(null) + progress': false,  // 19574: 'progress' expected [0.16666666666666666], but got [0.25]
-		'skip-combos: togglePlayPause(null) + progress > play(null) + loopSkip': false,  // 19760: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: togglePlayPause(null) + progress > togglePlayPause(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + stopBegin > rewind(null) + loopSkip': false,  // 20852: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
-		'skip-combos: togglePlayPause(null) + stopBegin > fastForward(null) + loopSkip': false,  // 20878: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,-2]) + loopSkip': false,  // 20904: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + stopBegin > once([0,0,2]) + loopSkip': false,  // 20930: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + stopBegin > current(null) + loopSkip': false,  // 20956: frags expected ["Victorious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-3) + loopSkip': false,  // 21138: frags expected ["Victorious,"], but got ["\n"]
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(-1) + loopSkip': false,  // 21164: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(0) + loopSkip': false,  // 21190: frags expected ["Victorious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpWords(4) + loopSkip': false,  // 21216: frags expected ["Delirious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(-1) + loopSkip': false,  // 21320: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(0) + loopSkip': false,  // 21346: frags expected ["Victorious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(1) + loopSkip': false,  // 21372: frags expected ["Delirious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopBegin > jumpSentences(3) + loopSkip': false,  // 21398: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + stopBegin > nextWord(null) + loopSkip': false,  // 21450: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + stopBegin > nextSentence(null) + loopSkip': false,  // 21476: frags expected ["Delirious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopBegin > prevWord(null) + loopSkip': false,  // 21502: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + stopBegin > prevSentence(null) + loopSkip': false,  // 21528: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + stopFinish > rewind(null) + loopSkip': false,  // 21788: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
-		'skip-combos: togglePlayPause(null) + stopFinish > fastForward(null) + loopSkip': false,  // 21814: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,-2]) + loopSkip': false,  // 21840: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + stopFinish > once([0,0,2]) + loopSkip': false,  // 21866: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + stopFinish > current(null) + loopSkip': false,  // 21892: frags expected ["Victorious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-3) + loopSkip': false,  // 22074: frags expected ["Victorious,"], but got ["\n"]
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(-1) + loopSkip': false,  // 22100: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(0) + loopSkip': false,  // 22126: frags expected ["Victorious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpWords(4) + loopSkip': false,  // 22152: frags expected ["Delirious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(-1) + loopSkip': false,  // 22256: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(0) + loopSkip': false,  // 22282: frags expected ["Victorious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(1) + loopSkip': false,  // 22308: frags expected ["Delirious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopFinish > jumpSentences(3) + loopSkip': false,  // 22334: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + stopFinish > nextWord(null) + loopSkip': false,  // 22386: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + stopFinish > nextSentence(null) + loopSkip': false,  // 22412: frags expected ["Delirious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + stopFinish > prevWord(null) + loopSkip': false,  // 22438: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + stopFinish > prevSentence(null) + loopSkip': false,  // 22464: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + done > rewind(null) + loopSkip': false,  // 22724: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
-		'skip-combos: togglePlayPause(null) + done > fastForward(null) + loopSkip': false,  // 22750: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + done > once([0,0,-2]) + loopSkip': false,  // 22776: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + done > once([0,0,2]) + loopSkip': false,  // 22802: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + done > current(null) + loopSkip': false,  // 22828: frags expected ["Victorious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-3) + loopSkip': false,  // 23010: frags expected ["Victorious,"], but got ["\n"]
-		'skip-combos: togglePlayPause(null) + done > jumpWords(-1) + loopSkip': false,  // 23036: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + done > jumpWords(0) + loopSkip': false,  // 23062: frags expected ["Victorious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + done > jumpWords(4) + loopSkip': false,  // 23088: frags expected ["Delirious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(-1) + loopSkip': false,  // 23192: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(0) + loopSkip': false,  // 23218: frags expected ["Victorious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(1) + loopSkip': false,  // 23244: frags expected ["Delirious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + done > jumpSentences(3) + loopSkip': false,  // 23270: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + done > nextWord(null) + loopSkip': false,  // 23322: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + done > nextSentence(null) + loopSkip': false,  // 23348: frags expected ["Delirious,"], but got ["wattlebird?"]
-		'skip-combos: togglePlayPause(null) + done > prevWord(null) + loopSkip': false,  // 23374: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + done > prevSentence(null) + loopSkip': false,  // 23400: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > play(null) + progress': false,  // 23500: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
-		'skip-combos: togglePlayPause(null) + loopSkip > play(null) + loopSkip': false,  // 23504: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + progress': false,  // 23526: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + done': false,  // 23529: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > revert(null) + playBegin': false,  // 23609: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > revert(null) + playFinish': false,  // 23610: event should not have been triggerd but WAS
-		'skip-combos: togglePlayPause(null) + loopSkip > revert(null) + pauseBegin': false,  // 23615: event should have been triggerd but was NOT
-		'skip-combos: togglePlayPause(null) + loopSkip > revert(null) + pauseFinish': false,  // 23616: event should have been triggerd but was NOT
+		// toggle(null)
+		'skip-combos: toggle(null) + playBegin > play(null) + loopSkip': false,  // 3848: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
+		'skip-combos: toggle(null) + playBegin > toggle(null) + loopSkip': false,  // 3874: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + playFinish > play(null) + loopSkip': false,  // 4784: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
+		'skip-combos: toggle(null) + playFinish > toggle(null) + loopSkip': false,  // 4810: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopBegin > play(null) + loopSkip': false,  // 16952: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
+		'skip-combos: toggle(null) + loopBegin > toggle(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopFinish > play(null) + loopSkip': false,  // 17888: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
+		'skip-combos: toggle(null) + loopFinish > toggle(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + newWordFragment > play(null) + loopSkip': false,  // 18824: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
+		'skip-combos: toggle(null) + newWordFragment > toggle(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + newWordFragment > fastForward(null) + newWordFragment': false,  // 19001: frags expected ["you","brave","I","back.","Why,","oh"], but got ["brave","I","back.","Why,","oh"]
+		'skip-combos: toggle(null) + newWordFragment > fastForward(null) + progress': false,  // 19002: 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
+		'skip-combos: toggle(null) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 19053: frags expected ["you"], but got ["brave"]
+		'skip-combos: toggle(null) + newWordFragment > once([0,0,2]) + progress': false,  // 19054: 'progress' expected [0.16666666666666666], but got [0.25]
+		'skip-combos: toggle(null) + newWordFragment > current(null) + progress': false,  // 19080: 'progress' expected [0.08333333333333333,0.16666666666666666], but got [0.16666666666666666]
+		'skip-combos: toggle(null) + newWordFragment > current(null) + loopSkip': false,  // 19084: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + newWordFragment > jumpWords(0) + progress': false,  // 19314: 'progress' expected [0.08333333333333333,0.16666666666666666], but got [0.16666666666666666]
+		'skip-combos: toggle(null) + newWordFragment > jumpWords(0) + loopSkip': false,  // 19318: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + newWordFragment > jumpWords(4) + progress': false,  // 19340: 'progress' expected [0.4166666666666667,0.5], but got [0.5]
+		'skip-combos: toggle(null) + newWordFragment > jumpWords(4) + loopSkip': false,  // 19344: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + newWordFragment > jumpSentences(0) + progress': false,  // 19470: 'progress' expected [0.08333333333333333,0.16666666666666666], but got [0.16666666666666666]
+		'skip-combos: toggle(null) + newWordFragment > jumpSentences(0) + loopSkip': false,  // 19474: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + newWordFragment > nextWord(null) + newWordFragment': false,  // 19573: frags expected ["you"], but got ["brave"]
+		'skip-combos: toggle(null) + newWordFragment > nextWord(null) + progress': false,  // 19574: 'progress' expected [0.16666666666666666], but got [0.25]
+		'skip-combos: toggle(null) + progress > play(null) + loopSkip': false,  // 19760: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
+		'skip-combos: toggle(null) + progress > toggle(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + stopBegin > rewind(null) + loopSkip': false,  // 20852: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
+		'skip-combos: toggle(null) + stopBegin > fastForward(null) + loopSkip': false,  // 20878: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopBegin > once([0,0,-2]) + loopSkip': false,  // 20904: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + stopBegin > once([0,0,2]) + loopSkip': false,  // 20930: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + stopBegin > current(null) + loopSkip': false,  // 20956: frags expected ["Victorious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-3) + loopSkip': false,  // 21138: frags expected ["Victorious,"], but got ["\n"]
+		'skip-combos: toggle(null) + stopBegin > jumpWords(-1) + loopSkip': false,  // 21164: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + stopBegin > jumpWords(0) + loopSkip': false,  // 21190: frags expected ["Victorious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopBegin > jumpWords(4) + loopSkip': false,  // 21216: frags expected ["Delirious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(-1) + loopSkip': false,  // 21320: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(0) + loopSkip': false,  // 21346: frags expected ["Victorious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(1) + loopSkip': false,  // 21372: frags expected ["Delirious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopBegin > jumpSentences(3) + loopSkip': false,  // 21398: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + stopBegin > nextWord(null) + loopSkip': false,  // 21450: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + stopBegin > nextSentence(null) + loopSkip': false,  // 21476: frags expected ["Delirious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopBegin > prevWord(null) + loopSkip': false,  // 21502: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + stopBegin > prevSentence(null) + loopSkip': false,  // 21528: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + stopFinish > rewind(null) + loopSkip': false,  // 21788: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
+		'skip-combos: toggle(null) + stopFinish > fastForward(null) + loopSkip': false,  // 21814: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopFinish > once([0,0,-2]) + loopSkip': false,  // 21840: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + stopFinish > once([0,0,2]) + loopSkip': false,  // 21866: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + stopFinish > current(null) + loopSkip': false,  // 21892: frags expected ["Victorious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-3) + loopSkip': false,  // 22074: frags expected ["Victorious,"], but got ["\n"]
+		'skip-combos: toggle(null) + stopFinish > jumpWords(-1) + loopSkip': false,  // 22100: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + stopFinish > jumpWords(0) + loopSkip': false,  // 22126: frags expected ["Victorious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopFinish > jumpWords(4) + loopSkip': false,  // 22152: frags expected ["Delirious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(-1) + loopSkip': false,  // 22256: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(0) + loopSkip': false,  // 22282: frags expected ["Victorious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(1) + loopSkip': false,  // 22308: frags expected ["Delirious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopFinish > jumpSentences(3) + loopSkip': false,  // 22334: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + stopFinish > nextWord(null) + loopSkip': false,  // 22386: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + stopFinish > nextSentence(null) + loopSkip': false,  // 22412: frags expected ["Delirious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + stopFinish > prevWord(null) + loopSkip': false,  // 22438: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + stopFinish > prevSentence(null) + loopSkip': false,  // 22464: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + done > rewind(null) + loopSkip': false,  // 22724: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
+		'skip-combos: toggle(null) + done > fastForward(null) + loopSkip': false,  // 22750: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + done > once([0,0,-2]) + loopSkip': false,  // 22776: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + done > once([0,0,2]) + loopSkip': false,  // 22802: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + done > current(null) + loopSkip': false,  // 22828: frags expected ["Victorious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + done > jumpWords(-3) + loopSkip': false,  // 23010: frags expected ["Victorious,"], but got ["\n"]
+		'skip-combos: toggle(null) + done > jumpWords(-1) + loopSkip': false,  // 23036: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + done > jumpWords(0) + loopSkip': false,  // 23062: frags expected ["Victorious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + done > jumpWords(4) + loopSkip': false,  // 23088: frags expected ["Delirious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + done > jumpSentences(-1) + loopSkip': false,  // 23192: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + done > jumpSentences(0) + loopSkip': false,  // 23218: frags expected ["Victorious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + done > jumpSentences(1) + loopSkip': false,  // 23244: frags expected ["Delirious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + done > jumpSentences(3) + loopSkip': false,  // 23270: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + done > nextWord(null) + loopSkip': false,  // 23322: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + done > nextSentence(null) + loopSkip': false,  // 23348: frags expected ["Delirious,"], but got ["wattlebird?"]
+		'skip-combos: toggle(null) + done > prevWord(null) + loopSkip': false,  // 23374: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + done > prevSentence(null) + loopSkip': false,  // 23400: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > play(null) + progress': false,  // 23500: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
+		'skip-combos: toggle(null) + loopSkip > play(null) + loopSkip': false,  // 23504: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + progress': false,  // 23526: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + done': false,  // 23529: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > toggle(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > revert(null) + playBegin': false,  // 23609: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > revert(null) + playFinish': false,  // 23610: event should not have been triggerd but WAS
+		'skip-combos: toggle(null) + loopSkip > revert(null) + pauseBegin': false,  // 23615: event should have been triggerd but was NOT
+		'skip-combos: toggle(null) + loopSkip > revert(null) + pauseFinish': false,  // 23616: event should have been triggerd but was NOT
 
 		// pause(null)
 		// stop(null)
@@ -10880,44 +10780,44 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: rewind(null) + loopSkip > play(null) + playFinish': false,  // 47816: event should have been triggerd but was NOT
 		'skip-combos: rewind(null) + loopSkip > play(null) + restartBegin': false,  // 47819: event should not have been triggerd but WAS
 		'skip-combos: rewind(null) + loopSkip > play(null) + restartFinish': false,  // 47820: event should not have been triggerd but WAS
-		'skip-combos: rewind(null) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: rewind(null) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: rewind(null) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
-		'skip-combos: rewind(null) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
+		'skip-combos: rewind(null) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: rewind(null) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: rewind(null) + loopSkip > toggle(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
+		'skip-combos: rewind(null) + loopSkip > toggle(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
 
 		// fastForward(null)
 		'skip-combos: fastForward(null) + fastForwardBegin > play(null) + loopSkip': false,  // 15080: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?","wattlebird?"]
-		'skip-combos: fastForward(null) + fastForwardBegin > togglePlayPause(null) + loopSkip': false,  // 15106: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + fastForwardBegin > toggle(null) + loopSkip': false,  // 15106: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + fastForwardBegin > current(null) + loopSkip': false,  // 15340: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + fastForwardBegin > jumpWords(0) + loopSkip': false,  // 15574: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + fastForwardBegin > jumpWords(4) + loopSkip': false,  // 15600: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + fastForwardBegin > jumpSentences(0) + loopSkip': false,  // 15730: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + fastForwardFinish > play(null) + loopSkip': false,  // 16016: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?","wattlebird?"]
-		'skip-combos: fastForward(null) + fastForwardFinish > togglePlayPause(null) + loopSkip': false,  // 16042: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + fastForwardFinish > toggle(null) + loopSkip': false,  // 16042: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + fastForwardFinish > current(null) + loopSkip': false,  // 16276: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + fastForwardFinish > jumpWords(0) + loopSkip': false,  // 16510: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + fastForwardFinish > jumpWords(4) + loopSkip': false,  // 16536: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + fastForwardFinish > jumpSentences(0) + loopSkip': false,  // 16666: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopBegin > play(null) + loopSkip': false,  // 16952: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?","wattlebird?"]
-		'skip-combos: fastForward(null) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopBegin > toggle(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopBegin > current(null) + loopSkip': false,  // 17212: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopBegin > jumpWords(0) + loopSkip': false,  // 17446: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopBegin > jumpWords(4) + loopSkip': false,  // 17472: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopBegin > jumpSentences(0) + loopSkip': false,  // 17602: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopFinish > play(null) + loopSkip': false,  // 17888: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?","wattlebird?"]
-		'skip-combos: fastForward(null) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopFinish > toggle(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopFinish > current(null) + loopSkip': false,  // 18148: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopFinish > jumpWords(0) + loopSkip': false,  // 18382: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopFinish > jumpWords(4) + loopSkip': false,  // 18408: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopFinish > jumpSentences(0) + loopSkip': false,  // 18538: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + newWordFragment > play(null) + loopSkip': false,  // 18824: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?","wattlebird?"]
-		'skip-combos: fastForward(null) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + newWordFragment > toggle(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + newWordFragment > current(null) + loopSkip': false,  // 19084: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + newWordFragment > jumpWords(0) + loopSkip': false,  // 19318: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + newWordFragment > jumpWords(4) + loopSkip': false,  // 19344: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + newWordFragment > jumpSentences(0) + loopSkip': false,  // 19474: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + progress > play(null) + loopSkip': false,  // 19760: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?","wattlebird?"]
-		'skip-combos: fastForward(null) + progress > togglePlayPause(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + progress > toggle(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + progress > current(null) + loopSkip': false,  // 20020: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + progress > jumpWords(0) + loopSkip': false,  // 20254: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + progress > jumpWords(4) + loopSkip': false,  // 20280: event should have been triggerd but was NOT
@@ -10976,20 +10876,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: fastForward(null) + loopSkip > play(null) + newWordFragment': false,  // 23499: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: fastForward(null) + loopSkip > play(null) + progress': false,  // 23500: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1,1]
 		'skip-combos: fastForward(null) + loopSkip > play(null) + loopSkip': false,  // 23504: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?","wattlebird?"]
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + revertBegin': false,  // 23517: event should not have been triggerd but WAS
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + revertFinish': false,  // 23518: event should not have been triggerd but WAS
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + progress': false,  // 23526: event should have been triggerd but was NOT
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + done': false,  // 23529: event should have been triggerd but was NOT
-		'skip-combos: fastForward(null) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + revertBegin': false,  // 23517: event should not have been triggerd but WAS
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + revertFinish': false,  // 23518: event should not have been triggerd but WAS
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + progress': false,  // 23526: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + done': false,  // 23529: event should have been triggerd but was NOT
+		'skip-combos: fastForward(null) + loopSkip > toggle(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
 		'skip-combos: fastForward(null) + loopSkip > rewind(null) + newWordFragment': false,  // 23655: event should not have been triggerd but WAS
 		'skip-combos: fastForward(null) + loopSkip > rewind(null) + progress': false,  // 23656: 'progress' expected [0.08333333333333333], but got [0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: fastForward(null) + loopSkip > fastForward(null) + newWordFragment': false,  // 23681: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
@@ -11037,57 +10937,57 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: once([0,0,-2]) + loopSkip > play(null) + playFinish': false,  // 47816: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,-2]) + loopSkip > play(null) + restartBegin': false,  // 47819: event should not have been triggerd but WAS
 		'skip-combos: once([0,0,-2]) + loopSkip > play(null) + restartFinish': false,  // 47820: event should not have been triggerd but WAS
-		'skip-combos: once([0,0,-2]) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: once([0,0,-2]) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: once([0,0,-2]) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
-		'skip-combos: once([0,0,-2]) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
+		'skip-combos: once([0,0,-2]) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: once([0,0,-2]) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: once([0,0,-2]) + loopSkip > toggle(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
+		'skip-combos: once([0,0,-2]) + loopSkip > toggle(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
 
 		// once(0,0,2)
 		'skip-combos: once([0,0,2]) + onceBegin > play(null) + loopSkip': false,  // 9464: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: once([0,0,2]) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
+		'skip-combos: once([0,0,2]) + onceBegin > toggle(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + onceBegin > current(null) + loopSkip': false,  // 9724: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + onceBegin > jumpWords(0) + loopSkip': false,  // 9958: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + onceBegin > jumpWords(4) + loopSkip': false,  // 9984: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + onceBegin > jumpSentences(0) + loopSkip': false,  // 10114: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + onceFinish > play(null) + loopSkip': false,  // 10400: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: once([0,0,2]) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
+		'skip-combos: once([0,0,2]) + onceFinish > toggle(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + onceFinish > current(null) + loopSkip': false,  // 10660: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + onceFinish > jumpWords(0) + loopSkip': false,  // 10894: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + onceFinish > jumpWords(4) + loopSkip': false,  // 10920: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + onceFinish > jumpSentences(0) + loopSkip': false,  // 11050: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + loopBegin > play(null) + loopSkip': false,  // 16952: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: once([0,0,2]) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
+		'skip-combos: once([0,0,2]) + loopBegin > toggle(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + loopBegin > current(null) + loopSkip': false,  // 17212: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + loopBegin > jumpWords(0) + loopSkip': false,  // 17446: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + loopBegin > jumpWords(4) + loopSkip': false,  // 17472: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + loopBegin > jumpSentences(0) + loopSkip': false,  // 17602: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + loopFinish > play(null) + loopSkip': false,  // 17888: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: once([0,0,2]) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
+		'skip-combos: once([0,0,2]) + loopFinish > toggle(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + loopFinish > current(null) + loopSkip': false,  // 18148: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + loopFinish > jumpWords(0) + loopSkip': false,  // 18382: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + loopFinish > jumpWords(4) + loopSkip': false,  // 18408: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + loopFinish > jumpSentences(0) + loopSkip': false,  // 18538: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + newWordFragment > play(null) + loopSkip': false,  // 18824: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: once([0,0,2]) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
+		'skip-combos: once([0,0,2]) + newWordFragment > toggle(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + newWordFragment > current(null) + loopSkip': false,  // 19084: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + newWordFragment > jumpWords(0) + loopSkip': false,  // 19318: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + newWordFragment > jumpWords(4) + loopSkip': false,  // 19344: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + newWordFragment > jumpSentences(0) + loopSkip': false,  // 19474: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + progress > play(null) + loopSkip': false,  // 19760: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: once([0,0,2]) + progress > togglePlayPause(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
+		'skip-combos: once([0,0,2]) + progress > toggle(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + progress > current(null) + loopSkip': false,  // 20020: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + progress > jumpWords(0) + loopSkip': false,  // 20254: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + progress > jumpWords(4) + loopSkip': false,  // 20280: event should have been triggerd but was NOT
 		'skip-combos: once([0,0,2]) + progress > jumpSentences(0) + loopSkip': false,  // 20410: event should have been triggerd but was NOT
 
 		// current(null)
-		'skip-combos: current(null) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 33826: event should have been triggerd but was NOT
-		'skip-combos: current(null) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 34762: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
+		'skip-combos: current(null) + onceBegin > toggle(null) + loopSkip': false,  // 33826: event should have been triggerd but was NOT
+		'skip-combos: current(null) + onceFinish > toggle(null) + loopSkip': false,  // 34762: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopBegin > toggle(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopFinish > toggle(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
 		'skip-combos: current(null) + newWordFragment > play(null) + progress': false,  // 43156: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: current(null) + newWordFragment > play(null) + loopSkip': false,  // 43160: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: current(null) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
+		'skip-combos: current(null) + newWordFragment > toggle(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
 		'skip-combos: current(null) + newWordFragment > fastForward(null) + newWordFragment': false,  // 43337: frags expected ["you","brave","I","back.","Why,","oh"], but got ["brave","I","back.","Why,","oh"]
 		'skip-combos: current(null) + newWordFragment > fastForward(null) + progress': false,  // 43338: 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: current(null) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 43389: frags expected ["you"], but got ["brave"]
@@ -11102,50 +11002,50 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: current(null) + newWordFragment > jumpSentences(0) + loopSkip': false,  // 43810: event should have been triggerd but was NOT
 		'skip-combos: current(null) + newWordFragment > nextWord(null) + newWordFragment': false,  // 43909: frags expected ["you"], but got ["brave"]
 		'skip-combos: current(null) + newWordFragment > nextWord(null) + progress': false,  // 43910: 'progress' expected [0.16666666666666666], but got [0.25]
-		'skip-combos: current(null) + progress > togglePlayPause(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + revertBegin': false,  // 47853: event should not have been triggerd but WAS
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + revertFinish': false,  // 47854: event should not have been triggerd but WAS
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + progress': false,  // 47862: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + done': false,  // 47865: event should have been triggerd but was NOT
-		'skip-combos: current(null) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
+		'skip-combos: current(null) + progress > toggle(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopSkip > toggle(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
+		'skip-combos: current(null) + loopSkip > toggle(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
+		'skip-combos: current(null) + loopSkip > toggle(null) + revertBegin': false,  // 47853: event should not have been triggerd but WAS
+		'skip-combos: current(null) + loopSkip > toggle(null) + revertFinish': false,  // 47854: event should not have been triggerd but WAS
+		'skip-combos: current(null) + loopSkip > toggle(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopSkip > toggle(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopSkip > toggle(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopSkip > toggle(null) + progress': false,  // 47862: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopSkip > toggle(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopSkip > toggle(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopSkip > toggle(null) + done': false,  // 47865: event should have been triggerd but was NOT
+		'skip-combos: current(null) + loopSkip > toggle(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
 
 		// jumpTo(-3)
 		'skip-combos: jumpTo(-3) + loopSkip > play(null) + playBegin': false,  // 23479: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(-3) + loopSkip > play(null) + playFinish': false,  // 23480: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(-3) + loopSkip > play(null) + restartBegin': false,  // 23483: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(-3) + loopSkip > play(null) + restartFinish': false,  // 23484: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(-3) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(-3) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(-3) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(-3) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(-3) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(-3) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(-3) + loopSkip > toggle(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(-3) + loopSkip > toggle(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
 
 		// jumpTo(-1)
 		'skip-combos: jumpTo(-1) + loopSkip > play(null) + playBegin': false,  // 47815: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(-1) + loopSkip > play(null) + playFinish': false,  // 47816: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(-1) + loopSkip > play(null) + restartBegin': false,  // 47819: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(-1) + loopSkip > play(null) + restartFinish': false,  // 47820: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(-1) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(-1) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(-1) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(-1) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(-1) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(-1) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(-1) + loopSkip > toggle(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(-1) + loopSkip > toggle(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
 
 		// jumpTo(0)
-		'skip-combos: jumpTo(0) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + onceBegin > toggle(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + onceFinish > toggle(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopBegin > toggle(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopFinish > toggle(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(0) + newWordFragment > play(null) + progress': false,  // 18820: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpTo(0) + newWordFragment > play(null) + loopSkip': false,  // 18824: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpTo(0) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + newWordFragment > toggle(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(0) + newWordFragment > fastForward(null) + newWordFragment': false,  // 19001: frags expected ["you","brave","I","back.","Why,","oh"], but got ["brave","I","back.","Why,","oh"]
 		'skip-combos: jumpTo(0) + newWordFragment > fastForward(null) + progress': false,  // 19002: 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpTo(0) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 19053: frags expected ["you"], but got ["brave"]
@@ -11160,40 +11060,40 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(0) + newWordFragment > jumpSentences(0) + loopSkip': false,  // 19474: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(0) + newWordFragment > nextWord(null) + newWordFragment': false,  // 19573: frags expected ["you"], but got ["brave"]
 		'skip-combos: jumpTo(0) + newWordFragment > nextWord(null) + progress': false,  // 19574: 'progress' expected [0.16666666666666666], but got [0.25]
-		'skip-combos: jumpTo(0) + progress > togglePlayPause(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + revertBegin': false,  // 23517: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + revertFinish': false,  // 23518: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + progress': false,  // 23526: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + done': false,  // 23529: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(0) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + progress > toggle(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + revertBegin': false,  // 23517: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + revertFinish': false,  // 23518: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + progress': false,  // 23526: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + done': false,  // 23529: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(0) + loopSkip > toggle(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
 
 		// jumpTo(4)
 		'skip-combos: jumpTo(4) + onceBegin > play(null) + newWordFragment': false,  // 33795: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: jumpTo(4) + onceBegin > play(null) + progress': false,  // 33796: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpTo(4) + onceBegin > play(null) + loopSkip': false,  // 33800: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + playBegin': false,  // 33801: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + playFinish': false,  // 33802: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + pauseBegin': false,  // 33807: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + pauseFinish': false,  // 33808: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + revertBegin': false,  // 33813: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + revertFinish': false,  // 33814: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + loopBegin': false,  // 33819: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + loopFinish': false,  // 33820: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + newWordFragment': false,  // 33821: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + progress': false,  // 33822: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + stopBegin': false,  // 33823: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + stopFinish': false,  // 33824: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + done': false,  // 33825: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 33826: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + playBegin': false,  // 33801: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + playFinish': false,  // 33802: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + pauseBegin': false,  // 33807: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + pauseFinish': false,  // 33808: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + revertBegin': false,  // 33813: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + revertFinish': false,  // 33814: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + loopBegin': false,  // 33819: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + loopFinish': false,  // 33820: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + newWordFragment': false,  // 33821: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + progress': false,  // 33822: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + stopBegin': false,  // 33823: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + stopFinish': false,  // 33824: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + done': false,  // 33825: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceBegin > toggle(null) + loopSkip': false,  // 33826: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(4) + onceBegin > rewind(null) + newWordFragment': false,  // 33951: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(4) + onceBegin > rewind(null) + progress': false,  // 33952: 'progress' expected [0.08333333333333333], but got [0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpTo(4) + onceBegin > rewind(null) + loopSkip': false,  // 33956: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
@@ -11255,20 +11155,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(4) + onceFinish > play(null) + newWordFragment': false,  // 34731: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: jumpTo(4) + onceFinish > play(null) + progress': false,  // 34732: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpTo(4) + onceFinish > play(null) + loopSkip': false,  // 34736: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + playBegin': false,  // 34737: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + playFinish': false,  // 34738: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + pauseBegin': false,  // 34743: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + pauseFinish': false,  // 34744: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + revertBegin': false,  // 34749: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + revertFinish': false,  // 34750: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + loopBegin': false,  // 34755: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + loopFinish': false,  // 34756: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + newWordFragment': false,  // 34757: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + progress': false,  // 34758: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + stopBegin': false,  // 34759: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + stopFinish': false,  // 34760: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + done': false,  // 34761: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 34762: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + playBegin': false,  // 34737: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + playFinish': false,  // 34738: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + pauseBegin': false,  // 34743: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + pauseFinish': false,  // 34744: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + revertBegin': false,  // 34749: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + revertFinish': false,  // 34750: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + loopBegin': false,  // 34755: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + loopFinish': false,  // 34756: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + newWordFragment': false,  // 34757: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + progress': false,  // 34758: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + stopBegin': false,  // 34759: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + stopFinish': false,  // 34760: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + done': false,  // 34761: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + onceFinish > toggle(null) + loopSkip': false,  // 34762: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(4) + onceFinish > rewind(null) + newWordFragment': false,  // 34887: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(4) + onceFinish > rewind(null) + progress': false,  // 34888: 'progress' expected [0.08333333333333333], but got [0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpTo(4) + onceFinish > rewind(null) + loopSkip': false,  // 34892: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
@@ -11330,20 +11230,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(4) + loopBegin > play(null) + newWordFragment': false,  // 41283: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: jumpTo(4) + loopBegin > play(null) + progress': false,  // 41284: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpTo(4) + loopBegin > play(null) + loopSkip': false,  // 41288: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + playBegin': false,  // 41289: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + playFinish': false,  // 41290: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + pauseBegin': false,  // 41295: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + pauseFinish': false,  // 41296: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + revertBegin': false,  // 41301: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + revertFinish': false,  // 41302: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + loopBegin': false,  // 41307: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + loopFinish': false,  // 41308: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + newWordFragment': false,  // 41309: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + progress': false,  // 41310: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + stopBegin': false,  // 41311: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + stopFinish': false,  // 41312: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + done': false,  // 41313: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + playBegin': false,  // 41289: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + playFinish': false,  // 41290: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + pauseBegin': false,  // 41295: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + pauseFinish': false,  // 41296: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + revertBegin': false,  // 41301: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + revertFinish': false,  // 41302: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + loopBegin': false,  // 41307: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + loopFinish': false,  // 41308: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + newWordFragment': false,  // 41309: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + progress': false,  // 41310: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + stopBegin': false,  // 41311: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + stopFinish': false,  // 41312: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + done': false,  // 41313: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopBegin > toggle(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(4) + loopBegin > rewind(null) + newWordFragment': false,  // 41439: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(4) + loopBegin > rewind(null) + progress': false,  // 41440: 'progress' expected [0.08333333333333333], but got [0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpTo(4) + loopBegin > rewind(null) + loopSkip': false,  // 41444: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
@@ -11405,20 +11305,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(4) + loopFinish > play(null) + newWordFragment': false,  // 42219: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: jumpTo(4) + loopFinish > play(null) + progress': false,  // 42220: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpTo(4) + loopFinish > play(null) + loopSkip': false,  // 42224: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + playBegin': false,  // 42225: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + playFinish': false,  // 42226: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + pauseBegin': false,  // 42231: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + pauseFinish': false,  // 42232: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + revertBegin': false,  // 42237: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + revertFinish': false,  // 42238: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + loopBegin': false,  // 42243: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + loopFinish': false,  // 42244: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + newWordFragment': false,  // 42245: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + progress': false,  // 42246: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + stopBegin': false,  // 42247: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + stopFinish': false,  // 42248: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + done': false,  // 42249: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + playBegin': false,  // 42225: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + playFinish': false,  // 42226: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + pauseBegin': false,  // 42231: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + pauseFinish': false,  // 42232: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + revertBegin': false,  // 42237: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + revertFinish': false,  // 42238: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + loopBegin': false,  // 42243: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + loopFinish': false,  // 42244: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + newWordFragment': false,  // 42245: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + progress': false,  // 42246: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + stopBegin': false,  // 42247: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + stopFinish': false,  // 42248: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + done': false,  // 42249: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopFinish > toggle(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(4) + loopFinish > rewind(null) + newWordFragment': false,  // 42375: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(4) + loopFinish > rewind(null) + progress': false,  // 42376: 'progress' expected [0.08333333333333333], but got [0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpTo(4) + loopFinish > rewind(null) + loopSkip': false,  // 42380: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
@@ -11480,20 +11380,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(4) + newWordFragment > play(null) + newWordFragment': false,  // 43155: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: jumpTo(4) + newWordFragment > play(null) + progress': false,  // 43156: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpTo(4) + newWordFragment > play(null) + loopSkip': false,  // 43160: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + playBegin': false,  // 43161: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + playFinish': false,  // 43162: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + pauseBegin': false,  // 43167: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + pauseFinish': false,  // 43168: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + revertBegin': false,  // 43173: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + revertFinish': false,  // 43174: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + loopBegin': false,  // 43179: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + loopFinish': false,  // 43180: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + newWordFragment': false,  // 43181: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + progress': false,  // 43182: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + stopBegin': false,  // 43183: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + stopFinish': false,  // 43184: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + done': false,  // 43185: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + playBegin': false,  // 43161: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + playFinish': false,  // 43162: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + pauseBegin': false,  // 43167: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + pauseFinish': false,  // 43168: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + revertBegin': false,  // 43173: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + revertFinish': false,  // 43174: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + loopBegin': false,  // 43179: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + loopFinish': false,  // 43180: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + newWordFragment': false,  // 43181: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + progress': false,  // 43182: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + stopBegin': false,  // 43183: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + stopFinish': false,  // 43184: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + done': false,  // 43185: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + newWordFragment > toggle(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(4) + newWordFragment > rewind(null) + newWordFragment': false,  // 43311: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(4) + newWordFragment > rewind(null) + progress': false,  // 43312: 'progress' expected [0.08333333333333333], but got [0.4166666666666667,0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpTo(4) + newWordFragment > rewind(null) + loopSkip': false,  // 43316: frags expected ["Victorious,"], but got ["Delirious,","flag.","Victorious,"]
@@ -11569,20 +11469,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(4) + progress > play(null) + newWordFragment': false,  // 44091: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: jumpTo(4) + progress > play(null) + progress': false,  // 44092: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpTo(4) + progress > play(null) + loopSkip': false,  // 44096: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + playBegin': false,  // 44097: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + playFinish': false,  // 44098: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + pauseBegin': false,  // 44103: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + pauseFinish': false,  // 44104: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + revertBegin': false,  // 44109: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + revertFinish': false,  // 44110: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + loopBegin': false,  // 44115: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + loopFinish': false,  // 44116: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + newWordFragment': false,  // 44117: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + progress': false,  // 44118: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + stopBegin': false,  // 44119: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + stopFinish': false,  // 44120: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + done': false,  // 44121: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + progress > togglePlayPause(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + progress > toggle(null) + playBegin': false,  // 44097: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + progress > toggle(null) + playFinish': false,  // 44098: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + progress > toggle(null) + pauseBegin': false,  // 44103: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + progress > toggle(null) + pauseFinish': false,  // 44104: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + progress > toggle(null) + revertBegin': false,  // 44109: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + progress > toggle(null) + revertFinish': false,  // 44110: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + progress > toggle(null) + loopBegin': false,  // 44115: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + progress > toggle(null) + loopFinish': false,  // 44116: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + progress > toggle(null) + newWordFragment': false,  // 44117: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + progress > toggle(null) + progress': false,  // 44118: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + progress > toggle(null) + stopBegin': false,  // 44119: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + progress > toggle(null) + stopFinish': false,  // 44120: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + progress > toggle(null) + done': false,  // 44121: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + progress > toggle(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(4) + progress > rewind(null) + newWordFragment': false,  // 44247: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(4) + progress > rewind(null) + progress': false,  // 44248: 'progress' expected [0.08333333333333333], but got [0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpTo(4) + progress > rewind(null) + loopSkip': false,  // 44252: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
@@ -11644,20 +11544,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(4) + loopSkip > play(null) + newWordFragment': false,  // 47835: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: jumpTo(4) + loopSkip > play(null) + progress': false,  // 47836: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpTo(4) + loopSkip > play(null) + loopSkip': false,  // 47840: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + revertBegin': false,  // 47853: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + revertFinish': false,  // 47854: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + progress': false,  // 47862: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + done': false,  // 47865: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(4) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + revertBegin': false,  // 47853: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + revertFinish': false,  // 47854: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + progress': false,  // 47862: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + done': false,  // 47865: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(4) + loopSkip > toggle(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(4) + loopSkip > rewind(null) + newWordFragment': false,  // 47991: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(4) + loopSkip > rewind(null) + progress': false,  // 47992: 'progress' expected [0.08333333333333333], but got [0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpTo(4) + loopSkip > rewind(null) + loopSkip': false,  // 47996: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
@@ -11858,10 +11758,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(11) + loopSkip > play(null) + playFinish': false,  // 23480: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(11) + loopSkip > play(null) + restartBegin': false,  // 23483: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(11) + loopSkip > play(null) + restartFinish': false,  // 23484: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(11) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(11) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(11) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(11) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(11) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(11) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(11) + loopSkip > toggle(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(11) + loopSkip > toggle(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(11) + loopSkip > rewind(null) + newWordFragment': false,  // 23655: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(11) + loopSkip > rewind(null) + progress': false,  // 23656: 'progress' expected [0.08333333333333333], but got [0.9166666666666666,0.8333333333333334,0.75,0.6666666666666666,0.5833333333333334,0.5,0.4166666666666667,0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpTo(11) + loopSkip > rewind(null) + loopSkip': false,  // 23660: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
@@ -12100,10 +12000,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpTo(100) + loopSkip > play(null) + playFinish': false,  // 47816: event should have been triggerd but was NOT
 		'skip-combos: jumpTo(100) + loopSkip > play(null) + restartBegin': false,  // 47819: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(100) + loopSkip > play(null) + restartFinish': false,  // 47820: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(100) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(100) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: jumpTo(100) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
-		'skip-combos: jumpTo(100) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(100) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(100) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: jumpTo(100) + loopSkip > toggle(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
+		'skip-combos: jumpTo(100) + loopSkip > toggle(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(100) + loopSkip > rewind(null) + newWordFragment': false,  // 47991: event should not have been triggerd but WAS
 		'skip-combos: jumpTo(100) + loopSkip > rewind(null) + progress': false,  // 47992: 'progress' expected [0.08333333333333333], but got [0.9166666666666666,0.8333333333333334,0.75,0.6666666666666666,0.5833333333333334,0.5,0.4166666666666667,0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpTo(100) + loopSkip > rewind(null) + loopSkip': false,  // 47996: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
@@ -12206,29 +12106,29 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(-3) + loopSkip > play(null) + playFinish': false,  // 23480: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(-3) + loopSkip > play(null) + restartBegin': false,  // 23483: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(-3) + loopSkip > play(null) + restartFinish': false,  // 23484: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(-3) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(-3) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(-3) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(-3) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(-3) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(-3) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(-3) + loopSkip > toggle(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(-3) + loopSkip > toggle(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
 
 		// jumpWords(-1)
 		'skip-combos: jumpWords(-1) + loopSkip > play(null) + playBegin': false,  // 47815: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(-1) + loopSkip > play(null) + playFinish': false,  // 47816: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(-1) + loopSkip > play(null) + restartBegin': false,  // 47819: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(-1) + loopSkip > play(null) + restartFinish': false,  // 47820: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(-1) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(-1) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(-1) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(-1) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(-1) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(-1) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(-1) + loopSkip > toggle(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(-1) + loopSkip > toggle(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
 
 		// jumpWords(0)
-		'skip-combos: jumpWords(0) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + onceBegin > toggle(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + onceFinish > toggle(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopBegin > toggle(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopFinish > toggle(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(0) + newWordFragment > play(null) + progress': false,  // 18820: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpWords(0) + newWordFragment > play(null) + loopSkip': false,  // 18824: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpWords(0) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + newWordFragment > toggle(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(0) + newWordFragment > fastForward(null) + newWordFragment': false,  // 19001: frags expected ["you","brave","I","back.","Why,","oh"], but got ["brave","I","back.","Why,","oh"]
 		'skip-combos: jumpWords(0) + newWordFragment > fastForward(null) + progress': false,  // 19002: 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpWords(0) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 19053: frags expected ["you"], but got ["brave"]
@@ -12243,25 +12143,25 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(0) + newWordFragment > jumpSentences(0) + loopSkip': false,  // 19474: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(0) + newWordFragment > nextWord(null) + newWordFragment': false,  // 19573: frags expected ["you"], but got ["brave"]
 		'skip-combos: jumpWords(0) + newWordFragment > nextWord(null) + progress': false,  // 19574: 'progress' expected [0.16666666666666666], but got [0.25]
-		'skip-combos: jumpWords(0) + progress > togglePlayPause(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + revertBegin': false,  // 23517: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + revertFinish': false,  // 23518: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + progress': false,  // 23526: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + done': false,  // 23529: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(0) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + progress > toggle(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + revertBegin': false,  // 23517: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + revertFinish': false,  // 23518: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + progress': false,  // 23526: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + done': false,  // 23529: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(0) + loopSkip > toggle(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
 
 		// jumpWords(4)
 		'skip-combos: jumpWords(4) + onceBegin > play(null) + loopSkip': false,  // 33800: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpWords(4) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 33826: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + onceBegin > toggle(null) + loopSkip': false,  // 33826: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(4) + onceBegin > rewind(null) + loopSkip': false,  // 33956: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: jumpWords(4) + onceBegin > fastForward(null) + loopSkip': false,  // 33982: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpWords(4) + onceBegin > once([0,0,-2]) + loopSkip': false,  // 34008: frags expected ["Victorious,"], but got ["flag."]
@@ -12276,7 +12176,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + onceBegin > nextSentence(null) + loopSkip': false,  // 34580: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: jumpWords(4) + onceBegin > prevWord(null) + loopSkip': false,  // 34606: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: jumpWords(4) + onceFinish > play(null) + loopSkip': false,  // 34736: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpWords(4) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 34762: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + onceFinish > toggle(null) + loopSkip': false,  // 34762: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(4) + onceFinish > rewind(null) + loopSkip': false,  // 34892: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: jumpWords(4) + onceFinish > fastForward(null) + loopSkip': false,  // 34918: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpWords(4) + onceFinish > once([0,0,-2]) + loopSkip': false,  // 34944: frags expected ["Victorious,"], but got ["flag."]
@@ -12291,7 +12191,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + onceFinish > nextSentence(null) + loopSkip': false,  // 35516: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: jumpWords(4) + onceFinish > prevWord(null) + loopSkip': false,  // 35542: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: jumpWords(4) + loopBegin > play(null) + loopSkip': false,  // 41288: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpWords(4) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopBegin > toggle(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(4) + loopBegin > rewind(null) + loopSkip': false,  // 41444: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: jumpWords(4) + loopBegin > fastForward(null) + loopSkip': false,  // 41470: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpWords(4) + loopBegin > once([0,0,-2]) + loopSkip': false,  // 41496: frags expected ["Victorious,"], but got ["flag."]
@@ -12306,7 +12206,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + loopBegin > nextSentence(null) + loopSkip': false,  // 42068: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: jumpWords(4) + loopBegin > prevWord(null) + loopSkip': false,  // 42094: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: jumpWords(4) + loopFinish > play(null) + loopSkip': false,  // 42224: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpWords(4) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopFinish > toggle(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(4) + loopFinish > rewind(null) + loopSkip': false,  // 42380: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: jumpWords(4) + loopFinish > fastForward(null) + loopSkip': false,  // 42406: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpWords(4) + loopFinish > once([0,0,-2]) + loopSkip': false,  // 42432: frags expected ["Victorious,"], but got ["flag."]
@@ -12321,7 +12221,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + loopFinish > nextSentence(null) + loopSkip': false,  // 43004: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: jumpWords(4) + loopFinish > prevWord(null) + loopSkip': false,  // 43030: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: jumpWords(4) + newWordFragment > play(null) + loopSkip': false,  // 43160: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
-		'skip-combos: jumpWords(4) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + newWordFragment > toggle(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(4) + newWordFragment > rewind(null) + loopSkip': false,  // 43316: frags expected ["Victorious,"], but got ["Delirious,","flag.","Victorious,"]
 		'skip-combos: jumpWords(4) + newWordFragment > fastForward(null) + loopSkip': false,  // 43342: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpWords(4) + newWordFragment > once([0,0,-2]) + loopSkip': false,  // 43368: frags expected ["Victorious,"], but got ["Delirious,","flag."]
@@ -12350,7 +12250,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + newWordFragment > prevSentence(null) + done': false,  // 43991: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(4) + newWordFragment > prevSentence(null) + loopSkip': false,  // 43992: frags expected ["Victorious,"], but got ["Delirious,","flag."]
 		'skip-combos: jumpWords(4) + progress > play(null) + loopSkip': false,  // 44096: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpWords(4) + progress > togglePlayPause(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + progress > toggle(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(4) + progress > rewind(null) + loopSkip': false,  // 44252: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: jumpWords(4) + progress > fastForward(null) + loopSkip': false,  // 44278: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpWords(4) + progress > once([0,0,-2]) + loopSkip': false,  // 44304: frags expected ["Victorious,"], but got ["flag."]
@@ -12367,20 +12267,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(4) + loopSkip > play(null) + newWordFragment': false,  // 47835: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: jumpWords(4) + loopSkip > play(null) + progress': false,  // 47836: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpWords(4) + loopSkip > play(null) + loopSkip': false,  // 47840: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + revertBegin': false,  // 47853: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + revertFinish': false,  // 47854: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + progress': false,  // 47862: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + done': false,  // 47865: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(4) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + revertBegin': false,  // 47853: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + revertFinish': false,  // 47854: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + progress': false,  // 47862: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + done': false,  // 47865: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(4) + loopSkip > toggle(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(4) + loopSkip > rewind(null) + newWordFragment': false,  // 47991: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(4) + loopSkip > rewind(null) + progress': false,  // 47992: 'progress' expected [0.08333333333333333], but got [0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpWords(4) + loopSkip > rewind(null) + loopSkip': false,  // 47996: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
@@ -12581,10 +12481,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(11) + loopSkip > play(null) + playFinish': false,  // 23480: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(11) + loopSkip > play(null) + restartBegin': false,  // 23483: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(11) + loopSkip > play(null) + restartFinish': false,  // 23484: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(11) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(11) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(11) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(11) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(11) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(11) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(11) + loopSkip > toggle(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(11) + loopSkip > toggle(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(11) + loopSkip > rewind(null) + newWordFragment': false,  // 23655: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(11) + loopSkip > rewind(null) + progress': false,  // 23656: 'progress' expected [0.08333333333333333], but got [0.9166666666666666,0.8333333333333334,0.75,0.6666666666666666,0.5833333333333334,0.5,0.4166666666666667,0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpWords(11) + loopSkip > rewind(null) + loopSkip': false,  // 23660: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
@@ -12823,10 +12723,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpWords(100) + loopSkip > play(null) + playFinish': false,  // 47816: event should have been triggerd but was NOT
 		'skip-combos: jumpWords(100) + loopSkip > play(null) + restartBegin': false,  // 47819: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(100) + loopSkip > play(null) + restartFinish': false,  // 47820: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(100) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(100) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: jumpWords(100) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
-		'skip-combos: jumpWords(100) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(100) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(100) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: jumpWords(100) + loopSkip > toggle(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
+		'skip-combos: jumpWords(100) + loopSkip > toggle(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(100) + loopSkip > rewind(null) + newWordFragment': false,  // 47991: event should not have been triggerd but WAS
 		'skip-combos: jumpWords(100) + loopSkip > rewind(null) + progress': false,  // 47992: 'progress' expected [0.08333333333333333], but got [0.9166666666666666,0.8333333333333334,0.75,0.6666666666666666,0.5833333333333334,0.5,0.4166666666666667,0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpWords(100) + loopSkip > rewind(null) + loopSkip': false,  // 47996: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
@@ -12929,29 +12829,29 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(-3) + loopSkip > play(null) + playFinish': false,  // 23480: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(-3) + loopSkip > play(null) + restartBegin': false,  // 23483: event should not have been triggerd but WAS
 		'skip-combos: jumpSentences(-3) + loopSkip > play(null) + restartFinish': false,  // 23484: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(-3) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(-3) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(-3) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(-3) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(-3) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(-3) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(-3) + loopSkip > toggle(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(-3) + loopSkip > toggle(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
 
 		// jumpSentences(-1)
 		'skip-combos: jumpSentences(-1) + loopSkip > play(null) + playBegin': false,  // 47815: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(-1) + loopSkip > play(null) + playFinish': false,  // 47816: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(-1) + loopSkip > play(null) + restartBegin': false,  // 47819: event should not have been triggerd but WAS
 		'skip-combos: jumpSentences(-1) + loopSkip > play(null) + restartFinish': false,  // 47820: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(-1) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(-1) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(-1) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(-1) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(-1) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(-1) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(-1) + loopSkip > toggle(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(-1) + loopSkip > toggle(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
 
 		// jumpSentences(0)
-		'skip-combos: jumpSentences(0) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + onceBegin > toggle(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + onceFinish > toggle(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopBegin > toggle(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopFinish > toggle(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(0) + newWordFragment > play(null) + progress': false,  // 18820: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpSentences(0) + newWordFragment > play(null) + loopSkip': false,  // 18824: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpSentences(0) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + newWordFragment > toggle(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(0) + newWordFragment > fastForward(null) + newWordFragment': false,  // 19001: frags expected ["you","brave","I","back.","Why,","oh"], but got ["brave","I","back.","Why,","oh"]
 		'skip-combos: jumpSentences(0) + newWordFragment > fastForward(null) + progress': false,  // 19002: 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpSentences(0) + newWordFragment > once([0,0,2]) + newWordFragment': false,  // 19053: frags expected ["you"], but got ["brave"]
@@ -12966,25 +12866,25 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(0) + newWordFragment > jumpSentences(0) + loopSkip': false,  // 19474: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(0) + newWordFragment > nextWord(null) + newWordFragment': false,  // 19573: frags expected ["you"], but got ["brave"]
 		'skip-combos: jumpSentences(0) + newWordFragment > nextWord(null) + progress': false,  // 19574: 'progress' expected [0.16666666666666666], but got [0.25]
-		'skip-combos: jumpSentences(0) + progress > togglePlayPause(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + revertBegin': false,  // 23517: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + revertFinish': false,  // 23518: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + progress': false,  // 23526: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + done': false,  // 23529: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(0) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + progress > toggle(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + pauseBegin': false,  // 23511: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + pauseFinish': false,  // 23512: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + revertBegin': false,  // 23517: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + revertFinish': false,  // 23518: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + loopBegin': false,  // 23523: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + loopFinish': false,  // 23524: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + newWordFragment': false,  // 23525: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + progress': false,  // 23526: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + stopBegin': false,  // 23527: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + stopFinish': false,  // 23528: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + done': false,  // 23529: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(0) + loopSkip > toggle(null) + loopSkip': false,  // 23530: event should have been triggerd but was NOT
 
 		// jumpSentences(1)
 		'skip-combos: jumpSentences(1) + onceBegin > play(null) + loopSkip': false,  // 33800: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpSentences(1) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 33826: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + onceBegin > toggle(null) + loopSkip': false,  // 33826: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(1) + onceBegin > rewind(null) + loopSkip': false,  // 33956: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: jumpSentences(1) + onceBegin > fastForward(null) + loopSkip': false,  // 33982: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpSentences(1) + onceBegin > once([0,0,-2]) + loopSkip': false,  // 34008: frags expected ["Victorious,"], but got ["flag."]
@@ -12999,7 +12899,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + onceBegin > nextSentence(null) + loopSkip': false,  // 34580: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: jumpSentences(1) + onceBegin > prevWord(null) + loopSkip': false,  // 34606: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: jumpSentences(1) + onceFinish > play(null) + loopSkip': false,  // 34736: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpSentences(1) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 34762: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + onceFinish > toggle(null) + loopSkip': false,  // 34762: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(1) + onceFinish > rewind(null) + loopSkip': false,  // 34892: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: jumpSentences(1) + onceFinish > fastForward(null) + loopSkip': false,  // 34918: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpSentences(1) + onceFinish > once([0,0,-2]) + loopSkip': false,  // 34944: frags expected ["Victorious,"], but got ["flag."]
@@ -13014,7 +12914,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + onceFinish > nextSentence(null) + loopSkip': false,  // 35516: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: jumpSentences(1) + onceFinish > prevWord(null) + loopSkip': false,  // 35542: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: jumpSentences(1) + loopBegin > play(null) + loopSkip': false,  // 41288: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpSentences(1) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopBegin > toggle(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(1) + loopBegin > rewind(null) + loopSkip': false,  // 41444: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: jumpSentences(1) + loopBegin > fastForward(null) + loopSkip': false,  // 41470: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpSentences(1) + loopBegin > once([0,0,-2]) + loopSkip': false,  // 41496: frags expected ["Victorious,"], but got ["flag."]
@@ -13029,7 +12929,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + loopBegin > nextSentence(null) + loopSkip': false,  // 42068: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: jumpSentences(1) + loopBegin > prevWord(null) + loopSkip': false,  // 42094: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: jumpSentences(1) + loopFinish > play(null) + loopSkip': false,  // 42224: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpSentences(1) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopFinish > toggle(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(1) + loopFinish > rewind(null) + loopSkip': false,  // 42380: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: jumpSentences(1) + loopFinish > fastForward(null) + loopSkip': false,  // 42406: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpSentences(1) + loopFinish > once([0,0,-2]) + loopSkip': false,  // 42432: frags expected ["Victorious,"], but got ["flag."]
@@ -13044,7 +12944,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + loopFinish > nextSentence(null) + loopSkip': false,  // 43004: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: jumpSentences(1) + loopFinish > prevWord(null) + loopSkip': false,  // 43030: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: jumpSentences(1) + newWordFragment > play(null) + loopSkip': false,  // 43160: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
-		'skip-combos: jumpSentences(1) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + newWordFragment > toggle(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(1) + newWordFragment > rewind(null) + loopSkip': false,  // 43316: frags expected ["Victorious,"], but got ["Delirious,","flag.","Victorious,"]
 		'skip-combos: jumpSentences(1) + newWordFragment > fastForward(null) + loopSkip': false,  // 43342: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpSentences(1) + newWordFragment > once([0,0,-2]) + loopSkip': false,  // 43368: frags expected ["Victorious,"], but got ["Delirious,","flag."]
@@ -13073,7 +12973,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + newWordFragment > prevSentence(null) + done': false,  // 43991: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(1) + newWordFragment > prevSentence(null) + loopSkip': false,  // 43992: frags expected ["Victorious,"], but got ["Delirious,","flag."]
 		'skip-combos: jumpSentences(1) + progress > play(null) + loopSkip': false,  // 44096: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpSentences(1) + progress > togglePlayPause(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + progress > toggle(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(1) + progress > rewind(null) + loopSkip': false,  // 44252: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: jumpSentences(1) + progress > fastForward(null) + loopSkip': false,  // 44278: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: jumpSentences(1) + progress > once([0,0,-2]) + loopSkip': false,  // 44304: frags expected ["Victorious,"], but got ["flag."]
@@ -13090,20 +12990,20 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(1) + loopSkip > play(null) + newWordFragment': false,  // 47835: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: jumpSentences(1) + loopSkip > play(null) + progress': false,  // 47836: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: jumpSentences(1) + loopSkip > play(null) + loopSkip': false,  // 47840: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + revertBegin': false,  // 47853: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + revertFinish': false,  // 47854: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + progress': false,  // 47862: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + done': false,  // 47865: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(1) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + revertBegin': false,  // 47853: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + revertFinish': false,  // 47854: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + progress': false,  // 47862: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + done': false,  // 47865: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(1) + loopSkip > toggle(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(1) + loopSkip > rewind(null) + newWordFragment': false,  // 47991: event should not have been triggerd but WAS
 		'skip-combos: jumpSentences(1) + loopSkip > rewind(null) + progress': false,  // 47992: 'progress' expected [0.08333333333333333], but got [0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpSentences(1) + loopSkip > rewind(null) + loopSkip': false,  // 47996: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
@@ -13165,7 +13065,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// jumpSentences(3)
 		'skip-combos: jumpSentences(3) + onceBegin > play(null) + loopSkip': false,  // 9464: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
-		'skip-combos: jumpSentences(3) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(3) + onceBegin > toggle(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(3) + onceBegin > rewind(null) + loopSkip': false,  // 9620: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
 		'skip-combos: jumpSentences(3) + onceBegin > fastForward(null) + loopSkip': false,  // 9646: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
 		'skip-combos: jumpSentences(3) + onceBegin > once([0,0,-2]) + loopSkip': false,  // 9672: frags expected ["Victorious,"], but got ["\n"]
@@ -13182,7 +13082,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(3) + onceBegin > prevWord(null) + loopSkip': false,  // 10270: frags expected ["Victorious,"], but got ["\n"]
 		'skip-combos: jumpSentences(3) + onceBegin > prevSentence(null) + loopSkip': false,  // 10296: frags expected ["Victorious,"], but got ["\n"]
 		'skip-combos: jumpSentences(3) + onceFinish > play(null) + loopSkip': false,  // 10400: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
-		'skip-combos: jumpSentences(3) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(3) + onceFinish > toggle(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(3) + onceFinish > rewind(null) + loopSkip': false,  // 10556: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
 		'skip-combos: jumpSentences(3) + onceFinish > fastForward(null) + loopSkip': false,  // 10582: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
 		'skip-combos: jumpSentences(3) + onceFinish > once([0,0,-2]) + loopSkip': false,  // 10608: frags expected ["Victorious,"], but got ["\n"]
@@ -13199,7 +13099,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(3) + onceFinish > prevWord(null) + loopSkip': false,  // 11206: frags expected ["Victorious,"], but got ["\n"]
 		'skip-combos: jumpSentences(3) + onceFinish > prevSentence(null) + loopSkip': false,  // 11232: frags expected ["Victorious,"], but got ["\n"]
 		'skip-combos: jumpSentences(3) + loopBegin > play(null) + loopSkip': false,  // 16952: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
-		'skip-combos: jumpSentences(3) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(3) + loopBegin > toggle(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(3) + loopBegin > rewind(null) + loopSkip': false,  // 17108: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
 		'skip-combos: jumpSentences(3) + loopBegin > fastForward(null) + loopSkip': false,  // 17134: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
 		'skip-combos: jumpSentences(3) + loopBegin > once([0,0,-2]) + loopSkip': false,  // 17160: frags expected ["Victorious,"], but got ["\n"]
@@ -13216,7 +13116,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(3) + loopBegin > prevWord(null) + loopSkip': false,  // 17758: frags expected ["Victorious,"], but got ["\n"]
 		'skip-combos: jumpSentences(3) + loopBegin > prevSentence(null) + loopSkip': false,  // 17784: frags expected ["Victorious,"], but got ["\n"]
 		'skip-combos: jumpSentences(3) + loopFinish > play(null) + loopSkip': false,  // 17888: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
-		'skip-combos: jumpSentences(3) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(3) + loopFinish > toggle(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(3) + loopFinish > rewind(null) + loopSkip': false,  // 18044: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
 		'skip-combos: jumpSentences(3) + loopFinish > fastForward(null) + loopSkip': false,  // 18070: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
 		'skip-combos: jumpSentences(3) + loopFinish > once([0,0,-2]) + loopSkip': false,  // 18096: frags expected ["Victorious,"], but got ["\n"]
@@ -13233,7 +13133,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(3) + loopFinish > prevWord(null) + loopSkip': false,  // 18694: frags expected ["Victorious,"], but got ["\n"]
 		'skip-combos: jumpSentences(3) + loopFinish > prevSentence(null) + loopSkip': false,  // 18720: frags expected ["Victorious,"], but got ["\n"]
 		'skip-combos: jumpSentences(3) + newWordFragment > play(null) + loopSkip': false,  // 18824: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
-		'skip-combos: jumpSentences(3) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(3) + newWordFragment > toggle(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(3) + newWordFragment > rewind(null) + loopSkip': false,  // 18980: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
 		'skip-combos: jumpSentences(3) + newWordFragment > fastForward(null) + loopSkip': false,  // 19006: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
 		'skip-combos: jumpSentences(3) + newWordFragment > once([0,0,-2]) + loopSkip': false,  // 19032: frags expected ["Victorious,"], but got ["\n"]
@@ -13250,7 +13150,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(3) + newWordFragment > prevWord(null) + loopSkip': false,  // 19630: frags expected ["Victorious,"], but got ["\n"]
 		'skip-combos: jumpSentences(3) + newWordFragment > prevSentence(null) + loopSkip': false,  // 19656: frags expected ["Victorious,"], but got ["\n"]
 		'skip-combos: jumpSentences(3) + progress > play(null) + loopSkip': false,  // 19760: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
-		'skip-combos: jumpSentences(3) + progress > togglePlayPause(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(3) + progress > toggle(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(3) + progress > rewind(null) + loopSkip': false,  // 19916: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
 		'skip-combos: jumpSentences(3) + progress > fastForward(null) + loopSkip': false,  // 19942: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["wattlebird?"]
 		'skip-combos: jumpSentences(3) + progress > once([0,0,-2]) + loopSkip': false,  // 19968: frags expected ["Victorious,"], but got ["\n"]
@@ -13408,10 +13308,10 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: jumpSentences(100) + loopSkip > play(null) + playFinish': false,  // 47816: event should have been triggerd but was NOT
 		'skip-combos: jumpSentences(100) + loopSkip > play(null) + restartBegin': false,  // 47819: event should not have been triggerd but WAS
 		'skip-combos: jumpSentences(100) + loopSkip > play(null) + restartFinish': false,  // 47820: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(100) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(100) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: jumpSentences(100) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
-		'skip-combos: jumpSentences(100) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(100) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(100) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: jumpSentences(100) + loopSkip > toggle(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
+		'skip-combos: jumpSentences(100) + loopSkip > toggle(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
 		'skip-combos: jumpSentences(100) + loopSkip > rewind(null) + newWordFragment': false,  // 47991: event should not have been triggerd but WAS
 		'skip-combos: jumpSentences(100) + loopSkip > rewind(null) + progress': false,  // 47992: 'progress' expected [0.08333333333333333], but got [0.9166666666666666,0.8333333333333334,0.75,0.6666666666666666,0.5833333333333334,0.5,0.4166666666666667,0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
 		'skip-combos: jumpSentences(100) + loopSkip > rewind(null) + loopSkip': false,  // 47996: frags expected ["Victorious,"], but got ["\n","come","Delirious,","flag.","Victorious,"]
@@ -13511,37 +13411,37 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// nextWord(null)
 		'skip-combos: nextWord(null) + onceBegin > play(null) + loopSkip': false,  // 9464: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextWord(null) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
+		'skip-combos: nextWord(null) + onceBegin > toggle(null) + loopSkip': false,  // 9490: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + onceBegin > current(null) + loopSkip': false,  // 9724: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + onceBegin > jumpWords(0) + loopSkip': false,  // 9958: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + onceBegin > jumpWords(4) + loopSkip': false,  // 9984: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + onceBegin > jumpSentences(0) + loopSkip': false,  // 10114: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + onceFinish > play(null) + loopSkip': false,  // 10400: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextWord(null) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
+		'skip-combos: nextWord(null) + onceFinish > toggle(null) + loopSkip': false,  // 10426: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + onceFinish > current(null) + loopSkip': false,  // 10660: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + onceFinish > jumpWords(0) + loopSkip': false,  // 10894: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + onceFinish > jumpWords(4) + loopSkip': false,  // 10920: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + onceFinish > jumpSentences(0) + loopSkip': false,  // 11050: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + loopBegin > play(null) + loopSkip': false,  // 16952: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextWord(null) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
+		'skip-combos: nextWord(null) + loopBegin > toggle(null) + loopSkip': false,  // 16978: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + loopBegin > current(null) + loopSkip': false,  // 17212: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + loopBegin > jumpWords(0) + loopSkip': false,  // 17446: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + loopBegin > jumpWords(4) + loopSkip': false,  // 17472: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + loopBegin > jumpSentences(0) + loopSkip': false,  // 17602: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + loopFinish > play(null) + loopSkip': false,  // 17888: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextWord(null) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
+		'skip-combos: nextWord(null) + loopFinish > toggle(null) + loopSkip': false,  // 17914: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + loopFinish > current(null) + loopSkip': false,  // 18148: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + loopFinish > jumpWords(0) + loopSkip': false,  // 18382: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + loopFinish > jumpWords(4) + loopSkip': false,  // 18408: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + loopFinish > jumpSentences(0) + loopSkip': false,  // 18538: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + newWordFragment > play(null) + loopSkip': false,  // 18824: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextWord(null) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
+		'skip-combos: nextWord(null) + newWordFragment > toggle(null) + loopSkip': false,  // 18850: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + newWordFragment > current(null) + loopSkip': false,  // 19084: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + newWordFragment > jumpWords(0) + loopSkip': false,  // 19318: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + newWordFragment > jumpWords(4) + loopSkip': false,  // 19344: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + newWordFragment > jumpSentences(0) + loopSkip': false,  // 19474: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + progress > play(null) + loopSkip': false,  // 19760: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["flag.","Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextWord(null) + progress > togglePlayPause(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
+		'skip-combos: nextWord(null) + progress > toggle(null) + loopSkip': false,  // 19786: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + progress > current(null) + loopSkip': false,  // 20020: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + progress > jumpWords(0) + loopSkip': false,  // 20254: event should have been triggerd but was NOT
 		'skip-combos: nextWord(null) + progress > jumpWords(4) + loopSkip': false,  // 20280: event should have been triggerd but was NOT
@@ -13549,7 +13449,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 
 		// nextSentence(null)
 		'skip-combos: nextSentence(null) + onceBegin > play(null) + loopSkip': false,  // 33800: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextSentence(null) + onceBegin > togglePlayPause(null) + loopSkip': false,  // 33826: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + onceBegin > toggle(null) + loopSkip': false,  // 33826: event should have been triggerd but was NOT
 		'skip-combos: nextSentence(null) + onceBegin > rewind(null) + loopSkip': false,  // 33956: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: nextSentence(null) + onceBegin > fastForward(null) + loopSkip': false,  // 33982: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: nextSentence(null) + onceBegin > once([0,0,-2]) + loopSkip': false,  // 34008: frags expected ["Victorious,"], but got ["flag."]
@@ -13564,7 +13464,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + onceBegin > nextSentence(null) + loopSkip': false,  // 34580: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: nextSentence(null) + onceBegin > prevWord(null) + loopSkip': false,  // 34606: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: nextSentence(null) + onceFinish > play(null) + loopSkip': false,  // 34736: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextSentence(null) + onceFinish > togglePlayPause(null) + loopSkip': false,  // 34762: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + onceFinish > toggle(null) + loopSkip': false,  // 34762: event should have been triggerd but was NOT
 		'skip-combos: nextSentence(null) + onceFinish > rewind(null) + loopSkip': false,  // 34892: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: nextSentence(null) + onceFinish > fastForward(null) + loopSkip': false,  // 34918: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: nextSentence(null) + onceFinish > once([0,0,-2]) + loopSkip': false,  // 34944: frags expected ["Victorious,"], but got ["flag."]
@@ -13579,7 +13479,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + onceFinish > nextSentence(null) + loopSkip': false,  // 35516: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: nextSentence(null) + onceFinish > prevWord(null) + loopSkip': false,  // 35542: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: nextSentence(null) + loopBegin > play(null) + loopSkip': false,  // 41288: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextSentence(null) + loopBegin > togglePlayPause(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopBegin > toggle(null) + loopSkip': false,  // 41314: event should have been triggerd but was NOT
 		'skip-combos: nextSentence(null) + loopBegin > rewind(null) + loopSkip': false,  // 41444: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: nextSentence(null) + loopBegin > fastForward(null) + loopSkip': false,  // 41470: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: nextSentence(null) + loopBegin > once([0,0,-2]) + loopSkip': false,  // 41496: frags expected ["Victorious,"], but got ["flag."]
@@ -13594,7 +13494,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + loopBegin > nextSentence(null) + loopSkip': false,  // 42068: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: nextSentence(null) + loopBegin > prevWord(null) + loopSkip': false,  // 42094: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: nextSentence(null) + loopFinish > play(null) + loopSkip': false,  // 42224: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextSentence(null) + loopFinish > togglePlayPause(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopFinish > toggle(null) + loopSkip': false,  // 42250: event should have been triggerd but was NOT
 		'skip-combos: nextSentence(null) + loopFinish > rewind(null) + loopSkip': false,  // 42380: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: nextSentence(null) + loopFinish > fastForward(null) + loopSkip': false,  // 42406: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: nextSentence(null) + loopFinish > once([0,0,-2]) + loopSkip': false,  // 42432: frags expected ["Victorious,"], but got ["flag."]
@@ -13609,7 +13509,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + loopFinish > nextSentence(null) + loopSkip': false,  // 43004: frags expected ["Delirious,"], but got ["\n"]
 		'skip-combos: nextSentence(null) + loopFinish > prevWord(null) + loopSkip': false,  // 43030: frags expected ["Victorious,"], but got ["flag."]
 		'skip-combos: nextSentence(null) + newWordFragment > play(null) + loopSkip': false,  // 43160: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
-		'skip-combos: nextSentence(null) + newWordFragment > togglePlayPause(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + newWordFragment > toggle(null) + loopSkip': false,  // 43186: event should have been triggerd but was NOT
 		'skip-combos: nextSentence(null) + newWordFragment > rewind(null) + loopSkip': false,  // 43316: frags expected ["Victorious,"], but got ["Delirious,","flag.","Victorious,"]
 		'skip-combos: nextSentence(null) + newWordFragment > fastForward(null) + loopSkip': false,  // 43342: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: nextSentence(null) + newWordFragment > once([0,0,-2]) + loopSkip': false,  // 43368: frags expected ["Victorious,"], but got ["Delirious,","flag."]
@@ -13638,7 +13538,7 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + newWordFragment > prevSentence(null) + done': false,  // 43991: event should have been triggerd but was NOT
 		'skip-combos: nextSentence(null) + newWordFragment > prevSentence(null) + loopSkip': false,  // 43992: frags expected ["Victorious,"], but got ["Delirious,","flag."]
 		'skip-combos: nextSentence(null) + progress > play(null) + loopSkip': false,  // 44096: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextSentence(null) + progress > togglePlayPause(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + progress > toggle(null) + loopSkip': false,  // 44122: event should have been triggerd but was NOT
 		'skip-combos: nextSentence(null) + progress > rewind(null) + loopSkip': false,  // 44252: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: nextSentence(null) + progress > fastForward(null) + loopSkip': false,  // 44278: frags expected ["flag.","Delirious,","come","\n","wattlebird?"], but got ["come","\n","wattlebird?"]
 		'skip-combos: nextSentence(null) + progress > once([0,0,-2]) + loopSkip': false,  // 44304: frags expected ["Victorious,"], but got ["flag."]
@@ -13655,23 +13555,24 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: nextSentence(null) + loopSkip > play(null) + newWordFragment': false,  // 47835: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: nextSentence(null) + loopSkip > play(null) + progress': false,  // 47836: 'progress' expected [0.08333333333333333,0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
 		'skip-combos: nextSentence(null) + loopSkip > play(null) + loopSkip': false,  // 47840: frags expected ["Victorious,","flag.","Delirious,","come","\n","wattlebird?"], but got ["Delirious,","come","\n","wattlebird?"]
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + revertBegin': false,  // 47853: event should not have been triggerd but WAS
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + revertFinish': false,  // 47854: event should not have been triggerd but WAS
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + progress': false,  // 47862: event should have been triggerd but was NOT
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + done': false,  // 47865: event should have been triggerd but was NOT
-		'skip-combos: nextSentence(null) + loopSkip > togglePlayPause(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + pauseBegin': false,  // 47847: event should not have been triggerd but WAS
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + pauseFinish': false,  // 47848: event should not have been triggerd but WAS
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + revertBegin': false,  // 47853: event should not have been triggerd but WAS
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + revertFinish': false,  // 47854: event should not have been triggerd but WAS
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + loopBegin': false,  // 47859: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + loopFinish': false,  // 47860: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + newWordFragment': false,  // 47861: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + progress': false,  // 47862: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + stopBegin': false,  // 47863: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + stopFinish': false,  // 47864: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + done': false,  // 47865: event should have been triggerd but was NOT
+		'skip-combos: nextSentence(null) + loopSkip > toggle(null) + loopSkip': false,  // 47866: event should have been triggerd but was NOT
 		'skip-combos: nextSentence(null) + loopSkip > rewind(null) + newWordFragment': false,  // 47991: event should not have been triggerd but WAS
 		'skip-combos: nextSentence(null) + loopSkip > rewind(null) + progress': false,  // 47992: 'progress' expected [0.08333333333333333], but got [0.3333333333333333,0.25,0.16666666666666666,0.08333333333333333]
-		'skip-combos: nextSentence(null) + loopSkip > rewind(null) + stopFinish': false,  // 47994: event should have been triggerd but was NOT
+		// False negative somehow. Needed more time?
+		// 'skip-combos: nextSentence(null) + loopSkip > rewind(null) + stopFinish': false,  // 47994: event should have been triggerd but was NOT
 		'skip-combos: nextSentence(null) + loopSkip > rewind(null) + loopSkip': false,  // 47996: frags expected ["Victorious,"], but got ["flag.","Victorious,"]
 		'skip-combos: nextSentence(null) + loopSkip > fastForward(null) + newWordFragment': false,  // 48017: frags expected ["you","brave","I","back.","Why,","oh"], but got ["I","back.","Why,","oh"]
 		'skip-combos: nextSentence(null) + loopSkip > fastForward(null) + progress': false,  // 48018: 'progress' expected [0.16666666666666666,0.25,0.3333333333333333,0.4166666666666667,0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1], but got [0.5,0.5833333333333334,0.6666666666666666,0.75,0.8333333333333334,0.9166666666666666,1]
@@ -13734,21 +13635,127 @@ module.exports = MakeAltAsserts = function ( plyb ) {
 		'skip-combos: prevWord(null) + loopSkip > play(null) + playFinish': false,  // 23480: event should have been triggerd but was NOT
 		'skip-combos: prevWord(null) + loopSkip > play(null) + restartBegin': false,  // 23483: event should not have been triggerd but WAS
 		'skip-combos: prevWord(null) + loopSkip > play(null) + restartFinish': false,  // 23484: event should not have been triggerd but WAS
-		'skip-combos: prevWord(null) + loopSkip > togglePlayPause(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
-		'skip-combos: prevWord(null) + loopSkip > togglePlayPause(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
-		'skip-combos: prevWord(null) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
-		'skip-combos: prevWord(null) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
+		'skip-combos: prevWord(null) + loopSkip > toggle(null) + playBegin': false,  // 23505: event should have been triggerd but was NOT
+		'skip-combos: prevWord(null) + loopSkip > toggle(null) + playFinish': false,  // 23506: event should have been triggerd but was NOT
+		'skip-combos: prevWord(null) + loopSkip > toggle(null) + restartBegin': false,  // 23509: event should not have been triggerd but WAS
+		'skip-combos: prevWord(null) + loopSkip > toggle(null) + restartFinish': false,  // 23510: event should not have been triggerd but WAS
 
 		// prevSentence(null)
 		'skip-combos: prevSentence(null) + loopSkip > play(null) + playBegin': false,  // 47815: event should have been triggerd but was NOT
 		'skip-combos: prevSentence(null) + loopSkip > play(null) + playFinish': false,  // 47816: event should have been triggerd but was NOT
 		'skip-combos: prevSentence(null) + loopSkip > play(null) + restartBegin': false,  // 47819: event should not have been triggerd but WAS
 		'skip-combos: prevSentence(null) + loopSkip > play(null) + restartFinish': false,  // 47820: event should not have been triggerd but WAS
-		'skip-combos: prevSentence(null) + loopSkip > togglePlayPause(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
-		'skip-combos: prevSentence(null) + loopSkip > togglePlayPause(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
-		'skip-combos: prevSentence(null) + loopSkip > togglePlayPause(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
-		'skip-combos: prevSentence(null) + loopSkip > togglePlayPause(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
+		'skip-combos: prevSentence(null) + loopSkip > toggle(null) + playBegin': false,  // 47841: event should have been triggerd but was NOT
+		'skip-combos: prevSentence(null) + loopSkip > toggle(null) + playFinish': false,  // 47842: event should have been triggerd but was NOT
+		'skip-combos: prevSentence(null) + loopSkip > toggle(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
+		'skip-combos: prevSentence(null) + loopSkip > toggle(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
 
+		// Different than regular combos:
+		// 'skip-combos: restart(null) + restartBegin > play(null) + newWordFragment': false,  // 1896: ?? (skip results are different than combos)
+		// 'skip-combos: restart(null) + restartFinish > play(null) + newWordFragment': false,  // 2796: ?? (skip results are different than combos)
+		// 'skip-combos: restart(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
+		// 'skip-combos: restart(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
+		// 'skip-combos: restart(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
+		// 'skip-combos: play(null) + playBegin > play(null) + newWordFragment': false,  // 3696: ?? (skip results are different than combos)
+		// 'skip-combos: play(null) + playFinish > play(null) + newWordFragment': false,  // 4596: ?? (skip results are different than combos)
+		// 'skip-combos: play(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
+		// 'skip-combos: play(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
+		// 'skip-combos: play(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
+		// 'skip-combos: toggle(null) + playBegin > play(null) + newWordFragment': false,  // 3696: ?? (skip results are different than combos)
+		// 'skip-combos: toggle(null) + playFinish > play(null) + newWordFragment': false,  // 4596: ?? (skip results are different than combos)
+		// 'skip-combos: toggle(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
+		// 'skip-combos: toggle(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
+		// 'skip-combos: toggle(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + fastForwardBegin > play(null) + newWordFragment': false,  // 14496: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + fastForwardBegin > current(null) + newWordFragment': false,  // 14746: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + fastForwardBegin > jumpWords(0) + newWordFragment': false,  // 14971: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + fastForwardBegin > jumpWords(4) + newWordFragment': false,  // 14996: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + fastForwardBegin > jumpSentences(0) + newWordFragment': false,  // 15121: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + fastForwardFinish > play(null) + newWordFragment': false,  // 15396: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + fastForwardFinish > current(null) + newWordFragment': false,  // 15646: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + fastForwardFinish > jumpWords(0) + newWordFragment': false,  // 15871: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + fastForwardFinish > jumpWords(4) + newWordFragment': false,  // 15896: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + fastForwardFinish > jumpSentences(0) + newWordFragment': false,  // 16021: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + loopBegin > current(null) + newWordFragment': false,  // 16546: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + loopBegin > jumpWords(0) + newWordFragment': false,  // 16771: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + loopBegin > jumpWords(4) + newWordFragment': false,  // 16796: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + loopBegin > jumpSentences(0) + newWordFragment': false,  // 16921: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + loopFinish > current(null) + newWordFragment': false,  // 17446: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + loopFinish > jumpWords(0) + newWordFragment': false,  // 17671: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + loopFinish > jumpWords(4) + newWordFragment': false,  // 17696: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + loopFinish > jumpSentences(0) + newWordFragment': false,  // 17821: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + newWordFragment > current(null) + newWordFragment': false,  // 18346: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + newWordFragment > jumpWords(0) + newWordFragment': false,  // 18571: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + newWordFragment > jumpWords(4) + newWordFragment': false,  // 18596: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + newWordFragment > jumpSentences(0) + newWordFragment': false,  // 18721: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + progress > current(null) + newWordFragment': false,  // 19246: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + progress > jumpWords(0) + newWordFragment': false,  // 19471: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + progress > jumpWords(4) + newWordFragment': false,  // 19496: ?? (skip results are different than combos)
+		// 'skip-combos: fastForward(null) + progress > jumpSentences(0) + newWordFragment': false,  // 19621: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + onceBegin > play(null) + newWordFragment': false,  // 9096: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + onceBegin > current(null) + newWordFragment': false,  // 9346: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + onceBegin > jumpWords(0) + newWordFragment': false,  // 9571: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + onceBegin > jumpWords(4) + newWordFragment': false,  // 9596: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + onceBegin > jumpSentences(0) + newWordFragment': false,  // 9721: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + onceFinish > play(null) + newWordFragment': false,  // 9996: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + onceFinish > current(null) + newWordFragment': false,  // 10246: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + onceFinish > jumpWords(0) + newWordFragment': false,  // 10471: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + onceFinish > jumpWords(4) + newWordFragment': false,  // 10496: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + onceFinish > jumpSentences(0) + newWordFragment': false,  // 10621: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + loopBegin > current(null) + newWordFragment': false,  // 16546: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + loopBegin > jumpWords(0) + newWordFragment': false,  // 16771: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + loopBegin > jumpWords(4) + newWordFragment': false,  // 16796: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + loopBegin > jumpSentences(0) + newWordFragment': false,  // 16921: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + loopFinish > current(null) + newWordFragment': false,  // 17446: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + loopFinish > jumpWords(0) + newWordFragment': false,  // 17671: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + loopFinish > jumpWords(4) + newWordFragment': false,  // 17696: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + loopFinish > jumpSentences(0) + newWordFragment': false,  // 17821: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + newWordFragment > current(null) + newWordFragment': false,  // 18346: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + newWordFragment > jumpWords(0) + newWordFragment': false,  // 18571: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + newWordFragment > jumpWords(4) + newWordFragment': false,  // 18596: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + newWordFragment > jumpSentences(0) + newWordFragment': false,  // 18721: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + progress > current(null) + newWordFragment': false,  // 19246: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + progress > jumpWords(0) + newWordFragment': false,  // 19471: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + progress > jumpWords(4) + newWordFragment': false,  // 19496: ?? (skip results are different than combos)
+		// 'skip-combos: once([0,0,2]) + progress > jumpSentences(0) + newWordFragment': false,  // 19621: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + onceBegin > play(null) + newWordFragment': false,  // 9096: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + onceBegin > current(null) + newWordFragment': false,  // 9346: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + onceBegin > jumpWords(0) + newWordFragment': false,  // 9571: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + onceBegin > jumpWords(4) + newWordFragment': false,  // 9596: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + onceBegin > jumpSentences(0) + newWordFragment': false,  // 9721: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + onceFinish > play(null) + newWordFragment': false,  // 9996: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + onceFinish > current(null) + newWordFragment': false,  // 10246: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + onceFinish > jumpWords(0) + newWordFragment': false,  // 10471: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + onceFinish > jumpWords(4) + newWordFragment': false,  // 10496: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + onceFinish > jumpSentences(0) + newWordFragment': false,  // 10621: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + loopBegin > current(null) + newWordFragment': false,  // 16546: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + loopBegin > jumpWords(0) + newWordFragment': false,  // 16771: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + loopBegin > jumpWords(4) + newWordFragment': false,  // 16796: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + loopBegin > jumpSentences(0) + newWordFragment': false,  // 16921: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + loopFinish > play(null) + newWordFragment': false,  // 17196: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + loopFinish > current(null) + newWordFragment': false,  // 17446: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + loopFinish > jumpWords(0) + newWordFragment': false,  // 17671: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + loopFinish > jumpWords(4) + newWordFragment': false,  // 17696: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + loopFinish > jumpSentences(0) + newWordFragment': false,  // 17821: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + newWordFragment > play(null) + newWordFragment': false,  // 18096: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + newWordFragment > current(null) + newWordFragment': false,  // 18346: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + newWordFragment > jumpWords(0) + newWordFragment': false,  // 18571: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + newWordFragment > jumpWords(4) + newWordFragment': false,  // 18596: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + newWordFragment > jumpSentences(0) + newWordFragment': false,  // 18721: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + progress > play(null) + newWordFragment': false,  // 18996: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + progress > current(null) + newWordFragment': false,  // 19246: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + progress > jumpWords(0) + newWordFragment': false,  // 19471: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + progress > jumpWords(4) + newWordFragment': false,  // 19496: ?? (skip results are different than combos)
+		// 'skip-combos: nextWord(null) + progress > jumpSentences(0) + newWordFragment': false,  // 19621: ?? (skip results are different than combos)
 
 	}  // end asts.expectedFailures{}
 

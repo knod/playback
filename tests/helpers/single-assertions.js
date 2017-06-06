@@ -1,5 +1,7 @@
 // single-assertions.js
 
+'use strict';
+
 // ------------ setup ------------
 
 var colors = {
@@ -7,211 +9,209 @@ var colors = {
   yellow: '\x1B[33m', none: '\x1B[0m'
 };
 
-var	parsedText = [
-	[ 'Victorious,', 'you','brave', 'flag.' ],
-	[ 'Delirious,', 'I', 'come', 'back.' ],
-	[ '\n' ],
-	[ 'Why,', 'oh', 'wattlebird?' ]
-];
 
-var	forward = parsedText[0].concat(parsedText[1]).concat(parsedText[2]).concat(parsedText[3]);
+// ------------ standard assertions for functions with events ------------
 
-var plab = null;
+const gets = module.exports = function ( plyb ) {
 
+	const plab = plyb;
+	const asts = {};
 
-// ------------ helpers ------------
+	const parsedText = [
+		[ 'Victorious,', 'you','brave', 'flag.' ],
+		[ 'Delirious,', 'I', 'come', 'back.' ],
+		[ '\n' ],
+		[ 'Why,', 'oh', 'wattlebird?' ]
+	];
 
-// Simple and suited to our purposes
-// https://github.com/micro-js/equal-array/blob/master/lib/index.js
-var arraysEqual = function ( arr1, arr2 ) {
-  var a1Len = arr1.length;
-  var a2Len = arr2.length;
-
-  if ( a1Len === a2Len ) {
-    for (var i = 0; i < a1Len; ++i) {
-      if (arr1[i] !== arr2[i]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  return false;
-};  // End arraysEqual()
+	const forward = parsedText[0].concat(parsedText[1]).concat(parsedText[2]).concat(parsedText[3]);
 
 
+	// ------------ helpers ------------
 
-// ------------ default assertions ------------
+	// Simple and suited to our purposes
+	// https://github.com/micro-js/equal-array/blob/master/lib/index.js
+	const arraysEqual = function ( arr1, arr2 ) {
+	  const a1Len = arr1.length;
+	  const a2Len = arr2.length;
 
-var defaultAsserts = {
-	triggered: null,
-	not: null,
-	frags: null,
-	progress: null
-}
+	  if ( a1Len === a2Len ) {
+	    for (var i = 0; i < a1Len; ++i) {
+	      if (arr1[i] !== arr2[i]) {
+	        return false;
+	      }
+	    }
 
-defaultAsserts.not = function ( result, testText, evnt ) {
+	    return true;
+	  }
 
-	var passes 	= true;
-	var msg 	= 'event ' + colors.green + 'NOT' + colors.none + ' triggered';
+	  return false;
+	};  // End arraysEqual()
 
-	if ( result.arg2s.length !== 0 ) {
-		passes = false;
-		msg = 'event should not have been triggerd but ' + colors.red + 'WAS' + colors.none;
+
+
+	// ------------ default assertions ------------
+
+	const defaultAsserts = {
+		triggered: null,
+		not: null,
+		frags: null,
+		progress: null
 	}
 
-	return { message: msg, passed: passes };
+	defaultAsserts.not = function ( result, testText, evnt ) {
 
-};
+		var passes 	= true;
+		var msg 	= 'event ' + colors.green + 'NOT' + colors.none + ' triggered';
 
-defaultAsserts.triggered = function ( result, testText, evnt ) {
+		if ( result.arg2s.length !== 0 ) {
+			passes = false;
+			msg = 'event should not have been triggerd but ' + colors.red + 'WAS' + colors.none;
+		}
 
-	var passes 	= true,
-		msg 	= 'event ' + colors.green + 'WAS' + colors.none + ' triggered';
+		return { message: msg, passed: passes };
 
-	if ( result.arg2s.length === 0 ) {
-		passes 	= false;
-		msg 	= 'event should have been triggerd but was ' + colors.red + 'NOT' + colors.none;
-	} else if ( result.playback !== plab ) {
-		passes 	= false;
-		msg 	= 'object recieved was ' + colors.red + 'NOT' + colors.none + ' the expected Playback instance';
-	}
+	};
 
-	return { message: msg, passed: passes };
-};
-
-
-
-// ------------ assertion builders ------------
-
-
-var makeFragAsserter = function ( plyb, frags ) {
-/* ( Playback, [ strs ] ) -> func
-* 
-* Basically here to abstract away the expected failures check.
-* 
-* Returns a fragment assertion function with the given values
-* which asserts that the given fragments are the ones that
-* were collected.
-*/
-	return function assertFrags( result, testText, evnt ) {
-		
-		var arg2sStr = JSON.stringify( result.arg2s )
+	defaultAsserts.triggered = function ( result, testText, evnt ) {
 
 		var passes 	= true,
-			msg 	= 'expected and ' + colors.green + 'GOT' + colors.none + ' ' + arg2sStr;
+			msg 	= 'event ' + colors.green + 'WAS' + colors.none + ' triggered';
 
-		var triggeredVals = defaultAsserts.triggered( result, testText, evnt );
-		if ( !triggeredVals.passed ) { return triggeredVals; }
-		else {
-			passes = arraysEqual( result.arg2s, frags );
-			if ( !passes ) { msg = 'frags expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + arg2sStr + colors.none }
+		if ( result.arg2s.length === 0 ) {
+			passes 	= false;
+			msg 	= 'event should have been triggerd but was ' + colors.red + 'NOT' + colors.none;
+		} else if ( result.playback !== plab ) {
+			passes 	= false;
+			msg 	= 'object recieved was ' + colors.red + 'NOT' + colors.none + ' the expected Playback instance.';
+			if ( plab.id ) { msg += ' Original id: ' + plab.id + ', current id: ' + result.playback.id + '.' }
 		}
 
 		return { message: msg, passed: passes };
 	};
-};  // End makeFragAsserter()
 
 
-var makeProgressAsserter = function ( plyb, numItems, vals ) {
-/* ( Playback, int, [ floats ] ) -> func
-* 
-* `vals` should include all the progress vals that will come up
-* 
-* Basically here to abstract away the expected failures check.
-* 
-* Returns a progress assertion function with the given values
-* which asserts that the correct progress was made at
-* the 0, 2, 5, 8, and 11th triggereing of the 'progress' event.
-* 
-* TODO: Remove `numItems` from calls
-*/
-	return function assertProgress ( result, testText, evnt ) {
 
-		var arg2sStr = JSON.stringify( result.arg2s )
+	// ------------ assertion builders ------------
 
-		var passes 	= true,
-			msg 	= 'expected and ' + colors.green + 'GOT' + colors.none + ' ' + arg2sStr;
 
-		// var shouldFail = checkExpectedToFail( testText );
-		// if ( supressExpectedFailures && shouldFail ) {
-		// 	// Nothing is expected, it's failing for good reasons
-		// } else {
+	var makeFragAsserter = function ( plyb, frags ) {
+	/* ( Playback, [ strs ] ) -> func
+	* 
+	* Basically here to abstract away the expected failures check.
+	* 
+	* Returns a fragment assertion function with the given values
+	* which asserts that the given fragments are the ones that
+	* were collected.
+	*/
+		return function assertFrags( result, testText, evnt ) {
+			
+			var arg2sStr = JSON.stringify( result.arg2s )
+
+			var passes 	= true,
+				msg 	= 'expected and ' + colors.green + 'GOT' + colors.none + ' ' + arg2sStr;
 
 			var triggeredVals = defaultAsserts.triggered( result, testText, evnt );
 			if ( !triggeredVals.passed ) { return triggeredVals; }
 			else {
-				passes = arraysEqual( result.arg2s, vals );
-				if ( !passes ) { msg = '\'progress\' expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + arg2sStr + colors.none }
+				passes = arraysEqual( result.arg2s, frags );
+				if ( !passes ) { msg = 'frags expected ' + JSON.stringify( frags ) + ', but got ' + colors.red + arg2sStr + colors.none }
 			}
 
-		// }
-		return { message: msg, passed: passes };
+			return { message: msg, passed: passes };
+		};
+	};  // End makeFragAsserter()
+
+
+	var makeProgressAsserter = function ( plyb, numItems, vals ) {
+	/* ( Playback, int, [ floats ] ) -> func
+	* 
+	* `vals` should include all the progress vals that will come up
+	* 
+	* Basically here to abstract away the expected failures check.
+	* 
+	* Returns a progress assertion function with the given values
+	* which asserts that the correct progress was made at
+	* the 0, 2, 5, 8, and 11th triggereing of the 'progress' event.
+	* 
+	* TODO: Remove `numItems` from calls
+	*/
+		return function assertProgress ( result, testText, evnt ) {
+
+			var arg2sStr = JSON.stringify( result.arg2s )
+
+			var passes 	= true,
+				msg 	= 'expected and ' + colors.green + 'GOT' + colors.none + ' ' + arg2sStr;
+
+			// var shouldFail = checkExpectedToFail( testText );
+			// if ( supressExpectedFailures && shouldFail ) {
+			// 	// Nothing is expected, it's failing for good reasons
+			// } else {
+
+				var triggeredVals = defaultAsserts.triggered( result, testText, evnt );
+				if ( !triggeredVals.passed ) { return triggeredVals; }
+				else {
+					passes = arraysEqual( result.arg2s, vals );
+					if ( !passes ) { msg = '\'progress\' expected ' + JSON.stringify( vals ) + ', but got ' + colors.red + arg2sStr + colors.none }
+				}
+
+			// }
+			return { message: msg, passed: passes };
+		};
+	};  // End makeProgressAsserter()
+
+
+
+
+	// ------------ common assertions ------------
+	// ('Delerious,' is also a popular one, but less so)
+
+	// All 12 words
+	var getAssertFragsAll = function ( plyb ) {
+		return makeFragAsserter( plyb, forward );
 	};
-};  // End makeProgressAsserter()
+	// Progress for all of them
+	var getAssertProgAll = function ( plyb ) {
+		return makeProgressAsserter( plyb, 12, [ 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1 ] );
+	};
+
+	// First word
+	var getAssertFragsFirst = function ( plyb ) {
+		return makeFragAsserter( plyb, [ 'Victorious,' ] );
+	};
+	// Progress for first word
+	var getAssertProgFirst = function ( plyb ) {
+		return makeProgressAsserter( plyb, 1, [ 1/12 ] );
+	};
+
+	// Last word
+	var getAssertFragsLast = function ( plyb ) {
+		return makeFragAsserter( plyb, [ 'wattlebird?' ] );
+	};
+	// Progress for last word
+	var getAssertProgLast = function ( plyb ) {
+		return makeProgressAsserter( plyb, 1, [ 12/12 ] );
+	};
 
 
+	var cloneAsserts = function ( defaults, override ) {
+	/* ( {}, {} ) -> other {}
+	*/
+		var asserts = {};
 
-
-// ------------ common assertions ------------
-// ('Delerious,' is also a popular one, but less so)
-
-// All 12 words
-var getAssertFragsAll = function ( plyb ) {
-	return makeFragAsserter( plyb, forward );
-};
-// Progress for all of them
-var getAssertProgAll = function ( plyb ) {
-	return makeProgressAsserter( plyb, 12, [ 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 1 ] );
-};
-
-// First word
-var getAssertFragsFirst = function ( plyb ) {
-	return makeFragAsserter( plyb, [ 'Victorious,' ] );
-};
-// Progress for first word
-var getAssertProgFirst = function ( plyb ) {
-	return makeProgressAsserter( plyb, 1, [ 1/12 ] );
-};
-
-// Last word
-var getAssertFragsLast = function ( plyb ) {
-	return makeFragAsserter( plyb, [ 'wattlebird?' ] );
-};
-// Progress for last word
-var getAssertProgLast = function ( plyb ) {
-	return makeProgressAsserter( plyb, 1, [ 12/12 ] );
-};
-
-
-var cloneAsserts = function ( defaults, override ) {
-/* ( {}, {} ) -> other {}
-*/
-	var asserts = {};
-
-	for ( let astKey in defaults ) {
-		if ( override[ astKey ] ) {
-			asserts[ astKey ] = override[ astKey ];
-		} else {
-			asserts[ astKey ] = defaults[ astKey ];
+		for ( let astKey in defaults ) {
+			if ( override[ astKey ] ) {
+				asserts[ astKey ] = override[ astKey ];
+			} else {
+				asserts[ astKey ] = defaults[ astKey ];
+			}
 		}
-	}
 
-	return asserts;
-};  // End cloneAsserts()
+		return asserts;
+	};  // End cloneAsserts()
 
+	const asserts = cloneAsserts( defaultAsserts, {} );
 
-
-
-// ------------ standard assertions for functions with events ------------
-
-module.exports = gets = function ( plyb ) {
-
-	plab 	= plyb;
-	asserts = cloneAsserts( defaultAsserts, {} );
-
-	var asts = {};
 
 	// ----------- play(null) -----------
 	asts.play 		 = {};
@@ -236,9 +236,9 @@ module.exports = gets = function ( plyb ) {
 	play['loopSkip'] 	 	 = { assertion: asserts.not, type: 'not' };
 
 
-	// ----------- togglePlayPause(null) -----------
-	asts.togglePlayPause = {};
-	var toggle 			 = asts.togglePlayPause["null"] = {};
+	// ----------- toggle(null) -----------
+	asts.toggle = {};
+	var toggle 			 = asts.toggle["null"] = {};
 	asserts.frags 		 = getAssertFragsAll( plyb );
 	asserts.progress 	 = getAssertProgAll( plyb );
 

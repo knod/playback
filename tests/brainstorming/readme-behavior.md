@@ -16,10 +16,10 @@ Events that can get triggered externally, but are also sometimes triggered inter
 - `'restartBegin/Finish'` (`.restart()` and, when `.done` is `true`, `.play()` and `.toggle()`)
 - `'pauseBegin/Finish'` (`.pause()`, `.revert()`, and someitmes `.toggle()`)
 - `'onceBegin/Finish'` (`.once()`, `.current()`, and anything starting with '.jump', '.next', or '.prev')
+- `'revertBegin/Finish'` (`.revert()` and sometimes `.toggle()`)
 - `'stopBegin/Finish'` (`.stop()` and anything that causes the playback to finish, either going forward or back)
 
 Events that can only be triggered from external calls of their namesakes
-- `'revertBegin/Finish'`
 - `'closeBegin/Finish'`
 - `'rewindBegin/Finish'`
 - `'fastForwardBegin/Finish'`

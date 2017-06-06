@@ -504,14 +504,14 @@ jasmine.testClose = function ( bigs, assertsOverride, reset, testText ) {
 };  // End jasmine.testClose()
 
 
-// ----------- togglePlayPause() -----------
+// ----------- toggle() -----------
 
 jasmine.testTogglePlayPause = function ( bigs, assertsOverride, reset, testText ) {
 
 	this.plyb  = bigs.playback;
 	this.state = bigs.state;
 
-	opWith = { op: 'togglePlayPause', arg: null };
+	opWith = { op: 'toggle', arg: null };
 
 
 	defaultAsserts.frags 	= getAssertFragsAll( this.plyb );

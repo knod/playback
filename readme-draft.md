@@ -91,7 +91,7 @@ Most actions (all?) are paused before they they start on their own procedures.
 - `.pause()`, `.stop()`, `.close()` (proxies/variants for each other)
 - `.rewind()`
 - `.fastForward()`
-- `.togglePlayPause()`
+- `.toggle()`
 - `.jumpWords()` - move forward or backward a certain number of words
 - `.jumpSentences()` - move forward or backward a certain number of sentences
 - `.nextWord()`

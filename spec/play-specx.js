@@ -9,7 +9,7 @@ TODO:
 .getProgress
 .getLength
 .getIndex
-.togglePlayPause
+.toggle
 .jumpWords
 .jumpSentences
 .nextWord

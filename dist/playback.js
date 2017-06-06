@@ -381,22 +381,22 @@
 
 
 
-		plab._togglePlayPauseProxy = function () {
+		plab._toggleProxy = function () {
 		// TODO: ??: Add a 'toggle' event? Change this name?
 			// Test `currentAction` not `revertableState` so that, for example, if was paused
 			// then rewound, will revert to 'pause' instead of toggling to 'play', since
 			// `rewind()` doesn't change revertableState to 'play'
 
 			// TODO: ??: Should these be non-queued? Straight to proxies?
-			if (  /pause|stop|close/.test( plab._currentAction ) ) { plab.play(); }
+			if ( /pause|stop|close/.test( plab._currentAction ) ) { plab.play(); }
 			else if ( plab._currentAction === 'play' ) { plab.pause(); }
 			else { plab.revert(); }
 
 			return plab;
 		};
 		// TODO: ??: Change name to just 'toggle'?
-		plab.togglePlayPause = function () {
-			plab._queueAdd( '_togglePlayPauseProxy', arguments );
+		plab.toggle = function () {
+			plab._queueAdd( '_toggleProxy', arguments );
 			return plab;
 		};
 

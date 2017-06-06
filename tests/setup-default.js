@@ -1,9 +1,12 @@
 // setup-default.js
 
-var Playback = require( '../dist/Playback.js' );
-var EventEmitter = require( '../node_modules/wolfy87-eventemitter/EventEmitter.js' );
+'use strict';
 
 var SetUp = module.exports = function () {
+
+	var Playback = require( '../dist/Playback.js' );
+	var EventEmitter = require( '../node_modules/wolfy87-eventemitter/EventEmitter.js' );
+
 	var state = {};
 
 	var emitter = state.emitter = new EventEmitter();  // Now has events

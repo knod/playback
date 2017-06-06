@@ -89,7 +89,7 @@ describe("When Playback calls", function() {
 		// 'pause', 'stop', 'close',  // (proxies/variants for each other)
 		// 'rewind',
 		// 'fastForward',
-		// 'togglePlayPause',
+		// 'toggle',
 		// 'jumpWords',
 		// 'jumpSentences',
 		// 'nextWord',
@@ -237,7 +237,7 @@ describe("When Playback calls", function() {
 	// 		'progress': null,
 	// 		'done': null
 	// 	},
-	// 	'togglePlayPause': {
+	// 	'toggle': {
 	// 		'playBegin': null, 'playFinish': null,
 	// 		'resetBegin': null, 'resetFinish': null,
 	// 		'restartBegin': null, 'restartFinish': null,

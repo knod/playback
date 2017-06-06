@@ -23,7 +23,7 @@
   - [partly done] .pause, .stop, .close (proxies/variants for each other)
   - [partly done] .rewind
   - .fastForward
-  - .togglePlayPause
+  - .toggle
   - .jumpWords
   - .jumpSentences
   - .nextWord
@@ -79,7 +79,7 @@
 - .pause, .stop, .close (proxies/variants for each other)
 - .rewind
 - .fastForward
-- .togglePlayPause
+- .toggle
 - .jumpWords
 - .jumpSentences
 - .nextWord
@@ -129,15 +129,15 @@ _??: At beginning, middle, and end? At sentence and word boundries?_
 - .fastForward(), .fastForward() again at 'newWordFragment'
 - .fastForward(), .fastForward() again at 'done'
 
-- .togglePlayPause(), .togglePlayPause() again at 'playBegin'
-- .togglePlayPause(), .togglePlayPause() again at 'playFinish'
-- .togglePlayPause(), .togglePlayPause() again at 'pauseBegin'
-- .togglePlayPause(), .togglePlayPause() again at 'pauseFinish'
-- .togglePlayPause(), .togglePlayPause() again at 'loopBegin'
-- .togglePlayPause(), .togglePlayPause() again at 'loopFinish'
-- .togglePlayPause(), .togglePlayPause() again at 'loopSkip'
-- .togglePlayPause(), .togglePlayPause() again at 'newWordFragment'
-- .togglePlayPause(), .togglePlayPause() again at 'done'
+- .toggle(), .toggle() again at 'playBegin'
+- .toggle(), .toggle() again at 'playFinish'
+- .toggle(), .toggle() again at 'pauseBegin'
+- .toggle(), .toggle() again at 'pauseFinish'
+- .toggle(), .toggle() again at 'loopBegin'
+- .toggle(), .toggle() again at 'loopFinish'
+- .toggle(), .toggle() again at 'loopSkip'
+- .toggle(), .toggle() again at 'newWordFragment'
+- .toggle(), .toggle() again at 'done'
 
 - .jumpWords(), .jumpWords() again at 'onceBegin'
 - .jumpWords(), .jumpWords() again at 'onceFinish'
@@ -238,7 +238,7 @@ play > restart				>> "play"			>> "play"
 play > pause/stop/close		>> "pause"			>> "pause"
 play > rewind				>> "rewind"			>> "play"
 play > fastForward			>> "fastForward"	>> "play"
-play > togglePlayPause?		>> "play"/"pause"	>> "same"
+play > toggle?		>> "play"/"pause"	>> "same"
 play > jumpWords			>> "jump"			>> "play"
 play > jumpSentences		>> "jump"			>> "play"
 play > nextWord				>> "jump"			>> "play"
@@ -252,7 +252,7 @@ restart > restart			>> "play"			>> "play"
 restart > pause/stop/close	>> "pause"			>> "pause"
 restart > rewind			>> "rewind"			>> "play"
 restart > fastForward		>> "fastForward"	>> "play"
-restart > togglePlayPause?	>> "play"/"pause"	>> "same"
+restart > toggle?	>> "play"/"pause"	>> "same"
 restart > jumpWords			>> "jump"			>> "play"
 restart > jumpSentences		>> "jump"			>> "play"
 restart > nextWord			>> "jump"			>> "play"
@@ -266,7 +266,7 @@ pause > restart				>> "play"			>> "play"
 pause > pause/stop/close	>> "pause"			>> "pause"
 pause > rewind				>> "rewind"			>> "pause"
 pause > fastForward			>> "fastForward"	>> "pause"
-pause > togglePlayPause?	>> "play"/"pause"	>> "same"
+pause > toggle?	>> "play"/"pause"	>> "same"
 pause > jumpWords			>> "jump"			>> "pause"
 pause > jumpSentences		>> "jump"			>> "pause"
 pause > nextWord			>> "jump"			>> "pause"
@@ -280,7 +280,7 @@ rewind/others > restart				>> "play"			>> "play"
 rewind/others > pause/stop/close	>> "pause"			>> "pause"
 rewind/others > rewind				>> "rewind"			>> "prev"/"pause"
 rewind/others > fastForward			>> "fastForward"	>> "prev"/"pause"
-rewind/others > togglePlayPause?	>> "play"/"pause"	>> "same"
+rewind/others > toggle?	>> "play"/"pause"	>> "same"
 rewind/others > jumpWords			>> "jump"			>> "prev"/"pause"
 rewind/others > jumpSentences		>> "jump"			>> "prev"/"pause"
 rewind/others > nextWord			>> "jump"			>> "prev"/"pause"
@@ -290,8 +290,8 @@ rewind/others > prevSentence		>> "jump"			>> "prev"/"pause"
 rewind/others > jumpTo				>> "jump"			>> "prev"/"pause"
 
 
-togglePlayPause is separate?
-??: play > togglePlayPause > togglePlayPause
+toggle is separate?
+??: play > toggle > toggle
 
 ## TODO
 .reset

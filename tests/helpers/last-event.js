@@ -1,18 +1,20 @@
 // last-event.js
 // Accumulates the result
 
+'use strict';
+
 var lastEvent = module.exports = function ( result, bigs, opWith, reset ) {
 /* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, bool ) */
 
-	var plab 	= bigs.playback,
+	const plab 	= bigs.playback,
 		emitter = bigs.emitter;
 
-	var op 	 = opWith.op,
+	const op 	 = opWith.op,
 		arg  = opWith.arg,
 		evnt = opWith.event;
 
 
-	whenRun = function ( one, two, three, four ) {
+	const whenRun = function ( one, two, three, four ) {
 		// console.log( '2:', two );
 
 		// I happen to know this will be the fragment some of the time
@@ -25,13 +27,13 @@ var lastEvent = module.exports = function ( result, bigs, opWith, reset ) {
 
 	// This assumes we're the only thing queueing and dequeueing right now...
 
-	var getFuncID = function (plab, item, queue) {
+	const getFuncID = function (plab, item, queue) {
 		// console.log( 'queued @2:', item );
 		emitter.off( '_queued', getFuncID );
 		ourFuncID = item.id;
 	};
 
-	var startListening = function (plab, item, queue) {
+	const startListening = function (plab, item, queue) {
 		// console.log( 'dequeued @2:', item );
 		if ( item.id === ourFuncID ) {
 			// console.log( 'starting to listen' );
