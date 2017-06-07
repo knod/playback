@@ -14,7 +14,7 @@ var start = function () {
 
 			let name 	 = funci + '';
 			let filePath = require('path').join( 'tests', 'results', name ) + '.txt';
-			let tester 	 = require('./testing-core.js')( filePath );
+			let tester 	 = require('../testing-core.js')( filePath );
 			tester.num 	 = funci;
 
 			one( tester, name );

@@ -10,7 +10,7 @@ var waitTime = 30;  // 20 is too short, 25 maybe ok
 
 var runTests = function ( tester ) {
 
-	var SetUp 		= require('./setup-default.js'),
+	var SetUp 		= require('./helpers/setup-default.js'),
 		bigObjects 	= SetUp(),
 		plab 		= bigObjects.playback,
 		emitter 	= bigObjects.emitter;

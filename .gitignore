@@ -1,5 +1,8 @@
 ### Custom ###
 bundle.js
+# Tester will have to make their results available some other way
+# otherwise this'll get pretty crowded pretty fast
+/tests/results/*
 
 
 # Created by https://www.gitignore.io/api/osx,node

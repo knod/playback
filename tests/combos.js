@@ -12,7 +12,7 @@ var consoleArg 	= process.argv[2];
 
 
 var setupFunc = function () {
-	return require('./setup-default.js')();
+	return require('./helpers/setup-default.js')();
 };  // End setupFunc()
 
 

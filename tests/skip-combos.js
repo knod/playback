@@ -13,7 +13,7 @@ var consoleArg 	= process.argv[2];
 
 var setupFunc = function () {
 
-	const bigObjects = require('./setup-default.js')();
+	const bigObjects = require('./helpers/setup-default.js')();
 	const skippers = [ 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?' ];
 	bigObjects.state.playback.transformFragment = function ( frag ) {
 		if ( skippers.indexOf(frag) > -1 ) {
