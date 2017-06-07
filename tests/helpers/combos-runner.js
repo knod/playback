@@ -1,6 +1,4 @@
-// combos-runner.js
-
-/* tests/skip-combos.js
+/* combos-runner.js
 * 
 * Too long to run on every single code change, but should
 * be run sometimes, just to check
@@ -232,9 +230,9 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 
 
 
-	var fs 			= require('fs'),
-		path 		= require('path');
-	var pathToCore 	= '../testing-core.js';
+	var fs 		= require('fs'),
+		path 	= require('path');
+	var pathToTestCore 	= '../testing-core.js';
 
 	var startTime = 0;
 	// Get the variables we need and start the ball rolling
@@ -276,7 +274,7 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 							let name 	 = funcObj.func + '(' + JSON.stringify( funcObj.arg ) + ')';
 
 							let filePath = path.join( 'tests', 'results', timePath, name ) + '.txt';
-							let tester 	 = new require( pathToCore )( filePath );
+							let tester 	 = new require( pathToTestCore )( filePath );
 
 							runTests( tester, [ funcObj ], name, clock, resolve );
 
@@ -301,7 +299,7 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 				// If we've got a valid first argument, run with that argument
 				if ( indx < iterables.one.funcs.length && obj ) {
 					
-					const tester = require( pathToCore )();
+					const tester = require( pathToTestCore )();
 
 					const name = obj.func + '(' + JSON.stringify( obj.arg ) + ')';
 					console.log( 'Testing with:', name );
@@ -313,7 +311,7 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 		} else {
 
 			// if no argument, just run all tests sequentially with output to the console
-			const tester = require( pathToCore )();
+			const tester = require( pathToTestCore )();
 			runTests( tester, iterables.one.funcs, ' ' + typeName + ' all sequentially', clock, null );
 
 		}  // end if called with an argument
@@ -321,4 +319,4 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 
 	start();
 
-}
+};  // End runCombosFor()
