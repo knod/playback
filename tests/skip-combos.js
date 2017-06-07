@@ -39,20 +39,17 @@
 // 	}
 // }
 
-var realTimeout = setTimeout;
-
-
 
 // A note on `once()`
 // Those tests could go on forever... but they do get tested somewhat with
 // next, prev, and the jumps so a lot taken care of. If that changes, these
 // tests need to change
 var funcsWithArgs1 = [
-	// { func: 'forceReset', arg: null },  // 0 (0 index)
-	// { func: 'reset', arg: null },
+	{ func: 'forceReset', arg: null },  // 0 (0 index)
+	{ func: 'reset', arg: null },
 	// { func: 'restart', arg: null },  // 2
 	// { func: 'play', arg: null },
-	{ func: 'toggle', arg: null },  // 4
+	// { func: 'toggle', arg: null },  // 4
 	// { func: 'pause', arg: null },
 
 	// { func: 'stop', arg: null },  // 6
@@ -95,7 +92,7 @@ var funcsWithArgs1 = [
 
 // 26 events * 21115 tests = 548990 tests
 var events1 = [
-	// 'resetBegin', 'resetFinish',
+	'resetBegin', 'resetFinish',
 	// 'restartBegin', 'restartFinish',
 	// 'playBegin', 'playFinish',
 	// 'pauseBegin', 'pauseFinish',
@@ -107,13 +104,13 @@ var events1 = [
 	// 'loopBegin', 'loopFinish',
 	// 'newWordFragment',
 	// 'progress',
-	'stopBegin', 'stopFinish',
-	'done',  // 24
+	// 'stopBegin', 'stopFinish',
+	// 'done',  // 24
 	// 'loopSkip'  // Relevant now
 ];
 
 var funcsWithArgs2 = [
-	// { func: 'forceReset', arg: null },  // 0 (0 index)
+	{ func: 'forceReset', arg: null },  // 0 (0 index)
 	// { func: 'reset', arg: null },
 	// { func: 'restart', arg: null },  // 2
 	// { func: 'play', arg: null },
@@ -123,7 +120,7 @@ var funcsWithArgs2 = [
 	// { func: 'stop', arg: null },  // 6
 	// { func: 'close', arg: null },
 	// { func: 'revert', arg: null },  // 8
-	{ func: 'rewind', arg: null },
+	// { func: 'rewind', arg: null },
 	// { func: 'fastForward', arg: null },  // 10
 
 	// { func: 'once', arg: [0,0,-2] },
@@ -159,9 +156,9 @@ var funcsWithArgs2 = [
 ];
 
 var events2 = [
-	// 'playBegin', 'playFinish',
-	// 'resetBegin', 'resetFinish',
+	'resetBegin', 'resetFinish',
 	// 'restartBegin', 'restartFinish',
+	// 'playBegin', 'playFinish',
 	// 'pauseBegin', 'pauseFinish',
 	// 'closeBegin', 'closeFinish',
 	// 'onceBegin', 'onceFinish',
@@ -172,21 +169,23 @@ var events2 = [
 	// 'newWordFragment',
 	// 'progress',
 	// 'stopBegin', 'stopFinish',
-	'done',
+	// 'done',  // 24
 	// 'loopSkip'  // Relevant now
 ];
 
 
 
+const realTimeout = setTimeout;
+// Basically double of single tests - 25 was just enough with singles.
+// ??: Why does need so much time? It's really just for one test since
+// the first test runs independently, but race conditions if shorter
+const waitTime = 30;
+
+
 var count = 0;
-const runTests = function ( tester, funcsWithArgs1, name ) {
+const runTests = function ( tester, funcsWithArgs1, name, clock, originalResolve ) {
 
 	const debugTests = false;
-
-	// Basically double of single tests - 25 was just enough with singles.
-	// ??: Why does need so much time? It's really just for one test since
-	// the first test runs independently, but race conditions if shorter
-	const waitTime = 60;
 
 	const SetUp 	= require('./setup-default.js'),
 		bigObjects 	= SetUp(),
@@ -371,7 +370,14 @@ const runTests = function ( tester, funcsWithArgs1, name ) {
 				false  // don't reset
 			);
 			// Once result has had a chance to fill up, run the test on it
-			realTimeout( function () { runAssert( result, 2, false ); }, waitTime);	
+			setTimeout( function () { runAssert( result, 2, false ); }, waitTime);	
+
+			// for ( var ms = 0; ms <= waitTime; ms++ ) {
+			// 	// if ( clock ) { clock.tick(1); }  // Tests fail that fail at no other time, including when manually checked
+			// 	if ( clock ) { clock.next(); } // Doesn't work at all for some reason
+			// 	runAssert( result, 2, false );
+			// }
+			// // runAssert( result, 2, false );
 		
 		};  // End afterFirstEvent()
 
@@ -385,72 +391,27 @@ const runTests = function ( tester, funcsWithArgs1, name ) {
 		);
 
 		// In case the first event was never triggered
-		realTimeout(function() {
+		setTimeout(function() {
 			if ( !firstCalled ) { runAssert( result, 1, false ); }
 		}, waitTime );  // the first one should have been triggered sooner
+
+		// for ( var ms = 0; ms <= waitTime + 3; ms++ ) {
+			// if ( clock ) { clock.tick( waitTime ); }
+			// // Apparently you have to put in the exact time, you can't increment
+			// // gradually
+			// if ( clock ) { clock.next(); }  // nothing happens
+
+			// This way all tests that should pass do pass for some reason
+			// (these are tests that I've checked manually in the browser console)
+			if ( clock ) { clock.runAll(); }
+
+		// }
 
 	};  // End iterate()
 
 	iterate('skip-combos:');
 };  // End runTests()
 
-
-// var startTime = 0;
-// // Get the variables we need and start the ball rolling
-// var start = function () {
-// // .slice( begin, end ) where `end` is not included
-	
-// 	startTime = Date.now();
-// 	const timeID = new Date();
-// 	const timeList = timeID.toString().split(' ');
-// 	const time = timeList[4];
-// 	console.log( 'Start:', time );
-// 	const timePath = [ timeList[0], timeList[1], timeList[2], timeList[3], timeList[4] ].join('-');
-
-// 	// When `node tests/combos.js` is called in the terminal it needs one
-// 	// argument in order to run. An index number or 'all'.
-// 	if ( typeof process.argv[2] === 'string' ) {
-
-// 		var arg1 = process.argv[2];
-
-// 		// If we're supposed to run all combo tests
-// 		if ( arg1 === 'all' ) {
-
-// 			singleAssertions = require('./helpers/skip-assertions.js')( plab );
-// 			altAssertionater = require('./helpers/skip-combos-assertions.js')( plab );
-// 			iterate('skip-combos:');
-
-// 		} else {
-// 			arg1 = eval( arg1 );
-// 			var arg2 = eval( process.argv[3] );
-
-// 			var newArray;
-
-// 			if ( typeof arg1 === 'number' && typeof arg2 === 'number' ) {
-// 				newArray = funcsWithArgs1.slice( arg1, arg2 );
-// 			} else if ( typeof arg1 === 'number' ) {
-// 				newArray = [ funcsWithArgs1[ arg1 ] ];
-// 			}
-
-// 			// If we've got a valid first argument, run with that argument
-// 			if ( newArray && !newArray.includes(undefined) ) {
-
-// 				console.log( 'Testing starting with:', newArray[ 0 ].func + '(' + newArray[ 0 ].arg + ')' );
-// 				funcsWithArgs1 = newArray;
-
-// 				singleAssertions = require('./helpers/skip-assertions.js')( plab );
-// 				altAssertionater = require('./helpers/skip-combos-assertions.js')( plab );
-// 				iterate('skip-combos:');
-// 			} else if ( newArray.includes(undefined) ) {
-// 				console.log('Arguments are out of bounds. Length of actual array:', funcsWithArgs1.length)
-// 			}
-// 			// If it wasn't 'all' and wasn't a valid first argument, don't do anything
-
-// 		}  // end if 'all'
-// 	}  // end if called with an argument
-// }  // End start()
-
-// start();
 
 
 var fs 		= require('fs'),
@@ -466,6 +427,11 @@ const start = function () {
 	const time = timeList[4];
 	console.log( 'Start:', time );
 	const timePath = [ timeList[0], timeList[1], timeList[2], timeList[3], timeList[4] ].join('-') + '-skips';
+
+	// control `setTimeout`
+	let lolex 	= require('lolex');
+	let clock 	= lolex.install(0, ["setTimeout", "clearTimeout"], 10000);
+	// let clock = null;
 
 	// When `node tests/skip-combos.js` is called in the terminal it needs one
 	// argument in order to run. An index number or 'all'.
@@ -483,17 +449,17 @@ const start = function () {
 				// Do them async so they can all run in parallel
 				realTimeout( function () {
 
-					// // control `setTimeout`
-					// let lolex 	= require('lolex');
-					// let clock 	= lolex.install(this, 0, ['setTimeout', 'clearTimeout']);
-
 					let funcObj  = funcsWithArgs1[ funci ];
 					let name 	 = funcObj.func + '(' + JSON.stringify( funcObj.arg ) + ')';
 
 					let filePath = path.join( 'tests', 'results', timePath, name ) + '.txt';
 					let tester 	 = new require('./testing-core.js')( filePath );
 
-					runTests( tester, [ funcObj ], name );
+					runTests( tester, [ funcObj ], name, clock );
+
+					// for ( var ms = 0; ms <= waitTime; ms++ ) {
+					// 	clock.tick();
+					// }
 
 				}, 0);
 			};
@@ -510,7 +476,7 @@ const start = function () {
 
 				const name = obj.func + '(' + JSON.stringify( obj.arg ) + ')';
 				console.log( 'Testing with:', name );
-				runTests( tester, [ obj ], name );
+				runTests( tester, [ obj ], name, clock );
 
 			}
 			// If it wasn't 'all' and wasn't a valid first argument, don't do anything
