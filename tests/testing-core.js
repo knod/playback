@@ -85,14 +85,14 @@ const makeTestingCore = function ( filePath ) {
             doneCalled = true;
             // core.time.end = Date.now();
             // core.time.total = core.time.end - core.time.start;
-            if ( error ) { reject( error ); }
-            else { resolve(); }
+            if ( error ) { return reject( error ); }
+            else { return resolve(); }
           }
 
           let skip = function ( error ) {
             doneCalled = true;
-            if ( error ) { reject( error ); }
-            else { resolve( true ); }
+            if ( error ) { return reject( error ); }
+            else { return resolve( true ); }
           }
           
           setTimeout( function () {
@@ -110,7 +110,7 @@ const makeTestingCore = function ( filePath ) {
     }  // end if callback
 
     let success = function ( shouldSkip ) {
-
+      var result = null;
       if ( !shouldSkip ) {
         report.total += 1;
         report.passed += 1;
@@ -119,8 +119,10 @@ const makeTestingCore = function ( filePath ) {
         // Print multiple successes on one line
         // process.stdout.write( msg );
         output( msg );
+        return msg;
       }
 
+      return result;
     }
 
     let failure = function ( error ) {
@@ -130,9 +132,9 @@ const makeTestingCore = function ( filePath ) {
           msg2 = '\n- Error:' + ' ' + error + '\n';
       // console.log( msg1 );
       // console.log( msg2 );
-      output( msg1 )
-      output( msg2 )
-
+      output( msg1 );
+      output( msg2 );
+      return (msg1 + msg2);
     }
 
     return tryPromise( tryer ).then( success, failure );

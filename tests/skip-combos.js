@@ -39,138 +39,142 @@
 // 	}
 // }
 
+var allFailures = [];
 
+// 24336 doesn't get error
+// 27040 gets error
+// 30420 doesn't get error
 // A note on `once()`
 // Those tests could go on forever... but they do get tested somewhat with
 // next, prev, and the jumps so a lot taken care of. If that changes, these
 // tests need to change
-var funcsWithArgs1 = [
+var funcsWithArg1 = [
 	{ func: 'forceReset', arg: null },  // 0 (0 index)
 	{ func: 'reset', arg: null },
-	// { func: 'restart', arg: null },  // 2
-	// { func: 'play', arg: null },
-	// { func: 'toggle', arg: null },  // 4
-	// { func: 'pause', arg: null },
+	{ func: 'restart', arg: null },  // 2
+	{ func: 'play', arg: null },
+	{ func: 'toggle', arg: null },  // 4
+	{ func: 'pause', arg: null },
 
-	// { func: 'stop', arg: null },  // 6
-	// { func: 'close', arg: null },
-	// { func: 'revert', arg: null },  // 8
-	// { func: 'rewind', arg: null },
-	// { func: 'fastForward', arg: null },  // 10
+	{ func: 'stop', arg: null },  // 6
+	{ func: 'close', arg: null },
+	{ func: 'revert', arg: null },  // 8
+	{ func: 'rewind', arg: null },
+	{ func: 'fastForward', arg: null },  // 10
 
-	// { func: 'once', arg: [0,0,-2] },
-	// { func: 'once', arg: [0,0,2] },  // 12
-	// { func: 'current', arg: null },  // once( [0,0,0] )
-	// { func: 'jumpTo', arg: -3 },  // 14
-	// { func: 'jumpTo', arg: -1 },
+	{ func: 'once', arg: [0,0,-2] },
+	{ func: 'once', arg: [0,0,2] },  // 12
+	{ func: 'current', arg: null },  // once( [0,0,0] )
+	{ func: 'jumpTo', arg: -3 },  // 14
+	{ func: 'jumpTo', arg: -1 },
 
-	// { func: 'jumpTo', arg: 0 },  // 16
-	// // Different than non-skip!
-	// { func: 'jumpTo', arg: 4 },
-	// { func: 'jumpTo', arg: 11 },  // 18
-	// { func: 'jumpTo', arg: 100 },
-	// { func: 'jumpWords', arg: -3 },  // 20
+	{ func: 'jumpTo', arg: 0 },  // 16
+	// Different than non-skip!
+	{ func: 'jumpTo', arg: 4 },
+	{ func: 'jumpTo', arg: 11 },  // 18
+	{ func: 'jumpTo', arg: 100 },
+	{ func: 'jumpWords', arg: -3 },  // 20
 
-	// { func: 'jumpWords', arg: -1 },
-	// { func: 'jumpWords', arg: 0 },  // 22
-	// { func: 'jumpWords', arg: 4 },
-	// { func: 'jumpWords', arg: 11 },  // 24
-	// { func: 'jumpWords', arg: 100 },
+	{ func: 'jumpWords', arg: -1 },
+	{ func: 'jumpWords', arg: 0 },  // 22
+	{ func: 'jumpWords', arg: 4 },
+	{ func: 'jumpWords', arg: 11 },  // 24
+	{ func: 'jumpWords', arg: 100 },
 
-	// { func: 'jumpSentences', arg: -3 },  // 26
-	// { func: 'jumpSentences', arg: -1 },
-	// { func: 'jumpSentences', arg: 0 },  // 28
-	// { func: 'jumpSentences', arg: 1 },
-	// { func: 'jumpSentences', arg: 3 },  // 30
+	{ func: 'jumpSentences', arg: -3 },  // 26
+	{ func: 'jumpSentences', arg: -1 },
+	{ func: 'jumpSentences', arg: 0 },  // 28
+	{ func: 'jumpSentences', arg: 1 },
+	{ func: 'jumpSentences', arg: 3 },  // 30
 
-	// { func: 'jumpSentences', arg: 100 },
-	// { func: 'nextWord', arg: null },  // 32
-	// { func: 'nextSentence', arg: null },
-	// { func: 'prevWord', arg: null },  // 34
-	// { func: 'prevSentence', arg: null }  // 35 (#36 with index 1)
+	{ func: 'jumpSentences', arg: 100 },
+	{ func: 'nextWord', arg: null },  // 32
+	{ func: 'nextSentence', arg: null },
+	{ func: 'prevWord', arg: null },  // 34
+	{ func: 'prevSentence', arg: null }  // 35 (#36 with index 1)
 ];
 
 // 26 events * 21115 tests = 548990 tests
 var events1 = [
 	'resetBegin', 'resetFinish',
-	// 'restartBegin', 'restartFinish',
-	// 'playBegin', 'playFinish',
-	// 'pauseBegin', 'pauseFinish',
-	// 'closeBegin', 'closeFinish',
-	// 'onceBegin', 'onceFinish',
-	// 'revertBegin', 'revertFinish',
-	// 'rewindBegin', 'rewindFinish',
-	// 'fastForwardBegin', 'fastForwardFinish',
-	// 'loopBegin', 'loopFinish',
-	// 'newWordFragment',
-	// 'progress',
-	// 'stopBegin', 'stopFinish',
-	// 'done',  // 24
-	// 'loopSkip'  // Relevant now
+	'restartBegin', 'restartFinish',
+	'playBegin', 'playFinish',
+	'pauseBegin', 'pauseFinish',
+	'closeBegin', 'closeFinish',
+	'onceBegin', 'onceFinish',
+	'revertBegin', 'revertFinish',
+	'rewindBegin', 'rewindFinish',
+	'fastForwardBegin', 'fastForwardFinish',
+	'loopBegin', 'loopFinish',
+	'newWordFragment',
+	'progress',
+	'stopBegin', 'stopFinish',
+	'done',  // 24
+	'loopSkip'  // Relevant now
 ];
 
-var funcsWithArgs2 = [
+var funcsWithArg2 = [
 	{ func: 'forceReset', arg: null },  // 0 (0 index)
-	// { func: 'reset', arg: null },
-	// { func: 'restart', arg: null },  // 2
-	// { func: 'play', arg: null },
-	// { func: 'toggle', arg: null },  // 4
-	// { func: 'pause', arg: null },
+	{ func: 'reset', arg: null },
+	{ func: 'restart', arg: null },  // 2
+	{ func: 'play', arg: null },
+	{ func: 'toggle', arg: null },  // 4
+	{ func: 'pause', arg: null },
 
-	// { func: 'stop', arg: null },  // 6
-	// { func: 'close', arg: null },
-	// { func: 'revert', arg: null },  // 8
-	// { func: 'rewind', arg: null },
-	// { func: 'fastForward', arg: null },  // 10
+	{ func: 'stop', arg: null },  // 6
+	{ func: 'close', arg: null },
+	{ func: 'revert', arg: null },  // 8
+	{ func: 'rewind', arg: null },
+	{ func: 'fastForward', arg: null },  // 10
 
-	// { func: 'once', arg: [0,0,-2] },
-	// { func: 'once', arg: [0,0,2] },  // 12
-	// { func: 'current', arg: null },  // once( [0,0,0] )
-	// { func: 'jumpTo', arg: -3 },  // 14
-	// { func: 'jumpTo', arg: -1 },
+	{ func: 'once', arg: [0,0,-2] },
+	{ func: 'once', arg: [0,0,2] },  // 12
+	{ func: 'current', arg: null },  // once( [0,0,0] )
+	{ func: 'jumpTo', arg: -3 },  // 14
+	{ func: 'jumpTo', arg: -1 },
 
-	// { func: 'jumpTo', arg: 0 },  // 16
-	// // Different than singles!
-	// { func: 'jumpTo', arg: 4 },
-	// { func: 'jumpTo', arg: 11 },  // 18
-	// { func: 'jumpTo', arg: 100 },
-	// { func: 'jumpWords', arg: -3 },  // 20
+	{ func: 'jumpTo', arg: 0 },  // 16
+	// Different than singles!
+	{ func: 'jumpTo', arg: 4 },
+	{ func: 'jumpTo', arg: 11 },  // 18
+	{ func: 'jumpTo', arg: 100 },
+	{ func: 'jumpWords', arg: -3 },  // 20
 
-	// { func: 'jumpWords', arg: -1 },
-	// { func: 'jumpWords', arg: 0 },  // 22
-	// { func: 'jumpWords', arg: 4 },
-	// { func: 'jumpWords', arg: 11 },  // 24
-	// { func: 'jumpWords', arg: 100 },
+	{ func: 'jumpWords', arg: -1 },
+	{ func: 'jumpWords', arg: 0 },  // 22
+	{ func: 'jumpWords', arg: 4 },
+	{ func: 'jumpWords', arg: 11 },  // 24
+	{ func: 'jumpWords', arg: 100 },
 
-	// { func: 'jumpSentences', arg: -3 },  // 26
-	// { func: 'jumpSentences', arg: -1 },
-	// { func: 'jumpSentences', arg: 0 },  // 28
-	// { func: 'jumpSentences', arg: 1 },
-	// { func: 'jumpSentences', arg: 3 },  // 30
+	{ func: 'jumpSentences', arg: -3 },  // 26
+	{ func: 'jumpSentences', arg: -1 },
+	{ func: 'jumpSentences', arg: 0 },  // 28
+	{ func: 'jumpSentences', arg: 1 },
+	{ func: 'jumpSentences', arg: 3 },  // 30
 
-	// { func: 'jumpSentences', arg: 100 },
-	// { func: 'nextWord', arg: null },  // 32
-	// { func: 'nextSentence', arg: null },
-	// { func: 'prevWord', arg: null },  // 34
-	// { func: 'prevSentence', arg: null }  // 35 (#36 with index 1)
+	{ func: 'jumpSentences', arg: 100 },
+	{ func: 'nextWord', arg: null },  // 32
+	{ func: 'nextSentence', arg: null },
+	{ func: 'prevWord', arg: null },  // 34
+	{ func: 'prevSentence', arg: null }  // 35 (#36 with index 1)
 ];
 
 var events2 = [
 	'resetBegin', 'resetFinish',
-	// 'restartBegin', 'restartFinish',
-	// 'playBegin', 'playFinish',
-	// 'pauseBegin', 'pauseFinish',
-	// 'closeBegin', 'closeFinish',
-	// 'onceBegin', 'onceFinish',
-	// 'revertBegin', 'revertFinish',
-	// 'rewindBegin', 'rewindFinish',
-	// 'fastForwardBegin', 'fastForwardFinish',
-	// 'loopBegin', 'loopFinish',
-	// 'newWordFragment',
-	// 'progress',
-	// 'stopBegin', 'stopFinish',
-	// 'done',  // 24
-	// 'loopSkip'  // Relevant now
+	'restartBegin', 'restartFinish',
+	'playBegin', 'playFinish',
+	'pauseBegin', 'pauseFinish',
+	'closeBegin', 'closeFinish',
+	'onceBegin', 'onceFinish',
+	'revertBegin', 'revertFinish',
+	'rewindBegin', 'rewindFinish',
+	'fastForwardBegin', 'fastForwardFinish',
+	'loopBegin', 'loopFinish',
+	'newWordFragment',
+	'progress',
+	'stopBegin', 'stopFinish',
+	'done',  // 24
+	'loopSkip'  // Relevant now
 ];
 
 
@@ -180,10 +184,11 @@ const realTimeout = setTimeout;
 // ??: Why does need so much time? It's really just for one test since
 // the first test runs independently, but race conditions if shorter
 const waitTime = 30;
+let firstIteration = 0;
 
 
 var count = 0;
-const runTests = function ( tester, funcsWithArgs1, name, clock, originalResolve ) {
+const runTests = function ( tester, funcsWithArg1, name, clock, originalResolve ) {
 
 	const debugTests = false;
 
@@ -260,7 +265,7 @@ const runTests = function ( tester, funcsWithArgs1, name, clock, originalResolve
 		var assert1Obj, assert2Obj;
 
 		// Loop 1
-		const funcWArg1 = funcsWithArgs1[ func1Indx ];
+		const funcWArg1 = funcsWithArg1[ func1Indx ];
 
 		const func1Name = funcWArg1.func;
 		const arg1		= funcWArg1.arg;
@@ -272,7 +277,7 @@ const runTests = function ( tester, funcsWithArgs1, name, clock, originalResolve
 		assert1Obj = singleAssertions[ func1Name ][ JSON.stringify( arg1 ) ][ evnt1 ];
 		
 		// Loop 2
-		const funcWArg2 = funcsWithArgs2[ func2Indx ];
+		const funcWArg2 = funcsWithArg2[ func2Indx ];
 
 		const func2Name = funcWArg2.func;
 		const arg2		= funcWArg2.arg;
@@ -307,7 +312,11 @@ const runTests = function ( tester, funcsWithArgs1, name, clock, originalResolve
 						}
 
 						if ( outcome.passed ) { done(); }
-						else { done( outcome.message ); }
+						else {
+							// All return undefined currently
+							var finalMsg = done( outcome.message );
+							allFailures.push( label + ': ' + outcome.message );
+						}
 
 					} catch (err) {
 						done( err, label );
@@ -328,15 +337,15 @@ const runTests = function ( tester, funcsWithArgs1, name, clock, originalResolve
 				var finished = increment({
 					one: {
 						// func: func1Indx, arg: arg1Indx, event: event1Indx,
-						// funcs: funcsWithArgs1, args: funcWArg1.args, events: events1
+						// funcs: funcsWithArg1, args: funcWArg1.args, events: events1
 						func: func1Indx, event: event1Indx,
-						funcs: funcsWithArgs1, events: events1
+						funcs: funcsWithArg1, events: events1
 					},
 					two: {
 						// func: func2Indx, arg: arg2Indx, event: event2Indx,
-						// funcs: funcsWithArgs2, args: funcWArg2.args, events: events2
+						// funcs: funcsWithArg2, args: funcWArg2.args, events: events2
 						func: func2Indx, event: event2Indx,
-						funcs: funcsWithArgs2, events: events2
+						funcs: funcsWithArg2, events: events2
 					}
 				});
 				if ( finished ) {
@@ -348,6 +357,8 @@ const runTests = function ( tester, funcsWithArgs1, name, clock, originalResolve
 					msg = msg + ': ' + time;
 					console.log( msg );
 					console.log( (Date.now() - startTime)/1000 + 's' );
+
+					if ( originalResolve ) { originalResolve(); }
 				}
 
 			});  // End .then()
@@ -371,13 +382,6 @@ const runTests = function ( tester, funcsWithArgs1, name, clock, originalResolve
 			);
 			// Once result has had a chance to fill up, run the test on it
 			setTimeout( function () { runAssert( result, 2, false ); }, waitTime);	
-
-			// for ( var ms = 0; ms <= waitTime; ms++ ) {
-			// 	// if ( clock ) { clock.tick(1); }  // Tests fail that fail at no other time, including when manually checked
-			// 	if ( clock ) { clock.next(); } // Doesn't work at all for some reason
-			// 	runAssert( result, 2, false );
-			// }
-			// // runAssert( result, 2, false );
 		
 		};  // End afterFirstEvent()
 
@@ -395,17 +399,7 @@ const runTests = function ( tester, funcsWithArgs1, name, clock, originalResolve
 			if ( !firstCalled ) { runAssert( result, 1, false ); }
 		}, waitTime );  // the first one should have been triggered sooner
 
-		// for ( var ms = 0; ms <= waitTime + 3; ms++ ) {
-			// if ( clock ) { clock.tick( waitTime ); }
-			// // Apparently you have to put in the exact time, you can't increment
-			// // gradually
-			// if ( clock ) { clock.next(); }  // nothing happens
-
-			// This way all tests that should pass do pass for some reason
-			// (these are tests that I've checked manually in the browser console)
-			if ( clock ) { clock.runAll(); }
-
-		// }
+		if ( clock ) { clock.runAll(); }
 
 	};  // End iterate()
 
@@ -429,8 +423,8 @@ const start = function () {
 	const timePath = [ timeList[0], timeList[1], timeList[2], timeList[3], timeList[4] ].join('-') + '-skips';
 
 	// control `setTimeout`
-	let lolex 	= require('lolex');
-	let clock 	= lolex.install(0, ["setTimeout", "clearTimeout"], 10000);
+	let lolex 	= require( 'lolex' );
+	let clock 	= lolex.install( 0, ['setTimeout', 'clearTimeout'], 1000000000000 );
 	// let clock = null;
 
 	// When `node tests/skip-combos.js` is called in the terminal it needs one
@@ -445,32 +439,42 @@ const start = function () {
 			let dirPath = path.join( 'tests', 'results', timePath );
 			fs.mkdirSync( dirPath );
 
-			for (let funci = 0; funci < funcsWithArgs1.length; funci++) {
-				// Do them async so they can all run in parallel
-				realTimeout( function () {
+			var promises = []
 
-					let funcObj  = funcsWithArgs1[ funci ];
-					let name 	 = funcObj.func + '(' + JSON.stringify( funcObj.arg ) + ')';
+			for (let funci = 0; funci < funcsWithArg1.length; funci++) {
 
-					let filePath = path.join( 'tests', 'results', timePath, name ) + '.txt';
-					let tester 	 = new require('./testing-core.js')( filePath );
+				promises.push(new Promise(function ( resolve, reject ) {
+					// Do them async so they can all run in parallel
+					realTimeout( function () {
 
-					runTests( tester, [ funcObj ], name, clock );
+						let funcObj  = funcsWithArg1[ funci ];
+						let name 	 = funcObj.func + '(' + JSON.stringify( funcObj.arg ) + ')';
 
-					// for ( var ms = 0; ms <= waitTime; ms++ ) {
-					// 	clock.tick();
-					// }
+						let filePath = path.join( 'tests', 'results', timePath, name ) + '.txt';
+						let tester 	 = new require('./testing-core.js')( filePath );
 
-				}, 0);
-			};
+						runTests( tester, [ funcObj ], name, clock, resolve );
+
+					}, 0);
+				}));
+			}  // end for every function
+
+			Promise.all(promises).then( function (){
+				console.log( '\nTotal failures:', allFailures.length );
+				for ( var faili = 0; faili < allFailures.length; faili++ ) {
+					console.log( allFailures[faili] )
+				}
+			}, function () {
+				console.log('\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nPromise.all() Failed\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n')
+			})
 
 		} else {
 
 			const indx = parseInt( arg );
-			const obj = funcsWithArgs1[ indx ];
+			const obj = funcsWithArg1[ indx ];
 
 			// If we've got a valid first argument, run with that argument
-			if ( indx < funcsWithArgs1.length && obj ) {
+			if ( indx < funcsWithArg1.length && obj ) {
 				
 				const tester = require('./testing-core.js')();
 
@@ -481,6 +485,12 @@ const start = function () {
 			}
 			// If it wasn't 'all' and wasn't a valid first argument, don't do anything
 		}  // end if 'all'
+	} else {
+
+		// if no argument, just run all tests sequentially
+		const tester = require('./testing-core.js')();
+		runTests( tester, funcsWithArg1, 'all sequentially', clock );
+
 	}  // end if called with an argument
 }  // End start()
 
