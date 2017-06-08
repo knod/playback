@@ -44,6 +44,13 @@
 	var Playback = function ( state, StepperConstr, DelayerConstr ) {
 	/* ( {}, [ {}, {} ] ) -> Playback
 	* 
+	* `state` must have a `.emitter`, `.stepper` (state for the stepper),
+	* `.delayer` (state for the delayer), `.playback` (state for this
+	* Playback instance). `state.playback` can, but isn't required to,
+	* have a `.accelerate`, `.transformFragment`, `.calcDelay`, and a
+	* `.checkRepeat`.
+	* `StepperConstr` and `DelayerConstr` will be handed their `state`
+	* objects.
 	*/
 		var plab = {};
 
@@ -55,6 +62,7 @@
 			var RealStepperConstr = StepperConstr || DefaultStepper,
 				RealDelayerConstr = DelayerConstr || DefaultDelayer;
 
+			plab.state 	  = state;
 			plab._stepper = RealStepperConstr( state.stepper );
 			plab._delayer = RealDelayerConstr( state.delayer );
 
@@ -82,8 +90,9 @@
 
 
 		plab.setState = function ( newState ) {
+		/* Destructively sets state. Not sure how best to do it non-destructively. */
 			// Validation needed?
-			state = newState;
+			state = plab.state = newState;
 			stepper.setState( newState.stepper )
 		};
 
@@ -182,7 +191,7 @@
 		/* Empties the current `._queue` array without destroying it */
 			plab._queue.splice(0, plab._queue.length);
 			return plab;
-		};  // End plab._queueClear()
+		};
 
 
 		// ----- Actions (includes methods for external use) -----
@@ -190,12 +199,14 @@
 		plab._reset = function () {
 		/* () -> Playback
 		* 
-		* Internal reset. No events, no sending fragments
-		* Returns to initial values
+		* Internal reset - sets most to initial values (other than
+		* things like `state`). --Changes `._currentAction`--. No events.
+		* Doesn't clear queue (for restart).
+		* Returns Playback instance.
 		*/
-			plab._currentAction  = 'reset';  // ??: needed? ^
+			plab._currentAction  = 'reset';  // ??: needed?
 			plab._killLoop();  // Does not change state of `._currentAction`
-			plab._revertableState = 'pause';  // either 'play' or 'pause'
+			plab._revertableState = 'pause';  // either 'play' or 'pause'. Lower down?
 
 			plab.done 		= false;
 			plab._timeoutID = null;
@@ -207,6 +218,9 @@
 			// // If so, it would happen on `restart()`, too
 			// plab._queueClear();
 
+			// // ??: Useful? Less confusing? More confusing?
+			// plab._currentAction = 'pause';
+
 			// Just put the index at the right place
 			plab._stepper.restart();
 
@@ -217,19 +231,24 @@
 		plab._resetProxy = function () {
 		/* () -> Playback
 		* 
-		* Returns to initial values and pauses
+		* Returns to initial values, clears queue, and pauses
 		*/
 			plab._queueSuspend();
 
 			var eventName = 'resetBegin';
 			plab._trigger( eventName, [eventName, plab] );
 
-			plab._reset();
-			// TODO: ??: Should this clear the queue?
-			plab._queueClear();
-			// TODO: ??: freeze before reseting values?
-			// Set `_currentAction` to 'pause'
+			// ??: If reset before freezing, values may change?
 			plab._freeze();
+			plab._queueClear();
+			plab._reset();
+
+			// Set `_currentAction` to 'pause' so we can toggle without reverting, etc.
+			// Shame to do it this way, but `._freeze()` needs to happen before
+			// `._reset()` (which changes `._currentAction` to 'reset') and it would
+			// be overkill to freeze again.
+			// ??: Should this be in `._reset`? Would that be better?
+			plab._currentAction = 'pause';
 
 			eventName = 'resetFinish';
 			plab._trigger( eventName, [eventName, plab] );
@@ -325,7 +344,7 @@
 
 
 		plab._playProxy = function () {  // Why is `frag` here?
-			if ( plab.done ) { plab.restart(); }
+			if ( plab.done ) { plab._restartProxy(); }
 			else { plab._play( 'play' ); }
 			return plab;
 		};  // End plab.play()
@@ -409,9 +428,9 @@
 			// `rewind()` doesn't change revertableState to 'play'
 
 			// TODO: ??: Should these be non-queued? Straight to proxies?
-			if ( /pause|stop|close/.test( plab._currentAction ) ) { plab.play(); }
-			else if ( plab._currentAction === 'play' ) { plab.pause(); }
-			else { plab.revert(); }
+			if ( /pause|stop|close/.test( plab._currentAction ) ) { plab._playProxy(); }
+			else if ( plab._currentAction === 'play' ) { plab._pauseProxy(); }
+			else { plab._revertProxy(); }
 
 			return plab;
 		};
