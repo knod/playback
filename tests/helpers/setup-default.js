@@ -4,8 +4,8 @@
 
 var SetUp = module.exports = function () {
 
-	var Playback = require( '../dist/Playback.js' );
-	var EventEmitter = require( '../node_modules/wolfy87-eventemitter/EventEmitter.js' );
+	var Playback = require( '../../dist/Playback.js' );
+	var EventEmitter = require( '../../node_modules/wolfy87-eventemitter/EventEmitter.js' );
 
 	var state = {};
 

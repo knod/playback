@@ -1,9 +1,9 @@
 // tests-core.js
 // Rude, crude testing framework
-
 // Call done() with a non-falsy argument to cause a failure
 
 'use strict';
+
 
 var fs = require('fs');
 
@@ -17,9 +17,6 @@ let colors = {
 const makeTestingCore = function ( filePath ) {
   const core = {};
 
-  var total = 0,
-    passed  = 0;
-
   var report = {
     total: 0,
     passed: 0
@@ -27,11 +24,7 @@ const makeTestingCore = function ( filePath ) {
 
   // ======== PROPERTIES ========
   core.report = report;
-  // core.time = {
-  //   start: 0,
-  //   end: 0,
-  //   total: 0
-  // }
+  // core.time = { start: 0, end: 0, total: 0 }
   // core.started = false;
 
   // Functions
@@ -115,9 +108,7 @@ const makeTestingCore = function ( filePath ) {
         report.total += 1;
         report.passed += 1;
         var msg = colors.green + '.' + colors.none;
-        // console.log( colors.green + 'Success:' + colors.none, label );
         // Print multiple successes on one line
-        // process.stdout.write( msg );
         output( msg );
         return msg;
       }
@@ -130,8 +121,6 @@ const makeTestingCore = function ( filePath ) {
       report.total += 1;
       var msg1 = '\n' + colors.red + 'Failure on test ' + report.total + ': ' + colors.none + ' ' + label,
           msg2 = '\n- Error:' + ' ' + error + '\n';
-      // console.log( msg1 );
-      // console.log( msg2 );
       output( msg1 );
       output( msg2 );
       return (msg1 + msg2);
@@ -144,7 +133,6 @@ const makeTestingCore = function ( filePath ) {
 
   core.finish = function () {
     var msg = '\n\n~~~ Report: ' + report.passed + ' out of ' + report.total + ' tests passed\n';
-    // console.log( msg );
     output( msg, true );
   };
 
@@ -165,45 +153,3 @@ const makeTestingCore = function ( filePath ) {
 };  // End makeTestingCore(){}
 
 module.exports = makeTestingCore;
-
-
-
-// Using it:
-/*
-function doOneThing ( x = 0, y = 0, z = 0 ) {
-  const foo = xs[x];
-  const bar = ys[y];
-  const baz = zs[z];
-  const label = foo + bar + baz;
-  it( label, (  done  ) => {
-    // do stuff
-    // try {
-      // if ( whatever ) {
-      //   done()
-      // } else {
-      //   done( useful message )  // Need a message - that's what causes a failure
-      // }
-    // } catch ( err ) {
-      // done( err )
-    //}
-  })
-  .then( () => {
-    let nextZ = z + 1;
-    let nextY = y;
-    let nextX = x;
-    if ( nextZ >= zs.length ) {
-      nextZ = 0;
-      nextY++;
-    }
-    if ( nextY >= ys.length ) {
-      nextY = 0;
-      nextX++;
-    }
-    if ( nextX >= xs.length ) {
-      return;
-    } else {
-      doOneThing(  nextX, nextY, nextZ  )
-    }
-  });
-};
-*/

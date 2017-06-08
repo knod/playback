@@ -32,6 +32,7 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 			plab 			= bigObjects.playback,
 			emitter 		= bigObjects.emitter;
 
+		// To help debugging when needed
 		plab.id = count;
 		count++;
 
@@ -129,7 +130,6 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 
 							if ( assertNum === 1 ) { outcome = assert1Obj.assertion( result ); }
 							else {
-								// assert = altAssertionater.assert( label, assertObj, result, debugTests );
 								/* label, originalAssertion, result, debug */
 								outcome = altAssertionater.assert( label, assert2Obj, result, debugTests );
 							}
@@ -153,8 +153,9 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 						skip();
 					}  // end if !shouldSkip
 
-				})  // End it()
+				})  // End tester.run()
 				// Then increment and run this function again, testing again
+				// or finish
 				.then(() => {
 
 					var finished = increment({
@@ -208,7 +209,7 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 			};  // End afterFirstEvent()
 
 			// Trigger first event that will trigger the next event
-			/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, func, func, bool ) */
+			/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, func, bool ) */
 			runFirstEvent(
 				{ playback: null, arg2s: [] }, bigObjects,
 				{ op: func1Name, arg: arg1, event: evnt1 },
