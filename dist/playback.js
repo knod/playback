@@ -14,7 +14,6 @@
 * - Speed up with long duration of ff or rewind
 * - `.rewind()` base speed as state property
 * - ??: Should `.restart()` trigger 'playBegin' and 'playFinish'
-* - Send event name with event
 * 
 * DEVELOPMENT NOTES/GUIDES:
 * - Where possible, return Playback so functions can be chained
