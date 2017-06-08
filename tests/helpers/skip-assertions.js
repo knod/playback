@@ -17,16 +17,11 @@ var	parsedText = [
 		[ '\n' ],
 		[ 'Why,', 'oh', 'wattlebird?' ]
 	];
-
-var	forward = parsedText[0].concat(parsedText[1]).concat(parsedText[2]).concat(parsedText[3]);
 // What it looks like when skipping around. Does not give good indication of progress values.
 // Skips 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?'
-forward = [ 'you', 'brave', 'I', 'back.', 'Why,', 'oh' ];
+var forward = [ 'you', 'brave', 'I', 'back.', 'Why,', 'oh' ];
 // 'v y b f. d i c b. w o w'  // (the original)
 var skipped = [ 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?' ];
-
-
-
 
 
 // ------------ standard assertions for functions with events ------------
@@ -56,7 +51,6 @@ const gets = module.exports = function ( plyb ) {
 
 	  return false;
 	};  // End arraysEqual()
-
 
 
 	// ------------ default assertions ------------
@@ -101,7 +95,6 @@ const gets = module.exports = function ( plyb ) {
 
 
 	// ------------ assertion builders ------------
-
 
 	var makeFragAsserter = function ( plyb, frags ) {
 	/* ( Playback, [ strs ] ) -> func
@@ -434,12 +427,8 @@ const gets = module.exports = function ( plyb ) {
 	// ----------- rewind(null) -----------
 	asts.rewind 	 = {};
 	var rew 		 = asts.rewind["null"] = {};
-	// asserts.frags 	 = getAssertFragsFirstBack( plyb );
 	asserts.progress = getAssertProgFirstBack( plyb );
 	asserts.skip 	 = getAssertSkipFirst( plyb );
-	// 'pause' triggered here because when going backwards, `revert()` is
-	// called and that pauses if it was paused. Forward doesn't have the same
-	// issue. That triggers just 'stop'
 
 	rew['playBegin'] 		= rew['playFinish'] 		= { assertion: asserts.not, type: 'not' };
 	rew['resetBegin'] 		= rew['resetFinish'] 		= { assertion: asserts.not, type: 'not' };
@@ -461,7 +450,7 @@ const gets = module.exports = function ( plyb ) {
 	// ----------- fastForward(null) -----------
 	asts.fastForward = {};  // TODO: Change ffwd and rewind behavior to get the current word first?
 	var fast 		 = asts.fastForward["null"] = {};
-	var ffwd 		 = forward;  // .slice(1);  // Gets till end (not sure of this since ffwd starts on the second word anyway)
+	var ffwd 		 = forward;  // Gets till end (first word gets skipped by ffwd and skipping, so it's the same)
 	asserts.frags 	 = makeFragAsserter( plyb, ffwd );
 	asserts.progress = makeProgressAsserter( plyb, 11, [ 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12, 12/12 ] );
 	asserts.skip 	 = makeFragAsserter( plyb, skipped.slice(1) );  // ffwd doesn't even try for the first word
@@ -561,8 +550,9 @@ const gets = module.exports = function ( plyb ) {
 
 	// ----------- jumpTo -----------
 	asts.jumpTo = {};
-	// Needed? Basically the same as `jumpWords()`
-	// Changed -1 behavior to match `jumpWords(-1)`. See no need for looping bak around
+	// Needed? Very similar to `jumpWords()` when run as single or first function
+	// Changed -1 behavior to match `jumpWords(-1)`-at-start. See no need for looping back around.
+	// i.e. goest to 0 in a negative traveling direction triggering 'done', etc.
 
 
 	// ----------- jumpTo( -3 ) -----------

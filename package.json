@@ -1,6 +1,6 @@
 {
   "name": "@knod/playback",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Sends out word fragments at intervals, pauses, rewinds, jumps by sentences, and does other playback jazz.",
   "main": "dist/playback.js",
   "scripts": {

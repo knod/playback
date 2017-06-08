@@ -29,7 +29,6 @@ const MakeAltAsserts = module.exports = function ( plyb ) {
 */
 
 	let plab = plyb;
-
 	const asts = {};
 
 
@@ -46,28 +45,19 @@ const MakeAltAsserts = module.exports = function ( plyb ) {
 		var passes 	= true;
 		var msg 	= 'Combos: Event ' + colors.green + 'NOT' + colors.none + ' triggered';
 
-		// var shouldFail = checkExpectedToFail( testID );
-		// if ( shouldFail ) {
-		// 	// Nothing is expected, it's failing for good reasons
-		// } else {
-			if ( result.arg2s.length !== 0 ) {
-				passes = false;
-				var testID
-				msg = 'Combos-' + testID +': Event should not have been triggered but ' + colors.red + 'WAS' + colors.none;
-			}
-		// }
+		if ( result.arg2s.length !== 0 ) {
+			passes = false;
+			var testID
+			msg = 'Combos-' + testID +': Event should not have been triggered but ' + colors.red + 'WAS' + colors.none;
+		}
 
 		return { message: msg, passed: passes };
-
 	};
 
 
 	asts.assert = function ( label, originalAssertion, result, debug ) {
 	// By this point, the first test/assertion was passed and gotten some
 	// result, so nothing should be interfereing with the possibility of further results
-
-		// Try to keep these tests as searchable as possible without having a million
-		// page doc of each individual label
 
 		if ( debug ) { console.log( label ); }
 		const assert = originalAssertion.assertion;
@@ -106,7 +96,7 @@ const MakeAltAsserts = module.exports = function ( plyb ) {
 			return assert( result );
 		}
 
-	};  // End getAssertion() ( func from label)
+	};  // End getAssertion() (func from label)
 
 	asts.expectedFailures = {
 

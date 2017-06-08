@@ -20,18 +20,9 @@ var runTests = function ( tester ) {
 
 	var currentAssertion = null;
 
-	// var	parsedText = [
-	// 		[ 'Victorious,', 'you','brave', 'flag.' ],
-	// 		[ 'Delirious,', 'I', 'come', 'back.' ],
-	// 		[ '\n' ],
-	// 		[ 'Why,', 'oh', 'wattlebird?' ]
-	// 	];
-	// // What it looks like when skipping around. Does not give good indication of progress values.
-	// // Skips 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?'
-	// forward = [ 'you', 'brave', 'I', 'back.', 'Why,', 'oh' ];
-	// // 'v y b f. d i c b. w o w'  // (the original)
-	// var skipped = [ 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?' ];
-
+	// Skips 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?'
+	// What it looks like when skipping around. Does not give good indication of progress values.
+	// var forward = [ 'you', 'brave', 'I', 'back.', 'Why,', 'oh' ];
 	var skippers = [ 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?' ];
 	bigObjects.state.playback.transformFragment = function ( frag ) {
 		if ( skippers.indexOf(frag) > -1 ) {
@@ -197,11 +188,8 @@ var runTests = function ( tester ) {
 
 // Get the variables we need
 var start = function () {
-
 	var tester = require('./testing-core.js')();
 	runTests( tester );
-
 }
 
 start();
-

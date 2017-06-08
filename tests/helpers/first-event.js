@@ -23,8 +23,8 @@ var firstEvent = module.exports = function ( result, bigs, opWith, doOnEvent, re
 		} else {
 			// I happen to know this will be the fragment some of the time
 			// and, a lot of the time it'll be the argument I'm interested in.
-			result.arg2s.push( two );
-			result.playback = one;
+			result.arg2s.push( three );
+			result.playback = two;
 		}
 	};
 

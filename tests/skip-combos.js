@@ -1,8 +1,8 @@
 /* tests/skip-combos.js
 * 
-* Too long to run on every single code change, but should
-* be run sometimes, just to check
+* Not too long to run on every single code change anymore
 */
+
 
 'use strict';
 

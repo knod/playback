@@ -775,18 +775,25 @@
 			}
 
 			var frag   = plab._stepper.getFragment( incrementors ),
-				// "$@skip@$" will be returned to skip the fragment
-				tester = state.playback.transformFragment( frag );  // TODO: ??: optional?
+				tester = null,
+				skipVector = null;
 
-			// Skip 1 word in the right direction if needed
-			var skipVector = plab._skipDirection( incrementors, tester );  // [int, int, int] of -1, 0, or 1
+			if ( state.playback.transformFragment ) {
+				// "$@skip@$" will be returned to skip the fragment
+				tester = state.playback.transformFragment( frag );
+			}
+
+			if ( tester !== null ) {
+				// Skip 1 word in the right direction if needed
+				skipVector = plab._skipDirection( incrementors, tester );  // [int, int, int] of -1, 0, or 1
+			}
 
     	    if ( skipVector !== null ) {
 
     	    	// TODO: ??: Also add 'loopSkipFinish'? (with 'loopSkipBegin')
 				plab._trigger( 'loopSkip', [plab, frag] );
 
-	    		plab._timeoutID = setTimeout( function() {
+	    		plab._timeoutID = setTimeout( function nextLoopFromSkipping() {
     	    		plab._loop( skipVector, checkRepeatOverride, calcDelayOverride );  // Put on queue
     	    	}, 0);
 
@@ -803,7 +810,7 @@
 				// Don't loop again if no repeats desired
 				if ( checkRepeat( plab, frag ) ) {
 
-					plab._timeoutID = setTimeout( function () {
+					plab._timeoutID = setTimeout( function nextLoopNormal() {
 						// Put on queue. Solves a bunch of problems
 						plab._loop( null, checkRepeat, calcDelay );
 					}, delay );

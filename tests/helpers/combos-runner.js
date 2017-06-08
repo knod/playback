@@ -1,8 +1,5 @@
 /* combos-runner.js
 * 
-* Too long to run on every single code change, but should
-* be run sometimes, just to check
-* 
 * Rake testing at start of development to discover behavior
 * other than single behavior and to reveal bugs, then later
 * just regular tests.

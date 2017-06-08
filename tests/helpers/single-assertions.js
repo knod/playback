@@ -513,8 +513,9 @@ const gets = module.exports = function ( plyb ) {
 
 	// ----------- jumpTo -----------
 	asts.jumpTo = {};
-	// Needed? Basically the same as `jumpWords()`
-	// Changed -1 behavior to match `jumpWords(-1)`. See no need for looping bak around
+	// Needed? Very similar to `jumpWords()` when run as single or first function
+	// Changed -1 behavior to match `jumpWords(-1)`-at-start. See no need for looping back around.
+	// i.e. goest to 0 in a negative traveling direction triggering 'done', etc.
 
 
 	// ----------- jumpTo( -3 ) -----------

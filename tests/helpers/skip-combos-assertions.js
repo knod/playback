@@ -47,16 +47,12 @@ const MakeAltAsserts = module.exports = function ( plyb ) {
 		var passes 	= true;
 		var msg 	= 'Combos: Event ' + colors.green + 'NOT' + colors.none + ' triggered';
 
-		// var shouldFail = checkExpectedToFail( testID );
-		// if ( shouldFail ) {
-		// 	// Nothing is expected, it's failing for good reasons
-		// } else {
-			if ( result.arg2s.length !== 0 ) {
-				passes = false;
-				var testID
-				msg = 'Combos-' + testID +': Event should not have been triggered but ' + colors.red + 'WAS' + colors.none;
-			}
-		// }
+		if ( result.arg2s.length !== 0 ) {
+			passes = false;
+			var testID
+			msg = 'Combos-' + testID +': Event should not have been triggered but ' + colors.red + 'WAS' + colors.none;
+		}
+
 		return { message: msg, passed: passes };
 	};
 
@@ -64,9 +60,6 @@ const MakeAltAsserts = module.exports = function ( plyb ) {
 	asts.assert = function ( label, originalAssertion, result, debug ) {
 	// By this point, the first test/assertion was passed and gotten some
 	// result, so nothing should be interfereing with the possibility of further results
-
-		// Try to keep these tests as searchable as possible without having a million
-		// page doc of each individual label
 
 		if ( debug ) { console.log( label ); }
 		var assert = originalAssertion.assertion;
@@ -13650,7 +13643,7 @@ const MakeAltAsserts = module.exports = function ( plyb ) {
 		'skip-combos: prevSentence(null) + loopSkip > toggle(null) + restartBegin': false,  // 47845: event should not have been triggerd but WAS
 		'skip-combos: prevSentence(null) + loopSkip > toggle(null) + restartFinish': false,  // 47846: event should not have been triggerd but WAS
 
-		// Different than regular combos:
+		// 'combos' failures that shouldn't fail here:
 		// 'skip-combos: restart(null) + restartBegin > play(null) + newWordFragment': false,  // 1896: ?? (skip results are different than combos)
 		// 'skip-combos: restart(null) + restartFinish > play(null) + newWordFragment': false,  // 2796: ?? (skip results are different than combos)
 		// 'skip-combos: restart(null) + loopBegin > play(null) + newWordFragment': false,  // 16296: ?? (skip results are different than combos)
