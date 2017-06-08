@@ -11,14 +11,14 @@
 * TODO;
 * - Still vulnurable to race conditions? Pausing function called in
 * 	middle of loop or while loop is in the queue?
-* - Speed up with long duration of ff or rewind
-* - `.rewind()` base speed as state property
+* - Speed up with long duration of ff or rewind [now use state function for acceleration control]
+* - `.rewind()` base speed as state property [now use state function for acceleration control]
 * - ??: Should `.restart()` trigger 'playBegin' and 'playFinish'
 * 
 * DEVELOPMENT NOTES/GUIDES:
 * - Where possible, return Playback so functions can be chained
-* - Always send Playback as the first argument to events to
-* 	stay consistent.
+* - Always send event name as the first argument to events and
+* 	Playback as the second argument for consistency.
 * - NO 'reverting' to revertable state internally. Module user
 * 	should handle that.
 */
@@ -91,18 +91,9 @@
 
 		// ============== PASSED ON DIRECTLY FROM STEPPER ============== \\
 
-		plab.getProgress = function () {
-			return plab._stepper.getProgress();
-		};  // End plab.gesProgress()
-
-		plab.getLength = function () {
-			return plab._stepper.getLength();
-		};  // End plab.gesLength()
-
-		plab.getIndex = function () {
-			return plab._stepper.getIndex();
-		};  // End plab.getIndex()
-
+		plab.getProgress = function () { return plab._stepper.getProgress(); };
+		plab.getLength 	 = function () { return plab._stepper.getLength(); };
+		plab.getIndex 	 = function () { return plab._stepper.getIndex(); };
 
 
 		// ============== EVENT EMITTING ============== \\
@@ -112,13 +103,20 @@
 		};
 
 
-
 		// ============== FLOW CONTROL ============== \\
 
-		// ----- Synchronous queue -----
+		// ----- Queue for synchronizing (for internal use) -----
 		var queueIDnum = 1;
-		plab._queueAdd = function ( funcName, args ) {
-			var item = { name: funcName, arguments: args, id: queueIDnum }
+		plab._queueAdd = function ( methodName, args ) {
+		/* ( str, {} ) -> {}
+		* 
+		* Takes a Playback instance method name and a set of arguments,
+		* turns them into an object, gives that an id and it to the
+		* `._queue` Array. Triggers an event containing the item and the queue,
+		* then triggers the calling of the next method on the queue (dequeueing).
+		* Returns the created item.
+		*/
+			var item = { name: methodName, arguments: args, id: queueIDnum }
 			queueIDnum++;
 
 			plab._queue.push( item );
@@ -127,18 +125,25 @@
 			plab._trigger( eventName, [eventName, plab, item, plab._queue] );
 			// console.log( 'queued:', item ); //plab._queue.slice(0) );
 
-			if ( !plab._queueCurrent && !plab._queueSuspended ) { plab._queueNext(); }
+			plab._queueNext();
 
 			return item;
 		};  // End plab._queueAdd()
 
 		plab._queueNext = function () {
-
+		/* ( str, {} ) -> {}
+		* 
+		* If appropriate, calls the next item (method) in the front of
+		* the `._queue`. Triggers an event containing the item and the queue,
+		* then, if possible, triggers the calling of the next function on the
+		* queue (dequeueing).
+		* Returns the Playback instance.
+		*/
 			// THIS SHOULD BE THE ONLY PLACE WHERE `._queueCurrent` GETS GIVEN A VALUE
 			// OTHER THAN `null`. IT IS THE ONLY PLACE THAT WAITS UNTIL THE PREVIOUS
 			// FUNCTION HAS FINISHED RUNNING.
-			// TODO: ??: Add `&& !plab._queueSuspended`?
-			if ( plab._queueCurrent === null && plab._queue.length > 0 ) {
+			// TODO: Add `&& !plab._queueSuspended`!
+			if ( plab._queueCurrent === null && plab._queue.length > 0 && !plab._queueSuspended ) {
 
 				var item = plab._queueCurrent = plab._queue.shift();
 				// Before func runs so it can be listened for
@@ -149,6 +154,8 @@
 				var func 	 = plab[ item.name ],
 					returned = func.apply( this, item.arguments );
 
+				// Lets us know the function just called has finished so this can't
+				// be triggered in the middle of a running function.
 				plab._queueCurrent = null;
 
 				plab._queueNext();
@@ -158,22 +165,27 @@
 		};  // End plab._queueNext()
 
 		plab._queueSuspend = function () {
+		/* Makes sure the next item on the queue won't be called */
 			plab._queueSuspended = true;
-			// ??: plab._queueCurrent = null; 
+			return plab;
 		};
 
 		plab._queueResume = function () {
-			plab._queueCurrent = null;
+		/* Starts the queue up again */
+			// plab._queueCurrent = null;  // ??: Should do this here?
 			plab._queueSuspended = false;
 			plab._queueNext();
+			return plab;
 		};
 
 		plab._queueClear = function () {
-			plab._queue.splice(0, plab._queue.length)
+		/* Empties the current `._queue` array without destroying it */
+			plab._queue.splice(0, plab._queue.length);
+			return plab;
 		};  // End plab._queueClear()
 
 
-		// ----- Actions -----
+		// ----- Actions (includes methods for external use) -----
 
 		plab._reset = function () {
 		/* () -> Playback
