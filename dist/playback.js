@@ -124,7 +124,8 @@
 
 			plab._queue.push( item );
 
-			plab._trigger( '_queued', [plab, item, plab._queue] );
+			var eventName = '_queued';
+			plab._trigger( eventName, [eventName, plab, item, plab._queue] );
 			// console.log( 'queued:', item ); //plab._queue.slice(0) );
 
 			if ( !plab._queueCurrent && !plab._queueSuspended ) { plab._queueNext(); }
@@ -142,7 +143,8 @@
 
 				var item = plab._queueCurrent = plab._queue.shift();
 				// Before func runs so it can be listened for
-				plab._trigger( '_dequeued', [plab, item, plab._queue] );
+				var eventName = '_dequeued';
+				plab._trigger( eventName, [eventName, plab, item, plab._queue] );
 				// console.log( 'dequeueing', item );
 
 				var func 	 = plab[ item.name ],
@@ -208,7 +210,8 @@
 		*/
 			plab._queueSuspend();
 
-			plab._trigger( 'resetBegin', [plab] );
+			var eventName = 'resetBegin';
+			plab._trigger( eventName, [eventName, plab] );
 
 			plab._reset();
 			// TODO: ??: Should this clear the queue?
@@ -217,7 +220,8 @@
 			// Set `_currentAction` to 'pause'
 			plab._freeze();
 
-			plab._trigger( 'resetFinish', [plab] );
+			eventName = 'resetFinish';
+			plab._trigger( eventName, [eventName, plab] );
 
 			// If we implement using `_queueSuspended` as check in `._queueNext` then this
 			// would do something important. Right now it doesn't do anything.
@@ -244,10 +248,12 @@
 
 		plab._restart = function ( eventName ) {
 
-			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
+			var begin = eventName + 'Begin';
+			if ( eventName ) { plab._trigger( begin, [begin, plab] ); }
 			plab._reset();  // no restart events
 			plab._play();  // no play events
-			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
+			var finish = eventName + 'Finish';
+			if ( eventName ) { plab._trigger( finish, [finish, plab] ); }
 
 			return plab;
 		};  // End plab._restart()
@@ -286,7 +292,8 @@
 			// "play" will always be forward
 			plab._incrementors = [0, 0, 1];
 
-			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
+			var begin = eventName + 'Begin';
+			if ( eventName ) { plab._trigger( begin, [begin, plab] ); }
 
 			// plab._delayer.resetSlowStart();  // ??: In here instead of in `._freeze()`?
 
@@ -299,7 +306,8 @@
 				plab._loopProxy( [0, 0, 0], null, null );  // Show the current word first, then it will move on
 			}
 
-			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
+			var finish = eventName + 'Finish';
+			if ( eventName ) { plab._trigger( finish, [finish, plab] ); }
 
 			return plab;
 		};  // End plab._play()
@@ -338,14 +346,16 @@
 		* 
 		* For all 'pause'-like activities
 		*/
-			if ( eventName ) { plab._trigger( eventName + 'Begin', [plab] ); }
+			var begin = eventName + 'Begin';
+			if ( eventName ) { plab._trigger( begin, [begin, plab] ); }
 
 			// Switch order?
 			plab._killLoop();
 			plab._revertableState = 'pause';  // ??: 'pause'? or 'stop'? or 'stopped' (and 'playing')
 			plab._currentAction = eventName || 'pause';
 
-			if ( eventName ) { plab._trigger( eventName + 'Finish', [plab] ); }
+			var finish = eventName + 'Finish';
+			if ( eventName ) { plab._trigger( finish, [finish, plab] ); }
 
 			return plab;
 		};  // End plab._freeze()
@@ -411,7 +421,8 @@
 		* completely
 		* TODO: ??: Should this set off the 'play' and 'pause' events?
 		*/
-			plab._trigger( 'revertBegin', [plab] );
+			var eventName = 'revertBegin';
+			plab._trigger( eventName, [eventName, plab] );
 
 			// plab._currentAction = 'revert';  // TODO: Would this be useful?
 			plab._killLoop( null );
@@ -424,7 +435,8 @@
 			if ( wasPlaying ) { plab._playProxy(); }
 			else { plab._pauseProxy(); }
 
-			plab._trigger( 'revertFinish', [plab] );
+			eventName = 'revertFinish';
+			plab._trigger( eventName, [eventName, plab] );
 
 			return wasPlaying;  // I think this is here for `finishIfDone()`
 		};  // End plab._revertProxy()
@@ -445,7 +457,8 @@
 		// it can get added to the queue, but then weird stuff
 		// can happen. Basically, mostly call `._` stuff internally.
 
-			plab._trigger( 'onceBegin', [plab] );  // ??: 'jumpBegin'? Other stuff? Pass `eventName`?
+			var eventName = 'onceBegin';
+			plab._trigger( eventName, [eventName, plab] );  // ??: 'jumpBegin'? Other stuff? Pass `eventName`?
 
 			plab._killLoop( null );
 			plab._direction = plab._getDirection( incrementors );
@@ -459,7 +472,8 @@
 				calcDelay 	 = function () { return 0; };
 			plab._loopProxy( incrementors, shouldRepeat, calcDelay );
 
-			plab._trigger( 'onceFinish', [plab] );  // ??: 'jumpFinish'?
+			eventName = 'onceFinish';
+			plab._trigger( eventName, [eventName, plab] );  // ??: 'jumpFinish'?
 
 			// // TODO: ??: Should this ever have the ability to revert?
 			// // `once()` should not assume anything about reverting, right?
@@ -583,7 +597,8 @@
 			// the old loop before starting the new loop
 			plab._currentAction = 'rewind';
 
-			plab._trigger( 'rewindBegin', [plab] );
+			var eventName = 'rewindBegin';
+			plab._trigger( eventName, [eventName, plab] );
 
 			plab._killLoop( null );
 			plab._currentAction = 'rewind';
@@ -595,7 +610,8 @@
 			// ??: Also here: Show the current word first, then it will move on?
 			plab._loopProxy( null, null, accelerate );
 
-			plab._trigger( 'rewindFinish', [plab] );
+			eventName = 'rewindFinish';
+			plab._trigger( eventName, [eventName, plab] );
 
 			return plab;
 		};  // end plab.rewind()
@@ -618,7 +634,8 @@
 		*/
 			// No need to prevent new `fastForward()` calls since this kills
 			// the old loop before starting the new loop
-			plab._trigger( 'fastForwardBegin', [plab] );
+			var eventName = 'fastForwardBegin';
+			plab._trigger( eventName, [eventName, plab] );
 
 			plab._killLoop( null );
 			plab._currentAction = 'fastForward';
@@ -630,7 +647,8 @@
 			// TODO: ??: Also here: Show the current word first, then it will move on?
 			plab._loopProxy( null, null, accelerate );
 
-			plab._trigger( 'fastForwardFinish', [plab] );
+			eventName = 'fastForwardFinish';
+			plab._trigger( eventName, [eventName, plab] );
 
 			return plab;
 		};  // end plab.fastForward()
@@ -664,7 +682,8 @@
 	        if ( isDone ) {
 				plab.done = true;
 				plab._stopProxy();  // Can't be added to queue or vulnerable to interruptions
-				plab._trigger( 'done', [plab] );
+				var eventName = 'done';
+				plab._trigger( eventName, [eventName, plab] );
 	        } else {
 	        	plab.done = false;
 	        }
@@ -687,7 +706,8 @@
         * 
         * Just trigger the progress event with the right progress fraction
         */
-	        plab._trigger( 'progress', [plab, plab.getProgress()] );
+	        var eventName = 'progress';
+	        plab._trigger( eventName, [eventName, plab, plab.getProgress()] );
 	        return plab;
         };  // End plab._emitProgress()
 
@@ -737,7 +757,8 @@
 
         plab._finishLoop = function () {
         	plab._emitProgress();
-        	plab._trigger( 'loopFinish', [plab] );
+        	var eventName = 'loopFinish';
+        	plab._trigger( eventName, [eventName, plab] );
         	// ??: Should this be before 'loopFinish'?
         	plab._finishIfDone();
 
@@ -761,7 +782,8 @@
 		* returns false, pausing between each fragment for an amount of time returned
 		* by `calcDelayOverride`, `state.clacDelay()`, or its own default.
 		*/
-			plab._trigger( 'loopBegin', [plab] );
+			var eventName = 'loopBegin';
+			plab._trigger( eventName, [eventName, plab] );
 
 			// Allows for stuff like `._play()` to show current word, then keep going
 			// If incrementors is an index number
@@ -791,7 +813,8 @@
     	    if ( skipVector !== null ) {
 
     	    	// TODO: ??: Also add 'loopSkipFinish'? (with 'loopSkipBegin')
-				plab._trigger( 'loopSkip', [plab, frag] );
+				eventName = 'loopSkip';
+				plab._trigger( eventName, [eventName, plab, frag] );
 
 	    		plab._timeoutID = setTimeout( function nextLoopFromSkipping() {
     	    		plab._loop( skipVector, checkRepeatOverride, calcDelayOverride );  // Put on queue
@@ -820,7 +843,8 @@
 				// Send fragment after setTimeout so that you can easily
 				// pause on "newWordFragment" - pause kills the current
 				// `._timeoutID`. Feels weird, though.
-				plab._trigger( 'newWordFragment', [plab, frag, incrementors] );
+				eventName = 'newWordFragment';
+				plab._trigger( eventName, [eventName, plab, frag, incrementors] );
 
     	    }  // end if skip fragment or not skip fragment
 

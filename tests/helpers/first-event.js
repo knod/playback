@@ -14,30 +14,32 @@ var firstEvent = module.exports = function ( result, bigs, opWith, doOnEvent, re
 		evnt = opWith.event;
 
 
-	var whenRun = function ( one, two, three, four ) {
+	var whenRun = function ( eventName, playback, three, four, five ) {
+	// arguments: eventName, playback, other things
+
 		// console.log( '1:', two );
 
 		if ( doOnEvent ) {  // If this is the first of two tests
 				emitter.removeAllListeners();
-				doOnEvent( evnt, one, two, three, four );
+				doOnEvent( arguments );
 		} else {
 			// I happen to know this will be the fragment some of the time
 			// and, a lot of the time it'll be the argument I'm interested in.
 			result.arg2s.push( three );
-			result.playback = two;
+			result.playback = playback;
 		}
 	};
 
 
 	// This assumes we're the only thing queueing and dequeueing right now...
 
-	var getFuncID = function (plab, item, queue) {
+	var getFuncID = function (eventName, plab, item, queue) {
 		// console.log( 'queued @1:', item );
 		emitter.off( '_queued', getFuncID );
 		ourFuncID = item.id;
 	};
 
-	var startListening = function (plab, item, queue) {
+	var startListening = function (eventName, plab, item, queue) {
 		// console.log( 'dequeued @1:', item )
 		if ( item.id === ourFuncID ) {
 			// console.log( 'starting to listen' );

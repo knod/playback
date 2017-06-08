@@ -14,29 +14,31 @@ var lastEvent = module.exports = function ( result, bigs, opWith, reset ) {
 		evnt = opWith.event;
 
 
-	const whenRun = function ( one, two, three, four ) {
-		// console.log( '2:', two );
+	const whenRun = function ( eventName, playback, three, four, five ) {
+	// arguments: eventName, playback, other things
+
+		// console.log( '@last:', two );
 
 		// I happen to know this will be the fragment some of the time
 		// and, a lot of the time it'll be the argument I'm interested in.
-		result.arg2s.push( two );
-		result.playback = one;
+		result.arg2s.push( three );
+		result.playback = playback;
 
 	};
 
 
 	// This assumes we're the only thing queueing and dequeueing right now...
 
-	const getFuncID = function (plab, item, queue) {
-		// console.log( 'queued @2:', item );
+	const getFuncID = function (eventName, plab, item, queue) {
+		// console.log( 'queued @last:', item );
 		emitter.off( '_queued', getFuncID );
 		ourFuncID = item.id;
 	};
 
-	const startListening = function (plab, item, queue) {
-		// console.log( 'dequeued @2:', item );
+	const startListening = function (eventName, plab, item, queue) {
+		// console.log( 'dequeued @last:', item );
 		if ( item.id === ourFuncID ) {
-			// console.log( 'starting to listen' );
+			// console.log( 'starting to listen for', evnt );
 			emitter.off( '_dequeued', startListening );
 			emitter.on( evnt, whenRun );
 		}
