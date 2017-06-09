@@ -136,7 +136,7 @@ Events allow their listeners to do things like change UI when appropriate (chang
 
 ### Other Features
 
-- `state.transformFragment()` can be used to skip fragments (sometimes whitespace is skipped) or to temporarily replace characters (sometimes whitespaces are shown as symbols) by returning '$@skip@$'.
+- `state.transformFragment()` can be used to skip fragments (sometimes whitespace is skipped) or to temporarily replace characters (sometimes whitespaces are shown as symbols) by returning '$$skip$$'.
 - Has many default values that can be used instead of `state` values. Debating making it possible to override the internal values temporarily in other ways, like through function calls.
 
 

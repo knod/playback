@@ -26,14 +26,14 @@
 		state.delayer = { slowStartDelay: 0 };
 		state.playback = {};
 		// state.playback.transformFragment = function ( frag ) {
-		// 	var changed = frag.replace(/[\n\r]+/g, '$@skip@$');
+		// 	var changed = frag.replace(/[\n\r]+/g, '$$skip$$');
 		// 	return changed;
 		// }
 
 		const skippers = [ 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?' ];
 		state.playback.transformFragment = function ( frag ) {
 			if ( skippers.indexOf(frag) > -1 ) {
-				return '$@skip@$'
+				return '$$skip$$'
 			} else {
 				return frag;
 			}

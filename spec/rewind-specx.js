@@ -19,7 +19,7 @@ describe("When Playback is", function() {
 		state.delayer = { slowStartDelay: 0, _baseDelay: 1 };  // Speed it up a bit for testing
 		state.playback = {};
 		// state.playback.transformFragment = function ( frag ) {
-		// 	var changed = frag.replace(/[\n\r]+/g, '$@skip@$');
+		// 	var changed = frag.replace(/[\n\r]+/g, '$$skip$$');
 		// 	return changed;
 		// }
 		state.playback.transformFragment = function ( frag ) {
