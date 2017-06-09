@@ -1,7 +1,7 @@
 /* playback.js
 * 
-* Transmits (or passes back) fragments from a 'stepper' object. Uses
-* a 'delayer' to determine time between each transmition/call. Can be
+* Transmits fragments from a 'stepper' object. Uses a 'delayer'
+* to determine time between each transmition/call. Can be
 * started (`play`), move forward, backward, pause, and jump to
 * positions. Can move by sentence, fragment, and word.
 * 
@@ -9,10 +9,8 @@
 * https://github.com/jamestomasino/read_plugin/blob/master/Read.js
 * 
 * TODO;
-* - Still vulnurable to race conditions? Pausing function called in
-* 	middle of loop or while loop is in the queue?
-* - Speed up with long duration of ff or rewind [now use state function for acceleration control]
-* - `.rewind` base speed as state property [now use state function for acceleration control]
+* - ??: Still vulnerable to race conditions? Pausing function
+* 	called in middle of loop or while loop is in the queue?
 * - ??: Should `.restart` trigger 'playBegin' and 'playFinish'
 * - ??: Implement override functions can be passed in from external function calls?
 * - ??: Should 'restart' after done from going backwards?
@@ -54,15 +52,15 @@
 	"use strict";
 
 	var Playback = function ( state, StepperConstr, DelayerConstr ) {
-	/* ( {}, [ {}, {} ] ) -> Playback
+	/* ( {}, {} || none, {} || none ) -> Playback
 	* 
-	* `state` must have a `.emitter`, `.stepper` (state for the stepper),
-	* `.delayer` (state for the delayer), `.playback` (state for this
-	* `Playback` instance). `state.playback` can, but isn't required to,
-	* have a `.accelerate`, `.transformFragment`, `.calcDelay`, and a
-	* `.checkRepeat`.
-	* `StepperConstr` and `DelayerConstr` will be handed their `state`
-	* objects.
+	* - `state` must have a `.emitter`, `.stepper` (state for the stepper),
+	* 	`.delayer` (state for the delayer), `.playback` (state for this
+	* 	`Playback` instance). `state.playback` can, but isn't required to,
+	* 	have a `.accelerate`, `.transformFragment`, `.calcDelay`, and a
+	* 	`.checkRepeat`.
+	* - `StepperConstr` and `DelayerConstr` will be handed their `state`
+	* 	objects.
 	*/
 		var plab = {};
 
@@ -163,7 +161,6 @@
 			// THIS SHOULD BE THE ONLY PLACE WHERE `._queueCurrent` GETS GIVEN A VALUE
 			// OTHER THAN `null`. IT IS THE ONLY PLACE THAT WAITS UNTIL THE PREVIOUS
 			// FUNCTION HAS FINISHED RUNNING.
-			// TODO: Add `&& !plab._queueSuspended`!
 			if ( plab._queueCurrent === null && plab._queue.length > 0 && !plab._queueSuspended ) {
 
 				var item = plab._queueCurrent = plab._queue.shift();
