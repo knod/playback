@@ -99,11 +99,11 @@
 
 		playback.process( parsedText );
 
-		// state.emitter.on('newWordFragment', function (playback, frag) {
+		// state.emitter.on('newWordFragment', function (eventName, playback, frag) {
 		// 	console.log( 'newFrag:', frag );
 		// });
 
-		state.emitter.on('loopSkip', function (playback, frag) {
+		state.emitter.on('loopSkip', function (eventName, playback, frag) {
 			console.log( 'newFrag:', frag );
 		});
 
@@ -139,7 +139,7 @@
 		// 	plab.reset();
 
 		// 	var count = 0;
-		// 	var whenRun = function ( arg1, arg2, arg3, arg4 ) {
+		// 	var whenRun = function ( eventName, plab, arg3, arg4, arg5 ) {
 
 		// 		if ( op2Check && op2Check( playback ) ) {
 		// 			if ( op2 ) { playback[ op2 ]( debug ); }
@@ -147,11 +147,11 @@
 
 		// 		// I happen to know this will be the fragment some of the time
 		// 		// and, most of the time it'll be the argument I'm interested in.
-		// 		frags.push( arg2 );
-		// 		args.push( [ arg1, arg2, arg3, arg4 ] );
+		// 		frags.push( plab );
+		// 		args.push( [ eventName, plab, arg3, arg4 ] );
 
-		// 		// arg1 is always the `Playback` instance
-		// 		if ( debug ) { console.log( '`.' + op1 + '()`', 'then', '`.' + op2 + '()`', 'in', '"' + toListenFor + '"', 'results in a `Playback` instance and:', arg2, ',', arg3, ', and', arg4 ); }
+		// 		// eventName is always the `Playback` instance
+		// 		if ( debug ) { console.log( '`.' + op1 + '()`', 'then', '`.' + op2 + '()`', 'in', '"' + toListenFor + '"', 'results in a `Playback` instance and:', plab, ',', arg3, ', and', arg4 ); }
 
 		// 		// if ( prop ) { console.log( 'property', prop, '=', playback[prop] ) }
 		// 	}

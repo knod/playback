@@ -1,5 +1,7 @@
 // tests/singles.js
 
+// TODO: Update to fake clock
+
 var debug = false;
 
 var waitTime = 30;  // 20 is too short, 25 maybe ok

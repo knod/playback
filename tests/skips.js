@@ -1,6 +1,8 @@
 // tests/skip.js
 // Skips 'Victorious,', 'flag.', 'Delerious,', 'come', '\n', 'wattlebird?'
 
+// TODO: Update to fake clock
+
 'use strict';
 
 
