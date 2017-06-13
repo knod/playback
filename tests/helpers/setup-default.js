@@ -9,11 +9,12 @@ var SetUp = module.exports = function () {
 
 	var state = {};
 
-	var emitter = state.emitter = new EventEmitter();  // Now has events
+	var emitter 	= state.emitter = new EventEmitter();  // Now has events
 	state.stepper 	= { maxNumCharacters: 20 };
 	state.delayer 	= { slowStartDelay: 0, _baseDelay: 1, calcDelay: function () { return 1; } };  // Speed it up a bit for testing
 	state.playback 	= {};
 
+	// Don't need this?
 	state.playback.transformFragment = function ( frag ) {
 		return frag;
 	}

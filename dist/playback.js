@@ -12,15 +12,30 @@
 * - ??: Still vulnerable to race conditions? Pausing function
 * 	called in middle of loop or while loop is in the queue?
 * - ??: Should `.restart` trigger 'playBegin' and 'playFinish'
-* - ??: Implement override functions can be passed in from external function calls?
+* - ??: Implement override functions can be passed in from external
+* 	function calls?
 * - ??: Should 'restart' after done from going backwards?
+* - ??: Useful to have `.next/prevFragment()` too?
+* - ??: Make the state optional? Also make each state propert optional?
+* - Add a `.next()` and a `.prev()` that can increment by a fragment. How
+* 	the heck did I leave those out?
+* - Change the `.jump`s so they just put `.once()` on the queue
+* - ??: Change fragment travel behavior so it won't stop at word boundry?
+* - ??: Add `.skip()`?
+* - ??: Change `.jumpTo()` to have it's old negative values action back?
+* - ??: Fix negative action values if negative numbers go past the start?
+* - Fix `.once(-int)` not working as expected - put `.jumpTo()` negative
+* 	calculations in `.once()`.
+* - ??: `.jumpWords(0)` to go to start of current word?
+* - ??: `.forceFreeze()`/`.forceStop()`/? for clearing the queue and
+* 	pausing without reseting to start? Maybe if a need shows itself.
 * 
 * DEVELOPMENT NOTES/GUIDES:
 * - Where possible, return Playback so functions can be chained
 * - Always send event name as the first argument to events and
 * 	Playback as the second argument for consistency.
 * - NO 'reverting' to revertable state internally. Module user
-* 	should handle that.
+* 	should handle that. Except maybe in `.toggle()`.
 * - Other than loops called from inside `._loopProxy`, no function put
 * 	on the queue should put another function on the queue. Otherwise
 * 	vulnerable to interruptions.
@@ -72,7 +87,7 @@
 			var RealStepperConstr = StepperConstr || DefaultStepper,
 				RealDelayerConstr = DelayerConstr || DefaultDelayer;
 
-			plab.state 	  = state;
+			plab._state   = state;
 			plab._stepper = RealStepperConstr( state.stepper );
 			plab._delayer = RealDelayerConstr( state.delayer );
 
@@ -103,7 +118,7 @@
 		plab.setState = function ( newState ) {
 		/* Destructively sets state. Not sure how best to do it non-destructively. */
 			// Validation needed?
-			state = plab.state = newState;
+			state = plab._state = newState;
 			stepper.setState( newState.stepper )
 		};
 
@@ -157,6 +172,8 @@
 		* the `._queue`. Triggers an event containing the item and the queue,
 		* then, if possible, triggers the calling of the next function on the
 		* queue (dequeueing).
+		* 
+		* TODO: ??: Return `item` instead?
 		*/
 			// THIS SHOULD BE THE ONLY PLACE WHERE `._queueCurrent` GETS GIVEN A VALUE
 			// OTHER THAN `null`. IT IS THE ONLY PLACE THAT WAITS UNTIL THE PREVIOUS
@@ -481,14 +498,6 @@
 		* 
 		* TODO: ??: Add a 'toggle' events?
 		*/
-			// Test `._currentAction` (`ca`) not `._revertableState` (`rs`).
-			// Why? Example using `rs`: `rs` is paused, user holds rewind and then
-			// releases it. `._toggle` is called (??: wait, why?) and sees that
-			// `rs` is 'pause', so it triggers `play`. Not desired behavior.
-			// If `cs` is used instead, it's value would be `rewind`, so it would
-			// revert to 'pause' again. This sounds a little crazy.
-
-			// TODO: ??: Straight to proxies?
 			if ( /pause|stop|close/.test( plab._currentAction ) ) { plab._playProxy(); }
 			else if ( plab._currentAction === 'play' ) { plab._pauseProxy(); }
 			else { plab._revertProxy(); }
@@ -504,7 +513,7 @@
 
 
 
-		// ========== RESUME ========== \\
+		// ========== REVERT ========== \\
 
 		plab._revertProxy = function () {
 		/* () -> Bool
@@ -686,6 +695,7 @@
 
 		plab._accelerate = function ( frag ) {
 		/* ( str ) -> Float :: Default rewind/ffwd acceleration just stays the same */
+			// TODO: Change name - this is actually just speed or delay or something.
 			return 20;
 		};
 
@@ -854,9 +864,14 @@
         * types to be skipped, use `state.playback.transformFragment` to
         * detect them and and return '$$skip$$'.
         * 
-        * TODO: Change name of `.transformFragment` to something that doesn't
-        * imply the fragment is going to be changed. Maybe even make it an
-        * object with a bool, or just a bool || string.
+        * TODO:
+        * - Change name of `.transformFragment` to something that doesn't
+        * 	imply the fragment is going to be changed. Maybe even make it an
+        * 	object with a bool, or just a bool || string.
+        * - Actually, don't really need frag, could just get bool in here.
+        * 	The only thing is that `transformFragment` could be used to
+        * 	return something else to be used in place of the frag (would
+        * 	need to change current code for that)
         */
 			var vector = null;
 
@@ -887,12 +902,14 @@
         plab._loopProxy = function( incrementors, checkRepeatOverride, calcDelayOverride ) {
 		/* ( [ [int, int, int] || int, func, func ] ) -> Playback
 		* 
-		* TODO: ??: Remove the overrides? There are no functions that currently use them.
+		* TODO: ??: Remove `checkRepeatOverride`? None use it atm.
+		* TODO: Change `test` to `frag` again - that way the frag
+		* can, if desired, be altered before it's displayed.
 		* 
 		* Uses the `stepper` to get a new fragment based on `incrementors`, then
 		* sends out an event with the fragment. Calls itself until `checkRepeat`
 		* returns false, pausing between each fragment for an amount of time returned
-		* by `calcDelayOverride`, `state.clacDelay`, or `._delayer.calcDelay`.
+		* by `calcDelayOverride`, `state.playback.calcDelay`, or `._delayer.calcDelay`.
 		* 
 		* All three arguments are optional
 		* `incrementors`: will only be used for the first loop, then loop
