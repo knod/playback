@@ -29,6 +29,8 @@
 * - ??: `.jumpWords(0)` to go to start of current word?
 * - ??: `.forceFreeze()`/`.forceStop()`/? for clearing the queue and
 * 	pausing without reseting to start? Maybe if a need shows itself.
+* - ??: Way to synchronously get current fragment?
+* - ??: Don't resume queue after reset is done?
 * 
 * DEVELOPMENT NOTES/GUIDES:
 * - Where possible, return Playback so functions can be chained
@@ -281,6 +283,9 @@
 			eventName = 'resetFinish';
 			plab._trigger( eventName, [eventName, plab] );
 
+			// TODO: ??: Don't unsuspend queue here? If not here, then where?
+			// Just `plab._queueSuspended = false;`?
+			// Add a `.resumeQueue/operations/??()`?
 			// Un-suspends queue
 			plab._queueResume();
 
@@ -956,7 +961,7 @@
 
     	    	// TODO: ??: Also add 'loopSkipBegin/Finish'?
 				eventName = 'loopSkip';
-				plab._trigger( eventName, [eventName, plab, frag] );
+				plab._trigger( eventName, [eventName, plab, frag] );  // ??: Add `incrementors` or `skipVector`?
 
 	    		plab._timeoutID = setTimeout( function nextLoopFromSkipping() {
     	    		plab._loop( skipVector, checkRepeatOverride, calcDelayOverride );  // Put on queue
