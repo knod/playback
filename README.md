@@ -29,7 +29,9 @@ Given an array of arrays of strings (which represents sentences made up of words
 
 ---------------------
 
+------------
 ### Downloading
+------------
 
 You can use this module in a browser by linking to it in your html page, but, unless you build custom objects, it means you have to get a couple of other modules too. You'll need the module that organizes and keeps track of the positions in the text (https://github.com/knod/prose-stepper) which uses a second module (https://github.com/knod/hyphenaxe) to split words into fragments. You'll need a script that figures out the delay between each new fragment (https://github.com/knod/string-time) and you'll need a fourth module that can emit events (https://github.com/Olical/EventEmitter). Once you've downloaded all the scripts, you can put this in the `<head>` element of your html page:
 ``` html
@@ -47,7 +49,9 @@ npm install @knod/playback --save
 
 <!-- ============================ -->
 
+------------
 ### Instantiation
+------------
 
 Now you're going to need a `state` object and some parsed text.
 
@@ -80,7 +84,9 @@ playback.process( parsedText );
 
 <!-- ============================ -->
 
+------------
 ### What Now?
+------------
 
 Now listen carefully before you tip over the first domino:
 ``` js
@@ -117,7 +123,9 @@ node tests/skip-combos
 
 ---------------------
 
+------------
 ### `Playback`
+------------
 
 The Playback constructor can take from 1 to 3 arguments:
 
@@ -127,13 +135,16 @@ The Playback constructor can take from 1 to 3 arguments:
 
 <!-- ============================ -->
 
+------------
 ### `state` Object Properties
+------------
 
 _See "Getting Started" above for an example of a state object and instantiation._
 
-**--- REQUIRED `state` PROPERTIES ---**
+#### REQUIRED `state` PROPERTIES
 
 **`.emitter`**
+
 An event emitter with a `.trigger` function.
 
 **`.stepper`** 
@@ -149,7 +160,8 @@ Can be an empty object. State properties for the delayer object, all of which ar
 Can be an empty object. State properties for this object, all of which are optional.
 
 
-**--- OPTIONAL `state.playback` PROPERTIES ---**
+
+#### OPTIONAL `state.playback` PROPERTIES
 
 _All properties of `state.playback` that this package can use_
 
@@ -171,23 +183,27 @@ Will be given a string - the current fragment - and should return a boolean, tru
 
 <!-- ============================ -->
 
+------------
 ### `Playback` Properties For Your Use
+------------
 
 **`.done`**
 
 Boolean. An indication of progress in the text. It will be `true` if the text navigation has either reached the end if traveling forward or reached the start if traveling backward. Otherwise, it will be `false`. It's the ony property that can/should be directly accessed from the outside of the package.
 
+------------
 ### `Playback` Functions/Methods For Your Use
+------------
 
-**--- SETUP ---**
+#### SETUP
 
 **`.process( [[str]] )`**
 
 Takes an array of arrays of strings - your text parsed into an array of sentences which are themselves arrays of strings. This method allows the module to navigate your text. It can be called with new text whenever desired.
 
-**--- TEXT NAVIGATION/FLOW CONTROL ---**
+#### TEXT NAVIGATION/FLOW CONTROL
 
-_Some may say there are too many functions here. I have to agree._
+_Some may say there are too many functions here. I'd have to agree._
 
 **`.play()`**
 
@@ -233,7 +249,7 @@ Another name for `.pause()`. It will set off the 'closeBegin' and 'closeFinish' 
 
 **`.once( [int, int, int] || int )`**
 
-Takes either an array of three integers or one integer. Sets off the events `jumpBegin`, `jumpFinish` (those names are slated to be changed to 'onceBegin' and 'onceFinish'), and loop events. If playing and pausing aren't enough for you (they weren't for me), you can have complete control of navigation using incrementors. Look at the definition for 'incrementors' for more detail.
+Takes either an array of three integers or one integer. Sets off the events 'jumpBegin', 'jumpFinish' (those names are slated to be changed to 'onceBegin' and 'onceFinish'), and loop events. If playing and pausing aren't enough for you (they weren't for me), you can have complete control of navigation using incrementors. Look at the definition for 'incrementors' for more detail.
 
 `.once()` can do any of the text navigation operations described below. They're there because the arguments for incrementing can annoying and hard to remember. If you're going to use `.once()`, I suggest picking either relative or absolute movement, but not both. Code gets confusing after a while otherwise.
 
@@ -274,11 +290,7 @@ Like `.reset()` except it fires right away instead of putting itself on the queu
 
 
 
-**--- GETTERS & SETTERS ---**
-
-**`playback.setState( {} )`**
-
-Takes a `state` object (see "`state` Object Properties" above for what's required). Allows you to switch to a new state object.
+#### GETTERS & SETTERS
 
 **`playback.getLength()`**
 
@@ -292,15 +304,21 @@ Returns a positive float/fraction that has a maximum value of 1 and that is alwa
 
 Returns a positive integer representing the index of the current word relative to the other words. It's as if the parsed text had been turned into one array of all the words and you were looking for the index number of the current word.
 
+**`playback.setState( {} )`**
 
-**--- FUTURE ---**
+Takes a `state` object (see '`state` Object Properties' above for what's required). Allows you to switch to a new state object.
 
-Depending on need, may add `.next()` and `.prev()` to move by fragment, and `.skip()` to skip a fragment.
+
+#### FUTURE
+
+Depending on need, may add `.next()` and `.prev()` to move by fragment, and `.skip()` to move one fragment forward without transmitting it through 'newWordFragment'.
 
 
 <!-- ============================ -->
 
+------------
 ### Definitions/Variables
+------------
 
 **incrementors**
 
@@ -328,7 +346,7 @@ The loop is basically the point of this whole thing. It's like the update loop i
 
 **loop events**
 
-Functions that set off a fragment loop - like `.play()`, `.rewind()`, and `.jumpTo()` - can, after transmitting their 'Begin' event, set off a few other events. In the following description, 'foo' is a stand-in for whatever function you called (for `.play()` it would be 'play'). The events are, in order, 'fooBegin', 'loopBegin', 'loopSkip' or 'newWordFragment', 'progress', 'loopFinish'. Then if the end has been reached when moving forward or the start has been reached when moving backwards, 'stopBegin', 'stopFinish', and 'done' will fire, finally followed by 'fooFinish'.
+Functions that set off a fragment loop - like `.play()`, `.rewind()`, and `.jumpTo()` - can, after transmitting their 'Begin' event, set off a few other events. In the following description, 'foo' is a stand-in for whatever function you called (for `.play()` it would be 'play'). The events are, in order, 'fooBegin', 'loopBegin', 'loopSkip' or 'newWordFragment', 'progress', 'loopFinish'. Then if the end has been reached when moving forward or the start has been reached when moving backwards, 'stopBegin', 'stopFinish', and then 'done' will fire, finally followed by 'fooFinish'.
 
 **queue**
 
@@ -338,57 +356,66 @@ Functions that set off a fragment loop - like `.play()`, `.rewind()`, and `.jump
 
 <!-- ============================ -->
 
+------------
 ### Events
+------------
 
 All events send the same first two arguments - the event name as the first argument and the `Playback` instance as the second argument. Some events send further data:
 
 
 **`'newWordFragment'`**
 
-Sends: `eventName, playbackInstance, fragmentString, incrementors`
-
-Fired when a loop is triggered and the fragment isn't skipped.
-
-
-**`'progress'`**
-
-Sends: `eventName, playbackInstance, progressFraction`
-
-Fired every loop
+Sends: `eventName, playbackInstance, fragmentString, incrementors`. Fired when a loop is triggered and the fragment isn't skipped.
 
 
 **`'loopSkipped'`**
 
-Sends: `eventName, playbackInstance, skippedFragment`
+Sends: `eventName, playbackInstance, skippedFragment`. Fired when a loop is triggered and the fragment _is_ skipped. _To be changed to 'skippedFragment'_.
 
-Fired when a loop is triggered and the fragment _is_ skipped. _To be changed to 'skippedFragment'_.
+
+**`'progress'`**
+
+Sends: `eventName, playbackInstance, progressFraction`. Fired every loop
 
 
 <!-- [[Before the 'done' event always come the 'stopBegin' and 'stopFinish' events]] -->
 
 
+**Functions that trigger loops/loop events**
+- `.play()`
+- `.toggle()` (if internal action state is paused)
+- `.fastForward()`
+- `.rewind()`
+- `.revert()` (if reverts to playing)
+- `.restart()`
+- `.once()`
+- `.current()`
+- `.nextWord(), .nextSentence(), .prevWord(), .prevSentence()`
+- `.jumpWords()`
+- `.jumpSentences()`
+- `.jumpTo()`
+
+
 **Events that only get triggered internally**
 
-- `'done'` - Triggered by anything that causes the playback to finish, either going forward or back
-- `'_queue'` - Should only be used for development right now. Triggered by any expected external call or inside the loop to set up the next loop
-- `'_dequeue'` - Should only be used for development right now. Triggered either when a function is put on the queue or when a previously queued function has been completed
 - `'loopBegin/Finish'` - Triggered by anything that triggeres a loop
 - `'newWordFragment'` - Triggered by anything that triggeres a loop where the fragment is NOT skipped
 - `'loopSkip'` - Triggered by anything that triggeres a loop where the fragment IS skipped
-- `'progress'` - Triggered by anything that triggeres a loo, skipped or not
+- `'progress'` - Triggered by anything that triggeres a loop, skipped or not
 - `'done'` - Triggered by anything that triggeres a loop that hits either the start while traveling forwards (`0` counts as forwards) or hits the start when traveling backwards
+
 
 **Events that can get triggered externally, but are also sometimes triggered internally**
 
 _That is, they have directly associated functions, but other functions that are called externally can also indirectly cause these to be triggered internally_
 
-- `'resetBegin/Finish'` - `.reset()` and `.forceReset()`
-- `'playBegin/Finish'` - `.play()` and, sometimes, `.toggle()`
-- `'restartBegin/Finish'` - `.restart()` and, when `.done` is `true`, `.play()` and `.toggle()`
-- `'pauseBegin/Finish'` - `.pause()`, `.revert()`, and someitmes `.toggle()`
-- `'onceBegin/Finish'` - `.once()`, `.current()`, and anything starting with '.jump', '.next', or '.prev'
-- `'revertBegin/Finish'` - `.revert()` and sometimes `.toggle()`
-- `'stopBegin/Finish'` - `.stop()` and anything that causes the playback to finish, either going forward or back
+- `'resetBegin/Finish'` - Triggered by `.reset()` and `.forceReset()`
+- `'playBegin/Finish'` - Triggered by `.play()` and, sometimes, `.toggle()`
+- `'restartBegin/Finish'` - Triggered by `.restart()` and, when `.done` is `true`, `.play()` and `.toggle()`
+- `'pauseBegin/Finish'` - Triggered by `.pause()`, `.revert()`, and someitmes `.toggle()`
+- `'onceBegin/Finish'` - Triggered by `.once()`, `.current()`, and anything starting with '.jump', '.next', or '.prev'
+- `'revertBegin/Finish'` - Triggered by `.revert()` and sometimes `.toggle()`
+- `'stopBegin/Finish'` - Triggered by `.stop()` and anything that causes the playback to finish, either going forward or back
 
 **Events that can only be triggered from external calls of their namesakes:**
 
@@ -397,7 +424,8 @@ _That is, they have directly associated functions, but other functions that are 
 - `'fastForwardBegin/Finish'`
 
 **Dev Events**
-If you're wondering about these, `'_queued'` and `'_dequeued'` are events put there for development to simplify testing. Don't mess with the queue. Do. Not. Do. It.
+
+If you're wondering about `'_queued'` and `'_dequeued'`, they're events put there for development to simplify testing. Don't mess with the queue. A dequeueing operation will be triggered either when a new function is added to it or when a function called from the queue has finished its synchronous operations.
 
 
 
