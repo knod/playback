@@ -31,6 +31,7 @@ var funcsWithArgs = [
 	{ func: 'rewind', args: [ null ]},
 	{ func: 'fastForward', args: [ null ]},  // 10
 
+	// once(-1)?
 	{ func: 'once', args: [ [0,0,-2] ]},
 	{ func: 'once', args: [ [0,0,2] ]},  // 12
 	{ func: 'current', args: [ null ]},  // once( [0,0,0] )

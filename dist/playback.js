@@ -570,13 +570,19 @@
 			plab._trigger( eventName, [eventName, plab] );  // ??: 'jumpBegin'? Other stuff? Pass `eventName`?
 
 			plab._killLoop( null );
-			plab._direction = plab._getDirection( incrementors );
-			plab._currentAction = 'jump';
 
 			// ??: Have `.jumpTo` logic in here instead so a number can be passed
 			// in? That may be more confusing as to what that number means when 
 			// calling `.once()`. e.g. would `0` mean the current fragment or
 			// mean the very first fragment in the collection?
+			if ( typeof incrementors === 'number' && incrementors < 0 ) {
+				// Go to beginning and then some (to trigger 'done')
+				var beforeStart = (-1 * plab.getIndex()) -1;
+				incrementors = [ 0, beforeStart, 0 ];
+			}
+
+			plab._direction = plab._getDirection( incrementors );
+			plab._currentAction = 'jump';
 
 			var shouldRepeat = function () { return false; },
 				calcDelay 	 = function () { return 0; };
@@ -672,14 +678,7 @@
 		* negative, but I don't see a reason to complicate things here.
 		* Any use cases?
 		*/
-			if ( indx < 0 ) {
-				// Go to beginning and then some (to trigger 'done')
-				var beforeStart = (-1 * plab.getIndex()) -1;
-				indx = [ 0, beforeStart, 0 ];
-			}
-
 			plab._onceProxy( indx );
-
 			return plab;
 		};  // End plab.jumpTo()
 

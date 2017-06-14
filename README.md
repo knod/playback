@@ -1,3 +1,6 @@
+<!-- lang js -->
+# PLAYBACK
+
 An event-based tool that allows control of the playback of parsed text. Sends out word fragments at intervals, pauses, rewinds, jumps by sentences, and does other playback jazz.
 
 ---------------------
@@ -38,7 +41,7 @@ You can use this module in a browser by linking to it in your html page, but, un
 ```
 
 If you're using npm then first open your terminal or command prompt, navigate to the right directory (folder), and install the project there with:
-```
+```bash
 npm install @knod/playback --save
 ```
 
@@ -178,14 +181,13 @@ Another name for `.pause()`. It will set off the 'closeBegin' and 'closeFinish' 
 
 
 ***`.once( [int, int, int] || int )`***
-Takes either an array of three integers or one integer. Sets off the events `jumpBegin`, `jumpFinish` (those names are slated to be changed to 'onceBegin' and 'onceFinish'), and loop events.
-If playing and pausing aren't enough for you (they weren't for me) you, you can have complete control of navigation. There are two ways you can navigate. You can either navigate to an absolute position ("go to the third word") or to a relative position ("go three words forwards from here"):
+Takes either an array of three integers or one integer. Sets off the events `jumpBegin`, `jumpFinish` (those names are slated to be changed to 'onceBegin' and 'onceFinish'), and loop events. If playing and pausing aren't enough for you (they weren't for me), you can have complete control of navigation. There are two ways you can navigate. You can either navigate to an absolute position ("go to the third word") or to a relative position ("go three words forwards from here"):
 
-1. Absolute: `.once( int )` will take you to the position/index in the text that the integer indicates. It acts as if the parsed text is a simple array of words and your integer is being used as an index position. If you try to navigate past the end, you'll just get the first fragment of the last word. If you use a negative number you'll get the first fragment of the first word. In both of those cases, you'll set off the 'done' event and its friends.
+1. Relative: `.once( [ int, int, int ] )` will move you backwards or forwards relative to your current position in the text. The first integer says how many sentences to move forward or back, the second integer is for words, and the third integer is for fragments. Positive integers will move forward and negative integers will move backwards. So to move back three words you'd do `.once( [ 0, -3, 0 ] ). It only listens to the first non-zero integer. That is, if you send `[ -1, 2, 5 ]`, it'll just move one sentence backwards and ignore the rest. You can also send `[ 0, 0, 0 ]` to get the current fragment. ***Note:*** If you're in the middle of a sentence or word and you move backwards, the first move is to the beginning of that sentence or word.
 
-2. Relative: `.once( [ int, int, int ] )` will move you backwards or forwards relative to your current position in the text. The first integer says how many sentences to move forward or back, the second integer is for words, and the third integer is for fragments. Positive integers will move forward and negative integers will move backwards. So to move back three words you'd do `.once( [ 0, -3, 0 ] ). It only listens to the first non-zero integer. That is, if you send `[ -1, 2, 5 ]`, it'll just move one sentence backwards and ignore the rest. You can also send all 0's to get the current fragment. ***Note:*** If you're in the middle of a sentence or word and you move backwards, the first move is to the beginning of that sentence or word.
+2. Absolute: `.once( int )` will take you to the position/index in the text that the integer indicates. It acts as if the parsed text is a simple array of words and your integer is being used as an index position. If you try to navigate past the end, you'll just get the first fragment of the last word. If you use a negative number you'll get the first fragment of the first word. In both of those cases, you'll set off the 'done' event and its friends.
 
-`.once()` can do any of the text navigation operations described below. They're there because the arguments for incrementing can annoying and hard to remember.
+`.once()` can do any of the text navigation operations described below. They're there because the arguments for incrementing can annoying and hard to remember. If you're going to use `.once()`, I suggest picking either methodology #1 or #2, but not both. Code gets confusing after a while otherwise.
 
 
 
