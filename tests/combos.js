@@ -153,4 +153,4 @@ iterables.two.events = [
 
 
 var runner = require( './helpers/combos-runner.js');
-return runner( typeName, consoleArg, setupFunc, singleAssertionsFunc, altAssertionaterFunc, iterables );
+module.exports = runner( typeName, consoleArg, setupFunc, singleAssertionsFunc, altAssertionaterFunc, iterables );

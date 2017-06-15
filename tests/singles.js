@@ -71,4 +71,4 @@ var iterables = {
 	]
 };  // end iterables{}
 
-return require( './helpers/singles-runner.js' )( typeName, setUp, getAssertions, iterables );
+module.exports = require( './helpers/singles-runner.js' )( typeName, setUp, getAssertions, iterables );

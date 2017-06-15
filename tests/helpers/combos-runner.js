@@ -178,7 +178,7 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 						console.log( msg );
 						console.log( (Date.now() - startTime)/1000 + 's' );
 
-						if ( originalResolve ) { originalResolve(); }
+						if ( originalResolve ) { originalResolve( tester.report ); }
 					}
 
 				});  // End .then()
@@ -288,7 +288,7 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 						console.log( allFailures[faili] )
 					}
 				}, function rejectAll() {
-					console.log('\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nPromise.all() Failed\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n')
+					console.log('\nxxxxxxxxxxx\nxxxxxxxxxxx\nxxxxxxxxxxx\nPromise.all() Failed\nxxxxxxxxxxx\nxxxxxxxxxxx\nxxxxxxxxxxx\n')
 				});
 
 			} else {

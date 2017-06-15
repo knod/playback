@@ -163,7 +163,7 @@ var runSinglesFor = module.exports = function ( typeName, setUp, getAssertions, 
 					if (nextFuncI >= iterables.funcs.length) {
 
 						tester.finish();
-						callerResolve();
+						callerResolve( tester.report );
 						return;
 
 					} else {
