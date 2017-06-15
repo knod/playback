@@ -249,7 +249,7 @@ Another name for `.pause()`. It will set off the 'closeBegin' and 'closeFinish' 
 
 **`.once( [int, int, int] || int )`**
 
-Takes either an array of three integers or one integer. Sets off the events 'jumpBegin', 'jumpFinish' (those names are slated to be changed to 'onceBegin' and 'onceFinish'), and loop events. If playing and pausing aren't enough for you (they weren't for me), you can have complete control of navigation using incrementors. Look at the definition for 'incrementors' for more detail.
+Takes either an array of three integers or one integer. Sets off the events 'onceBegin', 'onceFinish', and loop events. If playing and pausing aren't enough for you (they weren't for me), you can have complete control of navigation using incrementors. Look at the definition for 'incrementors' for more details.
 
 `.once()` can do any of the text navigation operations described below. They're there because the arguments for incrementing can annoying and hard to remember. If you're going to use `.once()`, I suggest picking either relative or absolute movement, but not both. Code gets confusing after a while otherwise.
 
@@ -257,25 +257,25 @@ Takes either an array of three integers or one integer. Sets off the events 'jum
 
 **`.current()`**
 
-Will get the instance to transmit the current non-skipped fragment. Sets off the 'jumpBegin', 'jumpEnd', and loop events.
+Will get the instance to transmit the current non-skipped fragment. Sets off the 'onceBegin', 'onceFinish', and loop events.
 
 **`.nextWord(), .nextSentence(), .prevWord(), .prevSentence()`**
 
-What they sound like. They set off the 'jumpBegin', 'jumpEnd', and loop events.
+What they sound like. They set off the 'onceBegin', 'onceFinish', and loop events.
 
 
 
 **`.jumpWords( int )`**
 
-Takes a positive or negative int and uses it to move forward or back by word relative to the current position. If you're in the middle of a word, `.jumpWords(-1)` will go to the beginning of the word. It fires the 'jumpBegin', 'jumpFinish', and loop events.
+Takes a positive or negative int and uses it to move forward or back by word relative to the current position. If you're in the middle of a word, `.jumpWords(-1)` will go to the beginning of the word. It fires the 'onceBegin', 'onceFinish', and loop events.
 
 **`.jumpSentences( int )`**
 
-Takes a positive or negative int and uses it to move forward or back by sentence relative to the current position. If you're in the middle of a sentence, `.jumpSentences(-1)` will go to the beginning of the sentence. It fires the 'jumpBegin', 'jumpFinish', and loop events.
+Takes a positive or negative int and uses it to move forward or back by sentence relative to the current position. If you're in the middle of a sentence, `.jumpSentences(-1)` will go to the beginning of the sentence. It fires the 'onceBegin', 'onceFinish', and loop events.
 
 **`.jumpTo( int )`**
 
-Takes a positive or negative int, though a negative int doesn't do much. Moves to an absolute position the the text. See 'Absolute' navigation in the description for `.once()`. It fires the 'jumpBegin', 'jumpFinish', and loop events.
+Takes a positive or negative int, though a negative int doesn't do much. Moves to an absolute position the the text. See 'Absolute' navigation in the description for `.once()`. It fires the 'onceBegin', 'onceFinish', and loop events.
 
 
 
