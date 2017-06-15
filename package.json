@@ -1,10 +1,10 @@
 {
   "name": "@knod/playback",
-  "version": "0.3.0",
+  "version": "0.10.0",
   "description": "Sends out word fragments at intervals, pauses, rewinds, jumps by sentences, and does other playback jazz.",
   "main": "dist/playback.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "node tests/all"
   },
   "repository": {
     "type": "git",
@@ -31,11 +31,11 @@
   },
   "homepage": "https://github.com/knod/playback#readme",
   "devDependencies": {
-    "jasmine": "^2.5.3",
-    "wolfy87-eventemitter": "^5.1.0"
+    "lolex": "^1.6.0"
   },
   "dependencies": {
     "@knod/prose-stepper": "^2.0.0",
-    "@knod/string-time": "^1.0.2"
+    "@knod/string-time": "^1.0.2",
+    "wolfy87-eventemitter": "^5.1.0"
   }
 }
