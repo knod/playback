@@ -107,7 +107,7 @@ Those are the basics! More fancy stuff is described below.
 
 ---------------------
 
-Issue filing welcome. Pull requests are also welcome, but the tests still have to be set up to run automatically. Currently you'll have to run each test script in the console separately and let each finish before moving onto the next. The tests are:
+Issue filing welcome. Pull requests are also welcome, but the tests still have to be set up to run automatically. Currently you'll have to run each test script in the console separately and let each finish before moving onto the next. You can run each test individually:
 
 ```bash
 node tests/singles
@@ -116,6 +116,13 @@ node tests/skips
 node tests/skip-combos
 ``` 
 
+Or you can run all the tests at once:
+
+```bash
+npm test
+``` 
+
+Running all the tests at once takes about 3.5min. and willhave some weird "Unhandled promise rejection" errors (maybe my code or may be the fake-clock module I'm using to make the tests faster and more consistent). The weird promise rejection things are fine. Actual failures should be in red.
 
 ---------------------
 

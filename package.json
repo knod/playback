@@ -4,7 +4,7 @@
   "description": "Sends out word fragments at intervals, pauses, rewinds, jumps by sentences, and does other playback jazz.",
   "main": "dist/playback.js",
   "scripts": {
-    "test": "jasmine"
+    "test": "node tests/all"
   },
   "repository": {
     "type": "git",
