@@ -1,91 +1,81 @@
 // tests/skip.js
 // Skips 'Victorious,', 'flag.', 'Delerious,', 'come', '\n', 'wattlebird?'
 
-// TODO: Update to fake clock
 
 'use strict';
 
 
-var debug = false;
+var typeName = 'skips';
 
-var waitTime = 30;  // 20 is too short, 25 maybe ok
-
-var runTests = function ( tester ) {
+var setUp = function () {
 
 	var SetUp 		= require('./helpers/setup-default.js'),
-		bigObjects 	= SetUp(),
-		plab 		= bigObjects.playback,
-		emitter 	= bigObjects.emitter;
-	var runEvent 	= require( './helpers/last-event.js' );
-
-	var assertions = require('./helpers/skip-assertions.js')( plab );
-
-	var currentAssertion = null;
+		bigObjects 	= SetUp();
 
 	// Skips 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?'
 	// What it looks like when skipping around. Does not give good indication of progress values.
 	// var forward = [ 'you', 'brave', 'I', 'back.', 'Why,', 'oh' ];
 	var skippers = [ 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?' ];
 	bigObjects.state.playback.transformFragment = function ( frag ) {
-		if ( skippers.indexOf(frag) > -1 ) {
-			return '$$skip$$'
+		if ( skippers.indexOf( frag ) > -1 ) {
+			return '$$skip$$';
 		} else {
 			return frag;
 		}
 	}
 
+	return bigObjects;
+}
 
-	// A note on `once()`
-	// Those tests could go on forever... but they do get tested somewhat with
-	// next, prev, and the jumps so a lot taken care of. If that changes, these
-	// tests need to change
-	var funcsWithArgs = [
-		{ func: 'forceReset', args: [ null ]},  // 0 (0 index)
-		{ func: 'reset', args: [ null ]},
-		{ func: 'restart', args: [ null ]},  // 2
-		{ func: 'play', args: [ null ] },
-		{ func: 'toggle', args: [ null ]},  // 4
-		{ func: 'pause', args: [ null ]},
+var getAssertions = require('./helpers/skip-assertions.js');
 
-		{ func: 'stop', args: [ null ]},  // 6
-		{ func: 'close', args: [ null ]},
-		{ func: 'revert', args: [ null ]},  // 8
-		{ func: 'rewind', args: [ null ]},
-		{ func: 'fastForward', args: [ null ]},  // 10
+var iterables = {
+	funcs: [
+		{ func: 'forceReset', arg: null },  // 0 (0 index)
+		{ func: 'reset', arg: null },
+		{ func: 'restart', arg: null },  // 2
+		{ func: 'play', arg: null },
+		{ func: 'toggle', arg: null },  // 4
+		{ func: 'pause', arg: null },
 
-		{ func: 'once', args: [ [0,0,-2] ]},
-		{ func: 'once', args: [ [0,0,2] ]},  // 12
-		{ func: 'current', args: [ null ]},  // once( [0,0,0] )
-		{ func: 'jumpTo', args: [ -3 ]},  // 14
-		{ func: 'jumpTo', args: [ -1 ]},
+		{ func: 'stop', arg: null },  // 6
+		{ func: 'close', arg: null },
+		{ func: 'revert', arg: null },  // 8
+		{ func: 'rewind', arg: null },
+		{ func: 'fastForward', arg: null },  // 10
 
-		{ func: 'jumpTo', args: [ 0 ]},  // 16
+		{ func: 'once', arg: [0,0,-2] },
+		{ func: 'once', arg: [0,0,2] },  // 12
+		{ func: 'current', arg: null },  // once( [0,0,0] )
+		{ func: 'jumpTo', arg: -3 },  // 14
+		{ func: 'jumpTo', arg: -1 },
+
+		{ func: 'jumpTo', arg: 0 },  // 16
 		// Different than non-skip!
-		{ func: 'jumpTo', args: [ 4 ]},
-		{ func: 'jumpTo', args: [ 11 ]},  // 18
-		{ func: 'jumpTo', args: [ 100 ]},
-		{ func: 'jumpWords', args: [ -3 ]},  // 20
+		{ func: 'jumpTo', arg: 4 },
+		{ func: 'jumpTo', arg: 11 },  // 18
+		{ func: 'jumpTo', arg: 100 },
+		{ func: 'jumpWords', arg: -3 },  // 20
 
-		{ func: 'jumpWords', args: [ -1 ]},
-		{ func: 'jumpWords', args: [ 0 ]},  // 22
-		{ func: 'jumpWords', args: [ 4 ]},
-		{ func: 'jumpWords', args: [ 11 ]},  // 24
-		{ func: 'jumpWords', args: [ 100 ]},
+		{ func: 'jumpWords', arg: -1 },
+		{ func: 'jumpWords', arg: 0 },  // 22
+		{ func: 'jumpWords', arg: 4 },
+		{ func: 'jumpWords', arg: 11 },  // 24
+		{ func: 'jumpWords', arg: 100 },
 
-		{ func: 'jumpSentences', args: [ -3 ]},  // 26
-		{ func: 'jumpSentences', args: [ -1 ]},
-		{ func: 'jumpSentences', args: [ 0 ]},  // 28
-		{ func: 'jumpSentences', args: [ 1 ]},
-		{ func: 'jumpSentences', args: [ 3 ]},  // 30
+		{ func: 'jumpSentences', arg: -3 },  // 26
+		{ func: 'jumpSentences', arg: -1 },
+		{ func: 'jumpSentences', arg: 0 },  // 28
+		{ func: 'jumpSentences', arg: 1 },
+		{ func: 'jumpSentences', arg: 3 },  // 30
 
-		{ func: 'jumpSentences', args: [ 100 ]},
-		{ func: 'nextWord', args: [ null ]},  // 32
-		{ func: 'nextSentence', args: [ null ]},
-		{ func: 'prevWord', args: [ null ]},  // 34
-		{ func: 'prevSentence', args: [ null ]}  // 35 (#36 with index 1)
-	];
-
-	var events = [
+		{ func: 'jumpSentences', arg: 100 },
+		{ func: 'nextWord', arg: null },  // 32
+		{ func: 'nextSentence', arg: null },
+		{ func: 'prevWord', arg: null },  // 34
+		{ func: 'prevSentence', arg: null }  // 35 (#36 with index 1)
+	],
+	events: [
 		'playBegin', 'playFinish',
 		'resetBegin', 'resetFinish',
 		'restartBegin', 'restartFinish',
@@ -101,97 +91,8 @@ var runTests = function ( tester ) {
 		'progress',
 		'done',
 		'loopSkip'
-	];
+	]
+};  // end iterables{}
 
+return require( './helpers/singles-runner.js' )( typeName, setUp, getAssertions, iterables );
 
-	function iterate ( label = '', funcIndx = 0, argIndx = 0, eventIndx = 0 ) {
-
-		emitter.removeAllListeners();
-
-		const funcWArg  = funcsWithArgs[ funcIndx ];
-
-		const funcName 	= funcWArg.func;
-		const arg 		= funcWArg.args[ argIndx ];
-		const evnt 	= events[ eventIndx ];
-
-		label = label + ' ' + funcName + '(' + JSON.stringify( arg ) + ')' + ' + ' + evnt;
-
-		if ( debug ) { console.log( label ); }
-
-		currentAssertion = assertions[ funcName ][ JSON.stringify( arg ) ][ evnt ];
-
-		const assert = currentAssertion.assertion;
-		const type 	 = currentAssertion.type;
-
-		// This should be mutated in `runEvent()`
-		var result = { playback: null, arg2s: [] };
-		/* ( {playback: none, arg2s: []}, {playback, emitter}, {op, arg, event}, bool ) */
-		runEvent(
-			result, bigObjects,
-			{ op: funcName, arg: arg, event: evnt },
-			true  // reset
-		);
-
-		setTimeout( function runAssert() {
-		
-			// Run a test
-			tester.run( label, function tests ( done ) {
-				// do stuff
-				try {
-
-					var outcome = assert( result, label, evnt );
-					if ( outcome.passed ) {
-						done();
-					} else {
-						done( label + ': ' + outcome.message );
-					}
-
-				} catch (err) {
-
-					done(err, label);
-
-				}  // End try
-			})  // End it()
-			// Then increment and run this function again, testing again
-			.then(() => {
-
-				let nextEventI 	= eventIndx + 1;
-				let nextArgI 	= argIndx;
-				let nextFuncI 	= funcIndx;
-
-				if (nextEventI >= events.length) {
-					nextEventI = 0;  // reset
-					nextArgI++;  // increment the next array
-				}
-				if (nextArgI >= funcWArg.args.length) {
-					nextArgI = 0;  // reset
-					nextFuncI++;  // increment the next array
-				}  // end increment
-
-				// If top most level is done, all done
-				if (nextFuncI >= funcsWithArgs.length) {
-
-					tester.finish();
-					return;
-
-				} else {
-
-					iterate( 'skips:', nextFuncI, nextArgI, nextEventI )  // iterate
-
-				}  // end maybe repeat
-
-			});  // End .then()
-
-		}, waitTime + 10 );
-	};  // End iterate()
-
-	iterate('skips:');
-};  // End runTests
-
-// Get the variables we need
-var start = function () {
-	var tester = require('./testing-core.js')();
-	runTests( tester );
-}
-
-start();

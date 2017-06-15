@@ -236,6 +236,8 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 	// Get the variables we need and start the ball rolling
 	const start = function () {
 
+		var ultimatePromise = null;
+
 		// Useful for console and for file dirs and names
 		startTime = Date.now();
 		const timeID = new Date();
@@ -280,41 +282,50 @@ var runCombosFor = module.exports = function ( typeName, consoleArg, setUp, sing
 					}));
 				}  // end for every function
 
-				Promise.all(promises).then( function (){
+				ultimatePromise = Promise.all( promises ).then( function resolveAll() {
 					console.log( '\nTotal failures:', allFailures.length );
 					for ( var faili = 0; faili < allFailures.length; faili++ ) {
 						console.log( allFailures[faili] )
 					}
-				}, function () {
+				}, function rejectAll() {
 					console.log('\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\nPromise.all() Failed\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n')
-				})
+				});
 
 			} else {
 
-				const indx = parseInt( arg );
-				const obj = iterables.one.funcs[ indx ];
+				ultimatePromise = new Promise(function ( resolve, reject ) {
 
-				// If we've got a valid first argument, run with that argument
-				if ( indx < iterables.one.funcs.length && obj ) {
-					
-					const tester = require( pathToTestCore )();
+					const indx = parseInt( arg );
+					const obj = iterables.one.funcs[ indx ];
 
-					const name = obj.func + '(' + JSON.stringify( obj.arg ) + ')';
-					console.log( 'Testing with:', name );
-					runTests( tester, [ obj ], name, clock, null );
+					// If we've got a valid first argument, run with that argument
+					if ( indx < iterables.one.funcs.length && obj ) {
+						
+						const tester = require( pathToTestCore )();
 
-				}
+						const name = obj.func + '(' + JSON.stringify( obj.arg ) + ')';
+						console.log( 'Testing with:', name );
+						runTests( tester, [ obj ], name, clock, resolve );
+
+					}
+
+				});
+
 				// If it wasn't 'all' and wasn't a valid first argument, don't do anything
 			}  // end if 'all'
 		} else {
 
-			// if no argument, just run all tests sequentially with output to the console
-			const tester = require( pathToTestCore )();
-			runTests( tester, iterables.one.funcs, ' ' + typeName + ' all sequentially', clock, null );
+			ultimatePromise = new Promise(function ( resolve, reject ) {
+				// if no argument, just run all tests sequentially with output to the console
+				const tester = require( pathToTestCore )();
+				runTests( tester, iterables.one.funcs, ' ' + typeName + ' all sequentially', clock, resolve );
+			});
 
 		}  // end if called with an argument
-	}  // End start()
 
-	start();
+		return ultimatePromise;
+	};  // End start()
+
+	return start();
 
 };  // End runCombosFor()
