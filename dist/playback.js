@@ -570,7 +570,6 @@
 		* 
 		* TODO: ??: restart on `jump`s when at end?
 		*/
-
 			var eventName = 'onceBegin';
 			plab._trigger( eventName, [eventName, plab] );  // ??: 'jumpBegin'? Other stuff? Pass `eventName`?
 
@@ -603,7 +602,7 @@
 		};  // End plab._onceProxy()
 
 		plab.once = function ( incrementors ) {
-		/* ( [ int, int, int ] || int ) -> Playback :: Puts 'once' (jumping-type) actions on queue */
+		/* ( [ int, int, int ] || int ) -> Playback :: Puts 'once' (jump-type) actions on queue */
 			plab._queueAdd( '_onceProxy', arguments );
 			return plab;
 		};
@@ -612,53 +611,35 @@
 
 		// ========== NAVIGATE (arrow keys and other) ========== \\
 
-		plab._currentProxy = function () {
+		plab.current = function () {
 		/* () -> Playback
 		* 
-		* Actually gets current fragment. Only called from queue.
-		* Maybe should use this in `._play`. Maybe in rewind and ffwd too.
+		* Will send current fragment. Can't use in 'play', etc, because
+		* doesn't create delay. Called externally.
 		*/
-			plab._onceProxy( [0, 0, 0] );
-			return plab;
-		};
-		plab.current = function () {
-		/* () -> Playback :: Puts getting current fragment on queue */
-			plab._queueAdd( '_currentProxy', arguments );
+			plab.once( [0, 0, 0] );  // Will be put on the `._queue`
 			return plab;
 		};
 
-		plab._jumpWordsProxy = function ( numToJump ) {
-		/* ( int ) -> Playback
-		* 
-		* Moves forward or back numToJump number of words relative to the
-		* current position. Called by queue, `.nextWord`, and `.prevWord`.
-		*/
-			// TODO: ??: If in middle of current word, go to beginning of
-			// word on 0?
-			plab._onceProxy( [0, numToJump, 0] );
-			return plab;
-		};
 		plab.jumpWords = function ( numToJump ) {
-		/* ( int ) -> Playback :: Puts jumping words on queue */
-			plab._queueAdd( '_jumpWordsProxy', arguments );
+		/* ( int ) -> Playback
+		* 
+		* Will move forward or back numToJump number of words relative
+		* to the current position. Called by `.nextWord`, `.prevWord`,
+		* and externally.
+		*/
+			plab.once( [0, numToJump, 0] );  // Will be put on the `._queue`
 			return plab;
 		};
 
-		plab._jumpSentencesProxy = function ( numToJump ) {
+		plab.jumpSentences = function ( numToJump ) {
 		/* ( int ) -> Playback
 		* 
-		* Moves forward or back numToJump number of sentences relative to
-		* the current position. Called by queue, `.nextSentence`, and
-		* `.prevSentence`.
+		* Will move forward or back numToJump number of sentences relative
+		* to the current position. Called by `.nextSentence`,
+		* `.prevSentence`, and externally.
 		*/
-			// TODO: ??: If in middle of current sentence, go to beginning
-			// of sentence on 0?
-			plab._onceProxy( [numToJump, 0, 0] );
-			return plab;
-		};
-		plab.jumpSentences = function ( numToJump ) {
-		/* ( int ) -> Playback :: Puts jumping sentences on queue */
-			plab._queueAdd( '_jumpSentencesProxy', arguments );
+			plab.once( [numToJump, 0, 0] );  // Will be put on the `._queue`
 			return plab;
 		};
 
@@ -671,25 +652,19 @@
 
 		// =================== SCRUBBER BAR (probably, and maybe scrolling) =================== \\
 
-		plab._jumpToProxy = function ( indx ) {
+		plab.jumpTo = function ( indx ) {
 		/* ( int ) -> Playback
 		* 
-		* Moves to an absolute word position (not relative). Any
+		* Will move to an absolute word position (not relative). Any
 		* positions below 0 hit the beginning as if moving backwards.
 		* ??: Makes sense as expected behavior?
-		* Called by queue, `.nextWord`, and `.prevWord`.
+		* Called externally.
 		* 
 		* Theoretically `._stepper` can loop around to the end when
 		* negative, but I don't see a reason to complicate things here.
 		* Any use cases?
 		*/
-			plab._onceProxy( indx );
-			return plab;
-		};  // End plab.jumpTo()
-
-		plab.jumpTo = function ( indx ) {
-		/* () -> Playback :: Puts 'jumping to particular spot' on queue */
-			plab._queueAdd( '_jumpToProxy', arguments );
+			plab.once( indx );  // Will be put on the `._queue`
 			return plab;
 		};
 
