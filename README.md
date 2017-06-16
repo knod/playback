@@ -29,7 +29,6 @@ Given an array of arrays of strings (which represents sentences made up of words
 
 ---------------------
 
-------------
 ### Downloading
 ------------
 
@@ -129,6 +128,38 @@ Running all the tests at once takes about 3.5min. and willhave some weird "Unhan
 ## API
 
 ---------------------
+
+### Definitions/Variables
+------------
+
+**incrementors**
+
+Either an array of three integers or one single integer. There are two ways that incrementors move in the text. They can either navigate to an absolute position ("go to the third word") or to a relative position ("go three words forwards from here"). An array of integers is for relative movement (see number 1 below) while a single integer is for absolute movement (see number 2 below). The examples use `.once()` because that function uses incrementors most directly, but this is the behavior whenever they are used:
+
+1. **Relative movement:** `.once( [ int, int, int ] )` will move you backwards or forwards relative to your current position in the text. The first integer says how many sentences to move forward or back, the second integer is for words, and the third integer is for fragments. Positive integers will move forward and negative integers will move backwards. So to move back three words you'd do `.once( [ 0, -3, 0 ] ). It only listens to the first non-zero integer. That is, if you send `[ -1, 2, 5 ]`, it'll just move one sentence backwards and ignore the rest. You can also send `[ 0, 0, 0 ]` to get the current fragment. **Note:** If you're in the middle of a sentence or word and you move backwards, the first move is to the beginning of that sentence or word.
+
+2. **Absolute movement:** `.once( int )` will take you to the position/index in the text that the integer indicates. It acts as if the parsed text is a simple array of words and your integer is being used as an index position. If you try to navigate past the end, you'll just get the first fragment of the last word. If you use a negative number you'll get the first fragment of the first word. In both of those cases, you'll set off the 'done' event and its friends.
+
+
+**progress**
+
+A fraction/float that's > 0 and <= 1 representing how far along in the text the current position is.
+
+
+**direction**
+
+Negative numbers are treated as going backwards. Positive numbers and 0 are treated as going forwards.
+
+
+**loop**
+
+The loop is basically the point of this whole thing. It's like the update loop in a game or animation. It fires events that, among other things, will transmit the fragment. It's events are described below.
+
+**queue**
+
+**Only for development and testing. Don't mess with the queue.** The queue is the way the package lines up functions to be called one after another so they don't interfere with each other.
+
+<!-- TODO: fragment? loop? loop events? -->
 
 ------------
 ### `Playback`
@@ -322,52 +353,14 @@ Takes a `state` object (see '`state` Object Properties' above for what's require
 
 Depending on need, may add `.next()` and `.prev()` to move by fragment, and `.skip()` to move one fragment forward without transmitting it through 'newWordFragment'.
 
-
-<!-- ============================ -->
-
-------------
-### Definitions/Variables
-------------
-
-**incrementors**
-
-Either an array of three integers or one single integer. There are two ways that incrementors move in the text. They can either navigate to an absolute position ("go to the third word") or to a relative position ("go three words forwards from here"). An array of integers is for relative movement (see number 1 below) while a single integer is for absolute movement (see number 2 below). The examples use `.once()` because that function uses incrementors most directly, but this is the behavior whenever they are used:
-
-1. **Relative movement:** `.once( [ int, int, int ] )` will move you backwards or forwards relative to your current position in the text. The first integer says how many sentences to move forward or back, the second integer is for words, and the third integer is for fragments. Positive integers will move forward and negative integers will move backwards. So to move back three words you'd do `.once( [ 0, -3, 0 ] ). It only listens to the first non-zero integer. That is, if you send `[ -1, 2, 5 ]`, it'll just move one sentence backwards and ignore the rest. You can also send `[ 0, 0, 0 ]` to get the current fragment. **Note:** If you're in the middle of a sentence or word and you move backwards, the first move is to the beginning of that sentence or word.
-
-2. **Absolute movement:** `.once( int )` will take you to the position/index in the text that the integer indicates. It acts as if the parsed text is a simple array of words and your integer is being used as an index position. If you try to navigate past the end, you'll just get the first fragment of the last word. If you use a negative number you'll get the first fragment of the first word. In both of those cases, you'll set off the 'done' event and its friends.
-
-
-**progress**
-
-A fraction/float that's > 0 and <= 1 representing how far along in the text the current position is.
-
-
-**direction**
-
-Negative numbers are treated as going backwards. Positive numbers and 0 are treated as going forwards.
-
-
-**loop**
-
-The loop is basically the point of this whole thing. It's like the update loop in a game or animation. It fires events that, among other things, will transmit the fragment. It's events are described below.
-
-
-**loop events**
-
-Functions that set off a fragment loop - like `.play()`, `.rewind()`, and `.jumpTo()` - can, after transmitting their 'Begin' event, set off a few other events. In the following description, 'foo' is a stand-in for whatever function you called (for `.play()` it would be 'play'). The events are, in order, 'fooBegin', 'loopBegin', 'loopSkip' or 'newWordFragment', 'progress', 'loopFinish'. Then if the end has been reached when moving forward or the start has been reached when moving backwards, 'stopBegin', 'stopFinish', and then 'done' will fire, finally followed by 'fooFinish'.
-
-**queue**
-
-**Only for development and testing. Don't mess with the queue.** The queue is the way the package lines up functions to be called one after another so they don't interfere with each other.
-
-<!-- TODO: fragment? loop? loop events? -->
-
 <!-- ============================ -->
 
 ------------
 ### Events
 ------------
+
+
+Events allow their listeners to do things like change UI when appropriate (changing button icons, pulsing a symbol, etc.).
 
 All events send the same first two arguments - the event name as the first argument and the `Playback` instance as the second argument. Some events send further data:
 
@@ -388,6 +381,27 @@ Sends: `eventName, playbackInstance, progressFraction`. Fired every loop
 
 
 <!-- [[Before the 'done' event always come the 'stopBegin' and 'stopFinish' events]] -->
+
+
+**loop events**
+
+Functions that set off a fragment loop - like `.play()`, `.rewind()`, and `.jumpTo()` - can, after transmitting their 'Begin' event, set off a few other events. In the following description, 'foo' is a stand-in for whatever function you called (for `.play()` it would be 'play'). The events are, in order:
+
+- 'fooBegin'
+- 'loopBegin'
+- 'loopSkip' or 'newWordFragment'
+- 'progress'
+- 'loopFinish'
+
+Then if the end has been reached when moving forward or the start has been reached when moving backwards:
+
+- 'stopBegin'
+- 'stopFinish'
+- 'done'
+
+Then always ends with
+
+- 'fooFinish'
 
 
 **Functions that trigger loops/loop events**
