@@ -148,6 +148,8 @@ The Playback constructor can take from 1 to 3 arguments:
 
 _See "Getting Started" above for an example of a state object and instantiation._
 
+The `state` object passed in to `Playback` and its mutable properties **MUST NOT BE DESTROYED**. You can alter its properties non-destructively, but you can't destroy its properties right now. Currently there's no way to set a new `state`.
+
 #### REQUIRED `state` PROPERTIES
 
 **`.emitter`**
@@ -164,7 +166,7 @@ Can be an empty object. State properties for the delayer object, all of which ar
 
 **`.playback`**
 
-Can be an empty object. State properties for this object, all of which are optional.
+Can be an empty object. State properties for this object, all of which are optional and listed below.
 
 
 
@@ -311,10 +313,10 @@ Returns a positive float/fraction that has a maximum value of 1 and that is alwa
 
 Returns a positive integer representing the index of the current word relative to the other words. It's as if the parsed text had been turned into one array of all the words and you were looking for the index number of the current word.
 
-**`playback.setState( {} )`**
+<!-- **`playback.setState( {} )`**
 
 Takes a `state` object (see '`state` Object Properties' above for what's required). Allows you to switch to a new state object.
-
+ -->
 
 #### FUTURE
 

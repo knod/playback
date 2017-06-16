@@ -124,12 +124,12 @@
 		};
 
 
-		plab.setState = function ( newState ) {
-		/* Destructively sets state. Not sure how best to do it non-destructively. */
-			// Validation needed?
-			state = plab._state = newState;
-			stepper.setState( newState.stepper )
-		};
+		// plab.setState = function ( newState ) {
+		// // Destructively sets state. Not sure how best to do it non-destructively.
+		// 	// Validation needed?
+		// 	state = plab._state = newState;
+		// 	stepper.setState( newState.stepper )
+		// };
 
 
 		// ============== PASSED ON DIRECTLY FROM STEPPER ============== \\
