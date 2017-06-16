@@ -31,6 +31,13 @@
 * 	pausing without reseting to start? Maybe if a need shows itself.
 * - ??: Way to synchronously get current fragment?
 * - ??: Don't resume queue after reset is done?
+* - ??: `.forceFreeze/Stop()` in addition to or instead of
+* 	`.forceReset()`? Would allow clearing queue without changing
+* 	position.
+* - ??: `.resume()` or something for restarting after `.forceReset()`?
+* 	Would allow complete control if something is continuing to build
+* 	up things on the queue.
+* - ??: Some kind of limit on amount of items allowed on the queue?
 * 
 * DEVELOPMENT NOTES/GUIDES:
 * - Where possible, return Playback so functions can be chained
@@ -280,14 +287,22 @@
 			// ??: Should this be in `._reset`? Would that be better?
 			plab._currentAction = 'pause';
 
+			// No starting up the queue again
+			plab._queueSuspended = false;
+
 			eventName = 'resetFinish';
 			plab._trigger( eventName, [eventName, plab] );
 
-			// TODO: ??: Don't unsuspend queue here? If not here, then where?
-			// Just `plab._queueSuspended = false;`?
-			// Add a `.resumeQueue/operations/??()`?
-			// Un-suspends queue
-			plab._queueResume();
+			// // Un-suspends queue
+			// // TODO: ??: Don't unsuspend queue here? If not here, then where?
+			// plab._queueResume();
+			// // Add a `.resumeQueue/operations/??()`?
+
+			// // No starting up the queue again
+			// plab._queueSuspended = false;
+			// Changes behavior - events put in after 'resetFinish' but before
+			// this don't get triggered. Desired behavior?
+			// ??: Move to before 'resetFinish'?
 
 			return plab;
 		};
