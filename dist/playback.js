@@ -38,6 +38,8 @@
 * 	Would allow complete control if something is continuing to build
 * 	up things on the queue.
 * - ??: Some kind of limit on amount of items allowed on the queue?
+* - Give prose-stepper module a way to set new state so that playback
+* 	can do it too.
 * 
 * DEVELOPMENT NOTES/GUIDES:
 * - Where possible, return Playback so functions can be chained
