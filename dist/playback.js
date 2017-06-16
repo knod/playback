@@ -46,8 +46,8 @@
 * 
 * API NOTES:
 * - All events send the event name as the first argument and the
-* 	`Playback` instance as the second argument. Some events send further
-* 	data. In those cases, it will be noted (that's the plan, anyway).
+* 	`Playback` instance as the second argument. Some events send
+* 	further data. In those cases, it will be noted in docs.
 */
 
 (function (root, playbackFactory) {  // root is usually `window`
@@ -74,7 +74,7 @@
 	* - `state` must have a `.emitter`, `.stepper` (state for the stepper),
 	* 	`.delayer` (state for the delayer), `.playback` (state for this
 	* 	`Playback` instance). `state.playback` can, but isn't required to,
-	* 	have a `.accelerate`, `.transformFragment`, `.calcDelay`, and a
+	* 	have an `.accelerate`, `.transformFragment`, `.calcDelay`, and a
 	* 	`.checkRepeat`.
 	* - `StepperConstr` and `DelayerConstr` will be handed their `state`
 	* 	objects.
