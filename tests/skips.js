@@ -18,7 +18,7 @@ var setUp = function () {
 	var skippers = [ 'Victorious,', 'flag.', 'Delirious,', 'come', '\n', 'wattlebird?' ];
 	bigObjects.state.playback.transformFragment = function ( frag ) {
 		if ( skippers.indexOf( frag ) > -1 ) {
-			return '$$skip$$';
+			return '@@skip@@';
 		} else {
 			return frag;
 		}

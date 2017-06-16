@@ -182,7 +182,7 @@ Will be given a string - the current fragment -  and should return a millisecond
 
 **`.transformFragment( str )`**
 
-YOU CAN USE THIS TO SKIP FRAGMENTS. Will be given a string - the current fragment -  and must return a string, either the same one or a different one. Also a terrible name. This won't actually transform the fragment in the array. It'll transform, basically, a copy of the fragment. It is a function that takes a string (the currently calculated fragment) and returns a string. If you return '$$skip$$', that fragment will be skipped. Right now it's just used for skipping, but in future this'll be your last chance to output something different than the current fragment.
+YOU CAN USE THIS TO SKIP FRAGMENTS. Will be given a string - the current fragment -  and must return a string, either the same one or a different one. Also a terrible name. This won't actually transform the fragment in the array. It'll transform, basically, a copy of the fragment. It is a function that takes a string (the currently calculated fragment) and returns a string. If you return '@@skip@@', that fragment will be skipped. Right now it's just used for skipping, but in future this'll be your last chance to output something different than the current fragment.
 
 **`.checkRepeat( str )`**
 

@@ -854,9 +854,9 @@
         * and magnitude (fragment, word, or sentence) to increment in the
         * right direction past the skipped section. Otherwise returns null.
         * 
-        * '$$skip$$' will be skipped. If you want fragments of certain
+        * '@@skip@@' will be skipped. If you want fragments of certain
         * types to be skipped, use `state.playback.transformFragment` to
-        * detect them and and return '$$skip$$'.
+        * detect them and and return '@@skip@@'.
         * 
         * TODO:
         * - Change name of `.transformFragment` to something that doesn't
@@ -869,10 +869,10 @@
         */
 			var vector = null;
 
-			// Skip our special symbols ('$$skip$$')
+			// Skip our special symbols ('@@skip@@')
 			// TODO: ??: use state property with a fallback instead?
-			// TODO: change to '$$skip$$'
-			if ( frag === '$$skip$$' ) {
+			// TODO: change to '@@skip@@'
+			if ( frag === '@@skip@@' ) {
 				var direction = plab._getDirection( incrementors );
 				if ( direction === 'forward' ) { vector = [0, 0, 1] }
 				else { vector = [0, 0, -1] }
@@ -937,7 +937,7 @@
 				skipVector 	= null;
 
 			if ( state.playback.transformFragment ) {
-				// Shoudl return "$$skip$$" to skip the fragment
+				// Shoudl return "@@skip@@" to skip the fragment
 				tester = state.playback.transformFragment( frag );
 			}
 

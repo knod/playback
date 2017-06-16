@@ -1,6 +1,12 @@
-// all.js
-// Run all the tests ever, somehow making sure they're run
-// sequentially
+/* all.js
+* Run all the tests ever, somehow making sure they're run
+* sequentially
+* 
+* TODO:
+* - ??: Run skipping with regex replacement to check that
+* 	skipping indicator works alright there?
+* - ??: `.once(-1)`?
+*/
 
 var reports = [];
 
