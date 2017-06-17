@@ -157,7 +157,7 @@ The loop is basically the point of this whole thing. It's like the update loop i
 
 **queue**
 
-**Only for development and testing. Don't mess with the queue.** The queue is the way the package lines up functions to be called one after another so they don't interfere with each other.
+**Don't mess with the queue.** The queue is the way the package lines up functions to be called one after another so they don't interfere with each other.
 
 <!-- TODO: fragment? loop? loop events? -->
 
